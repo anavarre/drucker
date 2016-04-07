@@ -22,6 +22,32 @@
   command: mv /var/www/html/phpMyAdmin-{{ phpmyadmin_stable_release }}-english /var/www/html/phpmyadmin
   when: phpmyadmin.stat.exists == false
 
+- name: Check if config.inc.php exists
+  stat:
+    path: "{{ webroot }}/phpmyadmin/config.inc.php"
+  register: config_inc
+  ignore_errors: True
+
+- name: Create config.inc.php file
+  command: cp {{ webroot }}/phpmyadmin/config.sample.inc.php {{ webroot }}/phpmyadmin/config.inc.php
+  when: config_inc.stat.exists == false
+
+- name: Define config auth for phpMyAdmin
+  lineinfile:
+    dest: "{{ webroot }}/phpmyadmin/config.inc.php"
+    regexp: '^(.*)auth_type(.*)$'
+    line: "$cfg['Servers'][$i]['auth_type'] = 'config';"
+  when: config_inc.stat.exists == false
+
+- name: Log in automatically to phpMyAdmin
+  blockinfile:
+    dest: "{{ webroot }}/phpmyadmin/config.inc.php"
+    block: |
+      $cfg['Servers'][$i]['username'] = '{{ mysql_creds }}';
+      $cfg['Servers'][$i]['password'] = '{{ mysql_creds }}';
+    insertafter: '^(.*)auth_type(.*)$'
+  when: config_inc.stat.exists == false
+
 - name: Check if phpMyAdmin vHost exists
   stat:
     path: /etc/apache2/sites-enabled/phpmyadmin.conf
