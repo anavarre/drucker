@@ -1,0 +1,24 @@
+---
+- name: Refresh APT
+  apt:
+    update_cache: yes
+
+- name: Restart SSH
+  service:
+    name: ssh
+    state: restarted
+
+- name: Restart Apache
+  service:
+    name: apache2
+    state: restarted
+
+- name: Reload Apache
+  service:
+    name: apache2
+    state: reloaded
+
+- name: Restart MySQL
+  service:
+    name: mysql
+    state: restarted

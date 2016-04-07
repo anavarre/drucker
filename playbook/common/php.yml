@@ -1,0 +1,50 @@
+---
+- name: Check if PHP is installed
+  stat:
+    path: /etc/php5/fpm/php.ini
+  register: fpm
+
+- name: "Install PHP packages"
+  apt: name={{ item }} state=installed
+  with_items:
+    - libapache2-mod-php5
+    - php5-fpm
+    - php5-apcu
+    - php5-cli
+    - php5-common
+    - php5-curl
+    - php5-dev
+    - php5-gd
+    - php5-memcached
+    - php5-mysql
+    - php5-xsl
+  when: fpm.stat.exists == false
+
+- name: "Harden PHP"
+  lineinfile:
+    dest: "/etc/php5/fpm/php.ini"
+    regexp: "SSLProtocol all"
+    line: "\tSSLProtocol all -SSLv2 -SSLv3"
+  notify: Restart Apache
+  when: fpm.stat.exists == false
+
+- name: Check if Composer is installed
+  stat:
+    path: "{{ composer_path }}"
+  when: fpm.stat.exists == false
+
+- name: Install Composer globally
+  get_url:
+    url: https://getcomposer.org/composer.phar
+    dest: "{{ composer_path }}"
+  when: fpm.stat.exists == false
+
+- name: Make Composer executable
+  file:
+    path: "{{ composer_path }}"
+    mode: 0755
+  when: fpm.stat.exists == false
+
+- name: Ensure Composer is up-to-date
+  command: /usr/local/bin/composer self-update
+  when: fpm.stat.exists == false

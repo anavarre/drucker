@@ -1,0 +1,17 @@
+---
+- name: "SSH Hardening"
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - {
+      regexp: "^PasswordAuthentication",
+      line: "PasswordAuthentication no"
+    }
+    - {
+      regexp: "^PermitRootLogin",
+      line: "PermitRootLogin no"
+    }
+  notify: Restart SSH

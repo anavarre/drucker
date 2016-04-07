@@ -1,0 +1,39 @@
+---
+- name: Clean up system packages
+  apt:
+    name: "{{ item }}"
+    state: absent
+    purge: yes
+  with_items:
+  - vim-tiny
+
+- name: Install sysadmin packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - strace
+  - sysstat
+  - dstat
+
+- name: Install system packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - ack-grep
+  - curl
+  - git
+  - htop
+  - logrotate
+  - ncdu
+  - ntp
+  - vim
+  - curl
+  - wget
+
+- name: Ensure NTP is running
+  service:
+    name: ntp
+    state: started
+    enabled: yes

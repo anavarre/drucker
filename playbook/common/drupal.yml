@@ -1,0 +1,151 @@
+---
+- name: Check if Drupal archive exists
+  stat:
+    path: /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz
+  register: drupal
+  ignore_errors: True
+
+- name: Download latest Drupal (dev) release
+  get_url:
+    url: https://ftp.drupal.org/files/projects/drupal-{{ drupal_dev_release }}-dev.tar.gz
+    dest: /tmp
+  when: drupal.stat.exists == false
+
+- name: Check if drucker exists
+  stat:
+    path: "{{ webroot }}/drucker"
+  register: drucker
+  ignore_errors: True
+
+- name: Extract Drupal files
+  unarchive:
+    src: /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz
+    dest: "{{ webroot }}"
+    copy: no
+  when: drucker.stat.exists == false
+
+- name: Rename Drupal directory
+  command: mv {{ webroot}}/drupal-{{ drupal_dev_release }}-dev {{ webroot }}/drucker
+  when: drucker.stat.exists == false
+
+- name: Create files directory
+  file:
+    path: "{{ drucker_install }}/sites/default/files"
+    state: directory
+    mode: 0777
+  when: drucker.stat.exists == false
+
+- name: Create settings.php file
+  command: cp {{ drucker_install }}/sites/default/default.settings.php {{ drucker_install }}/sites/default/settings.php
+  when: drucker.stat.exists == false
+
+- name: Add trusted_host_patterns in settings.php
+  blockinfile:
+    dest: "{{ drucker_install }}/sites/default/settings.php"
+    block: |
+
+      $settings['trusted_host_patterns'] = array(
+        '^drucker\.local$',
+      );
+  when: drucker.stat.exists == false
+
+- name: Ensure drucker database is wiped before installing
+  mysql_db:
+    login_user: "{{ mysql_creds }}"
+    login_password: "{{ mysql_creds }}"
+    login_host: localhost
+    login_port: 3306
+    name: drucker
+    state: absent
+  when: drucker.stat.exists == false
+
+- name: Create drucker database
+  mysql_db:
+    login_user: "{{ mysql_creds }}"
+    login_password: "{{ mysql_creds }}"
+    login_host: localhost
+    login_port: 3306
+    name: drucker
+    state: present
+  when: drucker.stat.exists == false
+
+- name: Add database connection string in settings.php
+  blockinfile:
+    dest: "{{ drucker_install }}/sites/default/settings.php"
+    block: |
+
+      $databases['default']['default'] = array (
+        'database' => 'drucker',
+        'username' => '{{ mysql_creds }}',
+        'password' => '{{ mysql_creds }}',
+        'host' => 'localhost',
+        'port' => '3306',
+        'driver' => 'mysql',
+        'prefix' => '',
+        'collation' => 'utf8mb4_general_ci',
+      );
+  when: drucker.stat.exists == false
+
+- name: Check if drucker vHost exists
+  stat:
+    path: /etc/apache2/sites-enabled/drucker.conf
+  register: drucker_conf
+  ignore_errors: True
+
+- name: Delete default vHost
+  file:
+    path: /etc/apache2/sites-available/000-default.conf
+    state: absent
+    path: /etc/apache2/sites-enabled/000-default.conf
+    state: absent
+  when: drucker_conf.stat.exists == false
+
+- name: Deploy default vHost template
+  copy:
+    src: files/vhost.conf
+    dest: /etc/apache2/sites-available/
+    mode: 0644
+  when: drucker_conf.stat.exists == false
+
+- name: Rename default vHost template
+  command: mv /etc/apache2/sites-available/vhost.conf /etc/apache2/sites-available/drucker.conf
+  when: drucker_conf.stat.exists == false
+
+- name: Modify drucker vHost
+  replace:
+    dest: /etc/apache2/sites-available/drucker.conf
+    regexp: '^(.*)SITENAME(.*)$'
+    replace: '\1drucker\2'
+  when: drucker_conf.stat.exists == false
+
+- name: Enable drucker vHost
+  file:
+    src: ../sites-available/drucker.conf
+    dest: /etc/apache2/sites-enabled/drucker.conf
+    state: link
+  notify: Reload Apache
+  when: drucker_conf.stat.exists == false
+
+- name: Check if drucker Drush aliases exist
+  stat:
+    path: ~/.drush/drucker.aliases.drushrc.php
+  register: drucker_aliases
+  ignore_errors: True
+
+- name: Create .drush directory
+  file:
+    path: ~/.drush
+    state: directory
+    mode: 0755
+  when: drucker_aliases.stat.exists == false
+
+- name: Deploy drucker Drush aliases
+  copy:
+    src: files/drucker.aliases.drushrc.php
+    dest: ~/.drush/drucker.aliases.drushrc.php
+    mode: 0644
+  when: drucker_aliases.stat.exists == false
+
+- name: Install Drupal
+  command: drush @drucker.local site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@127.0.0.1:3306/drucker --site-name=drucker --site-mail=admin@drucker.local --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail=admin@drucker.local
+  when: drucker.stat.exists == false

@@ -1,0 +1,30 @@
+---
+- name: Check if Apache is installed
+  stat:
+    path: /etc/apache2/conf-available/security.conf
+  register: apache
+  ignore_errors: True
+
+- name: Install Apache packages
+  #ANSIBLE 2 module apt/dnf = package:
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - apache2
+    - apache2-utils
+  when: apache.stat.exists == false
+
+- name: Enable mod_rewrite
+  apache2_module:
+    name: rewrite
+    state: present
+  when: apache.stat.exists == false
+
+- name: "Fix the POODLE SSL v3 vulnerability"
+  lineinfile:
+    dest: "/etc/apache2/mods-available/ssl.conf"
+    regexp: "SSLProtocol all"
+    line: "\tSSLProtocol all -SSLv2 -SSLv3"
+  notify: Restart Apache
+  when: apache.stat.exists == false

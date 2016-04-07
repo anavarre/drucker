@@ -1,0 +1,49 @@
+---
+- name: Check if MySQL is installed
+  stat:
+    path: /var/lib/mysql
+  register: mysql
+  ignore_errors: True
+
+- name: Install MySQL
+  apt:
+    name: "{{ item }}"
+    state: installed
+    force: yes
+  with_items:
+    - mysql-client-{{ mysql_release }}
+    - mysql-server-{{ mysql_release }}
+    - python-mysqldb
+  when: mysql.stat.exists == false
+
+- name: Start MySQL
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items:
+    - mysql
+  when: mysql.stat.exists == false
+
+- name: "Set MySQL root user password"
+  mysql_user:
+    name: root
+    host: localhost
+    password: "{{ mysql_creds }}"
+    check_implicit_admin: yes
+    login_user: "{{ mysql_creds }}"
+    login_password: "{{ mysql_creds }}"
+    state: present
+  when: mysql.stat.exists == false
+
+- name: Install MySQL utilities
+  apt:
+    name: "{{ item }}"
+    state: installed
+    force: yes
+  with_items:
+    - memcached
+    - mytop
+    - phpmyadmin
+    - adminer
+  when: mysql.stat.exists == false

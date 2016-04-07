@@ -1,0 +1,17 @@
+---
+- name: Check if Drush is installed
+  stat:
+    path: "{{ drush_path }}"
+  register: drush
+
+- name: Check Drush version
+  shell: drush --version | awk '{print $4}' | head -n1
+  register: drush_stable_release_check
+  when: drush.stat.exists == true
+
+- name: Install Drush globally
+  get_url:
+    url: https://github.com/drush-ops/drush/releases/download/{{ drush_stable_release }}/drush.phar
+    dest: "{{ drush_path }}"
+    mode: 0755
+  when: drush.stat.exists == false or drush_stable_release_check.stdout != "{{ drush_stable_release }}"
