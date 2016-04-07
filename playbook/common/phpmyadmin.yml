@@ -1,31 +1,31 @@
 ---
 - name: Check phpMyAdmin version
   stat:
-    path: /var/www/html/pma/RELEASE-DATE-{{ pma_stable_release }}
-  register: pma
+    path: /var/www/html/phpmyadmin/RELEASE-DATE-{{ phpmyadmin_stable_release }}
+  register: phpmyadmin
   ignore_errors: True
 
 - name: Download latest phpMyAdmin release
   get_url:
-    url: https://files.phpmyadmin.net/phpMyAdmin/{{ pma_stable_release }}/phpMyAdmin-{{ pma_stable_release }}-english.tar.gz
+    url: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_stable_release }}/phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
     dest: /tmp
-  when: pma.stat.exists == false
+  when: phpmyadmin.stat.exists == false
 
 - name: Extract phpMyAdmin files
   unarchive:
-    src: /tmp/phpMyAdmin-{{ pma_stable_release }}-english.tar.gz
+    src: /tmp/phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
     dest: /var/www/html
     copy: no
-  when: pma.stat.exists == false
+  when: phpmyadmin.stat.exists == false
 
 - name: Rename phpMyAdmin directory
-  command: mv /var/www/html/phpMyAdmin-{{ pma_stable_release }}-english /var/www/html/pma
-  when: pma.stat.exists == false
+  command: mv /var/www/html/phpMyAdmin-{{ phpmyadmin_stable_release }}-english /var/www/html/phpmyadmin
+  when: phpmyadmin.stat.exists == false
 
 - name: Check if phpMyAdmin vHost exists
   stat:
-    path: /etc/apache2/sites-enabled/pma.conf
-  register: pma_conf
+    path: /etc/apache2/sites-enabled/phpmyadmin.conf
+  register: phpmyadmin_conf
   ignore_errors: True
 
 - name: Deploy default vHost template
@@ -33,23 +33,23 @@
     src: files/vhost.conf
     dest: /etc/apache2/sites-available/
     mode: 0644
-  when: pma_conf.stat.exists == false
+  when: phpmyadmin_conf.stat.exists == false
 
 - name: Rename default vHost template
-  command: mv /etc/apache2/sites-available/vhost.conf /etc/apache2/sites-available/pma.conf
-  when: pma_conf.stat.exists == false
+  command: mv /etc/apache2/sites-available/vhost.conf /etc/apache2/sites-available/phpmyadmin.conf
+  when: phpmyadmin_conf.stat.exists == false
 
 - name: Modify phpMyAdmin vHost
   replace:
-    dest: /etc/apache2/sites-available/pma.conf
+    dest: /etc/apache2/sites-available/phpmyadmin.conf
     regexp: '^(.*)SITENAME(.*)$'
-    replace: '\1pma\2'
-  when: pma_conf.stat.exists == false
+    replace: '\1phpmyadmin\2'
+  when: phpmyadmin_conf.stat.exists == false
 
 - name: Enable phpMyAdmin vHost
   file:
-    src: ../sites-available/pma.conf
-    dest: /etc/apache2/sites-enabled/pma.conf
+    src: ../sites-available/phpmyadmin.conf
+    dest: /etc/apache2/sites-enabled/phpmyadmin.conf
     state: link
   notify: Reload Apache
-  when: pma_conf.stat.exists == false
+  when: phpmyadmin_conf.stat.exists == false

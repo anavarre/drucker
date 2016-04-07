@@ -1,7 +1,7 @@
 mysql_creds: root
 drupal_creds: admin
 mysql_stable_release: 5.5
-pma_stable_release: 4.6.0
+phpmyadmin_stable_release: 4.6.0
 drush_stable_release: 8.0.5
 drupal_dev_release: 8.1.x
 webroot: /var/www/html
