@@ -11,8 +11,8 @@
     state: installed
     force: yes
   with_items:
-    - mysql-client-{{ mysql_release }}
-    - mysql-server-{{ mysql_release }}
+    - mysql-client-{{ mysql_stable_release }}
+    - mysql-server-{{ mysql_stable_release }}
     - python-mysqldb
   when: mysql.stat.exists == false
 
