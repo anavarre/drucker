@@ -6,17 +6,6 @@ _drucker_ is a [Docker](https://www.docker.com/)-based [Drupal](https://www.drup
 
 Currently, _drucker_ runs on one container to rule them all. The plan is to make it a truly service-based suite of containers, to isolate MySQL from multiple Apache/PHP web nodes, have a distributed network filesystem, but also reverse proxy (Varnish) and Load-Balancing (nginx) capabilities.
 
-Currently, _drucker_ ships with:
-
-* Apache 2.4
-* PHP-FPM 5.6
-* MySQL 5.5
-* Drupal 8.1.x
-* Drush 8.0.5
-* Composer (latest)
-* phpMyAdmin 4.6.0
-* adminer 4.2.4
-
 ## Requirements
 
 You need to have both [Docker](https://www.docker.com/) and [Ansible](https://www.ansible.com/) installed on your machine. Check with the below commands:
@@ -27,6 +16,24 @@ Docker version 1.10.3, build 20f81dd
 $ ansible --version
 ansible 1.9.4
 ```
+
+You also need to [generate a SSH key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) if you don't have one already.
+
+## Technology
+
+Currently, _drucker_ ships with the following software stack:
+
+| Software      | Version         |
+| ------------- |:---------------:|
+| Debian        | 8 (Jessie)      |
+| Apache        | 2.4.10 or later |
+| PHP-FPM       | 5.6.19 or later |
+| MySQL         | 5.5.47 or later |
+| Drupal        | 8.1.x           |
+| Drush         | 8.0.5           |
+| Composer      | 1.0.0 or later  |
+| phpMyAdmin    | 4.6.0           |
+| adminer       | 4.2.4           |
 
 ## Installation
 
