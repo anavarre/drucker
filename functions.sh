@@ -69,6 +69,18 @@ orchestration() {
   ansible-playbook -i playbook/hosts playbook/drucker.yml --user=drucker --ask-become-pass
 }
 
+ssh_access() {
+  # Ensure we have SSH access to the container.
+  DEFAULT="$HOME/.ssh/id_rsa.pub"
+  read -p "Enter path to SSH public key [${DEFAULT}]: " PUBKEY
+  PUBKEY=${PUBKEY:-$DEFAULT}
+
+  cat ${PUBKEY} > /tmp/authorized_keys
+  docker cp /tmp/authorized_keys ${CONTAINER}:/home/drucker/.ssh/authorized_keys
+  docker exec -it ${CONTAINER} chown -R drucker:drucker /home/drucker/.ssh
+  rm /tmp/authorized_keys
+}
+
 provision_container() {
   if [[ $(docker ps -a \
       | grep -o ${CONTAINER}) == ${CONTAINER} ]]; then
@@ -84,16 +96,7 @@ provision_container() {
     -d -p 80:80 \
     ${DRUCKER_BASE_IMAGE} bash
 
-    # Ensure we have SSH access to the container.
-    DEFAULT="$HOME/.ssh/id_rsa.pub"
-    read -p "Enter path to SSH public key [${DEFAULT}]: " PUBKEY
-    PUBKEY=${PUBKEY:-$DEFAULT}
-
-    cat ${PUBKEY} > /tmp/authorized_keys
-    docker cp /tmp/authorized_keys ${CONTAINER}:/home/drucker/.ssh/authorized_keys
-    docker exec -it ${CONTAINER} chown -R drucker:drucker /home/drucker/.ssh
-    rm /tmp/authorized_keys
-
+    ssh_access
     orchestration
   fi
 }
