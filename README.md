@@ -6,6 +6,18 @@ _drucker_ is a [Docker](https://www.docker.com/)-based [Drupal](https://www.drup
 
 Currently, _drucker_ runs on one container to rule them all. The plan is to make it a truly service-based suite of containers, to isolate MySQL from multiple Apache/PHP web nodes, have a distributed network filesystem, but also reverse proxy (Varnish) and Load-Balancing (nginx) capabilities.
 
+Currently, _drucker_ ships with:
+
+* Apache 2.4
+* PHP-FPM 5.6
+* MySQL 5.5
+* Drupal 8.1.x
+* Drush 8.0.5
+* Composer (latest)
+* phpMyAdmin 4.6.0
+* adminer 4.2.4
+
+
 ## Requirements
 
 You need to have both [Docker](https://www.docker.com/) and [Ansible](https://www.ansible.com/) installed on your machine. Check with the below commands:
@@ -22,10 +34,14 @@ ansible 1.9.4
 Add the below host entries in your hosts file:
 
 ```
-203.0.113.2	drucker.local pma.local
+203.0.113.2	drucker.local phpmyadmin.local adminer.local
 ```
 
-This will ensure you can access both Drupal (`drucker.local`) and phpMyAdmin (`pma.local`) should you need it.
+This will ensure you can access:
+
+* `drucker.local`: Drupal 8
+* `phpmyadmin.local`: phpMyAdmin (MySQL/Maria database management tool)
+* `adminer.local`: adminer (Database management tool in a single file)
 
 **Recommended**: add the below bash alias entry in your `.bashrc` or `.bash_aliases` file:
 

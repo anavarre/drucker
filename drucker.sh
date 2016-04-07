@@ -11,7 +11,6 @@ COLOR_ENDING="\033[0m"
 
 source ${DIR}/functions.sh
 
-# Set up container.
 check_requirements
 create_custom_bridge_network
 pull_base_image_from_docker_hub
