@@ -19,7 +19,7 @@
   when: phpmyadmin.stat.exists == false
 
 - name: Rename phpMyAdmin directory
-  command: mv /var/www/html/phpMyAdmin-{{ phpmyadmin_stable_release }}-english /var/www/html/phpmyadmin
+  command: mv {{ webroot }}/phpMyAdmin-{{ phpmyadmin_stable_release }}-english {{ webroot }}/phpmyadmin
   when: phpmyadmin.stat.exists == false
 
 - name: Check if config.inc.php exists

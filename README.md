@@ -17,7 +17,6 @@ Currently, _drucker_ ships with:
 * phpMyAdmin 4.6.0
 * adminer 4.2.4
 
-
 ## Requirements
 
 You need to have both [Docker](https://www.docker.com/) and [Ansible](https://www.ansible.com/) installed on your machine. Check with the below commands:
