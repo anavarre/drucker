@@ -16,5 +16,6 @@
     - include: common/php.yml tags=php
     - include: common/mysql.yml tags=mysql
     - include: common/phpmyadmin.yml tags=phpmyadmin
+    - include: common/adminer.yml tags=adminer
     - include: common/drush.yml tags=drush
     - include: common/drupal.yml tags=drupal

@@ -1,0 +1,60 @@
+---
+- name: Check if adminer is installed
+  stat:
+    path: "{{ webroot }}/adminer"
+  register: adminer
+  ignore_errors: True
+
+- name: Check adminer version
+  command: grep -o "version {{ adminer_stable_release }}" {{ webroot }}/adminer/index.php
+  register: adminer_release
+  when: adminer.stat.exists == true
+
+- name: Create adminer directory
+  file:
+    path: "{{ webroot }}/adminer"
+    state: directory
+    mode: 0755
+  when: adminer.stat.exists == false
+
+- name: Download latest adminer release
+  get_url:
+    url: https://www.adminer.org/static/download/{{ adminer_stable_release }}/adminer-{{ adminer_stable_release }}-en.php
+    dest: "{{ webroot }}/adminer"
+  when: adminer.stat.exists == false
+
+- name: Rename adminer file
+  command: mv {{ webroot }}/adminer/adminer-{{ adminer_stable_release }}-en.php {{ webroot }}/adminer/index.php
+  when: adminer.stat.exists == false
+
+- name: Check if adminer vHost exists
+  stat:
+    path: /etc/apache2/sites-enabled/adminer.conf
+  register: adminer_conf
+  ignore_errors: True
+
+- name: Deploy default vHost template
+  copy:
+    src: files/vhost.conf
+    dest: /etc/apache2/sites-available/
+    mode: 0644
+  when: adminer_conf.stat.exists == false
+
+- name: Rename default vHost template
+  command: mv /etc/apache2/sites-available/vhost.conf /etc/apache2/sites-available/adminer.conf
+  when: adminer_conf.stat.exists == false
+
+- name: Modify adminer vHost
+  replace:
+    dest: /etc/apache2/sites-available/adminer.conf
+    regexp: '^(.*)SITENAME(.*)$'
+    replace: '\1adminer\2'
+  when: adminer_conf.stat.exists == false
+
+- name: Enable adminer vHost
+  file:
+    src: ../sites-available/adminer.conf
+    dest: /etc/apache2/sites-enabled/adminer.conf
+    state: link
+  notify: Reload Apache
+  when: adminer_conf.stat.exists == false
