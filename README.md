@@ -23,17 +23,18 @@ You also need to [generate a SSH key](https://help.github.com/articles/generatin
 
 Currently, _drucker_ ships with the following software stack:
 
-| Software      | Version         |
-| ------------- |:---------------:|
-| Debian        | 8 (Jessie)      |
-| Apache        | 2.4.10 or later |
-| PHP-FPM       | 5.6.19 or later |
-| MySQL         | 5.5.47 or later |
-| Drupal        | 8.1.x           |
-| Drush         | 8.0.5           |
-| Composer      | 1.0.0 or later  |
-| phpMyAdmin    | 4.6.0           |
-| adminer       | 4.2.4           |
+| Software       | Version         |
+| -------------  |:---------------:|
+| Debian         | 8 (Jessie)      |
+| Apache         | 2.4.10 or later |
+| PHP-FPM        | 5.6.19 or later |
+| MySQL          | 5.5.47 or later |
+| Drupal         | 8.1.x           |
+| Drush          | 8.0.5           |
+| Drupal Console | 0.11.2 or later |
+| Composer       | 1.0.0 or later  |
+| phpMyAdmin     | 4.6.0           |
+| adminer        | 4.2.4           |
 
 ## Installation
 
