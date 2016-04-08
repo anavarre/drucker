@@ -1,0 +1,30 @@
+---
+- name: Check if Composer is installed
+  stat:
+    path: "{{ composer_path }}"
+  register: composer
+
+- name: Check Composer version
+  shell: composer --version | awk '{print $3}'
+  register: composer_stable_release_check
+  when: composer.stat.exists == true
+
+- name: Update Composer
+  command: composer self-update
+  when: composer.stat.exists == true and composer_stable_release_check.stdout != "{{ composer_stable_release }}"
+
+- name: Install Composer globally
+  get_url:
+    url: https://getcomposer.org/composer.phar
+    dest: "{{ composer_path }}"
+  when: composer.stat.exists == false
+
+- name: Make Composer executable
+  file:
+    path: "{{ composer_path }}"
+    mode: 0755
+  when: composer.stat.exists == false
+
+- name: Ensure Composer is up-to-date
+  command: /usr/local/bin/composer self-update
+  when: composer.stat.exists == false

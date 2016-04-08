@@ -14,6 +14,7 @@
     - include: common/system.yml tags=system
     - include: common/apache.yml tags=apache
     - include: common/php.yml tags=php
+    - include: common/composer.yml tags=composer
     - include: common/mysql.yml tags=mysql
     - include: common/phpmyadmin.yml tags=phpmyadmin
     - include: common/adminer.yml tags=adminer
