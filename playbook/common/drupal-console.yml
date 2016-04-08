@@ -1,0 +1,31 @@
+---
+- name: Check if Drupal Console is installed
+  stat:
+    path: "{{ drupal_console_path }}"
+  register: drupal_console
+
+- name: Check Drupal Console version
+  shell: drupal --version | awk '{print $4}'
+  register: drupal_console_stable_release_check
+  when: drupal_console.stat.exists == true
+
+- name: Install Drupal Console globally
+  get_url:
+    url: https://drupalconsole.com/installer
+    dest: "{{ drupal_console_path }}"
+    mode: 0755
+  when: drupal_console.stat.exists == false
+
+- name: Update Drupal Console
+  command: drupal self-update
+  when: drupal_console_stable_release_check.stdout != "{{ drupal_console_stable_release }}"
+
+- name: Initialize Drupal Console 1/2
+  command: drupal init --override
+  when: drupal_console.stat.exists == false
+
+- name: Initialize Drupal Console 2/2
+  lineinfile:
+    dest: /home/{{ user }}/.bashrc
+    line: "source \"$HOME/.console/console.rc\" 2>/dev/null"
+  when: drupal_console.stat.exists == false
