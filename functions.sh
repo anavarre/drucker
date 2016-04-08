@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
+# Colors
+GREEN="\033[0;32m"
+RED="\033[0;31m"
+BLUE="\033[94m"
+COLOR_ENDING="\033[0m"
+
 # Networking
 NETWORK="drucker"
 SUBNET="203.0.113.0/24"
 GATEWAY="203.0.113.254"
 APACHE_IP="203.0.113.2"
-MYSQL_IP="203.0.113.3"
-GLUSTER_IP="203.0.113.4"
 
 BASE_IMAGE="debian:latest"
 DRUCKER_BASE_IMAGE="drucker:base"
@@ -14,12 +18,12 @@ CONTAINER="drucker_stack"
 
 check_requirements() {
   if [[ -z $(docker --version) ]]; then
-    echo "You need to install Docker before running this script."
+    echo "${RED}You need to install Docker before running this script.${COLOR_ENDING}"
     exit 0
   fi
 
   if [[ -z $(ansible --version) ]]; then
-    echo "You need to install Ansible before running this script."
+    echo "${RED}You need to install Ansible before running this script.${COLOR_ENDING}"
     exit 0
   fi
 }
@@ -27,7 +31,7 @@ check_requirements() {
 # Prepare for static IP addresses.
 create_custom_bridge_network() {
   if [[ $(docker network ls \
-      | awk {'print $2'} \
+      | awk '{print $2}' \
       | grep ${NETWORK}) ]]; then
     echo -e "${GREEN}Custom ${NETWORK} bridge network already exists.${COLOR_ENDING}"
   else
@@ -75,7 +79,7 @@ ssh_access() {
   read -p "Enter path to SSH public key [${DEFAULT}]: " PUBKEY
   PUBKEY=${PUBKEY:-$DEFAULT}
 
-  cat ${PUBKEY} > /tmp/authorized_keys
+  cat "${PUBKEY}" > /tmp/authorized_keys
   docker cp /tmp/authorized_keys ${CONTAINER}:/home/drucker/.ssh/authorized_keys
   docker exec -it ${CONTAINER} chown -R drucker:drucker /home/drucker/.ssh
   rm /tmp/authorized_keys
@@ -83,7 +87,7 @@ ssh_access() {
 
 provision_container() {
   if [[ $(docker ps -a \
-      | grep -o ${CONTAINER}) == ${CONTAINER} ]]; then
+      | grep -o ${CONTAINER}) == "${CONTAINER}" ]]; then
     echo -e "${GREEN}${CONTAINER} container already exists.${COLOR_ENDING}"
 
     orchestration
