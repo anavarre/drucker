@@ -2,9 +2,9 @@
 
 **This is a WIP (Work In Progress). Use at your own risk.**
 
-_drucker_ is a [Docker](https://www.docker.com/)-based [Drupal](https://www.drupal.org) stack managed by [Ansible](https://www.ansible.com/) for orchestration. It automates creating [Debian]() containers on which it will deploy a common PHP/MySQL web stack to run Drupal applications.
+_drucker_ is a [Docker](https://www.docker.com/)-based [Drupal](https://www.drupal.org) stack managed by [Ansible](https://www.ansible.com/) for orchestration. It automates creating [Debian]() containers on which it will deploy a common web stack to run Drupal applications.
 
-Currently, _drucker_ runs on one container to rule them all. The plan is to make it a truly service-based suite of containers, to isolate MySQL from multiple Apache/PHP web nodes, have a distributed network filesystem, but also reverse proxy (Varnish) and Load-Balancing (nginx) capabilities.
+**Currently, _drucker_ runs on one container to rule them all**. The plan is to make it a truly service-based suite of containers, to isolate MySQL from multiple Apache/PHP web nodes, have a distributed network filesystem, but also reverse proxy (Varnish) and Load-Balancing (nginx) capabilities.
 
 ## Requirements
 
@@ -21,7 +21,7 @@ You also need to [generate a SSH key](https://help.github.com/articles/generatin
 
 ## Technology
 
-Currently, _drucker_ ships with the following software stack:
+_drucker_ ships with the following software stack:
 
 | Software       | Version         |
 | -------------  |:---------------:|
@@ -47,13 +47,19 @@ Add the below host entries in your hosts file:
 This will ensure you can access:
 
 * `drucker.local`: Drupal 8
-* `phpmyadmin.local`: phpMyAdmin (MySQL/Maria database management tool)
+* `phpmyadmin.local`: phpMyAdmin (MySQL/MariaDB database management tool)
 * `adminer.local`: adminer (Database management tool in a single file)
 
 **Recommended**: add the below bash alias entry in your `.bashrc` or `.bash_aliases` file:
 
 ```
 alias drucker='path/to/drucker/drucker.sh'
+```
+
+And source the file (or log out and log back in) to use the alias immediately. E.g.:
+
+```
+$ source ~/.bashrc
 ```
 
 This will allow you to invoke `drucker` from anywhere on your system.
@@ -66,7 +72,7 @@ Simply run `drucker` if you have a bash alias, or invoke the `drucker.sh` script
 $ ./drucker.sh
 ```
 
-During the build process, _drucker_ will expect two things from you:
+During the build process, _drucker_ will prompt you twice to:
 
 * Enter the path to your SSH public key (in order to run [Ansible](https://www.ansible.com/) orchestration on your container). `~/.ssh/id_rsa.pub` is assumed, but you can enter the path to a custom public key
 * Enter the SUDO password to run the [Ansible](https://www.ansible.com/) playbook. Just type `drucker`
@@ -78,6 +84,13 @@ $ docker exec -it drucker_stack bash
 ```
 
 It will give you root access to the container.
+
+To log in as the `drucker` username (which is recommended and _is_ a sudoer), simply type:
+
+```
+$ su drucker
+```
+
 
 ## Passwords:
 
