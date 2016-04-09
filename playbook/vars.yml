@@ -1,4 +1,6 @@
 user: drucker
+
+# Web
 mysql_creds: root
 drupal_creds: admin
 mysql_stable_release: 5.5
@@ -13,3 +15,7 @@ drucker_install: /var/www/html/drucker
 drush_path: /usr/local/bin/drush
 drupal_console_path: /usr/local/bin/drupal
 composer_path: /usr/local/bin/composer
+
+# Reverse proxy
+varnish_source: 4.1
+varnish_stable_release: 4.0.2.1

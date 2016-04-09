@@ -1,2 +1,5 @@
-[drucker]
+[drucker_web]
 203.0.113.2
+
+[drucker_reverse_proxy]
+203.0.113.20

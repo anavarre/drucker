@@ -28,3 +28,5 @@
     line: "\tSSLProtocol all -SSLv2 -SSLv3"
   notify: Restart Apache
   when: apache.stat.exists == false
+
+cp /lib/systemd/system/varnish.service /etc/systemd/system/

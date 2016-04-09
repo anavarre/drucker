@@ -1,5 +1,5 @@
 ---
-- hosts: drucker
+- hosts: drucker_web
   sudo: yes
 
   gather_facts: no

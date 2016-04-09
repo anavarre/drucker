@@ -10,11 +10,13 @@ COLOR_ENDING="\033[0m"
 NETWORK="drucker"
 SUBNET="203.0.113.0/24"
 GATEWAY="203.0.113.254"
-APACHE_IP="203.0.113.2"
+WEB_IP="203.0.113.2"
+REVERSE_PROXY_IP="203.0.113.20"
 
 BASE_IMAGE="debian:latest"
 DRUCKER_BASE_IMAGE="drucker:base"
-CONTAINER="drucker_stack"
+WEB_CONTAINER="drucker_web"
+REVERSE_PROXY_CONTAINER="drucker_reverse_proxy"
 
 check_requirements() {
   if [[ -z $(docker --version) ]]; then
@@ -68,39 +70,77 @@ build_drucker_base_image() {
   fi
 }
 
-orchestration() {
-  echo -e "${BLUE}Running orchestration on the container...${COLOR_ENDING}"
-  ansible-playbook -i playbook/hosts playbook/drucker.yml --user=drucker --ask-become-pass
-}
-
-ssh_access() {
+common_ssh_access() {
   # Ensure we have SSH access to the container.
   DEFAULT="$HOME/.ssh/id_rsa.pub"
   read -p "Enter path to SSH public key [${DEFAULT}]: " PUBKEY
   PUBKEY=${PUBKEY:-$DEFAULT}
+}
+
+reverse_proxy_ssh_access() {
+  common_ssh_access
 
   cat "${PUBKEY}" > /tmp/authorized_keys
-  docker cp /tmp/authorized_keys ${CONTAINER}:/home/drucker/.ssh/authorized_keys
-  docker exec -it ${CONTAINER} chown -R drucker:drucker /home/drucker/.ssh
+  docker cp /tmp/authorized_keys ${REVERSE_PROXY_CONTAINER}:/home/drucker/.ssh/authorized_keys
+  docker exec -it ${REVERSE_PROXY_CONTAINER} chown -R drucker:drucker /home/drucker/.ssh
   rm /tmp/authorized_keys
 }
 
-provision_container() {
+reverse_proxy_orchestration() {
+  echo -e "${BLUE}Running Reverse Proxy orchestration on the container...${COLOR_ENDING}"
+  ansible-playbook -i playbook/hosts playbook/reverse_proxy.yml --user=drucker --ask-become-pass
+}
+
+provision_reverse_proxy_container() {
   if [[ $(docker ps -a \
-      | grep -o ${CONTAINER}) == "${CONTAINER}" ]]; then
-    echo -e "${GREEN}${CONTAINER} container already exists.${COLOR_ENDING}"
+      | grep -o ${REVERSE_PROXY_CONTAINER}) == "${REVERSE_PROXY_CONTAINER}" ]]; then
+    echo -e "${GREEN}${REVERSE_PROXY_CONTAINER} container already exists.${COLOR_ENDING}"
 
-    orchestration
+    reverse_proxy_orchestration
   else
-    echo -e "${BLUE}Spinning up ${CONTAINER} container with ID:${COLOR_ENDING}"
+    echo -e "${BLUE}Spinning up ${REVERSE_PROXY_CONTAINER} container with ID:${COLOR_ENDING}"
 
-    docker run --name "${CONTAINER}" -it \
+    docker run --name "${REVERSE_PROXY_CONTAINER}" -it \
     --net ${NETWORK} \
-    --ip ${APACHE_IP} \
+    --ip ${REVERSE_PROXY_IP} \
     -d -p 80:80 \
     ${DRUCKER_BASE_IMAGE} bash
 
-    ssh_access
-    orchestration
+    reverse_proxy_ssh_access
+    reverse_proxy_orchestration
+  fi
+}
+
+web_ssh_access() {
+  common_ssh_access
+
+  cat "${PUBKEY}" > /tmp/authorized_keys
+  docker cp /tmp/authorized_keys ${WEB_CONTAINER}:/home/drucker/.ssh/authorized_keys
+  docker exec -it ${WEB_CONTAINER} chown -R drucker:drucker /home/drucker/.ssh
+  rm /tmp/authorized_keys
+}
+
+web_orchestration() {
+  echo -e "${BLUE}Running web orchestration on the container...${COLOR_ENDING}"
+  ansible-playbook -i playbook/hosts playbook/web.yml --user=drucker --ask-become-pass
+}
+
+provision_web_container() {
+  if [[ $(docker ps -a \
+      | grep -o ${WEB_CONTAINER}) == "${WEB_CONTAINER}" ]]; then
+    echo -e "${GREEN}${WEB_CONTAINER} container already exists.${COLOR_ENDING}"
+
+    web_orchestration
+  else
+    echo -e "${BLUE}Spinning up ${WEB_CONTAINER} container with ID:${COLOR_ENDING}"
+
+    docker run --name "${WEB_CONTAINER}" -it \
+    --net ${NETWORK} \
+    --ip ${WEB_IP} \
+    -d -p 8080:8080 \
+    ${DRUCKER_BASE_IMAGE} bash
+
+    web_ssh_access
+    web_orchestration
   fi
 }

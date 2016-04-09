@@ -22,3 +22,8 @@
   service:
     name: mysql
     state: restarted
+
+- name: Restart Varnish
+  service:
+    name: varnish
+    state: restarted
