@@ -19,3 +19,4 @@ composer_path: /usr/local/bin/composer
 # Reverse proxy
 varnish_source: 4.1
 varnish_stable_release: 4.0.2.1
+backend_ip: 203.0.113.2

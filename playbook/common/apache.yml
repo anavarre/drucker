@@ -26,7 +26,12 @@
     dest: "/etc/apache2/mods-available/ssl.conf"
     regexp: "SSLProtocol all"
     line: "\tSSLProtocol all -SSLv2 -SSLv3"
-  notify: Restart Apache
   when: apache.stat.exists == false
 
-cp /lib/systemd/system/varnish.service /etc/systemd/system/
+- name: Make Apache listen on port 8080
+  replace:
+    dest: /etc/apache2/ports.conf
+    regexp: '^(.*)Listen 80(.*)$'
+    replace: 'Listen 8080'
+  notify: Restart Apache
+  when: apache.stat.exists == false

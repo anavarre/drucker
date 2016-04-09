@@ -42,30 +42,27 @@
 - name: Configure Varnish
   lineinfile:
     dest: /etc/default/varnish
-    regexp: "^DAEMON_OPTS=\"-a :6081"
-    line: "DAEMON_OPTS=\"-a :80"
+    regexp: "^DAEMON_OPTS=\"-a :6081(.*)$"
+    line: "DAEMON_OPTS=\"-a 0.0.0.0:80"
   when: varnish.stat.exists == false
 
 - name: Check if the default Varnish VCL exists
   stat:
-    path: /etc/default/varnish.vcl
+    path: /etc/varnish/default.vcl
   ignore_errors: True
   register: vcl
 
 - name: Create the default Varnish VCL
   file:
-    path: /etc/default/varnish.vcl
+    path: /etc/varnish/default.vcl
     state: touch
     mode: 0644
   when: varnish.stat.exists == false or vcl.stat.exists == false
 
-- name: Configure the Varnish VCL
-  blockinfile:
-    dest: /etc/default/varnish.vcl
-    block: |
-      backend default {
-          .host = "203.0.113.2";
-          .port = "8080";
-      }
+- name: Configure the Varnish VCL backend
+  replace:
+    dest: /etc/varnish/default.vcl
+    regexp: '127.0.0.1'
+    replace: "{{ backend_ip }}"
   notify: Restart Varnish
-  when: vcl.stat.exists == false
+  when: vcl.stat.exists == true

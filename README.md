@@ -4,7 +4,12 @@
 
 _drucker_ is a [Docker](https://www.docker.com/)-based [Drupal](https://www.drupal.org) stack managed by [Ansible](https://www.ansible.com/) for orchestration. It automates creating [Debian]() containers on which it will deploy a common web stack to run Drupal applications.
 
-**Currently, _drucker_ runs on one container to rule them all**. The plan is to make it a truly service-based suite of containers, to isolate MySQL from multiple Apache/PHP web nodes, have a distributed network filesystem, but also reverse proxy (Varnish) and Load-Balancing (nginx) capabilities.
+Currently, _drucker_ runs on 2 minimalistic containers:
+
+* `drucker_reverse_proxy` (Varnish): listens on port 80 and sends traffic to the backend
+* `drucker_web` (Apache/PHP/MySQL): listens on port 8080 and receives traffic from Varnish
+
+The plan is to make it a truly service-based suite of containers, to isolate MySQL from multiple Apache/PHP web nodes, have a distributed network filesystem, but also Load-Balancing (nginx) capabilities.
 
 ## Requirements
 
@@ -42,7 +47,7 @@ _drucker_ ships with the following software stack:
 Add the below host entries in your hosts file:
 
 ```
-203.0.113.2	drucker.local phpmyadmin.local adminer.local
+203.0.113.20    drucker.local phpmyadmin.local adminer.local
 ```
 
 This will ensure you can access:
@@ -78,10 +83,10 @@ During the build process, _drucker_ will prompt you twice to:
 * Enter the path to your SSH public key (in order to run [Ansible](https://www.ansible.com/) orchestration on your container). `~/.ssh/id_rsa.pub` is assumed, but you can enter the path to a custom public key
 * Enter the SUDO password to run the [Ansible](https://www.ansible.com/) playbook. Just type `drucker`
 
-To connect to the container, simply type:
+To connect to a container, simply type:
 
 ```
-$ docker exec -it drucker_stack bash
+$ docker exec -it <container_name> bash
 ```
 
 It will give you root access to the container.
@@ -128,12 +133,12 @@ $ rm /tmp/drupal-8.1.x-dev.tar.gz
 
 Then run `drucker` again.
 
-### Delete the container
+### Delete a container
 
 Run:
 
 ```
-$ docker rm -f drucker_stack
+$ docker rm -f <container_name>
 ```
 
 ### Delete the drucker base image
