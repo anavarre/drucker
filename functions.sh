@@ -6,6 +6,8 @@ RED="\033[0;31m"
 BLUE="\033[94m"
 COLOR_ENDING="\033[0m"
 
+USER="drucker"
+
 # Networking
 NETWORK="drucker"
 SUBNET="203.0.113.0/24"
@@ -81,14 +83,14 @@ reverse_proxy_ssh_access() {
   common_ssh_access
 
   cat "${PUBKEY}" > /tmp/authorized_keys
-  docker cp /tmp/authorized_keys ${REVERSE_PROXY_CONTAINER}:/home/drucker/.ssh/authorized_keys
-  docker exec -it ${REVERSE_PROXY_CONTAINER} chown -R drucker:drucker /home/drucker/.ssh
+  docker cp /tmp/authorized_keys ${REVERSE_PROXY_CONTAINER}:/home/${USER}/.ssh/authorized_keys
+  docker exec -it ${REVERSE_PROXY_CONTAINER} chown -R ${USER}:${USER} /home/${USER}/.ssh
   rm /tmp/authorized_keys
 }
 
 reverse_proxy_orchestration() {
   echo -e "${BLUE}Running Reverse Proxy orchestration on the container...${COLOR_ENDING}"
-  ansible-playbook -i playbook/hosts playbook/reverse_proxy.yml --user=drucker --ask-become-pass
+  ansible-playbook -i playbook/hosts playbook/reverse_proxy.yml --user=${USER} --ask-become-pass
 }
 
 provision_reverse_proxy_container() {
@@ -115,14 +117,14 @@ web_ssh_access() {
   common_ssh_access
 
   cat "${PUBKEY}" > /tmp/authorized_keys
-  docker cp /tmp/authorized_keys ${WEB_CONTAINER}:/home/drucker/.ssh/authorized_keys
-  docker exec -it ${WEB_CONTAINER} chown -R drucker:drucker /home/drucker/.ssh
+  docker cp /tmp/authorized_keys ${WEB_CONTAINER}:/home/${USER}/.ssh/authorized_keys
+  docker exec -it ${WEB_CONTAINER} chown -R ${USER}:${USER} /home/${USER}/.ssh
   rm /tmp/authorized_keys
 }
 
 web_orchestration() {
   echo -e "${BLUE}Running web orchestration on the container...${COLOR_ENDING}"
-  ansible-playbook -i playbook/hosts playbook/web.yml --user=drucker --ask-become-pass
+  ansible-playbook -i playbook/hosts playbook/web.yml --user=${USER} --ask-become-pass
 }
 
 provision_web_container() {
