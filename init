@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+check_requirements() {
+  if [[ -z $(docker --version) ]]; then
+    echo "${RED}You need to install Docker before running this script.${COLOR_ENDING}"
+    exit 0
+  fi
+
+  if [[ -z $(ansible --version) ]]; then
+    echo "${RED}You need to install Ansible before running this script.${COLOR_ENDING}"
+    exit 0
+  fi
+}
+
+# Prepare for static IP addresses.
+create_custom_bridge_network() {
+  if [[ $(docker network ls \
+      | awk '{print $2}' \
+      | grep ${NETWORK}) ]]; then
+    echo -e "${GREEN}Custom ${NETWORK} bridge network already exists.${COLOR_ENDING}"
+  else
+    echo -e "${BLUE}Creating custom ${NETWORK} bridge network with ID:${COLOR_ENDING}"
+    docker network create --subnet ${SUBNET} --gateway ${GATEWAY} ${NETWORK}
+  fi
+}
+
+pull_base_image_from_docker_hub() {
+  if [[ $(docker images \
+      | awk '{print $1":"$2}' \
+      | grep ${BASE_IMAGE}) ]]; then
+    echo -e "${GREEN}${BASE_IMAGE} base image already exists.${COLOR_ENDING}"
+    echo -e "${BLUE}Check if ${BASE_IMAGE} can be updated...${COLOR_ENDING}"
+      docker images \
+      | awk '{print $1":"$2}' \
+      | grep ${BASE_IMAGE} \
+      | xargs -L1 docker pull
+  else
+    echo -e "${BLUE}Pulling ${BASE_IMAGE} base image from Docker Hub...${COLOR_ENDING}"
+    docker pull ${BASE_IMAGE}
+  fi
+}
+
+build_drucker_init_image() {
+  if [[ $(docker images \
+      | awk '{print $1":"$2}' \
+      | grep ${DRUCKER_INIT_IMAGE}) ]]; then
+    echo -e "${GREEN}${DRUCKER_INIT_IMAGE} custom image already exists.${COLOR_ENDING}"
+  else
+    echo -e "${BLUE}Building ${DRUCKER_INIT_IMAGE} custom image from Dockerfile...${COLOR_ENDING}"
+
+    docker build -t ${DRUCKER_INIT_IMAGE} .
+  fi
+}

@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+common_ssh_access() {
+  # Ensure we have SSH access to the container.
+  DEFAULT="$HOME/.ssh/id_rsa.pub"
+  read -p "Enter path to SSH public key [${DEFAULT}]: " PUBKEY
+  PUBKEY=${PUBKEY:-$DEFAULT}
+
+  echo -e "${BLUE}Configuring SSH access to the container...${COLOR_ENDING}"
+}
+
+base_container_ssh_access() {
+  common_ssh_access
+
+  cat "${PUBKEY}" > /tmp/authorized_keys
+  docker cp /tmp/authorized_keys ${BASE_CONTAINER}:/home/${USER}/.ssh/authorized_keys
+  docker exec -it ${BASE_CONTAINER} chown -R ${USER}:${USER} /home/${USER}/.ssh
+  rm /tmp/authorized_keys
+}
+
+reverse_proxy_ssh_access() {
+  common_ssh_access
+
+  cat "${PUBKEY}" > /tmp/authorized_keys
+  docker cp /tmp/authorized_keys ${REVERSE_PROXY_CONTAINER}:/home/${USER}/.ssh/authorized_keys
+  docker exec -it ${REVERSE_PROXY_CONTAINER} chown -R ${USER}:${USER} /home/${USER}/.ssh
+  rm /tmp/authorized_keys
+}
+
+web_ssh_access() {
+  common_ssh_access
+
+  cat "${PUBKEY}" > /tmp/authorized_keys
+  docker cp /tmp/authorized_keys ${WEB_CONTAINER}:/home/${USER}/.ssh/authorized_keys
+  docker exec -it ${WEB_CONTAINER} chown -R ${USER}:${USER} /home/${USER}/.ssh
+  rm /tmp/authorized_keys
+}

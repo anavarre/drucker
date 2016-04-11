@@ -10,8 +10,6 @@
   roles:
     - yaegashi.blockinfile
   tasks:
-    - include: common/ssh.yml tags=ssh
-    - include: common/system.yml tags=system
     - include: common/apache.yml tags=apache
     - include: common/php.yml tags=php
     - include: common/composer.yml tags=composer

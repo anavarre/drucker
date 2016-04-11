@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+provision_base_container() {
+  if [[ $(docker images \
+      | awk '{print $1":"$2}' \
+      | grep ${DRUCKER_BASE_IMAGE}) ]]; then
+    echo -e "${BLUE}${DRUCKER_BASE_IMAGE} custom image already exists.${COLOR_ENDING}"
+  else
+    if [[ $(docker ps -a \
+      | grep -o ${BASE_CONTAINER}) == "${BASE_CONTAINER}" ]]; then
+      docker rm -f ${BASE_CONTAINER}
+    else
+      echo -e "${BLUE}Spinning up ${BASE_CONTAINER} container with ID:${COLOR_ENDING}"
+
+      docker run --name "${BASE_CONTAINER}" -it \
+      --net ${NETWORK} \
+      --ip ${BASE_CONTAINER_IP} \
+      -d -p 80:80 \
+      ${DRUCKER_INIT_IMAGE} bash
+
+      base_container_ssh_access
+      base_container_orchestration
+
+      echo -e "${BLUE}Committing ${DRUCKER_BASE_IMAGE} image from ${BASE_CONTAINER} container...${COLOR_ENDING}"
+      docker commit -m "${BASE_CONTAINER} on $(date +"%Y-%m-%d")" ${BASE_CONTAINER} ${DRUCKER_BASE_IMAGE}
+
+      docker rm -f ${BASE_CONTAINER}
+    fi
+  fi
+}
+
+provision_reverse_proxy_container() {
+  if [[ $(docker ps -a \
+      | grep -o ${REVERSE_PROXY_CONTAINER}) == "${REVERSE_PROXY_CONTAINER}" ]]; then
+    echo -e "${GREEN}${REVERSE_PROXY_CONTAINER} container already exists.${COLOR_ENDING}"
+
+    reverse_proxy_orchestration
+  else
+    echo -e "${BLUE}Spinning up ${REVERSE_PROXY_CONTAINER} container with ID:${COLOR_ENDING}"
+
+    docker run --name "${REVERSE_PROXY_CONTAINER}" -it \
+    --net ${NETWORK} \
+    --ip ${REVERSE_PROXY_IP} \
+    -d -p 80:80 \
+    ${DRUCKER_BASE_IMAGE} bash
+
+    reverse_proxy_ssh_access
+    reverse_proxy_orchestration
+  fi
+}
+
+provision_web_container() {
+  if [[ $(docker ps -a \
+      | grep -o ${WEB_CONTAINER}) == "${WEB_CONTAINER}" ]]; then
+    echo -e "${GREEN}${WEB_CONTAINER} container already exists.${COLOR_ENDING}"
+
+    web_orchestration
+  else
+    echo -e "${BLUE}Spinning up ${WEB_CONTAINER} container with ID:${COLOR_ENDING}"
+
+    docker run --name "${WEB_CONTAINER}" -it \
+    --net ${NETWORK} \
+    --ip ${WEB_IP} \
+    -d -p 8080:8080 \
+    ${DRUCKER_BASE_IMAGE} bash
+
+    #web_ssh_access
+    web_orchestration
+  fi
+}

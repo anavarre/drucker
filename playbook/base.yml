@@ -1,5 +1,5 @@
 ---
-- hosts: drucker_reverse_proxy
+- hosts: drucker_base
   sudo: yes
 
   gather_facts: no
@@ -10,4 +10,5 @@
   roles:
     - yaegashi.blockinfile
   tasks:
-    - include: common/varnish.yml tags=varnish
+    - include: common/ssh.yml tags=ssh
+    - include: common/system.yml tags=system
