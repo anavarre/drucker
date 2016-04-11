@@ -1,7 +1,7 @@
 ---
 - name: Check if adminer is installed
   stat:
-    path: "{{ webroot }}/adminer"
+    path: "{{ webroot }}/adminer/index.php"
   register: adminer
   ignore_errors: True
 
