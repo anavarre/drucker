@@ -78,7 +78,7 @@ Simply run `drucker` if you have a bash alias, or invoke the `drucker.sh` script
 $ ./drucker.sh
 ```
 
-During the build process, _drucker_ will prompt you twice to enter the path to your SSH public key (in order to run [Ansible](https://www.ansible.com/) orchestration on your container). `~/.ssh/id_rsa.pub` is assumed, but you can enter the path to a custom public key
+At the beginning of the build process, _drucker_ will prompt you to enter the path to your SSH public key (in order to run [Ansible](https://www.ansible.com/) orchestration on your container). `~/.ssh/id_rsa.pub` is assumed, but you can enter the path to a custom public key
 
 To connect to a container, simply type:
 

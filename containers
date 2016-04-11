@@ -11,6 +11,7 @@ provision_base_container() {
   else
     if [[ $(docker ps -a \
       | grep -o "${BASE_CONTAINER}") == "${BASE_CONTAINER}" ]]; then
+
       ${DELETE_BASE_CONTAINER}
     else
       echo -e "${BLUE}Spinning up ${BASE_CONTAINER} container with ID:${COLOR_ENDING}"
@@ -21,10 +22,10 @@ provision_base_container() {
       -d -p 80:80 \
       "${DRUCKER_INIT_IMAGE}" bash
 
-      base_container_ssh_access
       base_container_orchestration
 
       echo -e "${BLUE}Committing ${DRUCKER_BASE_IMAGE} image from ${BASE_CONTAINER} container...${COLOR_ENDING}"
+
       docker commit -m "${BASE_CONTAINER} on $(date +"%Y-%m-%d")" "${BASE_CONTAINER}" "${DRUCKER_BASE_IMAGE}"
 
       ${DELETE_BASE_CONTAINER}
@@ -47,7 +48,6 @@ provision_reverse_proxy_container() {
     -d -p 80:80 \
     "${DRUCKER_BASE_IMAGE}" bash
 
-    reverse_proxy_ssh_access
     reverse_proxy_orchestration
   fi
 }
@@ -67,7 +67,6 @@ provision_web_container() {
     -d -p 8080:8080 \
     "${DRUCKER_BASE_IMAGE}" bash
 
-    #web_ssh_access
     web_orchestration
   fi
 }
