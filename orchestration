@@ -2,15 +2,15 @@
 
 base_container_orchestration() {
   echo -e "${BLUE}Running ${BASE_CONTAINER} orchestration on the container...${COLOR_ENDING}"
-  ansible-playbook -i playbook/hosts playbook/base.yml --user=${USER} --extra-vars "ansible_sudo_pass=${USER}"
+  ansible-playbook -i playbook/hosts playbook/base.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
 }
 
 reverse_proxy_orchestration() {
   echo -e "${BLUE}Running ${REVERSE_PROXY_CONTAINER} orchestration on the container...${COLOR_ENDING}"
-  ansible-playbook -i playbook/hosts playbook/reverse_proxy.yml --user=${USER}  --extra-vars "ansible_sudo_pass=${USER}"
+  ansible-playbook -i playbook/hosts playbook/reverse_proxy.yml --user="${USER}"  --extra-vars "ansible_sudo_pass=${USER}"
 }
 
 web_orchestration() {
   echo -e "${BLUE}Running ${WEB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
-  ansible-playbook -i playbook/hosts playbook/web.yml --user=${USER} --extra-vars "ansible_sudo_pass=${USER}"
+  ansible-playbook -i playbook/hosts playbook/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
 }
