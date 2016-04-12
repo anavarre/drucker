@@ -66,3 +66,8 @@
     replace: "{{ backend_ip }}"
   notify: Restart Varnish
   when: vcl.stat.exists == true
+
+- name: Ensure Varnish is started
+  service:
+    name: varnish
+    state: restarted

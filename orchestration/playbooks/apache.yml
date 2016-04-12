@@ -35,3 +35,8 @@
     replace: 'Listen 8080'
   notify: Restart Apache
   when: apache.stat.exists == false
+
+- name: Ensure Apache is started
+  service:
+    name: apache2
+    state: restarted

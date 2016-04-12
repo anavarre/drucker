@@ -47,3 +47,8 @@
     - phpmyadmin
     - adminer
   when: mysql.stat.exists == false
+
+- name: Ensure MySQL is started
+  service:
+    name: mysql
+    state: restarted
