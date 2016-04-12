@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+REVERSE_PROXY_CONTAINER_EXISTS=$(docker ps -a | grep -o "${REVERSE_PROXY_CONTAINER}")
+REVERSE_PROXY_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${REVERSE_PROXY_IMAGE}")
+
+create_reverse_proxy_image_from_reverse_proxy_container() {
+  echo -e "${BLUE}Committing ${REVERSE_PROXY_IMAGE} image from ${REVERSE_PROXY_CONTAINER} container...${COLOR_ENDING}"
+
+  docker commit -m "${REVERSE_PROXY_CONTAINER} on $(date +"%Y-%m-%d")" "${REVERSE_PROXY_CONTAINER}" "${REVERSE_PROXY_IMAGE}"
+}
+
+create_reverse_proxy_container_from_reverse_proxy_image() {
+  echo -e "${BLUE}Spinning up ${REVERSE_PROXY_CONTAINER} container with ID:${COLOR_ENDING}"
+
+  docker run --name "${REVERSE_PROXY_CONTAINER}" -it \
+  --net "${NETWORK}" \
+  --ip "${REVERSE_PROXY_IP}" \
+  -d -p 80:80 \
+  "${REVERSE_PROXY_IMAGE}" bash
+
+  configure_reverse_proxy_ssh_access
+  run_reverse_proxy_orchestration
+  create_reverse_proxy_image_from_reverse_proxy_container
+}
+
+create_reverse_proxy_container_from_base_image() {
+  echo -e "${BLUE}Spinning up ${REVERSE_PROXY_CONTAINER} container with ID:${COLOR_ENDING}"
+
+  docker run --name "${REVERSE_PROXY_CONTAINER}" -it \
+  --net "${NETWORK}" \
+  --ip "${REVERSE_PROXY_IP}" \
+  -d -p 80:80 \
+  "${BASE_IMAGE}" bash
+
+  configure_reverse_proxy_ssh_access
+  run_reverse_proxy_orchestration
+  create_reverse_proxy_image_from_reverse_proxy_container
+}
+
+provision_reverse_proxy_container() {
+  if [[ ${REVERSE_PROXY_CONTAINER_EXISTS} ]]; then
+    echo -e "${GREEN}${REVERSE_PROXY_CONTAINER} container already exists.${COLOR_ENDING}"
+    run_reverse_proxy_orchestration
+    if [[ ! ${REVERSE_PROXY_IMAGE_EXISTS} ]]; then
+      create_reverse_proxy_image_from_reverse_proxy_container
+    fi
+  else
+    if [[ ${REVERSE_PROXY_IMAGE_EXISTS} ]]; then
+      echo -e "${GREEN}${REVERSE_PROXY_IMAGE} custom image already exists.${COLOR_ENDING}"
+      create_reverse_proxy_container_from_reverse_proxy_image
+    else
+      create_reverse_proxy_container_from_base_image
+    fi
+  fi
+}

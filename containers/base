@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+BASE_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${BASE_IMAGE}")
+BASE_CONTAINER_EXISTS=$(docker ps -a | grep -o "${BASE_CONTAINER}")
+
+delete_base_container() {
+  docker rm -f "${BASE_CONTAINER}" > /dev/null 2>&1
+}
+
+create_base_image_from_base_container() {
+  echo -e "${BLUE}Committing ${BASE_IMAGE} image from ${BASE_CONTAINER} container...${COLOR_ENDING}"
+
+  docker commit -m "${BASE_CONTAINER} on $(date +"%Y-%m-%d")" "${BASE_CONTAINER}" "${BASE_IMAGE}"
+}
+
+create_base_container_from_init_image() {
+  echo -e "${BLUE}Spinning up ${BASE_CONTAINER} container with ID:${COLOR_ENDING}"
+
+  docker run --name "${BASE_CONTAINER}" -it \
+  --net "${NETWORK}" \
+  --ip "${BASE_CONTAINER_IP}" \
+  -d -p 80:80 \
+  "${INIT_IMAGE}" bash
+
+  configure_base_container_ssh_access
+  run_base_container_orchestration
+}
+
+provision_base_container() {
+  if [[ ${BASE_IMAGE_EXISTS} ]]; then
+    echo -e "${GREEN}${BASE_IMAGE} image already exists.${COLOR_ENDING}"
+  else
+    if [[ ${BASE_CONTAINER_EXISTS} ]]; then
+      delete_base_container
+    else
+      create_base_container_from_init_image
+      create_base_image_from_base_container
+      delete_base_container
+    fi
+  fi
+}

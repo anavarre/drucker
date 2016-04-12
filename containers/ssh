@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
 
-ssh_access() {
-  DEFAULT="$HOME/.ssh/id_rsa.pub"
-
+configure_ssh_access() {
   read -p "Enter path to SSH public key [${DEFAULT}]: " PUBKEY
   PUBKEY=${PUBKEY:-$DEFAULT}
 
   echo -e "${BLUE}Configuring SSH access to the container...${COLOR_ENDING}"
 }
 
-base_container_ssh_access() {
+configure_base_container_ssh_access() {
   cat "${PUBKEY}" > /tmp/authorized_keys
 
   docker cp /tmp/authorized_keys "${BASE_CONTAINER}":/home/"${USER}"/.ssh/authorized_keys
@@ -19,7 +17,7 @@ base_container_ssh_access() {
   rm /tmp/authorized_keys
 }
 
-reverse_proxy_ssh_access() {
+configure_reverse_proxy_ssh_access() {
   cat "${PUBKEY}" > /tmp/authorized_keys
 
   docker cp /tmp/authorized_keys "${REVERSE_PROXY_CONTAINER}":/home/"${USER}"/.ssh/authorized_keys
@@ -29,7 +27,7 @@ reverse_proxy_ssh_access() {
   rm /tmp/authorized_keys
 }
 
-web_ssh_access() {
+configure_web_container_ssh_access() {
   cat "${PUBKEY}" > /tmp/authorized_keys
 
   docker cp /tmp/authorized_keys "${WEB_CONTAINER}":/home/"${USER}"/.ssh/authorized_keys

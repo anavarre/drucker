@@ -8,6 +8,8 @@ export COLOR_ENDING="\033[0m"
 
 export USER="drucker"
 
+export DEFAULT="$HOME/.ssh/id_rsa.pub"
+
 # Networking
 export NETWORK="drucker"
 export SUBNET="203.0.113.0/24"
@@ -16,9 +18,14 @@ export BASE_CONTAINER_IP="203.0.113.99"
 export REVERSE_PROXY_IP="203.0.113.20"
 export WEB_IP="203.0.113.2"
 
-export BASE_IMAGE="debian:latest"
-export DRUCKER_INIT_IMAGE="drucker:init"
-export DRUCKER_BASE_IMAGE="drucker:base"
+# Images
+export DISTRO_IMAGE="debian:latest"
+export INIT_IMAGE="drucker:init"
+export BASE_IMAGE="drucker:base"
+export REVERSE_PROXY_IMAGE="drucker:reverse_proxy"
+export WEB_IMAGE="drucker:web"
+
+# Containers
 export BASE_CONTAINER="drucker_base"
 export WEB_CONTAINER="drucker_web"
 export REVERSE_PROXY_CONTAINER="drucker_reverse_proxy"

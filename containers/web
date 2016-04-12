@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+WEB_CONTAINER_EXISTS=$(docker ps -a | grep -o "${WEB_CONTAINER}")
+WEB_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${WEB_IMAGE}")
+
+create_web_image_from_web_container() {
+  echo -e "${BLUE}Committing ${WEB_IMAGE} image from ${WEB_CONTAINER} container...${COLOR_ENDING}"
+
+  docker commit -m "${WEB_CONTAINER} on $(date +"%Y-%m-%d")" "${WEB_CONTAINER}" "${WEB_IMAGE}"
+}
+
+create_web_container_from_web_image() {
+  echo -e "${BLUE}Spinning up ${WEB_CONTAINER} container with ID:${COLOR_ENDING}"
+
+    docker run --name "${WEB_CONTAINER}" -it \
+    --net "${NETWORK}" \
+    --ip "${WEB_IP}" \
+    -d -p 8080:8080 \
+    "${WEB_IMAGE}" bash
+
+    configure_web_container_ssh_access
+    run_web_container_orchestration
+}
+
+create_web_container_from_base_image() {
+  echo -e "${BLUE}Spinning up ${WEB_CONTAINER} container with ID:${COLOR_ENDING}"
+
+  docker run --name "${WEB_CONTAINER}" -it \
+  --net "${NETWORK}" \
+  --ip "${WEB_IP}" \
+  -d -p 8080:8080 \
+  "${BASE_IMAGE}" bash
+
+  configure_web_container_ssh_access
+  run_web_container_orchestration
+  create_web_image_from_web_container
+}
+
+provision_web_container() {
+  if [[ ${WEB_CONTAINER_EXISTS} ]]; then
+    echo -e "${GREEN}${WEB_CONTAINER} container already exists.${COLOR_ENDING}"
+    run_web_container_orchestration
+    if [[ ! ${WEB_IMAGE_EXISTS} ]]; then
+      create_web_image_from_web_container
+    fi
+  else
+    if [[ ${WEB_IMAGE_EXISTS} ]]; then
+      echo -e "${GREEN}${WEB_IMAGE} custom image already exists.${COLOR_ENDING}"
+      create_web_container_from_web_image
+    else
+      create_web_container_from_base_image
+    fi
+  fi
+}

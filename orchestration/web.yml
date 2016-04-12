@@ -1,0 +1,21 @@
+---
+- hosts: drucker_web
+  sudo: yes
+
+  gather_facts: no
+  vars_files:
+    - vars.yml
+  handlers:
+    - include: handlers.yml
+  roles:
+    - yaegashi.blockinfile
+  tasks:
+    - include: playbooks/apache.yml tags=apache
+    - include: playbooks/php.yml tags=php
+    - include: playbooks/composer.yml tags=composer
+    - include: playbooks/mysql.yml tags=mysql
+    - include: playbooks/phpmyadmin.yml tags=phpmyadmin
+    - include: playbooks/adminer.yml tags=adminer
+    - include: playbooks/drush.yml tags=drush
+    - include: playbooks/drupal-console.yml tags=drupal-console
+    - include: playbooks/drupal.yml tags=drupal

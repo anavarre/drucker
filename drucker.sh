@@ -3,17 +3,19 @@
 # Invoke the script from anywhere (e.g .bashrc alias)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-source "${DIR}"/variables
-source "${DIR}"/init
-source "${DIR}"/ssh
-source "${DIR}"/orchestration
-source "${DIR}"/containers
+source "${DIR}"/containers/variables
+source "${DIR}"/containers/init
+source "${DIR}"/containers/ssh
+source "${DIR}"/containers/orchestration
+source "${DIR}"/containers/base
+source "${DIR}"/containers/reverse_proxy
+source "${DIR}"/containers/web
 
 check_requirements
-ssh_access
+configure_ssh_access
 create_custom_bridge_network
 pull_base_image_from_docker_hub
-build_drucker_init_image
+build_init_image
 provision_base_container
 provision_reverse_proxy_container
 provision_web_container
