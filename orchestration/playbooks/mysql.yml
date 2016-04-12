@@ -51,4 +51,5 @@
 - name: Ensure MySQL is started
   service:
     name: mysql
-    state: restarted
+    enabled: yes
+    state: started

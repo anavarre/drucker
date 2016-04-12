@@ -70,4 +70,5 @@
 - name: Ensure Varnish is started
   service:
     name: varnish
-    state: restarted
+    enabled: yes
+    state: started
