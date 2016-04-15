@@ -1,0 +1,21 @@
+---
+- name: Check if nginx is installed
+  stat:
+    path: /etc/nginx/nginx.conf
+  register: nginx
+  ignore_errors: True
+
+- name: Install nginx
+  #ANSIBLE 2 module apt/dnf = package:
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - nginx
+  when: nginx.stat.exists == false
+
+- name: Ensure nginx is started
+  service:
+    name: nginx
+    enabled: yes
+    state: started
