@@ -15,10 +15,13 @@
     - apache2-utils
   when: apache.stat.exists == false
 
-- name: Enable mod_rewrite
+- name: Enable mod_rewrite and proxy_http
   apache2_module:
-    name: rewrite
+    name: "{{ item }}"
     state: present
+  with_items:
+    - rewrite
+    - proxy_http
   when: apache.stat.exists == false
 
 - name: "Fix the POODLE SSL v3 vulnerability"
