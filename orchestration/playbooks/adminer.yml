@@ -35,13 +35,13 @@
 
 - name: Deploy default vHost template
   copy:
-    src: files/vhost.conf
+    src: files/apache-template.conf
     dest: /etc/apache2/sites-available/
     mode: 0644
   when: adminer_conf.stat.exists == false
 
 - name: Rename default vHost template
-  command: mv /etc/apache2/sites-available/vhost.conf /etc/apache2/sites-available/adminer.conf
+  command: mv /etc/apache2/sites-available/apache-template.conf /etc/apache2/sites-available/adminer.conf
   when: adminer_conf.stat.exists == false
 
 - name: Modify adminer vHost
