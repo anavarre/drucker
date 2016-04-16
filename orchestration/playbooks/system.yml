@@ -25,14 +25,13 @@
   - curl
   - git
   - htop
+  - iputils-ping
   - logrotate
   - ncdu
+  - net-tools
   - ntp
   - vim
-  - curl
   - wget
-  - net-tools
-  - iputils-ping
 
 - name: Ensure NTP is running
   service:
