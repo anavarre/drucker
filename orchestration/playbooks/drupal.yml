@@ -152,7 +152,7 @@
 
 - name: Make sure files and dirs ownership is consistent
   file:
-    path: /var/www/html/
+    path: "{{ webroot }}"
     owner: "{{ user }}"
     group: "{{ apache_user }}"
     mode: g+s
