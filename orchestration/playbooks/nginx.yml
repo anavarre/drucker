@@ -24,7 +24,7 @@
 
 - name: Check if nginx drucker host exists
   stat:
-    path: /etc/nginx/conf.d/drucker.conf
+    path: /etc/nginx/conf.d/{{ user }}.conf
   register: nginx_drucker_host
   ignore_errors: True
 
@@ -36,20 +36,20 @@
   when: nginx_drucker_host.stat.exists == false
 
 - name: Rename nginx template
-  command: mv /etc/nginx/conf.d/nginx-template.conf /etc/nginx/conf.d/drucker.conf
+  command: mv /etc/nginx/conf.d/nginx-template.conf /etc/nginx/conf.d/{{ user }}.conf
   when: nginx_drucker_host.stat.exists == false
 
 - name: Modify default nginx port
   replace:
-    dest: /etc/nginx/conf.d/drucker.conf
+    dest: /etc/nginx/conf.d/{{ user }}.conf
     regexp: '^(.*)listen localhost:80;(.*)$'
     replace: '\1listen localhost:{{ backend_port }};\2'
   when: nginx_drucker_host.stat.exists == false
 
 - name: Modify nginx proxy_pass
   replace:
-    dest: /etc/nginx/conf.d/drucker.conf
-    regexp: '^(.*)proxy_pass http://0.0.0.0:80;(.*)$'
+    dest: /etc/nginx/conf.d/{{ user }}.conf
+    regexp: '^(.*)proxy_pass http://0.0.0.0:{{ reverse_proxy_port }};(.*)$'
     replace: '\1proxy_pass http://{{ backend_ip }}:{{ backend_port }};\2'
   when: nginx_drucker_host.stat.exists == false
 

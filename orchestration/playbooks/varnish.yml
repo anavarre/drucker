@@ -5,11 +5,6 @@
   register: varnish
   ignore_errors: True
 
-# TODO: do we need this?
-# - name: Check Varnish version
-#   command: "dpkg -l | grep -w varnish | awk '{print $3}' | head -c-5"
-#   when: varnish.stat.exists == true
-
 - name: Prepare for Varnish installation 1/3
   #ANSIBLE 2 module apt/dnf = package:
   apt:
@@ -43,7 +38,7 @@
   lineinfile:
     dest: /etc/default/varnish
     regexp: "^DAEMON_OPTS=\"-a :6081(.*)$"
-    line: "DAEMON_OPTS=\"-a 0.0.0.0:80"
+    line: "DAEMON_OPTS=\"-a 0.0.0.0:{{ reverse_proxy_port }}"
   when: varnish.stat.exists == false
 
 - name: Check if the default Varnish VCL exists
