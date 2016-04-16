@@ -14,6 +14,44 @@
     - nginx
   when: nginx.stat.exists == false
 
+- name: Check if nginx default host exists
+  stat:
+    path: /etc/nginx/sites-enabled/default
+  register: nginx_host
+  ignore_errors: True
+
+- name: Delete default nginx site
+  file:
+    path: /etc/nginx/sites-available/default
+    state: absent
+  when: nginx_host.stat.exists == true
+
+- name: Deploy nginx template
+  copy:
+    src: files/default
+    dest: /etc/nginx/sites-available/
+    mode: 0644
+  when: nginx_host.stat.exists == true
+
+# - name: Rename default nginx template
+#   command: mv /etc/apache2/sites-available/vhost.conf /etc/apache2/sites-available/drucker.conf
+#   when: nginx_host.stat.exists == false
+
+# - name: Modify nginx vHost
+#   replace:
+#     dest: /etc/apache2/sites-available/drucker.conf
+#     regexp: '^(.*)SITENAME(.*)$'
+#     replace: '\1drucker\2'
+#   when: nginx_host.stat.exists == false
+
+- name: Enable default nginx host
+  file:
+    src: ../sites-available/default
+    dest: /etc/nginx/sites-enabled/default
+    state: link
+  notify: Reload nginx
+  when: nginx_host.stat.exists == true
+
 - name: Ensure nginx is started
   service:
     name: nginx

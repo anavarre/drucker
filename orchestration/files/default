@@ -1,0 +1,23 @@
+server {
+      listen localhost:8080;
+      server_name drucker.local;
+
+      #root /usr/local/www/mydomain.com;
+
+      #access_log logs/drucker_access.log;
+      #error_log logs/drucker_error.log;
+
+      location / {
+            # try_files attempts to serve a file or folder, until it reaches the fallback at the end
+            try_files $uri $uri/ @backend;
+      }
+
+      location @backend {
+            # essentially the same as passing php requests back to apache
+
+            proxy_set_header X-Real-IP  $remote_addr;
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_set_header Host $host;
+            proxy_pass http://203.0.113.2:8080;
+      }
+}
