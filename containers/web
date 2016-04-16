@@ -48,6 +48,8 @@ provision_web_container() {
       echo -e "${BLUE}Starting ${WEB_CONTAINER} container...${COLOR_ENDING}"
       start_web_container
       run_web_container_orchestration
+    else
+      run_web_container_orchestration
     fi
   else
     if [[ ${WEB_IMAGE_EXISTS} ]]; then

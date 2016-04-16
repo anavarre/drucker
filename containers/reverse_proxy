@@ -48,6 +48,8 @@ provision_reverse_proxy_container() {
       echo -e "${BLUE}Starting ${REVERSE_PROXY_CONTAINER} container...${COLOR_ENDING}"
       start_reverse_proxy_container
       run_reverse_proxy_container_orchestration
+    else
+      run_reverse_proxy_container_orchestration
     fi
   else
     if [[ ${REVERSE_PROXY_IMAGE_EXISTS} ]]; then
