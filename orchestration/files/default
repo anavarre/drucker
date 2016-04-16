@@ -9,7 +9,7 @@ server {
 
       location / {
             # try_files attempts to serve a file or folder, until it reaches the fallback at the end
-            try_files $uri $uri/ @backend;
+            try_files $uri @backend;
       }
 
       location @backend {
