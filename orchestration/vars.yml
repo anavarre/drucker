@@ -1,4 +1,5 @@
 user: drucker
+apache_user: www-data
 
 # Web
 mysql_creds: root
