@@ -13,7 +13,7 @@
 
 - name: Check if drucker exists
   stat:
-    path: "{{ webroot }}/drucker"
+    path: "{{ webroot }}/{{ user }}"
   register: drucker
   ignore_errors: True
 
@@ -25,7 +25,7 @@
   when: drucker.stat.exists == false
 
 - name: Rename Drupal directory
-  command: mv {{ webroot}}/drupal-{{ drupal_dev_release }}-dev {{ webroot }}/drucker
+  command: mv {{ webroot}}/drupal-{{ drupal_dev_release }}-dev {{ webroot }}/{{ user }}
   when: drucker.stat.exists == false
 
 - name: Create files directory
@@ -45,7 +45,7 @@
     block: |
 
       $settings['trusted_host_patterns'] = array(
-        '^drucker\.local$',
+        '^{{ user }}\.local$',
       );
   when: drucker.stat.exists == false
 
@@ -54,8 +54,8 @@
     login_user: "{{ mysql_creds }}"
     login_password: "{{ mysql_creds }}"
     login_host: localhost
-    login_port: 3306
-    name: drucker
+    login_port: "{{ mysq_port }}"
+    name: "{{ user }}"
     state: absent
   when: drucker.stat.exists == false
 
@@ -75,11 +75,11 @@
     block: |
 
       $databases['default']['default'] = array (
-        'database' => 'drucker',
+        'database' => '{{ user }}',
         'username' => '{{ mysql_creds }}',
         'password' => '{{ mysql_creds }}',
         'host' => 'localhost',
-        'port' => '3306',
+        'port' => '{{ mysq_port }}',
         'driver' => 'mysql',
         'prefix' => '',
         'collation' => 'utf8mb4_general_ci',
@@ -88,7 +88,7 @@
 
 - name: Check if drucker vHost exists
   stat:
-    path: /etc/apache2/sites-enabled/drucker.conf
+    path: /etc/apache2/sites-enabled/{{ user }}.conf
   register: drucker_conf
   ignore_errors: True
 
@@ -108,27 +108,27 @@
   when: drucker_conf.stat.exists == false
 
 - name: Rename default vHost template
-  command: mv /etc/apache2/sites-available/vhost.conf /etc/apache2/sites-available/drucker.conf
+  command: mv /etc/apache2/sites-available/vhost.conf /etc/apache2/sites-available/{{ user }}.conf
   when: drucker_conf.stat.exists == false
 
 - name: Modify drucker vHost
   replace:
-    dest: /etc/apache2/sites-available/drucker.conf
+    dest: /etc/apache2/sites-available/{{ user }}.conf
     regexp: '^(.*)SITENAME(.*)$'
-    replace: '\1drucker\2'
+    replace: '\1{{ user }}\2'
   when: drucker_conf.stat.exists == false
 
 - name: Enable drucker vHost
   file:
-    src: ../sites-available/drucker.conf
-    dest: /etc/apache2/sites-enabled/drucker.conf
+    src: ../sites-available/{{ user }}.conf
+    dest: /etc/apache2/sites-enabled/{{ user }}.conf
     state: link
   notify: Reload Apache
   when: drucker_conf.stat.exists == false
 
 - name: Check if drucker Drush aliases exist
   stat:
-    path: ~/.drush/drucker.aliases.drushrc.php
+    path: ~/.drush/{{ user }}.aliases.drushrc.php
   register: drucker_aliases
   ignore_errors: True
 
@@ -141,8 +141,8 @@
 
 - name: Deploy drucker Drush aliases
   copy:
-    src: files/drucker.aliases.drushrc.php
-    dest: ~/.drush/drucker.aliases.drushrc.php
+    src: files/{{ user }}.aliases.drushrc.php
+    dest: ~/.drush/{{ user }}.aliases.drushrc.php
     mode: 0644
   when: drucker_aliases.stat.exists == false
 
