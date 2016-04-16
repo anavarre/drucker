@@ -11,3 +11,4 @@
     - yaegashi.blockinfile
   tasks:
     - include: playbooks/varnish.yml tags=varnish
+    - include: playbooks/nginx.yml tags=nginx

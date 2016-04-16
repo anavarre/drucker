@@ -27,3 +27,8 @@
   service:
     name: varnish
     state: restarted
+
+- name: Reload nginx
+  service:
+    name: nginx
+    state: reloaded
