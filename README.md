@@ -2,14 +2,14 @@
 
 **This is a WIP (Work In Progress). Use at your own risk.**
 
-_drucker_ is a [Docker](https://www.docker.com/)-based [Drupal](https://www.drupal.org) stack managed by [Ansible](https://www.ansible.com/) for orchestration. It automates creating [Debian]() containers on which it will deploy a common web stack to run Drupal applications.
+_drucker_ is a [Docker](https://www.docker.com)-based [Drupal](https://www.drupal.org) stack managed by [Ansible](https://www.ansible.com) for orchestration. It automates creating [Debian](https://www.debian.org) containers on which it will deploy a common web stack to run Drupal applications.
 
 Currently, _drucker_ runs on 2 minimalistic containers:
 
-* `drucker_reverse_proxy` (Varnish): listens on port 80 and sends traffic to the backend
-* `drucker_web` (Apache/PHP/MySQL): listens on port 8080 and receives traffic from Varnish
+* `drucker_reverse_proxy` (Varnish/nginx): Varnish listens on port 80 and sends traffic to the nginx backend on port 8080
+* `drucker_web` (Apache/PHP/MySQL): Apache listens on port 8080 and receives traffic from nginx
 
-The plan is to make it a truly service-based suite of containers, to isolate MySQL from multiple Apache/PHP web nodes, have a distributed network filesystem, but also Load-Balancing (nginx) capabilities.
+The plan is to make _drucker_ a truly service-based suite of containers, to isolate MySQL from multiple Apache/PHP web nodes, have a distributed network filesystem, but also Load-Balancing and HA capabilities.
 
 ## Requirements
 
@@ -32,6 +32,7 @@ _drucker_ ships with the following software stack:
 | -------------  |:---------------:|
 | Debian         | 8 (Jessie)      |
 | Varnish        | 4.0.2.1         |
+| nginx          | 1.6.2           |
 | Apache         | 2.4.10 or later |
 | PHP-FPM        | 5.6.19 or later |
 | MySQL          | 5.5.47 or later |
