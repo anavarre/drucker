@@ -147,7 +147,7 @@
   when: drucker_aliases.stat.exists == false
 
 - name: Install Drupal
-  command: drush @drucker.local site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@127.0.0.1:3306/drucker --site-name=drucker --site-mail=admin@drucker.local --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail=admin@drucker.local
+  command: drush @{{ user }}.{{ tld }} site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@127.0.0.1:{{ mysql_port }}/{{ user }} --site-name={{ user }} --site-mail={{ drupal_creds }}@{{ user }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ user }}.{{ tld }}
   when: drucker.stat.exists == false
 
 - name: Make sure files and dirs ownership is consistent

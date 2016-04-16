@@ -3,6 +3,8 @@ apache_user: www-data
 
 # Web
 mysql_creds: root
+mysql_port: 3306
+tld: local
 drupal_creds: admin
 mysql_stable_release: 5.5
 phpmyadmin_stable_release: 4.6.0
