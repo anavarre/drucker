@@ -10,7 +10,7 @@ create_web_container_from_web_image() {
   docker run --name "${WEB_CONTAINER}" -it \
   --net "${NETWORK}" \
   --ip "${WEB_IP}" \
-  -d -p 8080:8080 \
+  -d -p "${HTTP_PORT}":"${HTTP_PORT}" \
   "${WEB_IMAGE}" bash
 
   configure_web_container_ssh_access
@@ -23,7 +23,7 @@ create_web_container_from_base_image() {
   docker run --name "${WEB_CONTAINER}" -it \
   --net "${NETWORK}" \
   --ip "${WEB_IP}" \
-  -d -p 8080:8080 \
+  -d -p "${HTTP_PORT}":"${HTTP_PORT}" \
   "${BASE_IMAGE}" bash
 
   configure_web_container_ssh_access

@@ -19,7 +19,7 @@ create_base_container_from_init_image() {
   docker run --name "${BASE_CONTAINER}" -it \
   --net "${NETWORK}" \
   --ip "${BASE_CONTAINER_IP}" \
-  -d -p 80:80 \
+  -d -p "${REVERSE_PROXY_PORT}":"${REVERSE_PROXY_PORT}" \
   "${INIT_IMAGE}" bash
 
   configure_base_container_ssh_access

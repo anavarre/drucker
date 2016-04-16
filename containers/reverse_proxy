@@ -16,7 +16,7 @@ create_reverse_proxy_container_from_reverse_proxy_image() {
   docker run --name "${REVERSE_PROXY_CONTAINER}" -it \
   --net "${NETWORK}" \
   --ip "${REVERSE_PROXY_IP}" \
-  -d -p 80:80 \
+  -d -p "${REVERSE_PROXY_PORT}":"${REVERSE_PROXY_PORT}" \
   "${REVERSE_PROXY_IMAGE}" bash
 
   configure_reverse_proxy_ssh_access
@@ -29,7 +29,7 @@ create_reverse_proxy_container_from_base_image() {
   docker run --name "${REVERSE_PROXY_CONTAINER}" -it \
   --net "${NETWORK}" \
   --ip "${REVERSE_PROXY_IP}" \
-  -d -p 80:80 \
+  -d -p "${REVERSE_PROXY_PORT}":"${REVERSE_PROXY_PORT}" \
   "${BASE_IMAGE}" bash
 
   configure_reverse_proxy_ssh_access

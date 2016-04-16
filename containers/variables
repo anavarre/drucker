@@ -17,6 +17,8 @@ export GATEWAY="203.0.113.254"
 export BASE_CONTAINER_IP="203.0.113.99"
 export REVERSE_PROXY_IP="203.0.113.20"
 export WEB_IP="203.0.113.2"
+export HTTP_PORT="8080"
+export REVERSE_PROXY_PORT="80"
 
 # Images
 export DISTRO_IMAGE="debian:latest"
