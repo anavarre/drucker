@@ -4,16 +4,25 @@
     path: /etc/php5/fpm/php.ini
   register: fpm
 
-- name: "Install PHP packages"
-  apt: name={{ item }} state=installed
+- name: "Install PHP core packages"
+  apt:
+    name: "{{ item }}"
+    state: installed
   with_items:
-    - libapache2-mod-php5
     - php5-fpm
-    - php5-apcu
     - php5-cli
     - php5-common
-    - php5-curl
     - php5-dev
+  when: fpm.stat.exists == false
+
+- name: "Install PHP extensions"
+  apt:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - libapache2-mod-php5
+    - php5-apcu
+    - php5-curl
     - php5-gd
     - php5-memcached
     - php5-mysql
