@@ -3,13 +3,13 @@
 run_base_container_orchestration() {
   echo -e "${BLUE}Running ${BASE_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ansible-playbook -i orchestration/hosts orchestration/base.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
+  ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/base.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
 }
 
 run_reverse_proxy_container_orchestration() {
   echo -e "${BLUE}Running ${REVERSE_PROXY_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ansible-playbook -i orchestration/hosts orchestration/reverse_proxy.yml --user="${USER}"  --extra-vars "ansible_sudo_pass=${USER}"
+  ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/reverse_proxy.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
 }
 
 run_web_container_orchestration() {
