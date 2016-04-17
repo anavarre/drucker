@@ -10,6 +10,7 @@ source "${DIR}"/containers/orchestration
 source "${DIR}"/containers/base
 source "${DIR}"/containers/reverse_proxy
 source "${DIR}"/containers/web
+source "${DIR}"/containers/gluster
 
 check_requirements
 configure_ssh_access
@@ -19,3 +20,4 @@ build_init_image
 provision_base_container
 provision_reverse_proxy_container
 provision_web_container
+provision_gluster_container

@@ -6,3 +6,6 @@
 
 [drucker_reverse_proxy]
 203.0.113.20
+
+[drucker_gluster]
+203.0.113.30

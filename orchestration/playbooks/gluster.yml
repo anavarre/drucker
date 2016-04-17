@@ -1,0 +1,26 @@
+---
+- name: Check if GlusterFS has been installed
+  stat:
+    path: /etc/glusterfs/glusterd.vol
+  register: gluster
+  ignore_errors: True
+
+- name: Prepare for GlusterFS installation 1/2
+  apt_key:
+    url: http://download.gluster.org/pub/gluster/glusterfs/3.7/{{ gluster_stable_release }}/rsa.pub
+    state: present
+  when: gluster.stat.exists == false
+
+- name: Prepare for GlusterFS installation 2/2
+  command: echo deb http://download.gluster.org/pub/gluster/glusterfs/3.7/{{ gluster_stable_release }}/Debian/jessie/apt jessie main > /etc/apt/sources.list.d/gluster.list
+  when: gluster.stat.exists == false
+
+- name: Install GlusterFS
+  #ANSIBLE 2 module apt/dnf = package:
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - glusterfs-server
+  when: gluster.stat.exists == false

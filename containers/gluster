@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+GLUSTER_CONTAINER_EXISTS=$(docker ps -a | grep -o "${GLUSTER_CONTAINER}")
+GLUSTER_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${GLUSTER_IMAGE}")
+GLUSTER_CONTAINER_STARTED=$(docker ps | grep -o "${GLUSTER_CONTAINER}")
+
+create_gluster_container_from_gluster_image() {
+  echo -e "${BLUE}Spinning up ${GLUSTER_CONTAINER} container with ID:${COLOR_ENDING}"
+
+  docker run --name "${GLUSTER_CONTAINER}" -it \
+  --net "${NETWORK}" \
+  --ip "${DRUCKER_IP}" \
+  -d -p "${GLUSTER_PORT}":"${GLUSTER_PORT}" \
+  "${GLUSTER_IMAGE}" bash
+
+  configure_gluster_container_ssh_access
+  run_gluster_container_orchestration
+}
+
+create_gluster_container_from_base_image() {
+  echo -e "${BLUE}Spinning up ${GLUSTER_CONTAINER} container with ID:${COLOR_ENDING}"
+
+  docker run --name "${GLUSTER_CONTAINER}" -it \
+  --net "${NETWORK}" \
+  --ip "${DRUCKER_IP}" \
+  -d -p "${GLUSTER_PORT}":"${GLUSTER_PORT}" \
+  "${BASE_IMAGE}" bash
+
+  configure_gluster_container_ssh_access
+  run_gluster_container_orchestration
+}
+
+create_gluster_image_from_gluster_container() {
+  echo -e "${BLUE}Committing ${GLUSTER_IMAGE} image from ${GLUSTER_CONTAINER} container...${COLOR_ENDING}"
+
+  docker commit -m "${GLUSTER_CONTAINER} on $(date +"%Y-%m-%d")" "${GLUSTER_CONTAINER}" "${GLUSTER_IMAGE}"
+}
+
+start_gluster_container() {
+  docker start "${GLUSTER_CONTAINER}" > /dev/null 2>&1
+}
+
+provision_gluster_container() {
+  if [[ ${GLUSTER_CONTAINER_EXISTS} ]]; then
+    echo -e "${GREEN}${GLUSTER_CONTAINER} container already exists.${COLOR_ENDING}"
+
+    if [[ ! ${GLUSTER_CONTAINER_STARTED} ]]; then
+      echo -e "${BLUE}Starting ${GLUSTER_CONTAINER} container...${COLOR_ENDING}"
+      start_gluster_container
+      run_gluster_container_orchestration
+    else
+      run_gluster_container_orchestration
+    fi
+  else
+    if [[ ${GLUSTER_IMAGE_EXISTS} ]]; then
+      echo -e "${GREEN}${GLUSTER_IMAGE} custom image already exists.${COLOR_ENDING}"
+      create_gluster_container_from_gluster_image
+    else
+      create_gluster_container_from_base_image
+      create_gluster_image_from_gluster_container
+    fi
+  fi
+}
