@@ -21,7 +21,9 @@
   when: varnish.stat.exists == false
 
 - name: Prepare for Varnish installation 3/3
-  command: echo "deb https://repo.varnish-cache.org/debian/ jessie varnish-{{ varnish_source }}" >> /etc/apt/sources.list.d/varnish-cache.list
+  apt_repository:
+    repo: 'deb https://repo.varnish-cache.org/debian/ jessie varnish-{{ varnish_source }}'
+    state: present
   when: varnish.stat.exists == false
 
 - name: Install Varnish
