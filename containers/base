@@ -16,12 +16,6 @@ create_base_image_from_base_container() {
 create_base_container_from_init_image() {
   echo -e "${BLUE}Spinning up ${BASE_CONTAINER} container with ID:${COLOR_ENDING}"
 
-  # docker run --name "${BASE_CONTAINER}" -it \
-  # --net "${NETWORK}" \
-  # --ip "${BASE_CONTAINER_IP}" \
-  # -d -p "${REVERSE_PROXY_PORT}":"${REVERSE_PROXY_PORT}" \
-  # "${INIT_IMAGE}" bash
-
   docker run -d --name "${BASE_CONTAINER}" -it --net "${NETWORK}" --ip "${BASE_CONTAINER_IP}" "${INIT_IMAGE}" bash
 
   configure_base_container_ssh_access
