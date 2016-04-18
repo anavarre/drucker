@@ -10,7 +10,7 @@ create_gluster_container_from_gluster_image() {
   docker run --name "${GLUSTER_CONTAINER}" -it \
   -h "${GLUSTER_HOSTNAME}" \
   --net "${NETWORK}" \
-  --ip "${DRUCKER_IP}" \
+  --ip "${GLUSTER_IP}" \
   -d -p "${GLUSTER_PORT}":"${GLUSTER_PORT}" \
   "${GLUSTER_IMAGE}" bash
 
@@ -24,7 +24,7 @@ create_gluster_container_from_base_image() {
   docker run --name "${GLUSTER_CONTAINER}" -it \
   -h "${GLUSTER_HOSTNAME}" \
   --net "${NETWORK}" \
-  --ip "${DRUCKER_IP}" \
+  --ip "${GLUSTER_IP}" \
   -d -p "${GLUSTER_PORT}":"${GLUSTER_PORT}" \
   "${BASE_IMAGE}" bash
 
