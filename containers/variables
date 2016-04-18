@@ -15,15 +15,21 @@ export DEFAULT="$HOME/.ssh/id_rsa.pub"
 export NETWORK="drucker"
 export SUBNET="203.0.113.0/24"
 export GATEWAY="203.0.113.254"
+
+# IPs
 export BASE_CONTAINER_IP="203.0.113.99"
 export REVERSE_PROXY_IP="203.0.113.20"
-export REVERSE_PROXY_PORT="80"
-export REVERSE_PROXY_HOSTNAME="proxy.${TLD}"
 export WEB_IP="203.0.113.2"
-export HTTP_PORT="8080"
-export WEB_HOSTNAME="web.${TLD}"
 export GLUSTER_IP="203.0.113.30"
+
+# Ports
+export REVERSE_PROXY_PORT="80"
+export WEB_PORT="8080"
 export GLUSTER_PORT="24007"
+
+# Hostnames
+export REVERSE_PROXY_HOSTNAME="proxy.${TLD}"
+export WEB_HOSTNAME="web.${TLD}"
 export GLUSTER_HOSTNAME="gluster.${TLD}"
 
 # Images
