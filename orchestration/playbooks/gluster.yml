@@ -7,12 +7,14 @@
 
 - name: Prepare for GlusterFS installation 1/2
   apt_key:
-    url: http://download.gluster.org/pub/gluster/glusterfs/3.7/{{ gluster_stable_release }}/rsa.pub
+    url: http://download.gluster.org/pub/gluster/glusterfs/LATEST/rsa.pub
     state: present
   when: gluster.stat.exists == false
 
 - name: Prepare for GlusterFS installation 2/2
-  command: echo deb http://download.gluster.org/pub/gluster/glusterfs/3.7/{{ gluster_stable_release }}/Debian/jessie/apt jessie main > /etc/apt/sources.list.d/gluster.list
+  apt_repository:
+    repo: 'deb http://download.gluster.org/pub/gluster/glusterfs/LATEST/Debian/{{ codename }}/apt {{ codename }} main'
+    state: present
   when: gluster.stat.exists == false
 
 - name: Install GlusterFS
@@ -23,4 +25,11 @@
     update_cache: yes
   with_items:
     - glusterfs-server
+    - glusterfs-client
   when: gluster.stat.exists == false
+
+- name: Ensure GlusterFS is started
+  service:
+    name: glusterfs-server
+    enabled: yes
+    state: started

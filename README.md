@@ -36,7 +36,7 @@ _drucker_ ships with the following software stack:
 | nginx          | 1.6.2           |
 | Apache         | 2.4.10 or later |
 | PHP-FPM        | 5.6.19 or later |
-| GlusterFS      | 3.7.9 or later  |
+| GlusterFS      | 3.7.10 or later |
 | MySQL          | 5.5.47 or later |
 | Drupal         | 8.1.x           |
 | Drush          | 8.0.5           |
