@@ -14,13 +14,19 @@
     - nginx
   when: nginx.stat.exists == false
 
+- name: Check if default nginx site exists
+  stat:
+    path: /etc/nginx/sites-available/default
+  register: nginx_default
+  ignore_errors: True
+
 - name: Delete default nginx site
   file:
     path: /etc/nginx/sites-available/default
     state: absent
     path: /etc/nginx/sites-enabled/default
     state: absent
-  when: nginx.stat.exists == true
+  when: nginx_default.stat.exists == false
 
 - name: Check if nginx drucker host exists
   stat:
