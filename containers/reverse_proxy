@@ -14,6 +14,7 @@ create_reverse_proxy_container_from_reverse_proxy_image() {
   echo -e "${BLUE}Spinning up ${REVERSE_PROXY_CONTAINER} container with ID:${COLOR_ENDING}"
 
   docker run --name "${REVERSE_PROXY_CONTAINER}" -it \
+  -h "${REVERSE_PROXY_HOSTNAME}" \
   --net "${NETWORK}" \
   --ip "${REVERSE_PROXY_IP}" \
   -d -p "${REVERSE_PROXY_PORT}":"${REVERSE_PROXY_PORT}" \
@@ -27,6 +28,7 @@ create_reverse_proxy_container_from_base_image() {
   echo -e "${BLUE}Spinning up ${REVERSE_PROXY_CONTAINER} container with ID:${COLOR_ENDING}"
 
   docker run --name "${REVERSE_PROXY_CONTAINER}" -it \
+  -h "${REVERSE_PROXY_HOSTNAME}" \
   --net "${NETWORK}" \
   --ip "${REVERSE_PROXY_IP}" \
   -d -p "${REVERSE_PROXY_PORT}":"${REVERSE_PROXY_PORT}" \

@@ -8,6 +8,7 @@ create_web_container_from_web_image() {
   echo -e "${BLUE}Spinning up ${WEB_CONTAINER} container with ID:${COLOR_ENDING}"
 
   docker run --name "${WEB_CONTAINER}" -it \
+  -h "${WEB_HOSTNAME}" \
   --net "${NETWORK}" \
   --ip "${WEB_IP}" \
   -d -p "${HTTP_PORT}":"${HTTP_PORT}" \
@@ -21,6 +22,7 @@ create_web_container_from_base_image() {
   echo -e "${BLUE}Spinning up ${WEB_CONTAINER} container with ID:${COLOR_ENDING}"
 
   docker run --name "${WEB_CONTAINER}" -it \
+  -h "${WEB_HOSTNAME}" \
   --net "${NETWORK}" \
   --ip "${WEB_IP}" \
   -d -p "${HTTP_PORT}":"${HTTP_PORT}" \

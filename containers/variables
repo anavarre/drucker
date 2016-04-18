@@ -7,6 +7,7 @@ export BLUE="\033[94m"
 export COLOR_ENDING="\033[0m"
 
 export USER="drucker"
+export TLD="local"
 
 export DEFAULT="$HOME/.ssh/id_rsa.pub"
 
@@ -17,11 +18,13 @@ export GATEWAY="203.0.113.254"
 export BASE_CONTAINER_IP="203.0.113.99"
 export REVERSE_PROXY_IP="203.0.113.20"
 export REVERSE_PROXY_PORT="80"
-export GLUSTER_IP="203.0.113.30"
+export REVERSE_PROXY_HOSTNAME="proxy.${TLD}"
 export WEB_IP="203.0.113.2"
 export HTTP_PORT="8080"
-export DRUCKER_IP="203.0.113.30"
+export WEB_HOSTNAME="web.${TLD}"
+export GLUSTER_IP="203.0.113.30"
 export GLUSTER_PORT="24007"
+export GLUSTER_HOSTNAME="gluster.${TLD}"
 
 # Images
 export DISTRO_IMAGE="debian:latest"

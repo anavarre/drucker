@@ -8,6 +8,7 @@ create_gluster_container_from_gluster_image() {
   echo -e "${BLUE}Spinning up ${GLUSTER_CONTAINER} container with ID:${COLOR_ENDING}"
 
   docker run --name "${GLUSTER_CONTAINER}" -it \
+  -h "${GLUSTER_HOSTNAME}" \
   --net "${NETWORK}" \
   --ip "${DRUCKER_IP}" \
   -d -p "${GLUSTER_PORT}":"${GLUSTER_PORT}" \
@@ -21,6 +22,7 @@ create_gluster_container_from_base_image() {
   echo -e "${BLUE}Spinning up ${GLUSTER_CONTAINER} container with ID:${COLOR_ENDING}"
 
   docker run --name "${GLUSTER_CONTAINER}" -it \
+  -h "${GLUSTER_HOSTNAME}" \
   --net "${NETWORK}" \
   --ip "${DRUCKER_IP}" \
   -d -p "${GLUSTER_PORT}":"${GLUSTER_PORT}" \
