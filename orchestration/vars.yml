@@ -10,11 +10,11 @@ mysql_port: 3306
 tld: local
 drupal_creds: admin
 mysql_stable_release: 5.5
-phpmyadmin_stable_release: 4.6.0
+phpmyadmin_stable_release: 4.6.1
 adminer_stable_release: 4.2.4
-composer_stable_release: 1.0.0
-drush_stable_release: 8.0.5
-drupal_console_stable_release: 0.11.2
+composer_stable_release: 1.1.0
+drush_stable_release: 8.1.1
+drupal_console_stable_release: 0.11.3
 drupal_dev_release: 8.1.x
 webroot: /var/www/html
 drucker_install: /var/www/html/drucker
