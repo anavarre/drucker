@@ -10,5 +10,5 @@
   roles:
     - yaegashi.blockinfile
   tasks:
-    - include: playbooks/varnish.yml tags=varnish
-    - include: playbooks/nginx.yml tags=nginx
+    - include: playbooks/varnish.yml
+    - include: playbooks/nginx.yml

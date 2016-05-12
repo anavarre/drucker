@@ -10,5 +10,5 @@
   roles:
     - yaegashi.blockinfile
   tasks:
-    - include: playbooks/ssh.yml tags=ssh
-    - include: playbooks/system.yml tags=system
+    - include: playbooks/ssh.yml
+    - include: playbooks/system.yml

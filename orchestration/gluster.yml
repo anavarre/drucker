@@ -10,4 +10,4 @@
   roles:
     - yaegashi.blockinfile
   tasks:
-    - include: playbooks/gluster.yml tags=gluster
+    - include: playbooks/gluster.yml

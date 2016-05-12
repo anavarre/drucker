@@ -15,7 +15,6 @@ create_base_image_from_base_container() {
 
 create_base_container_from_init_image() {
   echo -e "${BLUE}Spinning up ${BASE_CONTAINER} container with ID:${COLOR_ENDING}"
-
   docker run -d --name "${BASE_CONTAINER}" -it --net "${NETWORK}" --ip "${BASE_CONTAINER_IP}" "${INIT_IMAGE}" bash
 
   configure_base_container_ssh_access
