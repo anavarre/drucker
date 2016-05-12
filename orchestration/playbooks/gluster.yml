@@ -18,8 +18,7 @@
   when: gluster.stat.exists == false
 
 - name: Install GlusterFS
-  #ANSIBLE 2 module apt/dnf = package:
-  apt:
+  package:
     name: "{{ item }}"
     state: present
     update_cache: yes

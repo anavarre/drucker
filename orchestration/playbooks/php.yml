@@ -5,7 +5,7 @@
   register: fpm
 
 - name: "Install PHP core packages"
-  apt:
+  package:
     name: "{{ item }}"
     state: installed
   with_items:
@@ -16,7 +16,7 @@
   when: fpm.stat.exists == false
 
 - name: "Install PHP extensions"
-  apt:
+  package:
     name: "{{ item }}"
     state: installed
   with_items:

@@ -6,8 +6,7 @@
   ignore_errors: True
 
 - name: Install Apache packages
-  #ANSIBLE 2 module apt/dnf = package:
-  apt:
+  package:
     name: "{{ item }}"
     state: present
   with_items:

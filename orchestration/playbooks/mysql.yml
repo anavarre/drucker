@@ -6,7 +6,7 @@
   ignore_errors: True
 
 - name: Install MySQL
-  apt:
+  package:
     name: "{{ item }}"
     state: installed
     force: yes
@@ -37,7 +37,7 @@
   when: mysql.stat.exists == false
 
 - name: Install MySQL utilities
-  apt:
+  package:
     name: "{{ item }}"
     state: installed
     force: yes

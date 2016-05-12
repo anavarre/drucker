@@ -6,8 +6,7 @@
   ignore_errors: True
 
 - name: Prepare for Varnish installation 1/3
-  #ANSIBLE 2 module apt/dnf = package:
-  apt:
+  package:
     name: "{{ item }}"
     state: present
   with_items:
@@ -27,8 +26,7 @@
   when: varnish.stat.exists == false
 
 - name: Install Varnish
-  #ANSIBLE 2 module apt/dnf = package:
-  apt:
+  package:
     name: "{{ item }}"
     state: present
     update_cache: yes

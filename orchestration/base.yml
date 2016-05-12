@@ -1,6 +1,6 @@
 ---
 - hosts: drucker_base
-  sudo: yes
+  become: yes
 
   gather_facts: no
   vars_files:

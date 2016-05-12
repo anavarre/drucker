@@ -1,6 +1,6 @@
 ---
 - name: Clean up system packages
-  apt:
+  package:
     name: "{{ item }}"
     state: absent
     purge: yes
@@ -8,7 +8,7 @@
   - vim-tiny
 
 - name: Install sysadmin packages
-  apt:
+  package:
     name: "{{ item }}"
     state: present
   with_items:
@@ -17,7 +17,7 @@
   - dstat
 
 - name: Install system packages
-  apt:
+  package:
     name: "{{ item }}"
     state: present
   with_items:
