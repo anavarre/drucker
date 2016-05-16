@@ -20,8 +20,10 @@ You need to have both [Docker](https://www.docker.com/) and [Ansible](https://ww
 $ docker --version
 Docker version 1.10.3, build 20f81dd
 $ ansible --version
-ansible 1.9.4
+ansible 2.0.2.0
 ```
+
+Note: Ansible 2 or later is assumed in Ansible playbooks. 
 
 You also need to [generate a SSH key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) if you don't have one already.
 
