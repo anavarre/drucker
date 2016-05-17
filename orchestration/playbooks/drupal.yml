@@ -96,6 +96,10 @@
   file:
     path: /etc/apache2/sites-available/000-default.conf
     state: absent
+  when: drucker_conf.stat.exists == false
+
+- name: Delete default vHost symlink
+  file:
     path: /etc/apache2/sites-enabled/000-default.conf
     state: absent
   when: drucker_conf.stat.exists == false
