@@ -41,10 +41,10 @@ _drucker_ ships with the following software stack:
 | GlusterFS      | 3.7.10 or later |
 | MySQL          | 5.5.47 or later |
 | Drupal         | 8.1.x           |
-| Drush          | 8.0.5           |
-| Drupal Console | 0.11.2 or later |
-| Composer       | 1.0.0 or later  |
-| phpMyAdmin     | 4.6.0           |
+| Drush          | 8.1.1           |
+| Drupal Console | 0.11.3          |
+| Composer       | 1.1.0           |
+| phpMyAdmin     | 4.6.1           |
 | adminer        | 4.2.4           |
 
 ## Installation
