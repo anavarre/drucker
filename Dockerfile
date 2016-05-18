@@ -24,6 +24,6 @@ RUN adduser -q --disabled-password --gecos '' $USER \
 && usermod -aG sudo $USER
 RUN echo "$USER:$USER" | chpasswd
 
+# Prepare for SSH access
 RUN mkdir -p $SSH
-
 ENTRYPOINT service ssh restart && bash

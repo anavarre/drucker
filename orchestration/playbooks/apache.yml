@@ -42,7 +42,7 @@
   lineinfile:
     dest: /etc/php5/apache2/php.ini
     line: "apc.rfc1867 = 1"
-  when: apache.stat.exists == false
+  when: apache.stat.exists == true
 
 - name: Ensure Apache is started
   service:
