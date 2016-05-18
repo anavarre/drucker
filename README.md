@@ -49,7 +49,7 @@ _drucker_ ships with the following software stack:
 
 ## Installation
 
-1. Add the below host entries in your hosts file:
+Add the below host entries in your hosts file:
 
 ```
 203.0.113.20    drucker.local phpmyadmin.local adminer.local
@@ -67,7 +67,7 @@ This will ensure you can access:
 alias drucker='path/to/drucker/drucker.sh'
 ```
 
-2. Source the file (or log out and log back in) to use the alias immediately. E.g.:
+Source the file (or log out and log back in) to use the alias immediately. E.g.:
 
 ```
 $ source ~/.bashrc
@@ -75,7 +75,7 @@ $ source ~/.bashrc
 
 This will allow you to invoke `drucker` from anywhere on your system.
 
-3. Add the below in your `config` file (under `$HOME/.ssh`) or create the file if it doesn't exist.
+Add the below in your `config` file (under `$HOME/.ssh`) or create the file if it doesn't exist.
 
 ```
 Host 203.0.113.99 203.0.113.20 203.0.113.2 203.0.113.30
@@ -84,7 +84,7 @@ Host 203.0.113.99 203.0.113.20 203.0.113.2 203.0.113.30
   LogLevel=error
 ```
 
-This will prevent SSH strict host key checking from getting in the way, since drucker is for development purposes only.
+This will prevent SSH strict host key checking from getting in the way, since _drucker_ is for development purposes only.
 
 ## Usage
 
