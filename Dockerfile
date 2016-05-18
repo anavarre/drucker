@@ -4,6 +4,8 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV USER drucker
 ENV SSH /home/$USER/.ssh
 
+VOLUME ["/data"]
+
 # Ensure we're up-to-date
 RUN apt-get update -y && apt-get upgrade -y
 

@@ -7,7 +7,7 @@ WEB_CONTAINER_STARTED=$(docker ps | grep -o "${WEB_CONTAINER}")
 create_web_container_from_web_image() {
   echo -e "${BLUE}Spinning up ${WEB_CONTAINER} container with ID:${COLOR_ENDING}"
 
-  docker run --name "${WEB_CONTAINER}" -it \
+  docker run --privileged=true --name "${WEB_CONTAINER}" -it \
   -h "${WEB_HOSTNAME}" \
   --net "${NETWORK}" \
   --ip "${WEB_IP}" \
@@ -21,7 +21,7 @@ create_web_container_from_web_image() {
 create_web_container_from_base_image() {
   echo -e "${BLUE}Spinning up ${WEB_CONTAINER} container with ID:${COLOR_ENDING}"
 
-  docker run --name "${WEB_CONTAINER}" -it \
+  docker run --privileged=true --name "${WEB_CONTAINER}" -it \
   -h "${WEB_HOSTNAME}" \
   --net "${NETWORK}" \
   --ip "${WEB_IP}" \

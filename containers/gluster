@@ -7,7 +7,7 @@ GLUSTER_CONTAINER_STARTED=$(docker ps | grep -o "${GLUSTER_CONTAINER}")
 create_gluster_container_from_gluster_image() {
   echo -e "${BLUE}Spinning up ${GLUSTER_CONTAINER} container with ID:${COLOR_ENDING}"
 
-  docker run --name "${GLUSTER_CONTAINER}" -it \
+  docker run --privileged=true --name "${GLUSTER_CONTAINER}" -it \
   -h "${GLUSTER_HOSTNAME}" \
   --net "${NETWORK}" \
   --ip "${GLUSTER_IP}" \
@@ -21,7 +21,7 @@ create_gluster_container_from_gluster_image() {
 create_gluster_container_from_base_image() {
   echo -e "${BLUE}Spinning up ${GLUSTER_CONTAINER} container with ID:${COLOR_ENDING}"
 
-  docker run --name "${GLUSTER_CONTAINER}" -it \
+  docker run --privileged=true --name "${GLUSTER_CONTAINER}" -it \
   -h "${GLUSTER_HOSTNAME}" \
   --net "${NETWORK}" \
   --ip "${GLUSTER_IP}" \
