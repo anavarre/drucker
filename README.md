@@ -23,7 +23,7 @@ $ ansible --version
 ansible 2.0.2.0
 ```
 
-Note: Ansible 2 or later is assumed in Ansible playbooks.
+**Important**: Ansible 2 or later is assumed in Ansible playbooks.
 
 You also need to [generate a SSH key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) if you don't have one already.
 
@@ -94,7 +94,7 @@ Simply run `drucker` if you have a bash alias, or invoke the `drucker.sh` script
 $ ./drucker.sh
 ```
 
-At the beginning of the build process, _drucker_ will prompt you to enter the path to your SSH public key (in order to run [Ansible](https://www.ansible.com/) orchestration on your container). `~/.ssh/id_rsa.pub` is assumed, but you can enter the path to a custom public key
+At the beginning of the build process, _drucker_ will prompt you to enter the path to your SSH public key (in order to run [Ansible](https://www.ansible.com/) orchestration on your container). `~/.ssh/id_rsa.pub` is assumed, but you can enter the path to a custom public key then.
 
 To connect to a container, simply type:
 
@@ -110,11 +110,9 @@ To log in as the `drucker` username (which is recommended and _is_ a sudoer), si
 $ su drucker
 ```
 
-
 ## Passwords:
 
 * drucker user on the container: `drucker`
-* Ansible playbook SUDO password: `drucker`
 * MySQL credentials: `root`/`root`
 * Drupal credentials: `admin`/`admin`
 
@@ -154,10 +152,12 @@ Run:
 $ docker rm -f <container_name>
 ```
 
-### Delete the drucker base image
+### Delete an image
 
 Run:
 
 ```
-$ docker rmi drucker:base
+$ docker rmi <drucker:image>
 ```
+
+If you run `drucker` again it will spin up containers (and optionally will build images). Orchestration will then be run as expected.
