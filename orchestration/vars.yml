@@ -28,3 +28,8 @@ varnish_stable_release: 4.0.2.1
 backend_ip: 203.0.113.2
 reverse_proxy_port: 80
 backend_port: 8080
+
+# GlusterFS
+brick: /data/brick1/gv0
+gluster_mount_dir: /mnt/gfs
+gluster_ip: 203.0.113.30

@@ -27,8 +27,56 @@
     - glusterfs-client
   when: gluster.stat.exists == false
 
+- name: Create GlusterFS brick
+  file:
+    path: "{{ brick }}"
+    state: directory
+    mode: 0777
+  when: gluster.stat.exists == false
+
+- name: Create mount point
+  file:
+    path: "{{ gluster_mount_dir }}"
+    state: directory
+    mode: 0777
+  when: gluster.stat.exists == false
+
 - name: Ensure GlusterFS is started
   service:
     name: glusterfs-server
     enabled: yes
     state: started
+
+- name: Add web container to trusted pool
+  command: gluster peer probe "{{ backend_ip }}"
+  when: inventory_hostname == "{{ gluster_ip }}"
+
+# - name: Add Gluster container to trusted pool
+#   command: gluster peer probe "{{ gluster_ip }}"
+#   when: inventory_hostname == "{{ backend_ip }}"
+
+- name: Check if Gluster volume already exists
+  command: gluster volume info
+  register: gv0_exists
+  when: inventory_hostname == "{{ gluster_ip }}"
+
+- name: Create Gluster volume
+  command: gluster volume create gv0 replica 2 203.0.113.2:/data/brick1/gv0 203.0.113.30:/data/brick1/gv0
+  #command: gluster volume create gv0 replica 2 "{{ backend_ip }}":"{{ brick }}" {{ gluster_ip }}:"{{ brick }}"
+  when: inventory_hostname == "{{ gluster_ip }}" and gv0_exists.stdout != "No volumes present"
+
+#   command: gluster volume create gv0 replica 2 "203.0.113.2":"/data/brick1/gv0" "203.0.113.30":"/data/brick1/gv0"
+
+- name: Start Gluster volume
+  command: gluster volume start gv0
+  when: inventory_hostname == "{{ gluster_ip }}"
+
+- name: Mount Gluster volume
+  # command: mount -t glusterfs 203.0.113.30:/gv0 /mnt
+  # when: inventory_hostname == "{{ gluster_ip }}"
+  mount:
+    name: "{{ gluster_mount_dir }}"
+    src: "{{ inventory_hostname }}:/{{ brick }}"
+    fstype: glusterfs
+    opts: "defaults,_netdev"
+    state: mounted
