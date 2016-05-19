@@ -16,6 +16,8 @@ create_gluster_container_from_gluster_image() {
 
   configure_gluster_container_ssh_access
   run_gluster_container_orchestration
+
+  docker restart "${GLUSTER_CONTAINER}"
 }
 
 create_gluster_container_from_base_image() {

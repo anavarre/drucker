@@ -16,6 +16,8 @@ create_web_container_from_web_image() {
 
   configure_web_container_ssh_access
   run_web_container_orchestration
+
+  docker restart "${WEB_CONTAINER}"
 }
 
 create_web_container_from_base_image() {

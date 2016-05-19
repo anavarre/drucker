@@ -8,6 +8,8 @@ create_reverse_proxy_image_from_reverse_proxy_container() {
   echo -e "${BLUE}Committing ${REVERSE_PROXY_IMAGE} image from ${REVERSE_PROXY_CONTAINER} container...${COLOR_ENDING}"
 
   docker commit -m "${REVERSE_PROXY_CONTAINER} on $(date +"%Y-%m-%d")" "${REVERSE_PROXY_CONTAINER}" "${REVERSE_PROXY_IMAGE}"
+
+  docker restart "${REVERSE_PROXY_CONTAINER}"
 }
 
 create_reverse_proxy_container_from_reverse_proxy_image() {
