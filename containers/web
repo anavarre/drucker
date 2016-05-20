@@ -4,6 +4,23 @@ WEB_CONTAINER_EXISTS=$(docker ps -a | grep -o "${WEB_CONTAINER}")
 WEB_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${WEB_IMAGE}")
 WEB_CONTAINER_STARTED=$(docker ps | grep -o "${WEB_CONTAINER}")
 
+create_web_container_from_base_image() {
+  echo -e "${BLUE}Spinning up ${WEB_CONTAINER} container with ID:${COLOR_ENDING}"
+
+  docker run --privileged=true --name "${WEB_CONTAINER}" -it \
+  -h "${WEB_HOSTNAME}" \
+  --net "${NETWORK}" \
+  --ip "${WEB_IP}" \
+  -d -p "${HOST_WEB_PORT}":"${WEB_PORT}" \
+  -p ${HOST_TCP_GLUSTER_DAEMON_WEB}:"${TCP_GLUSTER_DAEMON_WEB}" \
+  -p ${HOST_TCP_GLUSTER_BRICK_WEB}:"${TCP_GLUSTER_BRICK_WEB}" \
+  -p ${HOST_TCP_PORT_MAPPER_WEB}:"${TCP_PORT_MAPPER_WEB}" \
+  "${BASE_IMAGE}" bash
+
+  configure_web_container_ssh_access
+  run_web_container_orchestration
+}
+
 create_web_container_from_web_image() {
   echo -e "${BLUE}Spinning up ${WEB_CONTAINER} container with ID:${COLOR_ENDING}"
 
@@ -11,7 +28,10 @@ create_web_container_from_web_image() {
   -h "${WEB_HOSTNAME}" \
   --net "${NETWORK}" \
   --ip "${WEB_IP}" \
-  -d -p "${WEB_PORT}":"${WEB_PORT}" \
+  -d -p "${HOST_WEB_PORT}":"${WEB_PORT}" \
+  -p ${HOST_TCP_GLUSTER_DAEMON_WEB}:"${TCP_GLUSTER_DAEMON_WEB}" \
+  -p ${HOST_TCP_GLUSTER_BRICK_WEB}:"${TCP_GLUSTER_BRICK_WEB}" \
+  -p ${HOST_TCP_PORT_MAPPER_WEB}:"${TCP_PORT_MAPPER_WEB}" \
   "${WEB_IMAGE}" bash
 
   configure_web_container_ssh_access
@@ -20,24 +40,14 @@ create_web_container_from_web_image() {
   docker restart "${WEB_CONTAINER}"
 }
 
-create_web_container_from_base_image() {
-  echo -e "${BLUE}Spinning up ${WEB_CONTAINER} container with ID:${COLOR_ENDING}"
-
-  docker run --privileged=true --name "${WEB_CONTAINER}" -it \
-  -h "${WEB_HOSTNAME}" \
-  --net "${NETWORK}" \
-  --ip "${WEB_IP}" \
-  -d -p "${WEB_PORT}":"${WEB_PORT}" \
-  "${BASE_IMAGE}" bash
-
-  configure_web_container_ssh_access
-  run_web_container_orchestration
-}
-
 create_web_image_from_web_container() {
   echo -e "${BLUE}Committing ${WEB_IMAGE} image from ${WEB_CONTAINER} container...${COLOR_ENDING}"
 
   docker commit -m "${WEB_CONTAINER} on $(date +"%Y-%m-%d")" "${WEB_CONTAINER}" "${WEB_IMAGE}"
+
+  echo -e "${BLUE}Deleting initial container...${COLOR_ENDING}"
+  docker rm -f "${WEB_CONTAINER}"
+  create_web_container_from_web_image
 }
 
 start_web_container() {

@@ -7,6 +7,7 @@ codename: jessie
 apache_user: www-data
 mysql_creds: root
 mysql_port: 3306
+name: web
 tld: local
 drupal_creds: admin
 mysql_stable_release: 5.5

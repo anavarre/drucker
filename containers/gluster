@@ -4,22 +4,6 @@ GLUSTER_CONTAINER_EXISTS=$(docker ps -a | grep -o "${GLUSTER_CONTAINER}")
 GLUSTER_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${GLUSTER_IMAGE}")
 GLUSTER_CONTAINER_STARTED=$(docker ps | grep -o "${GLUSTER_CONTAINER}")
 
-create_gluster_container_from_gluster_image() {
-  echo -e "${BLUE}Spinning up ${GLUSTER_CONTAINER} container with ID:${COLOR_ENDING}"
-
-  docker run --privileged=true --name "${GLUSTER_CONTAINER}" -it \
-  -h "${GLUSTER_HOSTNAME}" \
-  --net "${NETWORK}" \
-  --ip "${GLUSTER_IP}" \
-  -d -p "${GLUSTER_PORT}":"${GLUSTER_PORT}" \
-  "${GLUSTER_IMAGE}" bash
-
-  configure_gluster_container_ssh_access
-  run_gluster_container_orchestration
-
-  docker restart "${GLUSTER_CONTAINER}"
-}
-
 create_gluster_container_from_base_image() {
   echo -e "${BLUE}Spinning up ${GLUSTER_CONTAINER} container with ID:${COLOR_ENDING}"
 
@@ -27,8 +11,28 @@ create_gluster_container_from_base_image() {
   -h "${GLUSTER_HOSTNAME}" \
   --net "${NETWORK}" \
   --ip "${GLUSTER_IP}" \
-  -d -p "${GLUSTER_PORT}":"${GLUSTER_PORT}" \
+  -d -p "${HOST_WEB2_PORT}":"${WEB2_PORT}" \
+  -p ${HOST_TCP_GLUSTER_DAEMON_WEB2}:"${TCP_GLUSTER_DAEMON_WEB2}" \
+  -p ${HOST_TCP_GLUSTER_BRICK_WEB2}:"${TCP_GLUSTER_BRICK_WEB2}" \
+  -p ${HOST_TCP_PORT_MAPPER_WEB2}:"${TCP_PORT_MAPPER_WEB2}" \
   "${BASE_IMAGE}" bash
+
+  configure_gluster_container_ssh_access
+  run_gluster_container_orchestration
+}
+
+create_gluster_container_from_gluster_image() {
+  echo -e "${BLUE}Spinning up ${GLUSTER_CONTAINER} container with ID:${COLOR_ENDING}"
+
+  docker run --privileged=true --name "${GLUSTER_CONTAINER}" -it \
+  -h "${GLUSTER_HOSTNAME}" \
+  --net "${NETWORK}" \
+  --ip "${GLUSTER_IP}" \
+  -d -p "${HOST_WEB2_PORT}":"${WEB2_PORT}" \
+  -p ${HOST_TCP_GLUSTER_DAEMON_WEB2}:"${TCP_GLUSTER_DAEMON_WEB2}" \
+  -p ${HOST_TCP_GLUSTER_BRICK_WEB2}:"${TCP_GLUSTER_BRICK_WEB2}" \
+  -p ${HOST_TCP_PORT_MAPPER_WEB2}:"${TCP_PORT_MAPPER_WEB2}" \
+  "${GLUSTER_IMAGE}" bash
 
   configure_gluster_container_ssh_access
   run_gluster_container_orchestration
@@ -38,6 +42,10 @@ create_gluster_image_from_gluster_container() {
   echo -e "${BLUE}Committing ${GLUSTER_IMAGE} image from ${GLUSTER_CONTAINER} container...${COLOR_ENDING}"
 
   docker commit -m "${GLUSTER_CONTAINER} on $(date +"%Y-%m-%d")" "${GLUSTER_CONTAINER}" "${GLUSTER_IMAGE}"
+
+  echo -e "${BLUE}Deleting initial container...${COLOR_ENDING}"
+  docker rm -f "${GLUSTER_CONTAINER}"
+  create_gluster_container_from_gluster_image
 }
 
 start_gluster_container() {
