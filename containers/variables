@@ -60,3 +60,7 @@ export BASE_CONTAINER="drucker_base"
 export WEB_CONTAINER="drucker_web"
 export REVERSE_PROXY_CONTAINER="drucker_reverse_proxy"
 export GLUSTER_CONTAINER="drucker_gluster"
+
+# Services
+export WEB_SERVICES="apache2 mysql"
+export REVERSE_PROXY_SERVICES="nginx varnish"
