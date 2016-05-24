@@ -35,6 +35,13 @@
     mode: 0777
   when: drucker.stat.exists == false
 
+- name: Create simpletest directory
+  file:
+    path: "{{ drucker_install }}/sites/simpletest"
+    state: directory
+    mode: 0777
+  when: drucker.stat.exists == false
+
 - name: Create settings.php file
   command: cp {{ drucker_install }}/sites/default/default.settings.php {{ drucker_install }}/sites/default/settings.php
   when: drucker.stat.exists == false
