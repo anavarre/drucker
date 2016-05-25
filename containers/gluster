@@ -62,6 +62,10 @@ provision_gluster_container() {
       run_gluster_container_orchestration
     else
       run_gluster_container_orchestration
+
+      if [[ $(</dev/tcp/${GLUSTER_IP}/${TCP_GLUSTER_DAEMON_WEB} && echo Port open) ]]; then
+        run_gluster_setup_container_orchestration
+      fi
     fi
   else
     if [[ ${GLUSTER_IMAGE_EXISTS} ]]; then
