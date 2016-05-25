@@ -39,3 +39,9 @@ run_gluster_container_orchestration() {
 
   ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/gluster.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
 }
+
+run_gluster_setup_container_orchestration() {
+  echo -e "${BLUE}Running GlusterFS orchestration on the container...${COLOR_ENDING}"
+
+  ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/gluster-setup.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
+}

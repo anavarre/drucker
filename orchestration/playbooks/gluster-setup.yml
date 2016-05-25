@@ -1,0 +1,37 @@
+---
+- name: Check if web container is part of the trusted pool
+  shell: gluster peer status
+  register: web_peer
+  when: inventory_hostname == "{{ gluster_ip }}"
+
+- name: Add web container to trusted pool
+  command: gluster peer probe "{{ backend_ip }}"
+  register: web_peer_status
+  when: inventory_hostname == "{{ gluster_ip }}"
+
+- name: Check if Gluster volume already exists
+  command: gluster volume info
+  register: gluster_volume_check
+  when: inventory_hostname == "{{ gluster_ip }}"
+
+- name: Create Gluster volume
+  command: gluster volume create gv0 replica 2 "{{ backend_ip }}":"{{ brick }}" "{{ gluster_ip }}":"{{ brick }}"
+  register: create_gv0
+  when: "'No volumes present' in gluster_volume_check.stderr"
+
+- name: Check if Gluster volume has already been started
+  command: gluster volume info gv0
+  register: gluster_volume_started
+  when: inventory_hostname == "{{ gluster_ip }}"
+
+- name: Start Gluster volume
+  command: gluster volume start gv0
+  when: "'Status: Started' not in gluster_volume_started.stdout"
+
+# - name: Mount Gluster volume
+#   mount:
+#     name: "{{ gluster_mount_dir }}"
+#     src: "{{ inventory_hostname }}:/{{ brick }}"
+#     fstype: glusterfs
+#     opts: "defaults,_netdev"
+#     state: mounted
