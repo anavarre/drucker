@@ -32,3 +32,8 @@
   service:
     name: nginx
     state: reloaded
+
+- name: Restart GlusterFS
+  service:
+    name: glusterfs-server
+    state: restarted

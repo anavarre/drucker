@@ -62,5 +62,5 @@ export REVERSE_PROXY_CONTAINER="drucker_reverse_proxy"
 export GLUSTER_CONTAINER="drucker_gluster"
 
 # Services
-export WEB_SERVICES="apache2 mysql"
+export WEB_SERVICES="apache2 mysql glusterfs-server"
 export REVERSE_PROXY_SERVICES="nginx varnish"

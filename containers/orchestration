@@ -8,7 +8,7 @@ run_base_container_orchestration() {
 
 start_reverse_proxy_services() {
   for SERVICE in ${REVERSE_PROXY_SERVICES}; do
-    docker exec -it "${REVERSE_PROXY_CONTAINER}" /etc/init.d/"${SERVICE}" restart
+    docker exec -it "${REVERSE_PROXY_CONTAINER}" /etc/init.d/"${SERVICE}" reload
   done
 }
 
@@ -22,7 +22,7 @@ run_reverse_proxy_container_orchestration() {
 
 start_web_services() {
   for SERVICE in ${WEB_SERVICES}; do
-    docker exec -it "${WEB_CONTAINER}" /etc/init.d/"${SERVICE}" restart
+    docker exec -it "${WEB_CONTAINER}" /etc/init.d/"${SERVICE}" start
   done
 }
 
