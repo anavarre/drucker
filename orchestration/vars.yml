@@ -11,7 +11,7 @@ name: web
 tld: local
 drupal_creds: admin
 mysql_stable_release: 5.5
-phpmyadmin_stable_release: 4.6.1
+phpmyadmin_stable_release: 4.6.2
 adminer_stable_release: 4.2.4
 composer_stable_release: 1.1.1
 drush_stable_release: 8.1.1
