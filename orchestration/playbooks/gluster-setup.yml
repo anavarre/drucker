@@ -33,3 +33,20 @@
     src: "{{ gluster_ip }}:/gv0"
     fstype: glusterfs
     state: mounted
+
+- name: Check if files dir exists under GFS
+  stat:
+    path: "{{ gluster_mount_dir }}/files"
+  register: files_gfs
+
+- name: Move files dir to GFS
+  command: mv "{{ drucker_install }}/sites/default/files" "{{ gluster_mount_dir }}/"
+  register: toto
+  when: (files_gfs.stat.exists == false) and (inventory_hostname != "{{ gluster_ip }}")
+
+- name: Create Drucker GFS symlink
+  file:
+    src: "{{ gluster_mount_dir }}/files"
+    dest: "{{ drucker_install }}/sites/default/files"
+    state: link
+  when: (files_gfs.stat.exists == true) and (inventory_hostname != "{{ gluster_ip }}")
