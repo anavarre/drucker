@@ -6,7 +6,7 @@ run_base_container_orchestration() {
   ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/base.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
 }
 
-start_reverse_proxy_services() {
+reload_reverse_proxy_services() {
   for SERVICE in ${REVERSE_PROXY_SERVICES}; do
     docker exec -it "${REVERSE_PROXY_CONTAINER}" /etc/init.d/"${SERVICE}" reload
   done
@@ -17,12 +17,12 @@ run_reverse_proxy_container_orchestration() {
 
   ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/reverse_proxy.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
 
-  start_reverse_proxy_services
+  reload_reverse_proxy_services
 }
 
-start_web_services() {
+reload_web_services() {
   for SERVICE in ${WEB_SERVICES}; do
-    docker exec -it "${WEB_CONTAINER}" /etc/init.d/"${SERVICE}" start
+    docker exec -it "${WEB_CONTAINER}" /etc/init.d/"${SERVICE}" reload
   done
 }
 
@@ -31,7 +31,7 @@ run_web_container_orchestration() {
 
   ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
 
-  start_web_services
+  reload_web_services
 }
 
 run_gluster_container_orchestration() {
