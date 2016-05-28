@@ -20,7 +20,7 @@ export GATEWAY="203.0.113.254"
 export BASE_CONTAINER_IP="203.0.113.99"
 export REVERSE_PROXY_IP="203.0.113.20"
 export WEB_IP="203.0.113.2"
-export GLUSTER_IP="203.0.113.30"
+export WEB2_IP="203.0.113.30"
 
 # Ports
 export HOST_REVERSE_PROXY_PORT="81"
@@ -45,7 +45,7 @@ export TCP_PORT_MAPPER_WEB2="2050"
 # Hostnames
 export REVERSE_PROXY_HOSTNAME="proxy.${TLD}"
 export WEB_HOSTNAME="web.${TLD}"
-export GLUSTER_HOSTNAME="gluster.${TLD}"
+export WEB2_HOSTNAME="web2.${TLD}"
 
 # Images
 export DISTRO_IMAGE="debian:latest"
@@ -53,13 +53,13 @@ export INIT_IMAGE="drucker:init"
 export BASE_IMAGE="drucker:base"
 export REVERSE_PROXY_IMAGE="drucker:reverse_proxy"
 export WEB_IMAGE="drucker:web"
-export GLUSTER_IMAGE="drucker:gluster"
+export WEB2_IMAGE="drucker:web2"
 
 # Containers
 export BASE_CONTAINER="drucker_base"
 export WEB_CONTAINER="drucker_web"
 export REVERSE_PROXY_CONTAINER="drucker_reverse_proxy"
-export GLUSTER_CONTAINER="drucker_gluster"
+export WEB2_CONTAINER="drucker_web2"
 
 # Services
 export WEB_SERVICES="apache2 mysql glusterfs-server"

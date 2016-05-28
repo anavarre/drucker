@@ -33,4 +33,4 @@ backend_port: 8080
 # GlusterFS
 brick: /data/brick1/gv0
 gluster_mount_dir: /mnt/gfs
-gluster_ip: 203.0.113.30
+web2_ip: 203.0.113.30

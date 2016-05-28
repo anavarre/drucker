@@ -2,12 +2,12 @@
 - name: Check if web container is part of the trusted pool
   shell: gluster peer status
   register: web_peer
-  when: inventory_hostname == "{{ gluster_ip }}"
+  when: inventory_hostname == "{{ web2_ip }}"
 
 - name: Add web container to trusted pool
   command: gluster peer probe "{{ backend_ip }}"
   register: web_peer_status
-  when: inventory_hostname == "{{ gluster_ip }}"
+  when: inventory_hostname == "{{ web2_ip }}"
 
 - name: Check if Gluster volume already exists
   stat:
@@ -15,7 +15,7 @@
   register: gluster_volume_check
 
 - name: Create Gluster volume
-  command: gluster volume create gv0 replica 2 "{{ backend_ip }}":"{{ brick }}" "{{ gluster_ip }}":"{{ brick }}"
+  command: gluster volume create gv0 replica 2 "{{ backend_ip }}":"{{ brick }}" "{{ web2_ip }}":"{{ brick }}"
   register: create_gv0
   when: gluster_volume_check.stat.exists == false
 
@@ -25,12 +25,12 @@
 
 - name: Start Gluster volume
   command: gluster volume start gv0
-  when: (gluster_volume_is_started.stdout != "1") and (inventory_hostname == "{{ gluster_ip }}")
+  when: (gluster_volume_is_started.stdout != "1") and (inventory_hostname == "{{ web2_ip }}")
 
 - name: Create mount point for brick
   mount:
     name: "{{ gluster_mount_dir }}"
-    src: "{{ gluster_ip }}:/gv0"
+    src: "{{ web2_ip }}:/gv0"
     fstype: glusterfs
     state: mounted
 
@@ -41,11 +41,11 @@
 
 - name: Move files dir to the brick
   command: mv "{{ drucker_install }}/sites/default/files" "{{ brick }}/"
-  when: (files_brick.stat.exists == false) and (inventory_hostname != "{{ gluster_ip }}")
+  when: (files_brick.stat.exists == false) and (inventory_hostname != "{{ web2_ip }}")
 
 - name: Create Drucker GFS symlink
   file:
     src: "{{ gluster_mount_dir }}/files"
     dest: "{{ drucker_install }}/sites/default/files"
     state: link
-  when: (files_brick.stat.exists == true) and (inventory_hostname != "{{ gluster_ip }}")
+  when: (files_brick.stat.exists == true) and (inventory_hostname != "{{ web2_ip }}")

@@ -37,12 +37,12 @@ configure_web_container_ssh_access() {
   rm /tmp/authorized_keys
 }
 
-configure_gluster_container_ssh_access() {
+configure_web2_container_ssh_access() {
   cat "${PUBKEY}" > /tmp/authorized_keys
 
-  docker cp /tmp/authorized_keys "${GLUSTER_CONTAINER}":/home/"${USER}"/.ssh/authorized_keys
+  docker cp /tmp/authorized_keys "${WEB2_CONTAINER}":/home/"${USER}"/.ssh/authorized_keys
 
-  docker exec -it "${GLUSTER_CONTAINER}" chown -R "${USER}":"${USER}" /home/"${USER}"/.ssh
+  docker exec -it "${WEB2_CONTAINER}" chown -R "${USER}":"${USER}" /home/"${USER}"/.ssh
 
   rm /tmp/authorized_keys
 }
