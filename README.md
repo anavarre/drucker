@@ -44,7 +44,7 @@ _drucker_ ships with the following software stack:
 | Drush          | 8.1.1           |
 | Drupal Console | 0.11.3          |
 | Composer       | 1.1.1           |
-| phpMyAdmin     | 4.6.1           |
+| phpMyAdmin     | 4.6.2           |
 | adminer        | 4.2.4           |
 
 ## Installation
@@ -163,3 +163,7 @@ $ docker rmi <drucker:image>
 ```
 
 If you run `drucker` again it will spin up containers (and optionally will build images). Orchestration will then be run as expected.
+
+## Troubleshooting
+
+See [Troubleshooting drucker](https://github.com/anavarre/drucker/wiki/Troubleshooting-drucker)
