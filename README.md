@@ -13,6 +13,8 @@ The plan is to make _drucker_ a truly service-based suite of containers, to isol
 
 ## Requirements
 
+### Software
+
 You need to have both [Docker](https://www.docker.com/) and [Ansible](https://www.ansible.com/) installed on your machine. Check with the below commands:
 
 ```
@@ -23,6 +25,12 @@ ansible 2.0.2.0
 ```
 
 **Important**: Ansible 2 or later is assumed in Ansible playbooks.
+
+### Disk space
+
+You need to have approximately 2GB available.
+
+### SSH
 
 You also need to [generate a SSH key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) if you don't have one already.
 
