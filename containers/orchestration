@@ -35,9 +35,11 @@ run_web_container_orchestration() {
 }
 
 run_web2_container_orchestration() {
-  echo -e "${BLUE}Running ${WEB2_CONTAINER} orchestration on the container...${COLOR_ENDING}"
+  echo -e "${BLUE}Running ${WEB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
   ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web2.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
+
+  reload_web_services
 }
 
 run_gluster_setup_container_orchestration() {

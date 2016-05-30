@@ -10,4 +10,13 @@
   roles:
     - yaegashi.blockinfile
   tasks:
+    - include: playbooks/apache.yml
+    - include: playbooks/php.yml
+    - include: playbooks/composer.yml
+    - include: playbooks/mysql.yml
+    - include: playbooks/phpmyadmin.yml
+    - include: playbooks/adminer.yml
+    - include: playbooks/drush.yml
+    - include: playbooks/drupal-console.yml
+    - include: playbooks/drupal.yml
     - include: playbooks/gluster.yml

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 WEB2_CONTAINER_EXISTS=$(docker ps -a | grep -o "${WEB2_CONTAINER}")
-WEB2_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${WEB2_IMAGE}")
+WEB_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${WEB_IMAGE}")
 WEB2_CONTAINER_STARTED=$(docker ps | grep -o "${WEB2_CONTAINER}")
 
 create_web2_container_from_base_image() {
@@ -21,7 +21,7 @@ create_web2_container_from_base_image() {
   run_web2_container_orchestration
 }
 
-create_web2_container_from_web2_image() {
+create_web2_container_from_web_image() {
   echo -e "${BLUE}Spinning up ${WEB2_CONTAINER} container with ID:${COLOR_ENDING}"
 
   docker run --privileged=true --name "${WEB2_CONTAINER}" -it \
@@ -32,20 +32,10 @@ create_web2_container_from_web2_image() {
   -p ${HOST_TCP_GLUSTER_DAEMON_WEB2}:"${TCP_GLUSTER_DAEMON_WEB2}" \
   -p ${HOST_TCP_GLUSTER_BRICK_WEB2}:"${TCP_GLUSTER_BRICK_WEB2}" \
   -p ${HOST_TCP_PORT_MAPPER_WEB2}:"${TCP_PORT_MAPPER_WEB2}" \
-  "${WEB2_IMAGE}" bash
+  "${WEB_IMAGE}" bash
 
   configure_web2_container_ssh_access
   run_web2_container_orchestration
-}
-
-create_web2_image_from_web2_container() {
-  echo -e "${BLUE}Committing ${WEB2_IMAGE} image from ${WEB2_CONTAINER} container...${COLOR_ENDING}"
-
-  docker commit -m "${WEB2_CONTAINER} on $(date +"%Y-%m-%d")" "${WEB2_CONTAINER}" "${WEB2_IMAGE}"
-
-  echo -e "${BLUE}Deleting initial container...${COLOR_ENDING}"
-  docker rm -f "${WEB2_CONTAINER}"
-  create_web2_container_from_web2_image
 }
 
 start_web2_container() {
@@ -68,12 +58,9 @@ provision_web2_container() {
       fi
     fi
   else
-    if [[ ${WEB2_IMAGE_EXISTS} ]]; then
-      echo -e "${GREEN}${WEB2_IMAGE} custom image already exists.${COLOR_ENDING}"
-      create_web2_container_from_web2_image
-    else
-      create_web2_container_from_base_image
-      create_web2_image_from_web2_container
+    if [[ ${WEB_IMAGE_EXISTS} ]]; then
+      echo -e "${GREEN}${WEB_IMAGE} custom image already exists.${COLOR_ENDING}"
+      create_web2_container_from_web_image
     fi
   fi
 }
