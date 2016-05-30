@@ -1,11 +1,11 @@
 [drucker_base]
 203.0.113.99
 
-[drucker_web]
+[drucker_reverse_proxy]
 203.0.113.2
 
-[drucker_reverse_proxy]
-203.0.113.20
+[drucker_web]
+203.0.113.10
 
 [drucker_web2]
-203.0.113.30
+203.0.113.11

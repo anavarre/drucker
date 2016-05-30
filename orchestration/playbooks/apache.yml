@@ -34,7 +34,7 @@
   replace:
     dest: /etc/apache2/ports.conf
     regexp: '^(.*)Listen 80(.*)$'
-    replace: 'Listen {{ backend_port }}'
+    replace: 'Listen {{ web_port }}'
   notify: Restart Apache
   when: apache.stat.exists == false
 

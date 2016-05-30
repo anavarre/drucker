@@ -52,7 +52,7 @@ _drucker_ ships with the following software stack:
 Add the below host entries in your hosts file:
 
 ```
-203.0.113.20    drucker.local phpmyadmin.local adminer.local
+203.0.113.2    drucker.local phpmyadmin.local adminer.local
 ```
 
 This will ensure you can access:
@@ -78,7 +78,7 @@ This will allow you to invoke `drucker` from anywhere on your system.
 Add the below in your `config` file (under `$HOME/.ssh`) or create the file if it doesn't exist.
 
 ```
-Host 203.0.113.99 203.0.113.20 203.0.113.2 203.0.113.30
+Host 203.0.113.99 203.0.113.2 203.0.113.10 203.0.113.11
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
   LogLevel=error

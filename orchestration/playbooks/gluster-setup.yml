@@ -5,7 +5,7 @@
   when: inventory_hostname == "{{ web2_ip }}"
 
 - name: Add web container to trusted pool
-  command: gluster peer probe "{{ backend_ip }}"
+  command: gluster peer probe "{{ web_ip }}"
   register: web_peer_status
   when: inventory_hostname == "{{ web2_ip }}"
 
@@ -15,7 +15,7 @@
   register: gluster_volume_check
 
 - name: Create Gluster volume
-  command: gluster volume create gv0 replica 2 "{{ backend_ip }}":"{{ brick }}" "{{ web2_ip }}":"{{ brick }}"
+  command: gluster volume create gv0 replica 2 "{{ web_ip }}":"{{ brick }}" "{{ web2_ip }}":"{{ brick }}"
   register: create_gv0
   when: gluster_volume_check.stat.exists == false
 
