@@ -3,16 +3,23 @@ user: drucker
 # System
 codename: jessie
 
-# Web
+# Apache
+web_ip: 203.0.113.10
+web2_ip: 203.0.113.11
+web_port: 8080
 apache_user: www-data
+
+# MySQL
 mysql_creds: root
 mysql_port: 3306
-name: web
-tld: local
-drupal_creds: admin
 mysql_stable_release: 5.5
 phpmyadmin_stable_release: 4.6.2
 adminer_stable_release: 4.2.4
+
+# Drupal & Tools
+name: web
+tld: local
+drupal_creds: admin
 composer_stable_release: 1.1.1
 drush_stable_release: 8.1.1
 drupal_console_stable_release: 1.0.0-alpha2
@@ -26,11 +33,8 @@ composer_path: /usr/local/bin/composer
 # Reverse proxy
 varnish_source: 4.1
 varnish_stable_release: 4.0.2.1
-web_ip: 203.0.113.10
 reverse_proxy_port: 80
-web_port: 8080
 
 # GlusterFS
 brick: /data/brick1/gv0
 gluster_mount_dir: /mnt/gfs
-web2_ip: 203.0.113.11
