@@ -7,10 +7,9 @@ _drucker_ is a [Docker](https://www.docker.com)-based [Drupal](https://www.drupa
 Currently, _drucker_ runs on 3 minimalistic containers:
 
 * `drucker_reverse_proxy` (Varnish/nginx): Varnish listens on port 80 and sends traffic to the nginx backend on port 8080
-* `drucker_web` (Apache/PHP/MySQL): Apache listens on port 8080 and receives traffic from nginx
-* `drucker_web2` (GlusterFS): Distributed network filesystem (WIP - not currently integrated with the web container)
+* `drucker_web` and `drucker_web2` (Apache/PHP/MySQL/GlusterFS): Apache listens on port 8080 and receives traffic from nginx. GlusterFS is used as a distributed network filesystem
 
-The plan is to make _drucker_ a truly service-based suite of containers, to isolate MySQL from multiple Apache/PHP web nodes but also Load-Balancing and HA capabilities. When we have this, then a [0.1](https://github.com/anavarre/drucker/milestones/0.1) release will be tagged.
+The plan is to make _drucker_ a truly service-based suite of containers, to isolate MySQL from multiple Apache/PHP web nodes but also enforce Load-Balancing and HA capabilities. When we have this, then a [0.1](https://github.com/anavarre/drucker/milestones/0.1) release will be tagged.
 
 ## Requirements
 
