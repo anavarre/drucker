@@ -103,13 +103,6 @@ $ ./drucker.sh
 
 At the beginning of the build process, _drucker_ will prompt you to enter the path to your SSH public key (in order to run [Ansible](https://www.ansible.com/) orchestration on your container). `~/.ssh/id_rsa.pub` is assumed, but you can enter the path to a custom public key then.
 
-**Currently, you need to run _drucker_ several times before the containers are ready to go. It's because of (mainly) post-installation GlusterFS configuration that needs to happen. Long story short, run _drucker_ again until you see the below Ansible play recap**
-
-```
-203.0.113.10               : ok=7    changed=1    unreachable=0    failed=0
-203.0.113.11               : ok=8    changed=3    unreachable=0    failed=0
-```
-
 To connect to a container, simply type:
 
 ```

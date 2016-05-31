@@ -34,16 +34,17 @@ run_web_container_orchestration() {
   reload_web_services
 }
 
+run_gluster_setup_container_orchestration() {
+  echo -e "${BLUE}Running GlusterFS orchestration on the container...${COLOR_ENDING}"
+
+  ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/gluster-setup.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
+}
+
 run_web2_container_orchestration() {
   echo -e "${BLUE}Running ${WEB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
   ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web2.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
 
+  run_gluster_setup_container_orchestration
   reload_web_services
-}
-
-run_gluster_setup_container_orchestration() {
-  echo -e "${BLUE}Running GlusterFS orchestration on the container...${COLOR_ENDING}"
-
-  ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/gluster-setup.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
 }
