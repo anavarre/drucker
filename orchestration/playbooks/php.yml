@@ -34,5 +34,12 @@
     dest: "/etc/php5/fpm/php.ini"
     regexp: "SSLProtocol all"
     line: "\tSSLProtocol all -SSLv2 -SSLv3"
+  when: fpm.stat.exists == false
+
+- name: "Add default timezone"
+  lineinfile:
+    dest: "/etc/php5/cli/php.ini"
+    regexp: ";date.timezone ="
+    line: "date.timezone = America/New_York"
   notify: Restart Apache
   when: fpm.stat.exists == false
