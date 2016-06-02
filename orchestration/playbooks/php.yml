@@ -40,6 +40,6 @@
   lineinfile:
     dest: "/etc/php5/cli/php.ini"
     regexp: ";date.timezone ="
-    line: "date.timezone = America/New_York"
+    line: "date.timezone = UTC"
   notify: Restart Apache
   when: fpm.stat.exists == false
