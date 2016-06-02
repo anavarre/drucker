@@ -19,4 +19,4 @@
     - include: playbooks/drush.yml
     - include: playbooks/drupal-console.yml
     - include: playbooks/drupal.yml
-    - include: playbooks/gluster.yml
+    # - include: playbooks/gluster.yml
