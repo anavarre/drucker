@@ -48,4 +48,4 @@
     src: "{{ gluster_mount_dir }}/files"
     dest: "{{ drucker_install }}/sites/default/files"
     state: link
-  when: (files_brick.stat.exists == true) and (inventory_hostname != "{{ web2_ip }}")
+  when: files_brick.stat.exists == true
