@@ -13,6 +13,7 @@
     - include: playbooks/apache.yml
     - include: playbooks/php.yml
     - include: playbooks/xdebug.yml
+    - include: playbooks/codesniffer.yml
     - include: playbooks/composer.yml
     - include: playbooks/mysql.yml
     - include: playbooks/phpmyadmin.yml

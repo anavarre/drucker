@@ -11,6 +11,7 @@ apache_user: www-data
 
 # PHP
 xdebug_stable_release: 2.4.0
+codesniffer_stable_release: 2.6.1
 php_extensions: 20131226
 
 # MySQL
