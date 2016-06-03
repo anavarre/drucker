@@ -9,6 +9,10 @@ web2_ip: 203.0.113.11
 web_port: 8080
 apache_user: www-data
 
+# PHP
+xdebug_stable_release: 2.4.0
+php_extensions: 20131226
+
 # MySQL
 mysql_creds: root
 mysql_port: 3306

@@ -1,0 +1,43 @@
+---
+- name: Check if Xdebug is installed
+  stat:
+    path: /usr/lib/php5/{{ php_extensions }}/xdebug.so
+  register: xdebug
+
+- name: Download latest Xdebug release
+  get_url:
+    url: http://xdebug.org/files/xdebug-{{ xdebug_stable_release }}.tgz
+    dest: /tmp
+  when: xdebug.stat.exists == false
+
+- name: Extract Xdebug files
+  unarchive:
+    src: /tmp/xdebug-{{ xdebug_stable_release }}.tgz
+    dest: /tmp/
+    copy: no
+  when: xdebug.stat.exists == false
+
+- name: Compile Xdebug
+  command: "{{ item }} chdir=/tmp/xdebug-{{ xdebug_stable_release }}"
+  with_items:
+    - /usr/bin/phpize
+    - ./configure
+    - /usr/bin/make
+  register: compile_xdebug
+  when: xdebug.stat.exists == false
+
+- name: Copy compiled Xdebug extension
+  command: cp /tmp/xdebug-{{ xdebug_stable_release }}/modules/xdebug.so /usr/lib/php5/{{ php_extensions }}
+  when: xdebug.stat.exists == false
+
+- name: Configure Xdebug in php.ini (CLI)
+  lineinfile:
+    dest: "/etc/php5/cli/php.ini"
+    line: "zend_extension = /usr/lib/php5/{{ php_extensions }}/xdebug.so"
+  when: xdebug.stat.exists == false
+
+- name: Configure Xdebug in php.ini (Apache)
+  lineinfile:
+    dest: "/etc/php5/apache2/php.ini"
+    line: "zend_extension = /usr/lib/php5/{{ php_extensions }}/xdebug.so"
+  when: xdebug.stat.exists == false
