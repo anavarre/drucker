@@ -1,7 +1,7 @@
 ---
 - name: Check if Composer is installed
   stat:
-    path: "{{ composer_path }}"
+    path: "{{ user_programs_path }}/composer"
   register: composer
 
 - name: Check Composer version
@@ -16,15 +16,15 @@
 - name: Install Composer globally
   get_url:
     url: https://getcomposer.org/composer.phar
-    dest: "{{ composer_path }}"
+    dest: "{{ user_programs_path }}/composer"
   when: composer.stat.exists == false
 
 - name: Make Composer executable
   file:
-    path: "{{ composer_path }}"
+    path: "{{ user_programs_path }}/composer"
     mode: 0755
   when: composer.stat.exists == false
 
 - name: Ensure Composer is up-to-date
-  command: /usr/local/bin/composer self-update
+  command: "{{ user_programs_path }}/composer self-update"
   when: composer.stat.exists == false

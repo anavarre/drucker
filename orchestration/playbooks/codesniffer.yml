@@ -1,7 +1,7 @@
 ---
 - name: Check if Code Sniffer is installed
   stat:
-    path: /usr/lib/php5/phpcs
+    path: "{{ user_programs_path }}/phpcs"
   register: codesniffer
 
 - name: Download Code Sniffer phpcs PHAR file
@@ -16,7 +16,7 @@
   when: codesniffer.stat.exists == false
 
 - name: Move phpcs to PHP directory
-  command: mv /tmp/phpcs /usr/lib/php5/
+  command: mv /tmp/phpcs {{ user_programs_path }}/
   when: codesniffer.stat.exists == false
 
 - name: Download Code Sniffer phpcbf
@@ -31,5 +31,5 @@
   when: codesniffer.stat.exists == false
 
 - name: Move phpcbf to PHP directory
-  command: mv /tmp/phpcbf /usr/lib/php5/
+  command: mv /tmp/phpcbf {{ user_programs_path }}/
   when: codesniffer.stat.exists == false
