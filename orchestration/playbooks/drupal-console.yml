@@ -1,7 +1,7 @@
 ---
 - name: Check if Drupal Console is installed
   stat:
-    path: "{{ drupal_console_path }}"
+    path: "{{ user_programs_path }}/drupal"
   register: drupal_console
 
 - name: Check Drupal Console version
@@ -12,7 +12,7 @@
 - name: Install Drupal Console globally
   get_url:
     url: https://drupalconsole.com/installer
-    dest: "{{ drupal_console_path }}"
+    dest: "{{ user_programs_path }}/drupal"
     mode: 0755
   when: drupal_console.stat.exists == false
 

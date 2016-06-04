@@ -30,25 +30,25 @@
 
 - name: Create files directory
   file:
-    path: "{{ drucker_install }}/sites/default/files"
+    path: "{{ webroot }}/{{ user }}/sites/default/files"
     state: directory
     mode: 0777
   when: drucker.stat.exists == false
 
 - name: Create simpletest directory
   file:
-    path: "{{ drucker_install }}/sites/simpletest"
+    path: "{{ webroot }}/{{ user }}/sites/simpletest"
     state: directory
     mode: 0777
   when: drucker.stat.exists == false
 
 - name: Create settings.php file
-  command: cp {{ drucker_install }}/sites/default/default.settings.php {{ drucker_install }}/sites/default/settings.php
+  command: cp {{ webroot }}/{{ user }}/sites/default/default.settings.php {{ webroot }}/{{ user }}/sites/default/settings.php
   when: drucker.stat.exists == false
 
 - name: Add trusted_host_patterns in settings.php
   blockinfile:
-    dest: "{{ drucker_install }}/sites/default/settings.php"
+    dest: "{{ webroot }}/{{ user }}/sites/default/settings.php"
     block: |
 
       $settings['trusted_host_patterns'] = array(
@@ -78,7 +78,7 @@
 
 - name: Add database connection string in settings.php
   blockinfile:
-    dest: "{{ drucker_install }}/sites/default/settings.php"
+    dest: "{{ webroot }}/{{ user }}/sites/default/settings.php"
     block: |
 
       $databases['default']['default'] = array (
