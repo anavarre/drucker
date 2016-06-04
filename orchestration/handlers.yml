@@ -13,6 +13,11 @@
     name: apache2
     state: restarted
 
+- name: Start Apache
+  service:
+    name: apache2
+    state: started
+
 - name: Reload Apache
   service:
     name: apache2

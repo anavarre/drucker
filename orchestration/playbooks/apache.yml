@@ -35,7 +35,6 @@
     dest: /etc/apache2/ports.conf
     regexp: '^(.*)Listen 80(.*)$'
     replace: 'Listen {{ web_port }}'
-  notify: Restart Apache
   when: apache.stat.exists == false
 
 - name: Support file upload progress through APC
@@ -48,4 +47,4 @@
   service:
     name: apache2
     enabled: yes
-    state: restarted
+    state: started

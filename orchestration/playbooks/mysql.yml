@@ -52,4 +52,4 @@
   service:
     name: mysql
     enabled: yes
-    state: restarted
+    state: started
