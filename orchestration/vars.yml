@@ -12,7 +12,7 @@ apache_user: www-data
 # PHP
 php_extensions: 20131226
 user_programs_path: /usr/local/bin
-composer_stable_release: 1.1.1
+composer_stable_release: 1.1.2
 xdebug_stable_release: 2.4.0
 codesniffer_stable_release: 2.6.1
 
