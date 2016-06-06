@@ -9,7 +9,7 @@ Currently, _drucker_ runs on 2 minimalistic containers:
 * `drucker_reverse_proxy` (Varnish/nginx): Varnish listens on port 80 and sends traffic to the Apache backend on port 8080, via nginx.
 * `drucker_web` (Apache/PHP/MySQL): Apache listens on port 8080 and receives traffic from nginx.
 
-The plan is to make _drucker_ a true service-based suite of containers, to isolate MySQL from multiple Apache/PHP web nodes but also leverage GlusterFS for distributed network filesystem across N number of web containers. Load-Balancing and HA capabilities will also be enforced to replicate a production environment locally. When we have this, then a 1.0.0 release will be tagged. But for now, the aim is to get [0.1.0](https://github.com/anavarre/drucker/milestones/0.1.0) out the door and incrementally make things more stable and more fully-featured.
+The plan is to make _drucker_ a true service-based suite of containers, to isolate MySQL from multiple Apache/PHP web nodes but also leverage GlusterFS for distributed network filesystem across N number of web containers. Load-Balancing and HA capabilities will also be enforced to replicate a production environment locally. When we have this, then a 1.0.0 release will be tagged. But for now, the aim is to get [0.2.0](https://github.com/anavarre/drucker/milestones/0.2.0) out the door and incrementally make things more stable and more fully-featured.
 
 ## Requirements
 
