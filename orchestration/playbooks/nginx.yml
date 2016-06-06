@@ -5,10 +5,26 @@
   register: nginx
   ignore_errors: True
 
+- name: Prepare for nginx installation 1/2
+  apt_key:
+    url: http://nginx.org/keys/nginx_signing.key
+    state: present
+  when: nginx.stat.exists == false
+
+- name: Prepare for nginx installation 2/2
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+  with_items:
+    - 'deb http://nginx.org/packages/debian/ {{ codename }} nginx'
+    - 'deb-src http://nginx.org/packages/debian/ {{ codename }} nginx'
+  when: nginx.stat.exists == false
+
 - name: Install nginx
   package:
     name: "{{ item }}"
     state: present
+    update_cache: yes
   with_items:
     - nginx
   when: nginx.stat.exists == false
@@ -24,6 +40,18 @@
     path: /etc/nginx/sites-enabled/default
     state: absent
   when: nginx_default.stat.exists == true
+
+- name: Check if default nginx site configuration exists
+  stat:
+    path: /etc/nginx/conf.d/default.conf
+  register: nginx_default_configuration
+  ignore_errors: True
+
+- name: Delete default nginx site configuration
+  file:
+    path: /etc/nginx/conf.d/default.conf
+    state: absent
+  when: nginx_default_configuration.stat.exists == true
 
 - name: Check if nginx drucker host exists
   stat:

@@ -21,7 +21,7 @@
 
 - name: Prepare for Varnish installation 3/3
   apt_repository:
-    repo: 'deb https://repo.varnish-cache.org/debian/ jessie varnish-{{ varnish_source }}'
+    repo: 'deb https://repo.varnish-cache.org/debian/ {{ codename }} varnish-{{ varnish_source }}'
     state: present
   when: varnish.stat.exists == false
 

@@ -42,7 +42,7 @@ _drucker_ ships with the following software stack:
 | -------------  |:---------------:|
 | Debian         | 8 (Jessie)      |
 | Varnish        | 4.0.2.1         |
-| nginx          | 1.6.2           |
+| nginx          | 1.10.1          |
 | Apache         | 2.4.10 or later |
 | PHP-FPM        | 5.6.19 or later |
 | Xdebug         | 2.4.0           |
