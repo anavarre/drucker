@@ -34,25 +34,19 @@
     - varnish
   when: varnish.stat.exists == false
 
-- name: Configure Varnish
-  lineinfile:
-    dest: /etc/default/varnish
-    regexp: "^DAEMON_OPTS=\"-a :6081(.*)$"
-    line: "DAEMON_OPTS=\"-a 0.0.0.0:{{ reverse_proxy_port }}"
+- name: Deploy Varnish template
+  copy:
+    src: files/varnish
+    dest: /etc/default/
+    mode: 0644
   when: varnish.stat.exists == false
 
-- name: Check if the default Varnish VCL exists
-  stat:
-    path: /etc/varnish/default.vcl
-  ignore_errors: True
-  register: vcl
-
-- name: Create the default Varnish VCL
-  file:
-    path: /etc/varnish/default.vcl
-    state: touch
+- name: "Deploy Varnish's default VCL template"
+  copy:
+    src: files/default.vcl
+    dest: /etc/varnish/
     mode: 0644
-  when: varnish.stat.exists == false or vcl.stat.exists == false
+  when: varnish.stat.exists == false
 
 - name: Ensure Varnish is started
   service:
