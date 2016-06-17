@@ -30,13 +30,6 @@
     line: "\tSSLProtocol all -SSLv2 -SSLv3"
   when: apache.stat.exists == false
 
-- name: Make Apache listen on port 8080
-  replace:
-    dest: /etc/apache2/ports.conf
-    regexp: '^(.*)Listen 80(.*)$'
-    replace: 'Listen {{ web_port }}'
-  when: apache.stat.exists == false
-
 - name: Support file upload progress through APC
   lineinfile:
     dest: /etc/php5/apache2/php.ini

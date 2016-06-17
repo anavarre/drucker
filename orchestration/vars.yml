@@ -7,7 +7,6 @@ tld: local
 # Apache
 web_ip: 203.0.113.10
 web2_ip: 203.0.113.11
-web_port: 8080
 apache_user: www-data
 webroot: /var/www/html
 
