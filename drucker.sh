@@ -10,7 +10,7 @@ source "${DIR}"/containers/orchestration
 source "${DIR}"/containers/base
 source "${DIR}"/containers/reverse_proxy
 source "${DIR}"/containers/web
-source "${DIR}"/containers/web2
+# source "${DIR}"/containers/web2
 
 check_requirements
 configure_ssh_access
