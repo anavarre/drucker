@@ -6,7 +6,7 @@ _drucker_ is a [Docker](https://www.docker.com)-based [Drupal](https://www.drupa
 
 Currently, _drucker_ runs on 2 minimalistic containers:
 
-* `drucker_reverse_proxy` (Varnish/nginx): Varnish listens on port 80 and sends traffic to the Apache backend, via nginx (port 8080).
+* `drucker_reverse_proxy` (Varnish/nginx): Varnish listens on port 80 and sends traffic to the Apache backend via nginx on port 8080).
 * `drucker_web` (Apache/PHP/MySQL): Apache listens on port 80 and receives traffic from nginx.
 
 The plan is to make _drucker_ a true service-based suite of containers, to isolate MySQL from multiple Apache/PHP web nodes but also leverage GlusterFS for distributed network filesystem across N number of web containers. Load-Balancing and HA capabilities will also be enforced to replicate a production environment locally. When we have this, then a 1.0.0 release will be tagged. But for now, the aim is to get [0.2.0](https://github.com/anavarre/drucker/milestones/0.2.0) out the door and incrementally make things more stable and more fully-featured.
@@ -48,8 +48,8 @@ _drucker_ ships with the following software stack:
 | Xdebug         | 2.4.0           |
 | Code Sniffer   | 2.6.1           |
 | MySQL          | 5.5.49 or later |
-| Drupal         | 8.1.x           |
-| Drush          | 8.1.1           |
+| Drupal         | 8.2.x           |
+| Drush          | 8.1.2           |
 | Drupal Console | 1.0.0-beta1     |
 | Composer       | 1.1.2           |
 | phpMyAdmin     | 4.6.2           |
