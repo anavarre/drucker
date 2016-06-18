@@ -37,4 +37,14 @@ sub vcl_deliver {
     # response to the client.
     #
     # You can do accounting or modifying the final object here.
+
+    # Indicate if the response is a HIT or MISS
+    if (obj.hits > 0) {
+        set resp.http.X-Cache = "HIT";
+    } else {
+        set resp.http.X-Cache = "MISS";
+    }
+
+    # Indicate how many HITS Varnish has recorded within the allowed TTL
+    set resp.http.X-Cache-Hits = obj.hits;
 }
