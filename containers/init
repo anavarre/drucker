@@ -2,6 +2,7 @@
 
 INIT_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${INIT_IMAGE}")
 DISTRO_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${DISTRO_IMAGE}")
+BASE_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${BASE_IMAGE}")
 
 check_requirements() {
   if [[ -z $(docker --version) ]]; then
@@ -49,7 +50,8 @@ build_init_image() {
   if [[ ${INIT_IMAGE_EXISTS} ]]; then
     echo -e "${GREEN}${INIT_IMAGE} image already exists.${COLOR_ENDING}"
   else
-    if [[ ! ${BASE_IMAGE} ]]; then
+    if [[ ! ${BASE_IMAGE_EXISTS} ]]; then
+      echo 'base not here!'
       echo -e "${BLUE}Building ${INIT_IMAGE} image from Dockerfile...${COLOR_ENDING}"
       # Make sure the Docker build context doesn't get in the way.
       cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd

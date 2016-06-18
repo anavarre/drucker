@@ -39,6 +39,7 @@ provision_base_container() {
       create_base_container_from_init_image
       create_base_image_from_base_container
       delete_base_container
+      delete_init_image
     fi
   fi
 }
