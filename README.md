@@ -44,13 +44,13 @@ _drucker_ ships with the following software stack:
 | Varnish        | 4.1.2 or later  |
 | nginx          | 1.10.1 or later |
 | Apache         | 2.4.10 or later |
-| PHP-FPM        | 5.6.21 or later |
+| PHP-FPM        | 5.6.22 or later |
 | Xdebug         | 2.4.0           |
 | Code Sniffer   | 2.6.1           |
 | MySQL          | 5.5.49 or later |
 | Drupal         | 8.2.x           |
 | Drush          | 8.1.2           |
-| Drupal Console | 1.0.0-beta1     |
+| Drupal Console | 1.0.0-beta2     |
 | Composer       | 1.1.2           |
 | phpMyAdmin     | 4.6.2           |
 | adminer        | 4.2.5           |
