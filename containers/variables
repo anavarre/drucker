@@ -44,7 +44,7 @@ export TCP_PORT_MAPPER_WEB2="2050"
 
 # Hostnames
 export REVERSE_PROXY_HOSTNAME="proxy.${TLD}"
-export WEB_HOSTNAME="web.${TLD}"
+export DRUCKER_HOSTNAME="drucker.${TLD}"
 export WEB2_HOSTNAME="web2.${TLD}"
 
 # Images
