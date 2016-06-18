@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+INIT_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${INIT_IMAGE}")
 BASE_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${BASE_IMAGE}")
 BASE_CONTAINER_EXISTS=$(docker ps -a | grep -o "${BASE_CONTAINER}")
 
@@ -28,6 +29,9 @@ create_base_container_from_init_image() {
 provision_base_container() {
   if [[ ${BASE_IMAGE_EXISTS} ]]; then
     echo -e "${GREEN}${BASE_IMAGE} image already exists.${COLOR_ENDING}"
+    if [[ ${INIT_IMAGE_EXISTS} ]]; then
+      delete_init_image
+    fi
   else
     if [[ ${BASE_CONTAINER_EXISTS} ]]; then
       delete_base_container
@@ -35,7 +39,6 @@ provision_base_container() {
       create_base_container_from_init_image
       create_base_image_from_base_container
       delete_base_container
-      delete_init_image
     fi
   fi
 }

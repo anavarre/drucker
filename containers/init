@@ -51,9 +51,9 @@ build_init_image() {
   else
     if [[ ! ${BASE_IMAGE} ]]; then
       echo -e "${BLUE}Building ${INIT_IMAGE} image from Dockerfile...${COLOR_ENDING}"
+      # Make sure the Docker build context doesn't get in the way.
+      cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd
+      docker build -t "${INIT_IMAGE}" .
     fi
-    # Make sure the Docker build context doesn't get in the way.
-    cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd
-    docker build -t "${INIT_IMAGE}" .
   fi
 }
