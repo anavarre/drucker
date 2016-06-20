@@ -23,6 +23,11 @@
     name: apache2
     state: reloaded
 
+- name: Restart PHP-FPM
+  service:
+    name: php5-fpm
+    state: restarted
+
 - name: Restart MySQL
   service:
     name: mysql

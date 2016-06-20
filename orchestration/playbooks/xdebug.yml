@@ -38,6 +38,6 @@
 
 - name: Configure Xdebug in php.ini (Apache)
   lineinfile:
-    dest: "/etc/php5/apache2/php.ini"
+    dest: "/etc/php5/fpm/php.ini"
     line: "zend_extension = /usr/lib/php5/{{ php_extensions }}/xdebug.so"
   when: xdebug.stat.exists == false
