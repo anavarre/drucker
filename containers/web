@@ -4,8 +4,15 @@ WEB_CONTAINER_EXISTS=$(docker ps -a | grep -o "${WEB_CONTAINER}")
 WEB_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${WEB_IMAGE}")
 WEB_CONTAINER_STARTED=$(docker ps | grep -o "${WEB_CONTAINER}")
 
+local_directory_mapping() {
+  read -p "Enter local path to store drucker sites [${DEFAULT_HOST_PATH}]: " HOST_PATH
+  HOST_PATH=${HOST_PATH:-$DEFAULT_HOST_PATH}
+}
+
 create_web_container_from_base_image() {
   echo -e "${BLUE}Spinning up ${WEB_CONTAINER} container with ID:${COLOR_ENDING}"
+
+  local_directory_mapping
 
   docker run --privileged=true --name "${WEB_CONTAINER}" -it \
   -h "${DRUCKER_HOSTNAME}" \
@@ -15,6 +22,7 @@ create_web_container_from_base_image() {
   -p "${HOST_TCP_GLUSTER_DAEMON_WEB}":"${TCP_GLUSTER_DAEMON_WEB}" \
   -p "${HOST_TCP_GLUSTER_BRICK_WEB}":"${TCP_GLUSTER_BRICK_WEB}" \
   -p "${HOST_TCP_PORT_MAPPER_WEB}":"${TCP_PORT_MAPPER_WEB}" \
+  -v "${HOST}":"${CONTAINER_PATH}" \
   "${BASE_IMAGE}" bash
 
   configure_web_container_ssh_access
@@ -24,6 +32,8 @@ create_web_container_from_base_image() {
 create_web_container_from_web_image() {
   echo -e "${BLUE}Spinning up ${WEB_CONTAINER} container with ID:${COLOR_ENDING}"
 
+  local_directory_mapping
+
   docker run --privileged=true --name "${WEB_CONTAINER}" -it \
   -h "${DRUCKER_HOSTNAME}" \
   --net "${NETWORK}" \
@@ -32,6 +42,7 @@ create_web_container_from_web_image() {
   -p "${HOST_TCP_GLUSTER_DAEMON_WEB}":"${TCP_GLUSTER_DAEMON_WEB}" \
   -p "${HOST_TCP_GLUSTER_BRICK_WEB}":"${TCP_GLUSTER_BRICK_WEB}" \
   -p "${HOST_TCP_PORT_MAPPER_WEB}":"${TCP_PORT_MAPPER_WEB}" \
+  -v "${HOST_PATH}":"${CONTAINER_PATH}" \
   "${WEB_IMAGE}" bash
 
   configure_web_container_ssh_access

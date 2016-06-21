@@ -11,6 +11,10 @@ export TLD="local"
 
 export DEFAULT="$HOME/.ssh/id_rsa.pub"
 
+# Volume mapping
+export DEFAULT_HOST_PATH="/var/www/html"
+export CONTAINER_PATH="/var/www/html"
+
 # Networking
 export NETWORK="drucker"
 export SUBNET="203.0.113.0/24"
