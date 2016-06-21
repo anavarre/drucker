@@ -14,14 +14,14 @@ RUN apt-get install -y apt-utils
 
 # Packages needed for Ansible orchestration.
 RUN apt-get install -y \
-ssh \
-python-simplejson \
-unzip \
-sudo
+    ssh \
+    python-simplejson \
+    unzip \
+    sudo
 
 # Create a drucker sudoer.
 RUN adduser -q --disabled-password --gecos '' $USER \
-&& usermod -aG sudo $USER
+    && usermod -aG sudo $USER
 RUN echo "$USER:$USER" | chpasswd
 
 # Prepare for SSH access
