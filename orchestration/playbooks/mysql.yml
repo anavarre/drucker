@@ -16,6 +16,13 @@
     - python-mysqldb
   when: mysql.stat.exists == false
 
+- name: Set innodb_file_per_table
+  lineinfile:
+    dest: /etc/mysql/my.cnf
+    insertafter: "^datadir"
+    line: "innodb_file_per_table = 1"
+  when: mysql.stat.exists == false
+
 - name: Start MySQL
   service:
     name: "{{ item }}"
