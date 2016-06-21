@@ -55,7 +55,7 @@
     state: absent
     name: php5
   notify: Restart PHP-FPM
-  when: fpm.stat.exists == true
+  when: fpm.stat.exists == false
 
 - name: Increase max_execution_time
   lineinfile:
