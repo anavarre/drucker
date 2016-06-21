@@ -76,23 +76,6 @@
     state: present
   when: drucker.stat.exists == false
 
-- name: Add database connection string in settings.php
-  blockinfile:
-    dest: "{{ webroot }}/{{ user }}/sites/default/settings.php"
-    block: |
-
-      $databases['default']['default'] = array (
-        'database' => '{{ user }}',
-        'username' => '{{ mysql_creds }}',
-        'password' => '{{ mysql_creds }}',
-        'host' => 'localhost',
-        'port' => '{{ mysql_port }}',
-        'driver' => 'mysql',
-        'prefix' => '',
-        'collation' => 'utf8mb4_general_ci',
-      );
-  when: drucker.stat.exists == false
-
 - name: Check if drucker vHost exists
   stat:
     path: /etc/apache2/sites-enabled/{{ user }}.conf
