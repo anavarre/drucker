@@ -22,7 +22,7 @@ create_web_container_from_base_image() {
   -p "${HOST_TCP_GLUSTER_DAEMON_WEB}":"${TCP_GLUSTER_DAEMON_WEB}" \
   -p "${HOST_TCP_GLUSTER_BRICK_WEB}":"${TCP_GLUSTER_BRICK_WEB}" \
   -p "${HOST_TCP_PORT_MAPPER_WEB}":"${TCP_PORT_MAPPER_WEB}" \
-  -v "${HOST}":"${CONTAINER_PATH}" \
+  -v "${HOST_PATH}":"${CONTAINER_PATH}" \
   "${BASE_IMAGE}" bash
 
   configure_web_container_ssh_access
