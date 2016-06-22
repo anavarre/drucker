@@ -140,7 +140,7 @@ Then run `drucker` again.
 
 ### Reinstall Drupal from a newer dev release
 
-Delete the `drucker` directory under `/var/www/html`
+Delete the `drucker` directory under `/var/www/html`.
 
 ```
 $ rm -Rf /var/www/html/drucker
@@ -153,6 +153,10 @@ $ rm /tmp/drupal-8.1.x-dev.tar.gz
 ```
 
 Then run `drucker` again.
+
+### Reinstall Drupal from the existing codebase
+
+Delete the `drucker` database. Then run `drucker` again.
 
 ### Delete a container
 

@@ -11,7 +11,7 @@
     dest: /tmp
   when: drupal.stat.exists == false
 
-- name: Check if drucker exists
+- name: Check if drucker docroot exists
   stat:
     path: "{{ webroot }}/{{ user }}"
   register: drucker
@@ -28,12 +28,23 @@
   command: mv {{ webroot}}/drupal-{{ drupal_dev_release }}-dev {{ webroot }}/{{ user }}
   when: drucker.stat.exists == false
 
+- name: Check if drucker database exists
+  stat:
+    path: "/var/lib/mysql/{{ user }}"
+  register: drucker_db
+
+- name: Delete files directory when reinstalling
+  file:
+    path: "{{ webroot }}/{{ user }}/sites/default/files"
+    state: absent
+  when: drucker_db.stat.exists == false
+
 - name: Create files directory
   file:
     path: "{{ webroot }}/{{ user }}/sites/default/files"
     state: directory
     mode: 0777
-  when: drucker.stat.exists == false
+  when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Create simpletest directory
   file:
@@ -42,19 +53,24 @@
     mode: 0777
   when: drucker.stat.exists == false
 
+- name: Delete settings.php file when reinstalling
+  file:
+    path: "{{ webroot }}/{{ user }}/sites/default/settings.php"
+    state: absent
+  when: drucker_db.stat.exists == false
+
 - name: Create settings.php file
   command: cp {{ webroot }}/{{ user }}/sites/default/default.settings.php {{ webroot }}/{{ user }}/sites/default/settings.php
-  when: drucker.stat.exists == false
+  when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Add trusted_host_patterns in settings.php
   blockinfile:
     dest: "{{ webroot }}/{{ user }}/sites/default/settings.php"
     block: |
-
       $settings['trusted_host_patterns'] = array(
         '^{{ user }}\.local$',
       );
-  when: drucker.stat.exists == false
+  when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Ensure drucker database is wiped before installing
   mysql_db:
@@ -74,7 +90,7 @@
     login_port: 3306
     name: drucker
     state: present
-  when: drucker.stat.exists == false
+  when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Check if drucker vHost exists
   stat:
@@ -142,7 +158,7 @@
 
 - name: Install Drupal
   command: drush @{{ user }}.{{ tld }} site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@127.0.0.1:{{ mysql_port }}/{{ user }} --site-name={{ user }} --site-mail={{ drupal_creds }}@{{ user }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ user }}.{{ tld }}
-  when: drucker.stat.exists == false
+  when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Make sure files and dirs ownership is consistent
   file:
