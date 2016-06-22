@@ -31,13 +31,33 @@
   when: xdebug.stat.exists == false
 
 - name: Configure Xdebug in php.ini (CLI)
-  lineinfile:
+  blockinfile:
     dest: "/etc/php5/cli/php.ini"
-    line: "zend_extension = /usr/lib/php5/{{ php_extensions }}/xdebug.so"
-  when: xdebug.stat.exists == false
+    block: |
+      zend_extension = /usr/lib/php5/{{ php_extensions }}/xdebug.so
+      xdebug.remote_host=localhost
+      xdebug.remote_port=9000
+      xdebug.remote_enable=1
+      xdebug.remote_autostart=1
+      xdebug.profiler_enable=1
+      xdebug.profiler_output_dir="/tmp/profiler"
+      xdebug.idekey=PHPSTORM
+      xdebug.max_nesting_level=256
+    marker: ; {mark} ANSIBLE MANAGED BLOCK
+  when: xdebug.stat.exists == true
 
-- name: Configure Xdebug in php.ini (Apache)
-  lineinfile:
+- name: Configure Xdebug in php.ini (FPM)
+  blockinfile:
     dest: "/etc/php5/fpm/php.ini"
-    line: "zend_extension = /usr/lib/php5/{{ php_extensions }}/xdebug.so"
-  when: xdebug.stat.exists == false
+    block: |
+      zend_extension = /usr/lib/php5/{{ php_extensions }}/xdebug.so
+      xdebug.remote_host=localhost
+      xdebug.remote_port=9000
+      xdebug.remote_enable=1
+      xdebug.remote_autostart=1
+      xdebug.profiler_enable=1
+      xdebug.profiler_output_dir="/tmp/profiler"
+      xdebug.idekey=PHPSTORM
+      xdebug.max_nesting_level=256
+    marker: ; {mark} ANSIBLE MANAGED BLOCK
+  when: xdebug.stat.exists == true
