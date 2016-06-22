@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 configure_ssh_access() {
-  read -p "Enter path to SSH public key [${DEFAULT}]: " PUBKEY
-  PUBKEY=${PUBKEY:-$DEFAULT}
+  read -p "Enter path to SSH public key [${DEFAULT_SSH_PATH}]: " PUBKEY
+  PUBKEY=${PUBKEY:-$DEFAULT_SSH_PATH}
 
   echo -e "${BLUE}Configuring SSH access to the container...${COLOR_ENDING}"
 }

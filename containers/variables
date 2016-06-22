@@ -9,7 +9,7 @@ export COLOR_ENDING="\033[0m"
 export USER="drucker"
 export TLD="local"
 
-export DEFAULT="$HOME/.ssh/id_rsa.pub"
+export DEFAULT_SSH_PATH="$HOME/.ssh/id_rsa.pub"
 
 # Volume mapping
 export DEFAULT_HOST_PATH="/var/www/html"
