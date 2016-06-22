@@ -50,12 +50,17 @@
     name: actions
   when: fpm.stat.exists == false
 
+- name: Check if php5 module is enabled
+  stat:
+    path: /etc/apache2/mods-available/php5.conf
+  register: php5_module
+
 - name: Disable php5 module
   apache2_module:
     state: absent
     name: php5
   notify: Restart PHP-FPM
-  when: fpm.stat.exists == false
+  when: php5_module.stat.exists == true
 
 - name: Increase max_execution_time
   lineinfile:
