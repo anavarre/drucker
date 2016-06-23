@@ -22,7 +22,7 @@ max_execution_time: 300
 mysql_creds: root
 mysql_port: 3306
 mysql_stable_release: 5.5
-phpmyadmin_stable_release: 4.6.2
+phpmyadmin_stable_release: 4.6.3
 adminer_stable_release: 4.2.5
 
 # Drupal & Tools
