@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
 configure_ssh_access() {
-  read -p "Enter path to SSH public key [${DEFAULT_SSH_PATH}]: " PUBKEY
-  PUBKEY=${PUBKEY:-$DEFAULT_SSH_PATH}
+  if [[ (! ${WEB_CONTAINER_EXISTS}) || (! ${REVERSE_PROXY_CONTAINER_EXISTS}) ]]; then
+    read -p "Enter path to SSH public key [${DEFAULT_SSH_PATH}]: " PUBKEY
+    PUBKEY=${PUBKEY:-$DEFAULT_SSH_PATH}
 
-  echo -e "${BLUE}Configuring SSH access to the container...${COLOR_ENDING}"
+    echo -e "${BLUE}Configuring SSH access to the container...${COLOR_ENDING}"
+  fi
 }
 
 configure_base_container_ssh_access() {

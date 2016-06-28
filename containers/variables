@@ -62,7 +62,11 @@ export WEB2_IMAGE="drucker:web2"
 # Containers
 export BASE_CONTAINER="drucker_base"
 export WEB_CONTAINER="drucker_web"
+WEB_CONTAINER_EXISTS=$(docker ps -a | grep -o "${WEB_CONTAINER}")
+export WEB_CONTAINER_EXISTS
 export REVERSE_PROXY_CONTAINER="drucker_reverse_proxy"
+export REVERSE_PROXY_CONTAINER_EXISTS
+REVERSE_PROXY_CONTAINER_EXISTS=$(docker ps -a | grep -o "${REVERSE_PROXY_CONTAINER}")
 export WEB2_CONTAINER="drucker_web2"
 
 # Services

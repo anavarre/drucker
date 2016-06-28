@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
-WEB_CONTAINER_EXISTS=$(docker ps -a | grep -o "${WEB_CONTAINER}")
 WEB_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${WEB_IMAGE}")
 WEB_CONTAINER_STARTED=$(docker ps | grep -o "${WEB_CONTAINER}")
 
 local_directory_mapping() {
-  read -p "Enter local path to store drucker sites [${DEFAULT_HOST_PATH}]: " HOST_PATH
-  HOST_PATH=${HOST_PATH:-$DEFAULT_HOST_PATH}
+  if [[ ! ${WEB_CONTAINER_EXISTS} ]]; then
+    read -p "Enter local path to store drucker sites [${DEFAULT_HOST_PATH}]: " HOST_PATH
+    HOST_PATH=${HOST_PATH:-$DEFAULT_HOST_PATH}
+  fi
 }
 
 create_web_container_from_base_image() {

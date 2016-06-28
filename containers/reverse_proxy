@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-REVERSE_PROXY_CONTAINER_EXISTS=$(docker ps -a | grep -o "${REVERSE_PROXY_CONTAINER}")
 REVERSE_PROXY_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${REVERSE_PROXY_IMAGE}")
 REVERSE_PROXY_CONTAINER_STARTED=$(docker ps | grep -o "${REVERSE_PROXY_CONTAINER}")
 
