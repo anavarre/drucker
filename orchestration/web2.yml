@@ -7,8 +7,6 @@
     - vars.yml
   handlers:
     - include: handlers.yml
-  roles:
-    - yaegashi.blockinfile
   tasks:
     - include: playbooks/apache.yml
     - include: playbooks/php.yml

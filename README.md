@@ -24,7 +24,7 @@ $ ansible --version
 ansible 2.0.2.0
 ```
 
-**Important**: Ansible 2 or later is assumed in Ansible playbooks. This project also leverages the [blockinfile](https://github.com/yaegashi/ansible-role-blockinfile) module to add code blocks to files.
+**Important**: Ansible 2 or later is assumed in Ansible playbooks.
 
 ### Disk space
 
