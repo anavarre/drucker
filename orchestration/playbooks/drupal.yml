@@ -138,22 +138,32 @@
 
 - name: Check if drucker Drush aliases exist
   stat:
-    path: ~/.drush/{{ user }}.aliases.drushrc.php
+    path: /etc/drush/site-aliases/{{ user }}.aliases.drushrc.php
   register: drucker_aliases
-  ignore_errors: True
 
-- name: Create .drush directory
+- name: Create site-aliases directory
   file:
-    path: ~/.drush
+    path: /etc/drush/site-aliases
     state: directory
-    mode: 0755
   when: drucker_aliases.stat.exists == false
 
 - name: Deploy drucker Drush aliases
   copy:
     src: files/{{ user }}.aliases.drushrc.php
-    dest: ~/.drush/{{ user }}.aliases.drushrc.php
+    dest: /etc/drush/site-aliases/{{ user }}.aliases.drushrc.php
     mode: 0644
+  when: drucker_aliases.stat.exists == false
+
+- name: Create .drush directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  with_items:
+    - /home/{{ user }}/.drush
+    - /home/root/.drush
   when: drucker_aliases.stat.exists == false
 
 - name: Install Drupal
