@@ -170,6 +170,36 @@
   command: drush @{{ user }}.{{ tld }} site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@127.0.0.1:{{ mysql_port }}/{{ user }} --site-name={{ user }} --site-mail={{ drupal_creds }}@{{ user }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ user }}.{{ tld }}
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
+- name: Check if phpunit.xml file exists
+  stat:
+    path: "{{ webroot }}/{{ user }}/core/phpunit.xml"
+  register: phpunit
+
+- name: Create phpunit.xml file
+  command: cp {{ webroot }}/{{ user }}/core/phpunit.xml.dist {{ webroot }}/{{ user }}/core/phpunit.xml
+  when: phpunit.stat.exists == false
+
+- name: Modify SIMPLETEST_BASE_URL
+  replace:
+    dest: "{{ webroot }}/{{ user }}/core/phpunit.xml"
+    regexp: '^(.*)"SIMPLETEST_BASE_URL" value=""(.*)$'
+    replace: '\1"SIMPLETEST_BASE_URL" value="http://{{ user }}.{{ tld }}"\2'
+  when: phpunit.stat.exists == false
+
+- name: Modify SIMPLETEST_DB
+  replace:
+    dest: "{{ webroot }}/{{ user }}/core/phpunit.xml"
+    regexp: '^(.*)"SIMPLETEST_DB" value=""(.*)$'
+    replace: '\1"SIMPLETEST_DB" value="mysql://{{ user }}:{{ user }}@localhost/{{ user }}"\2'
+  when: phpunit.stat.exists == false
+
+- name: Modify BROWSERTEST_OUTPUT_DIRECTORY
+  replace:
+    dest: "{{ webroot }}/{{ user }}/core/phpunit.xml"
+    regexp: '^(.*)"BROWSERTEST_OUTPUT_DIRECTORY" value=""(.*)$'
+    replace: '\1"BROWSERTEST_OUTPUT_DIRECTORY" value="{{ webroot }}/{{ user }}/sites/simpletest"\2'
+  when: phpunit.stat.exists == false
+
 - name: Make sure files and dirs ownership is consistent
   file:
     path: "{{ webroot }}"
