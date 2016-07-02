@@ -51,7 +51,6 @@ build_init_image() {
     echo -e "${GREEN}${INIT_IMAGE} image already exists.${COLOR_ENDING}"
   else
     if [[ ! ${BASE_IMAGE_EXISTS} ]]; then
-      echo 'base not here!'
       echo -e "${BLUE}Building ${INIT_IMAGE} image from Dockerfile...${COLOR_ENDING}"
       # Make sure the Docker build context doesn't get in the way.
       cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd
