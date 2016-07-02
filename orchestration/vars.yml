@@ -16,7 +16,9 @@ user_programs_path: /usr/local/bin
 composer_stable_release: 1.1.3
 xdebug_stable_release: 2.4.0
 codesniffer_stable_release: 2.6.1
+max_input_time: 300
 max_execution_time: 300
+memory_limit: 256M
 
 # MySQL
 mysql_creds: root
