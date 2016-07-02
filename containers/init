@@ -36,11 +36,11 @@ update_distro_image() {
 }
 
 pull_base_image_from_docker_hub() {
-  if [[ ${DISTRO_IMAGE_EXISTS} ]]; then
+  if [[ ${DISTRO_IMAGE_EXISTS} ]] && [[ ! ${BASE_IMAGE_EXISTS} ]]; then
     echo -e "${GREEN}${DISTRO_IMAGE} image already exists.${COLOR_ENDING}"
     echo -e "${BLUE}Check if ${DISTRO_IMAGE} can be updated...${COLOR_ENDING}"
       update_distro_image
-  else
+  elif [[ ! ${DISTRO_IMAGE_EXISTS} ]]; then
     echo -e "${BLUE}Pulling ${DISTRO_IMAGE} image from Docker Hub...${COLOR_ENDING}"
     docker pull "${DISTRO_IMAGE}"
   fi
