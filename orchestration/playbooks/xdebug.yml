@@ -30,6 +30,16 @@
   command: cp /tmp/xdebug-{{ xdebug_stable_release }}/modules/xdebug.so /usr/lib/php5/{{ php_extensions }}
   when: xdebug.stat.exists == false
 
+- name: Delete Xdebug temporary directory
+  file:
+    path: /tmp/xdebug-{{ xdebug_stable_release }}
+    state: absent
+  when: xdebug.stat.exists == false
+
+- name: Check Xdebug config in php.ini
+  shell: grep -o "xdebug.so" /etc/php5/fpm/php.ini || echo "absent"
+  register: xdebug_config
+
 - name: Configure Xdebug in php.ini
   blockinfile:
     dest: "/etc/php5/fpm/php.ini"
@@ -43,5 +53,5 @@
       xdebug.profiler_output_dir="/tmp/profiler"
       xdebug.idekey=PHPSTORM
       xdebug.max_nesting_level=256
-    marker: ; {mark} ANSIBLE MANAGED BLOCK
-  when: xdebug.stat.exists == true
+    marker: ; {mark} MANAGED XDEBUG BLOCK
+  when: xdebug_config.stdout == "absent"
