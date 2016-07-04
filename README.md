@@ -46,6 +46,7 @@ _drucker_ ships with the following software stack:
 | Apache         | 2.4.10 or later |
 | PHP-FPM        | 5.6.22 or later |
 | Xdebug         | 2.4.0           |
+| uprofiler      | master          |
 | Code Sniffer   | 2.6.1           |
 | MySQL          | 5.5.49 or later |
 | Drupal         | 8.2.x           |
