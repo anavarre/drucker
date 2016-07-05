@@ -1,0 +1,34 @@
+---
+- name: Check if phantomjs is installed
+  stat:
+    path: "{{ user_programs_path }}/phantomjs"
+  register: phantomjs
+
+- name: Download latest phantomjs release
+  get_url:
+    url: https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
+    dest: /tmp/
+  when: phantomjs.stat.exists == false
+
+- name: Extract phantomjs files
+  unarchive:
+    src: /tmp/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
+    dest: /tmp/
+    copy: no
+  when: phantomjs.stat.exists == false
+
+- name: Install phantomjs globally
+  command: mv /tmp/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64/bin/phantomjs "{{ user_programs_path }}"
+  when: phantomjs.stat.exists == false
+
+- name: Make phantomjs executable
+  file:
+    path: "{{ user_programs_path }}/phantomjs"
+    mode: 0755
+  when: phantomjs.stat.exists == false
+
+- name: Delete phantomjs temporary directory
+  file:
+    path: /tmp/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
+    state: absent
+  when: phantomjs.stat.exists == false

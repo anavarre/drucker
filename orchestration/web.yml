@@ -14,6 +14,7 @@
     - include: playbooks/uprofiler.yml
     - include: playbooks/codesniffer.yml
     - include: playbooks/composer.yml
+    - include: playbooks/phantomjs.yml
     - include: playbooks/mysql.yml
     - include: playbooks/phpmyadmin.yml
     - include: playbooks/adminer.yml
