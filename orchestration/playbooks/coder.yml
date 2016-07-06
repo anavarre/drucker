@@ -1,0 +1,36 @@
+---
+- name: Check if Coder is installed
+  stat:
+    path: /home/{{ user }}/.composer/vendor/drupal/coder
+  register: coder
+
+- name: Create .composer directory
+  file:
+    path: /home/{{ user }}/.composer
+    state: directory
+  when: coder.stat.exists == false
+
+- name: Install Coder
+  command: composer global require drupal/coder --working-dir=/home/{{ user }}/.composer
+  when: coder.stat.exists == false
+
+# Makes phpcs and phpcbf available.
+- name: Add the composer bin path to $PATH
+  lineinfile:
+    dest: /home/{{ user }}/.bashrc
+    line: export PATH="$PATH:$HOME/.composer/vendor/bin"
+  when: coder.stat.exists == false
+
+- name: Add Code Sniffer aliases
+  blockinfile:
+    dest: /home/{{ user }}/.bashrc
+    block: |
+
+      # Code Sniffer
+      alias phpcs="phpcs --standard=Drupal --extensions=php,module,inc,install,test,profile,theme"
+      alias phpcbf="phpcbf --standard=Drupal --extensions=php,module,inc,install,test,profile,theme"
+  when: coder.stat.exists == false
+
+- name: Register Drupal and DrupalPractice with PHPCS
+  command: phpcs --config-set installed_paths /home/{{ user }}/.composer/vendor/drupal/coder/coder_sniffer
+  when: coder.stat.exists == false
