@@ -51,7 +51,7 @@
       xdebug.remote_autostart=1
       xdebug.profiler_enable=1
       xdebug.profiler_output_dir="/tmp/profiler"
-      xdebug.idekey=PHPSTORM
+      xdebug.idekey={{ xdebug_ide_key }}
       xdebug.max_nesting_level=256
     marker: ; {mark} MANAGED XDEBUG BLOCK
   when: xdebug_config.stdout == "absent"
