@@ -12,9 +12,9 @@ create_web2_container_from_base_image() {
   --net "${NETWORK}" \
   --ip "${WEB2_IP}" \
   -d -p "${HOST_WEB2_PORT}":"${WEB2_PORT}" \
-  -p ${HOST_TCP_GLUSTER_DAEMON_WEB2}:"${TCP_GLUSTER_DAEMON_WEB2}" \
-  -p ${HOST_TCP_GLUSTER_BRICK_WEB2}:"${TCP_GLUSTER_BRICK_WEB2}" \
-  -p ${HOST_TCP_PORT_MAPPER_WEB2}:"${TCP_PORT_MAPPER_WEB2}" \
+  -p "${HOST_TCP_GLUSTER_DAEMON_WEB2}":"${TCP_GLUSTER_DAEMON_WEB2}" \
+  -p "${HOST_TCP_GLUSTER_BRICK_WEB2}":"${TCP_GLUSTER_BRICK_WEB2}" \
+  -p "${HOST_TCP_PORT_MAPPER_WEB2}":"${TCP_PORT_MAPPER_WEB2}" \
   "${BASE_IMAGE}" bash
 
   configure_web2_container_ssh_access
@@ -29,9 +29,9 @@ create_web2_container_from_web_image() {
   --net "${NETWORK}" \
   --ip "${WEB2_IP}" \
   -d -p "${HOST_WEB2_PORT}":"${WEB2_PORT}" \
-  -p ${HOST_TCP_GLUSTER_DAEMON_WEB2}:"${TCP_GLUSTER_DAEMON_WEB2}" \
-  -p ${HOST_TCP_GLUSTER_BRICK_WEB2}:"${TCP_GLUSTER_BRICK_WEB2}" \
-  -p ${HOST_TCP_PORT_MAPPER_WEB2}:"${TCP_PORT_MAPPER_WEB2}" \
+  -p "${HOST_TCP_GLUSTER_DAEMON_WEB2}":"${TCP_GLUSTER_DAEMON_WEB2}" \
+  -p "${HOST_TCP_GLUSTER_BRICK_WEB2}":"${TCP_GLUSTER_BRICK_WEB2}" \
+  -p "${HOST_TCP_PORT_MAPPER_WEB2}":"${TCP_PORT_MAPPER_WEB2}" \
   "${WEB_IMAGE}" bash
 
   configure_web2_container_ssh_access
