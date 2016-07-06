@@ -2,7 +2,7 @@ FROM debian:latest
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV USER drucker
-ENV SSH /home/$USER/.ssh
+ENV SSH /home/"$USER"/.ssh
 
 VOLUME ["/data"]
 
@@ -20,10 +20,10 @@ RUN apt-get install -y \
     sudo
 
 # Create a drucker sudoer.
-RUN adduser -q --disabled-password --gecos '' $USER \
-    && usermod -aG sudo $USER
-RUN echo "$USER:$USER" | chpasswd
+RUN adduser -q --disabled-password --gecos '' "$USER" \
+    && usermod -aG sudo "$USER"
+RUN echo "$USER":"$USER" | chpasswd
 
 # Prepare for SSH access
-RUN mkdir -p $SSH
+RUN mkdir -p "$SSH"
 ENTRYPOINT service ssh restart && bash
