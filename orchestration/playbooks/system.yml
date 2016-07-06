@@ -33,3 +33,61 @@
     name: ntp
     state: started
     enabled: yes
+
+- name: Check if .bash_aliases exist
+  stat:
+    path: /home/{{ user }}/.bash_aliases
+  register: bash_aliases
+
+- name: Deploy .bash_aliases
+  copy:
+    src: files/.bash_aliases
+    dest: /home/{{ user }}/
+    mode: 0644
+  when: bash_aliases.stat.exists == false
+
+- name: Check if .bash_custom exist
+  stat:
+    path: /home/{{ user }}/.bash_custom
+  register: bash_custom
+
+- name: Deploy .bash_custom
+  copy:
+    src: files/.bash_custom
+    dest: /home/{{ user }}/
+    mode: 0644
+  when: bash_custom.stat.exists == false
+
+- name: Integrate .bash_custom in .bashrc
+  blockinfile:
+    dest: /home/{{ user }}/.bashrc
+    block: |
+
+      if [ -f ~/.bash_custom ]; then
+        . ~/.bash_custom
+      fi
+  when: bash_custom.stat.exists == false
+
+- name: Check if .git-completion.bash exist
+  stat:
+    path: /home/{{ user }}/.git-completion.bash
+  register: git_completion
+
+- name: Deploy .git-completion.bash
+  copy:
+    src: files/.git-completion.bash
+    dest: /home/{{ user }}/
+    mode: 0644
+  when: git_completion.stat.exists == false
+
+- name: Check if .git-prompt.sh exist
+  stat:
+    path: /home/{{ user }}/.git-prompt.sh
+  register: git_prompt
+
+- name: Deploy .git-prompt.sh
+  copy:
+    src: files/.git-prompt.sh
+    dest: /home/{{ user }}/
+    mode: 0644
+  when: git_prompt.stat.exists == false
