@@ -27,8 +27,9 @@
     block: |
 
       # Code Sniffer
-      alias phpcs="phpcs --standard=Drupal --extensions=php,module,inc,install,test,profile,theme"
-      alias phpcbf="phpcbf --standard=Drupal --extensions=php,module,inc,install,test,profile,theme"
+      alias drupalcs="phpcs --standard=Drupal --extensions={{ codesniffer_extensions }}"
+      alias drupalpractice="phpcs --standard=DrupalPractice --extensions={{ codesniffer_extensions }}"
+      alias drupalfix="phpcbf --standard=Drupal --extensions={{ codesniffer_extensions }}"
   when: coder.stat.exists == false
 
 - name: Register Drupal and DrupalPractice with PHPCS
