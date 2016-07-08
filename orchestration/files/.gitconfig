@@ -1,0 +1,24 @@
+[user]
+  name = drucker
+  email = drucker@drucker.local
+[core]
+  autocrlf = false
+  safecrlf = false
+  ignorecase = false
+  excludesfile = ~/.gitignore
+[color]
+  ui = true
+[push]
+  default = current
+[diff]
+  renames = copies
+[alias]
+  apply = apply --index -v
+  p = format-patch --stdout
+  diff = diff --full-index --binary
+  co = checkout
+  st = status --untracked-files=all --ignored
+  unstash = !git stash show -p | git apply -R
+  hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short -25
+  clean = clean -fdx
+  reset = resert --hard

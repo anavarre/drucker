@@ -1,0 +1,56 @@
+---
+- name: Check if .git-completion.bash exists
+  stat:
+    path: /home/{{ user }}/.git-completion.bash
+  register: git_completion
+
+- name: Deploy .git-completion.bash
+  copy:
+    src: files/.git-completion.bash
+    dest: /home/{{ user }}/
+    mode: 0644
+  when: git_completion.stat.exists == false
+
+- name: Check if .git-prompt.sh exists
+  stat:
+    path: /home/{{ user }}/.git-prompt.sh
+  register: git_prompt
+
+- name: Deploy .git-prompt.sh
+  copy:
+    src: files/.git-prompt.sh
+    dest: /home/{{ user }}/
+    mode: 0644
+  when: git_prompt.stat.exists == false
+
+- name: Deploy .gitconfig
+  copy:
+    src: files/.gitconfig
+    dest: /home/{{ user }}/
+    mode: 0644
+
+- name: Ensure ownership is correct on git files
+  file:
+    path: /home/{{ user }}/{{ item }}
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  with_items:
+    - .git-completion.bash
+    - .git-prompt.sh
+    - .gitconfig
+
+- name: Customize .bashrc
+  blockinfile:
+    dest: /home/{{ user }}/.bashrc
+    block: |
+
+      # Git
+      if [ -f ~/.git-completion.bash ]; then
+        . ~/.git-completion.bash
+      fi
+
+      if [ -f ~/.git-prompt.sh ]; then
+      . ~/.git-prompt.sh
+      fi
+
+      PS1='[\t] \u:\w$(__git_ps1 " (%s)")\$ '
