@@ -35,6 +35,11 @@
     owner: "{{ user }}"
     group: "{{ user }}"
 
+- name: Check if .bashrc exists
+  stat:
+    path: /home/{{ user }}/.bashrc
+  register: bashrc
+
 - name: Customize .bashrc
   blockinfile:
     dest: /home/{{ user }}/.bashrc
@@ -50,3 +55,4 @@
       fi
 
       PS1='[\t] \u:\w$(__git_ps1 " (%s)")\$ '
+  when: bashrc.stat.exists == true
