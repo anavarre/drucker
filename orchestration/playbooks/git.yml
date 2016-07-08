@@ -9,6 +9,8 @@
     src: files/.git-completion.bash
     dest: /home/{{ user }}/
     mode: 0644
+    owner: "{{ user }}"
+    group: "{{ user }}"
   when: git_completion.stat.exists == false
 
 - name: Check if .git-prompt.sh exists
@@ -21,6 +23,8 @@
     src: files/.git-prompt.sh
     dest: /home/{{ user }}/
     mode: 0644
+    owner: "{{ user }}"
+    group: "{{ user }}"
   when: git_prompt.stat.exists == false
 
 - name: Deploy .gitconfig
@@ -28,16 +32,8 @@
     src: files/.gitconfig
     dest: /home/{{ user }}/
     mode: 0644
-
-- name: Ensure ownership is correct on git files
-  file:
-    path: /home/{{ user }}/{{ item }}
     owner: "{{ user }}"
     group: "{{ user }}"
-  with_items:
-    - .git-completion.bash
-    - .git-prompt.sh
-    - .gitconfig
 
 - name: Customize .bashrc
   blockinfile:

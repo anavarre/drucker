@@ -8,7 +8,9 @@
   file:
     path: /home/{{ user }}/.composer
     state: directory
-  when: coder.stat.exists == false
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  when: coder.stat.exists == true
 
 - name: Install Coder
   command: composer global require drupal/coder --working-dir=/home/{{ user }}/.composer

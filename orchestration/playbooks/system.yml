@@ -44,4 +44,6 @@
     src: files/.bash_aliases
     dest: /home/{{ user }}/
     mode: 0644
+    owner: "{{ user }}"
+    group: "{{ user }}"
   when: bash_aliases.stat.exists == false
