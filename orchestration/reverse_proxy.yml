@@ -8,6 +8,5 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - include: playbooks/git.yml
     - include: playbooks/varnish.yml
     - include: playbooks/nginx.yml

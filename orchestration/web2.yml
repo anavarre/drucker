@@ -8,7 +8,6 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - include: playbooks/git.yml
     - include: playbooks/apache.yml
     - include: playbooks/php.yml
     - include: playbooks/xdebug.yml

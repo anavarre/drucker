@@ -10,3 +10,4 @@
   tasks:
     - include: playbooks/ssh.yml
     - include: playbooks/system.yml
+    - include: playbooks/git.yml
