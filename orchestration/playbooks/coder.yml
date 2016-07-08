@@ -10,7 +10,7 @@
     state: directory
     owner: "{{ user }}"
     group: "{{ user }}"
-  when: coder.stat.exists == true
+  when: coder.stat.exists == false
 
 - name: Install Coder
   command: composer global require drupal/coder --working-dir=/home/{{ user }}/.composer
