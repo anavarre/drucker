@@ -108,13 +108,17 @@ At the beginning of the build process, _drucker_ will prompt you to enter the pa
 
 When spinning up the web container, drucker will try to map its web directory to a local path (`/var/www/html`) on your computer. Feel free to change this default path to one that is more convenient.
 
-To connect to a container, simply type:
+To connect to a container as the privileged _drucker_, simply type:
+
+```
+$ docker exec -u drucker -it <container_name> bash
+```
+
+To connect to a container as root, type:
 
 ```
 $ docker exec -it <container_name> bash
 ```
-
-It will give you root access to the container.
 
 To log in as the `drucker` username (which is recommended and _is_ a sudoer), simply type:
 
