@@ -29,8 +29,13 @@
   command: "{{ user_programs_path }}/composer self-update"
   when: composer.stat.exists == false
 
+- name: Check if composer is in PATH
+  shell: grep -o "export PATH=\"\$PATH:\$HOME/.composer/vendor/bin\"" /home/{{ user }}.bashrc || echo "absent"
+  register: composer_path
+
 - name: Add composer to PATH
   lineinfile:
     dest: /home/{{ user }}/.bashrc
     line: export PATH="$PATH:$HOME/.composer/vendor/bin"
-  when: composer.stat.exists == false
+    insertafter: EOF
+  when: composer_path.stdout == 'absent'

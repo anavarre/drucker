@@ -20,12 +20,17 @@
   command: drupal self-update
   when: drupal_console.stat.exists == true and drupal_console_stable_release_check.stdout != "{{ drupal_console_stable_release }}"
 
-- name: Initialize Drupal Console 1/2
+- name: Initialize Drupal Console
   command: drupal init --override
   when: drupal_console.stat.exists == false
 
-- name: Initialize Drupal Console 2/2
+- name: Check if Drupal Console has been configured in .bashrc
+  shell: grep -o "source \"\$HOME/.console/console.rc\" 2>/dev/null" /home/{{ user }}.bashrc || echo "absent"
+  register: drupal_console_bashrc
+
+- name: Configure Drupal Console in .bashrc
   lineinfile:
     dest: /home/{{ user }}/.bashrc
     line: "source \"$HOME/.console/console.rc\" 2>/dev/null"
-  when: drupal_console.stat.exists == false
+    insertafter: EOF
+  when: drupal_console_bashrc.stdout == 'absent'

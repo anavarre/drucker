@@ -35,16 +35,14 @@
     owner: "{{ user }}"
     group: "{{ user }}"
 
-- name: Check if .bashrc exists
-  stat:
-    path: /home/{{ user }}/.bashrc
-  register: bashrc
+- name: Check if .bashrc needs to be customized
+  shell: grep -o "MANAGED GIT BLOCK" /home/{{ user }}/.bashrc || echo "absent"
+  register: git_bashrc
 
 - name: Customize .bashrc
   blockinfile:
     dest: /home/{{ user }}/.bashrc
     block: |
-
       # Git
       if [ -f ~/.git-completion.bash ]; then
         . ~/.git-completion.bash
@@ -55,4 +53,6 @@
       fi
 
       PS1='[\t] \u:\w$(__git_ps1 " (%s)")\$ '
-  when: bashrc.stat.exists == true
+    insertafter: EOF
+    marker: "# {mark} MANAGED GIT BLOCK"
+  when: git_bashrc.stdout == "absent"

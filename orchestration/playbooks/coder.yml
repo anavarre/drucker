@@ -16,23 +16,20 @@
   command: composer global require drupal/coder --working-dir=/home/{{ user }}/.composer
   when: coder.stat.exists == false
 
-# Makes phpcs and phpcbf available.
-- name: Add the composer bin path to $PATH
-  lineinfile:
-    dest: /home/{{ user }}/.bashrc
-    line: export PATH="$PATH:$HOME/.composer/vendor/bin"
-  when: coder.stat.exists == false
+- name: Check if Coder bash aliases exist
+  shell: egrep -o 'MANAGED CODE SNIFFER BLOCK' /home/{{ user }}.bashrc || echo "absent"
+  register: coder_aliases
 
 - name: Add Code Sniffer aliases
   blockinfile:
     dest: /home/{{ user }}/.bashrc
     block: |
-
-      # Code Sniffer
       alias drupalcs="phpcs --standard=Drupal --extensions={{ codesniffer_extensions }}"
       alias drupalpractice="phpcs --standard=DrupalPractice --extensions={{ codesniffer_extensions }}"
       alias drupalfix="phpcbf --standard=Drupal --extensions={{ codesniffer_extensions }}"
-  when: coder.stat.exists == false
+    insertafter: EOF
+    marker: "# {mark} MANAGED CODE SNIFFER BLOCK"
+  when: coder_aliases.stdout == 'absent'
 
 - name: Register Drupal and DrupalPractice with PHPCS
   command: phpcs --config-set installed_paths /home/{{ user }}/.composer/vendor/drupal/coder/coder_sniffer
