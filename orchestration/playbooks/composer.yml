@@ -29,8 +29,8 @@
   command: "{{ user_programs_path }}/composer self-update"
   when: composer.stat.exists == false
 
-  - name: Add composer to PATH
-    lineinfile:
-      dest: /home/{{ user }}/.bashrc
-      line: "export PATH="$PATH:$HOME/.composer/vendor/bin""
+- name: Add composer to PATH
+  lineinfile:
+    dest: /home/{{ user }}/.bashrc
+    line: export PATH="$PATH:$HOME/.composer/vendor/bin"
   when: composer.stat.exists == false
