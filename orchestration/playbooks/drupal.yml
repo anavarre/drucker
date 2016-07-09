@@ -182,6 +182,17 @@
     mode: 0644
   when: phpunit.stat.exists == false
 
+- name: Check if phpunit bash alias exists
+  shell: grep -o "alias phpunit=\"sudo -u www-data ../vendor/bin/phpunit\"" /home/{{ user }}.bash_aliases || echo "absent"
+  register: phpunit_alias
+
+- name: Configure phpunit in .bash_aliases
+  lineinfile:
+    dest: /home/{{ user }}/.bash_aliases
+    line: "alias phpunit=\"sudo -u www-data ../vendor/bin/phpunit\""
+    insertafter: EOF
+  when: phpunit_alias.stdout == 'absent'
+
 - name: Make sure files and dirs ownership is consistent
   file:
     path: "{{ webroot }}"
