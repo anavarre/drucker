@@ -14,7 +14,7 @@
          beStrictAboutOutputDuringTests="true"
          beStrictAboutChangesToGlobalState="true"
          checkForUnintentionallyCoveredCode="false"
-         printer="\Drupal\Tests\Listeners\HtmlOutputPrinter">
+         printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter">
   <php>
     <!-- Set error reporting to E_ALL. -->
     <ini name="error_reporting" value="32767"/>
