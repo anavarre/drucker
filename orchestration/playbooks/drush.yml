@@ -9,6 +9,12 @@
   register: drush_stable_release_check
   when: drush.stat.exists == true
 
+- name: Delete outdated Drush executable
+  file:
+    path: "{{ user_programs_path }}/drush"
+    state: absent
+  when: drush_stable_release_check.stdout != "{{ drush_stable_release }}"
+
 - name: Install Drush globally
   get_url:
     url: https://github.com/drush-ops/drush/releases/download/{{ drush_stable_release }}/drush.phar
