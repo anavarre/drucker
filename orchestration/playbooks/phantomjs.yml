@@ -4,31 +4,50 @@
     path: "{{ user_programs_path }}/phantomjs"
   register: phantomjs
 
+- name: Check if phantomjs can be updated
+  command: phantomjs --version
+  register: phantomjs_update
+  when: phantomjs.stat.exists == true
+
+- name: Check if phantomjs archive exists
+  stat:
+    path: phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
+  register: phantomjs_archive
+
 - name: Download latest phantomjs release
   get_url:
     url: https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
     dest: /tmp/
-  when: phantomjs.stat.exists == false
+  when: phantomjs.stat.exists == false or phantomjs_update.stdout != "{{ phantomjs_stable_version }}" and phantomjs_archive.stat.exists == false
 
 - name: Extract phantomjs files
   unarchive:
     src: /tmp/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
     dest: /tmp/
     copy: no
-  when: phantomjs.stat.exists == false
+  when: phantomjs.stat.exists == false or phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
+
+- name: Delete outdated phantomjs executable
+  file:
+    path: "{{ user_programs_path }}/phantomjs"
+    state: absent
+  when: phantomjs.stat.exists == true and phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
 
 - name: Install phantomjs globally
   command: mv /tmp/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64/bin/phantomjs "{{ user_programs_path }}"
-  when: phantomjs.stat.exists == false
+  when: phantomjs.stat.exists == false or phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
 
 - name: Make phantomjs executable
   file:
     path: "{{ user_programs_path }}/phantomjs"
     mode: 0755
-  when: phantomjs.stat.exists == false
+  when: phantomjs.stat.exists == false or phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
 
 - name: Delete phantomjs temporary directory
   file:
-    path: /tmp/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
+    path: /tmp/{{ item }}
     state: absent
-  when: phantomjs.stat.exists == false
+  with_items:
+    - phantomjs-{{ phantomjs_stable_version }}-linux-x86_64
+    - phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
+  when: phantomjs.stat.exists == false or phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
