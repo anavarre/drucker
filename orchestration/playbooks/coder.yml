@@ -4,14 +4,6 @@
     path: /home/{{ user }}/.composer/vendor/drupal/coder
   register: coder
 
-- name: Create .composer directory
-  file:
-    path: /home/{{ user }}/.composer
-    state: directory
-    owner: "{{ user }}"
-    group: "{{ user }}"
-  when: coder.stat.exists == false
-
 - name: Install Coder
   command: composer global require drupal/coder --working-dir=/home/{{ user }}/.composer
   when: coder.stat.exists == false

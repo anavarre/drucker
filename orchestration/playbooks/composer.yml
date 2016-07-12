@@ -39,3 +39,16 @@
     line: export PATH="$PATH:$HOME/.composer/vendor/bin"
     insertafter: EOF
   when: composer_path.stdout == 'absent'
+
+- name: Check if .composer directory exists
+  stat:
+    path: /home/{{ user }}/.composer
+  register: composer_directory
+
+- name: Create .composer directory
+  file:
+    path: /home/{{ user }}/.composer
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  when: composer_directory.stat.exists == false
