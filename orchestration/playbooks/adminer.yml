@@ -6,7 +6,7 @@
   ignore_errors: True
 
 - name: Check adminer version
-  command: grep -o "version {{ adminer_stable_release }}" {{ webroot }}/adminer/index.php
+  shell: grep -o "version {{ adminer_stable_release }}" {{ webroot }}/adminer/index.php || echo "update"
   register: adminer_release
   when: adminer.stat.exists == true
 
@@ -21,11 +21,17 @@
   get_url:
     url: https://www.adminer.org/static/download/{{ adminer_stable_release }}/adminer-{{ adminer_stable_release }}-en.php
     dest: "{{ webroot }}/adminer"
-  when: adminer.stat.exists == false
+  when: adminer.stat.exists == false or adminer_release.stdout == "update"
+
+- name: Delete outdated adminer file
+  file:
+    path: "{{ webroot }}/adminer/index.php"
+    state: absent
+  when: adminer_release.stdout == "update"
 
 - name: Rename adminer file
   command: mv {{ webroot }}/adminer/adminer-{{ adminer_stable_release }}-en.php {{ webroot }}/adminer/index.php
-  when: adminer.stat.exists == false
+  when: adminer.stat.exists == false or adminer_release.stdout == "update"
 
 - name: Check if adminer vHost exists
   stat:
