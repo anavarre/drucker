@@ -30,12 +30,6 @@
   command: mv /tmp/phpcs.phar /tmp/phpcs
   when: phpcs.stat.exists == false or phpcs_version.stdout != "{{ phpcs_stable_release }}"
 
-- name: Delete outdated phpcs PHAR file
-  file:
-    path: "{{ user_programs_path }}/phpcs"
-    state: absent
-  when: phpcs_version.stdout != "{{ phpcs_stable_release }}"
-
 - name: Install phpcs globally
   command: mv /tmp/phpcs {{ user_programs_path }}/
   when: phpcs.stat.exists == false or phpcs_version.stdout != "{{ phpcs_stable_release }}"
@@ -50,12 +44,6 @@
 - name: Rename phpcbf PHAR file
   command: mv /tmp/phpcbf.phar /tmp/phpcbf
   when: phpcbf.stat.exists == false or phpcbf_version.stdout != "{{ phpcbf_stable_release }}"
-
-- name: Delete outdated phpcbf PHAR file
-  file:
-    path: "{{ user_programs_path }}/phpcbf"
-    state: absent
-  when: phpcbf_version.stdout != "{{ phpcbf_stable_release }}"
 
 - name: Install phpcbf globally
   command: mv /tmp/phpcbf {{ user_programs_path }}/
