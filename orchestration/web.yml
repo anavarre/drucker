@@ -10,16 +10,16 @@
   tasks:
     - include: playbooks/apache.yml
     - include: playbooks/php.yml
-    - include: playbooks/xdebug.yml
-    - include: playbooks/uprofiler.yml
-    - include: playbooks/codesniffer.yml
-    - include: playbooks/composer.yml
-    - include: playbooks/phantomjs.yml
     - include: playbooks/mysql.yml
+    - include: playbooks/composer.yml
     - include: playbooks/phpmyadmin.yml
     - include: playbooks/adminer.yml
     - include: playbooks/drush.yml
     - include: playbooks/drupal-console.yml
-    - include: playbooks/drupal.yml
+    - include: playbooks/xdebug.yml
+    - include: playbooks/uprofiler.yml
+    - include: playbooks/phantomjs.yml
+    - include: playbooks/codesniffer.yml
     - include: playbooks/coder.yml
+    - include: playbooks/drupal.yml
     # - include: playbooks/gluster.yml
