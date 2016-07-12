@@ -10,12 +10,12 @@
   register: phpcbf
 
 - name: Check phpcs version
-  command: phpcs --version | awk '{print $3}'
+  shell: phpcs --version | awk '{print $3}'
   register: phpcs_version
   when: phpcs.stat.exists == true
 
 - name: Check phpcbf version
-  command: phpcbf --version | awk '{print $3}'
+  shell: phpcbf --version | awk '{print $3}'
   register: phpcbf_version
   when: phpcbf.stat.exists == true
 
