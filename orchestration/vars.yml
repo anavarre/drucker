@@ -16,8 +16,8 @@ user_programs_path: /usr/local/bin
 composer_stable_release: 1.1.3
 xdebug_stable_release: 2.4.0
 xdebug_ide_key: PHPSTORM
-codesniffer_phpcs_stable_release: 2.6.1
-codesniffer_phpcbf_stable_release: 2.6.1
+phpcs_stable_release: 2.6.1
+phpcbf_stable_release: 2.6.1
 codesniffer_extensions: php,module,inc,install,test,profile,theme
 phantomjs_stable_version: 2.1.1
 max_input_time: 300
