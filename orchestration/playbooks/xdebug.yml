@@ -4,18 +4,23 @@
     path: /usr/lib/php5/{{ php_extensions }}/xdebug.so
   register: xdebug
 
+- name: Check if Xdebug can be updated
+  shell: ls /tmp/xdebug-{{ xdebug_stable_release }}.tgz | grep -o {{ xdebug_stable_release }}
+  register: xdebug_update
+  when: xdebug.stat.exists == true
+
 - name: Download latest Xdebug release
   get_url:
     url: http://xdebug.org/files/xdebug-{{ xdebug_stable_release }}.tgz
     dest: /tmp
-  when: xdebug.stat.exists == false
+  when: xdebug.stat.exists == false or xdebug_update != "{{ xdebug_stable_release }}"
 
 - name: Extract Xdebug files
   unarchive:
     src: /tmp/xdebug-{{ xdebug_stable_release }}.tgz
     dest: /tmp/
     copy: no
-  when: xdebug.stat.exists == false
+  when: xdebug.stat.exists == false or xdebug_update != "{{ xdebug_stable_release }}"
 
 - name: Compile Xdebug
   command: "{{ item }} chdir=/tmp/xdebug-{{ xdebug_stable_release }}"
@@ -24,17 +29,17 @@
     - ./configure
     - /usr/bin/make
   register: compile_xdebug
-  when: xdebug.stat.exists == false
+  when: xdebug.stat.exists == false or xdebug_update != "{{ xdebug_stable_release }}"
 
 - name: Copy compiled Xdebug extension
   command: cp /tmp/xdebug-{{ xdebug_stable_release }}/modules/xdebug.so /usr/lib/php5/{{ php_extensions }}
-  when: xdebug.stat.exists == false
+  when: xdebug.stat.exists == false or xdebug_update != "{{ xdebug_stable_release }}"
 
 - name: Delete Xdebug temporary directory
   file:
     path: /tmp/xdebug-{{ xdebug_stable_release }}
     state: absent
-  when: xdebug.stat.exists == false
+  when: xdebug.stat.exists == false or xdebug_update != "{{ xdebug_stable_release }}"
 
 - name: Check Xdebug config in php.ini
   shell: grep -o "xdebug.so" /etc/php5/fpm/php.ini || echo "absent"
