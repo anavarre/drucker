@@ -1,26 +1,42 @@
 ---
 - name: Check phpMyAdmin version
   stat:
-    path: /var/www/html/phpmyadmin/RELEASE-DATE-{{ phpmyadmin_stable_release }}
-  register: phpmyadmin
+    path: "{{ webroot }}/phpmyadmin/RELEASE-DATE-{{ phpmyadmin_stable_release }}"
+  register: phpmyadmin_version
   ignore_errors: True
+
+- name: Check if phpMyAdmin can be updated
+  shell: ls {{ webroot }}/phpmyadmin/RELEASE-DATE-{{ phpmyadmin_stable_release }} | tail -c 6
+  register: phpmyadmin_update
 
 - name: Download latest phpMyAdmin release
   get_url:
     url: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_stable_release }}/phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
     dest: /tmp
-  when: phpmyadmin.stat.exists == false
+  when: phpmyadmin_version.stat.exists == false or phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
 
 - name: Extract phpMyAdmin files
   unarchive:
     src: /tmp/phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
-    dest: /var/www/html
+    dest: "{{ webroot }}"
     copy: no
-  when: phpmyadmin.stat.exists == false
+  when: phpmyadmin_version.stat.exists == false or phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
+
+- name: Delete outdated phpMyAdmin version
+  file:
+    path: "{{ webroot }}/phpmyadmin"
+    state: absent
+  when: phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
 
 - name: Rename phpMyAdmin directory
   command: mv {{ webroot }}/phpMyAdmin-{{ phpmyadmin_stable_release }}-english {{ webroot }}/phpmyadmin
-  when: phpmyadmin.stat.exists == false
+  when: phpmyadmin_version.stat.exists == false or phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
+
+- name: Delete phpMyAdmin archive
+  file:
+    path: /tmp/phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
+    state: absent
+  when: phpmyadmin_version.stat.exists == false or phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
 
 - name: Check if config.inc.php exists
   stat:
