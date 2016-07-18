@@ -17,6 +17,7 @@
   get_url:
     url: https://getcomposer.org/composer.phar
     dest: "{{ user_programs_path }}/composer"
+    validate_certs: no
   when: composer.stat.exists == false
 
 - name: Make Composer executable

@@ -9,6 +9,7 @@
   get_url:
     url: https://ftp.drupal.org/files/projects/drupal-{{ drupal_dev_release }}-dev.tar.gz
     dest: /tmp
+    validate_certs: no
   when: drupal.stat.exists == false
 
 - name: Check if drucker docroot exists

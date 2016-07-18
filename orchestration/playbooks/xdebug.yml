@@ -13,6 +13,7 @@
   get_url:
     url: http://xdebug.org/files/xdebug-{{ xdebug_stable_release }}.tgz
     dest: /tmp
+    validate_certs: no
   when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
 
 - name: Extract Xdebug files

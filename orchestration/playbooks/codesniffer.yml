@@ -24,6 +24,7 @@
     url: https://github.com/squizlabs/PHP_CodeSniffer/releases/download/{{ phpcs_stable_release }}/phpcs.phar
     dest: /tmp
     mode: 0755
+    validate_certs: no
   when: phpcs.stat.exists == false or phpcs_version.stdout != "{{ phpcs_stable_release }}"
 
 - name: Rename phpcs PHAR file
@@ -39,6 +40,7 @@
     url: https://github.com/squizlabs/PHP_CodeSniffer/releases/download/{{ phpcbf_stable_release }}/phpcbf.phar
     dest: /tmp
     mode: 0755
+    validate_certs: no
   when: phpcbf.stat.exists == false or phpcbf_version.stdout != "{{ phpcbf_stable_release }}"
 
 - name: Rename phpcbf PHAR file

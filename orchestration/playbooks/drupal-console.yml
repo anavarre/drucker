@@ -14,6 +14,7 @@
     url: https://drupalconsole.com/installer
     dest: "{{ user_programs_path }}/drupal"
     mode: 0755
+    validate_certs: no
   when: drupal_console.stat.exists == false
 
 - name: Update Drupal Console

@@ -14,4 +14,5 @@
     url: https://github.com/drush-ops/drush/releases/download/{{ drush_stable_release }}/drush.phar
     dest: "{{ user_programs_path }}/drush"
     mode: 0755
+    validate_certs: no
   when: drush.stat.exists == false or drush_stable_release_check.stdout != "{{ drush_stable_release }}"

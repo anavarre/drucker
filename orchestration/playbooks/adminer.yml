@@ -21,6 +21,7 @@
   get_url:
     url: https://www.adminer.org/static/download/{{ adminer_stable_release }}/adminer-{{ adminer_stable_release }}-en.php
     dest: "{{ webroot }}/adminer"
+    validate_certs: no
   when: adminer.stat.exists == false or adminer_release.stdout == "update"
 
 - name: Delete outdated adminer file

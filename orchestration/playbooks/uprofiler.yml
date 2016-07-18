@@ -8,6 +8,7 @@
   get_url:
     url: https://github.com/FriendsOfPHP/uprofiler/archive/master.zip
     dest: /tmp/
+    validate_certs: no
   when: uprofiler.stat.exists == false
 
 - name: Extract uprofiler files
