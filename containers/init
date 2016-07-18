@@ -6,12 +6,17 @@ BASE_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${BASE_IMAGE}"
 
 check_requirements() {
   if [[ -z $(docker --version) ]]; then
-    echo "${RED}You need to install Docker before running this script.${COLOR_ENDING}"
+    echo -e "${RED}You need to install Docker before running this script.${COLOR_ENDING}"
     exit 0
   fi
 
   if [[ -z $(ansible --version) ]]; then
-    echo "${RED}You need to install Ansible before running this script.${COLOR_ENDING}"
+    echo -e "${RED}You need to install Ansible before running this script.${COLOR_ENDING}"
+    exit 0
+  fi
+
+  if [[ "$(ansible --version | head -n1 | awk '{print $2}' | cut -c 1)" -lt "2" ]]; then
+    echo -e "${RED}Ansible 2 or later is required to run drucker.${COLOR_ENDING}"
     exit 0
   fi
 }

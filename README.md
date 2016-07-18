@@ -24,7 +24,7 @@ $ ansible --version
 ansible 2.0.2.0
 ```
 
-**Important**: Ansible 2 or later is assumed in Ansible playbooks.
+**Important**: Ansible 2 or later is required.
 
 ### Disk space
 
