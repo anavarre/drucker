@@ -23,7 +23,14 @@
     - proxy_http
   when: apache.stat.exists == false
 
-- name: "Fix the POODLE SSL v3 vulnerability"
+- name: Ensure APACHE_RUN_USER is set to the expected user
+  lineinfile:
+    dest: "/etc/apache2/envvars"
+    regexp: "export APACHE_RUN_USER=www-data"
+    line: "export APACHE_RUN_USER={{ user }}"
+  when: apache.stat.exists == false
+
+- name: Fix the POODLE SSL v3 vulnerability
   lineinfile:
     dest: "/etc/apache2/mods-available/ssl.conf"
     regexp: "SSLProtocol all"
