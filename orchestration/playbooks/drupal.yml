@@ -184,13 +184,13 @@
   when: phpunit.stat.exists == false
 
 - name: Check if phpunit bash alias exists
-  shell: grep -o "alias phpunit=\"sudo -u www-data ../vendor/bin/phpunit\"" /home/{{ user }}.bash_aliases || echo "absent"
+  shell: grep -o "alias test='sudo -u www-data ./vendor/bin/phpunit -c core -v --debug'" /home/{{ user }}/.bash_aliases || echo "absent"
   register: phpunit_alias
 
 - name: Configure phpunit in .bash_aliases
   lineinfile:
     dest: /home/{{ user }}/.bash_aliases
-    line: "alias phpunit=\"sudo -u www-data ../vendor/bin/phpunit\""
+    line: "alias test='sudo -u www-data ./vendor/bin/phpunit -c core -v --debug'"
     insertafter: EOF
   when: phpunit_alias.stdout == 'absent'
 
