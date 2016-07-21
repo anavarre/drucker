@@ -13,20 +13,21 @@
     state: present
   with_items:
   - ack-grep
-  - git
-  - ncdu
-  - vim
-  - wget
-  - strace
-  - sysstat
+  - curl
   - dstat
+  - git
+  - htop
+  - iputils-ping
+  - logrotate
+  - ncdu
   - netcat
   - net-tools
   - ntp
-  - iputils-ping
-  - logrotate
-  - htop
   - patchutils
+  - strace
+  - sysstat
+  - vim
+  - wget
 
 - name: Ensure NTP is running
   service:
