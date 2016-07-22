@@ -20,6 +20,7 @@ phpcs_stable_release: 2.6.1
 phpcbf_stable_release: 2.6.1
 codesniffer_extensions: php,module,inc,install,test,profile,theme
 phantomjs_stable_version: 2.1.1
+phpmd_stable_version: 2.4.3
 max_input_time: 300
 max_execution_time: 300
 memory_limit: 256M

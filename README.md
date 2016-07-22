@@ -48,6 +48,7 @@ _drucker_ ships with the following software stack:
 | Xdebug         | 2.4.0           |
 | uprofiler      | master          |
 | Code Sniffer   | 2.6.1           |
+| phpmd          | 2.4.3           |
 | phantomjs      | 2.1.1           |
 | MySQL          | 5.5.49 or later |
 | Drupal         | 8.2.x           |
