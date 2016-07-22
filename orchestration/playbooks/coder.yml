@@ -9,7 +9,7 @@
   when: coder.stat.exists == false
 
 - name: Check if Coder bash aliases exist
-  shell: egrep -o 'MANAGED CODE SNIFFER BLOCK' /home/{{ user }}.bashrc || echo "absent"
+  shell: egrep -o 'MANAGED CODE SNIFFER BLOCK' /home/{{ user }}/.bashrc || echo "absent"
   register: coder_aliases
 
 - name: Add Code Sniffer aliases
