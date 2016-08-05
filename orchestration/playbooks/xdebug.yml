@@ -5,7 +5,7 @@
   register: xdebug
 
 - name: Check if Xdebug can be updated
-  shell: ls /tmp/xdebug-{{ xdebug_stable_release }}.tgz | grep -o {{ xdebug_stable_release }}
+  shell: ls /tmp/xdebug-{{ xdebug_stable_release }}.tgz | grep -o {{ xdebug_stable_release }} || echo "absent"
   register: xdebug_update
   when: xdebug.stat.exists == true
 
