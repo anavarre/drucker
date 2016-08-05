@@ -45,15 +45,15 @@ _drucker_ ships with the following software stack:
 | nginx          | 1.10.1 or later |
 | Apache         | 2.4.10 or later |
 | PHP-FPM        | 5.6.22 or later |
-| Xdebug         | 2.4.0           |
+| Xdebug         | 2.4.1           |
 | uprofiler      | master          |
 | Code Sniffer   | 2.6.1           |
 | phpmd          | 2.4.3           |
 | phantomjs      | 2.1.1           |
 | MySQL          | 5.5.49 or later |
-| Drupal         | 8.2.x           |
+| Drupal         | 8.3.x           |
 | Drush          | 8.1.2           |
-| Drupal Console | 1.0.0-beta4     |
+| Drupal Console | 1.0.0-beta5     |
 | Composer       | 1.2.0           |
 | phpMyAdmin     | 4.6.3           |
 | adminer        | 4.2.5           |

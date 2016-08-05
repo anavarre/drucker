@@ -14,7 +14,7 @@ webroot: /var/www/html
 php_extensions: 20131226
 user_programs_path: /usr/local/bin
 composer_stable_release: 1.2.0
-xdebug_stable_release: 2.4.0
+xdebug_stable_release: 2.4.1
 xdebug_ide_key: PHPSTORM
 phpcs_stable_release: 2.6.1
 phpcbf_stable_release: 2.6.1
@@ -34,9 +34,9 @@ adminer_stable_release: 4.2.5
 
 # Drupal & Tools
 drupal_creds: admin
-drupal_dev_release: 8.2.x
+drupal_dev_release: 8.3.x
 drush_stable_release: 8.1.2
-drupal_console_stable_release: 1.0.0-beta4
+drupal_console_stable_release: 1.0.0-beta5
 
 # Reverse proxy
 varnish_source: 4.1
