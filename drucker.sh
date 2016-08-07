@@ -3,14 +3,13 @@
 # Invoke the script from anywhere (e.g .bashrc alias)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-source "${DIR}"/containers/variables
-source "${DIR}"/containers/init
-source "${DIR}"/containers/ssh
-source "${DIR}"/containers/orchestration
-source "${DIR}"/containers/base
-source "${DIR}"/containers/reverse_proxy
-source "${DIR}"/containers/web
-# source "${DIR}"/containers/web2
+CONTAINER_DIR="containers"
+CONTAINER_FILES="variables init ssh orchestration base reverse_proxy web"
+# web2 has been excluded for now
+
+for FILES in ${CONTAINER_FILES} ; do
+  source "${DIR}"/${CONTAINER_DIR}/${FILES}
+done
 
 check_requirements
 configure_ssh_access
@@ -20,4 +19,4 @@ build_init_image
 provision_base_container
 provision_reverse_proxy_container
 provision_web_container
-# provision_web2_container
+# provision_web2_container has been excluded for now
