@@ -15,7 +15,19 @@ run_reverse_proxy_container_orchestration() {
 run_web_container_orchestration() {
   echo -e "${BLUE}Running ${WEB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
+  if [[ -n "$FIRST_ARG" ]]; then
+    case "$FIRST_ARG" in
+      --dev)
+      ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
+      ;;
+      --prod)
+      ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
+      ;;
+      *)
+    esac
+  else
+    ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
+  fi
 }
 
 run_gluster_setup_container_orchestration() {

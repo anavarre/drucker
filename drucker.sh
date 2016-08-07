@@ -3,6 +3,23 @@
 # Invoke the script from anywhere (e.g .bashrc alias)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+usage() {
+  FIRST_ARG=$1
+
+  if [[ "$FIRST_ARG" == "--help" ]]; then
+cat <<EOF
+--dev     Prepare drucker for development work with no caching and helper modules enabled. !!! YET TO BE IMPLEMENTED !!!
+--prod    Opinionated setup with all known performance best practices enabled. !!! YET TO BE IMPLEMENTED !!!
+EOF
+    exit 0
+  elif [[ -n "${FIRST_ARG}" ]] && [[ "${FIRST_ARG}" != "--dev" ]] && [[ "${FIRST_ARG}" != "--prod" ]]; then
+    echo "Usage: drucker {--dev|--prod}"
+    exit 0
+  fi
+}
+
+usage "$@"
+
 CONTAINER_DIR="containers"
 CONTAINER_FILES="variables init ssh orchestration base reverse_proxy web"
 # web2 has been excluded for now
