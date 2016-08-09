@@ -8,7 +8,7 @@ usage() {
 
   if [[ "$FIRST_ARG" == "--help" ]]; then
 cat <<EOF
---dev     Prepare drucker for development work with no caching and helper modules enabled. !!! YET TO BE IMPLEMENTED !!!
+--dev     Prepare drucker for development work with no caching and helper modules enabled.
 --prod    Opinionated setup with all known performance best practices enabled. !!! YET TO BE IMPLEMENTED !!!
 EOF
     exit 0

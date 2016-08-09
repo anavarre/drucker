@@ -19,3 +19,31 @@
     regexp: '^(.*)# \$settings\[''cache''\]\[''bins''\](.*)$'
     replace: '\1$settings[''cache''][''bins'']\2'
   when: settings_local.stat.exists == false or cache_bins.stdout == 'absent'
+
+- name: Enable settings.local.php
+  blockinfile:
+    dest: "{{ webroot }}/{{ user }}/sites/default/settings.php"
+    block: |
+      if (file_exists(__DIR__ . '/settings.local.php')) {
+        include __DIR__ . '/settings.local.php';
+      }
+
+    insertafter: EOF
+    marker: "# {mark} MANAGED SETTINGS.LOCAL.PHP BLOCK"
+
+- name: Disable Twig caching
+  blockinfile:
+    dest: "{{ webroot }}/{{ user }}/sites/development.services.yml"
+    block: |
+      parameters:
+          twig.config:
+              debug: true
+              auto_reload: true
+              cache: false
+    insertafter: EOF
+    marker: "# {mark} MANAGED TWIG CACHING BLOCK"
+  register: twig_caching
+
+- name: Rebuild Drupal cache
+  command: drush @{{ user }}.{{ tld }} cache-rebuild
+  when: twig_caching.changed
