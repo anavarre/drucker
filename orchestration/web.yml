@@ -23,4 +23,8 @@
     - include: playbooks/coder.yml
     - include: playbooks/phpmd.yml
     - include: playbooks/drupal.yml
+    - include: playbooks/drupal-dev.yml
+      when: dev == "Y"
+    - include: playbooks/drupal-prod.yml
+      when: prod == "Y"
     # - include: playbooks/gluster.yml

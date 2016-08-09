@@ -1,0 +1,21 @@
+---
+- name: Check if settings.local.php file exists
+  stat:
+    path: "{{ webroot }}/{{ user }}/sites/settings.local.php"
+  register: settings_local
+  ignore_errors: True
+
+- name: Create settings.local.php file
+  command: cp {{ webroot }}/{{ user }}/sites/example.settings.local.php {{ webroot }}/{{ user }}/sites/settings.local.php
+  when: settings_local.stat.exists == false
+
+- name: Check if cache bins have been disabled
+  shell: grep -o "\$settings\['cache'\]\['bins'\]" settings.local.php || echo "absent"
+  register: cache_bins
+
+- name: Disable cache bins
+  replace:
+    dest: "{{ webroot }}/{{ user }}/sites/settings.local.php"
+    regexp: '^(.*)# \$settings\[''cache''\]\[''bins''\](.*)$'
+    replace: '\1$settings[''cache''][''bins'']\2'
+  when: settings_local.stat.exists == false or cache_bins.stdout == 'absent'
