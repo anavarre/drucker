@@ -25,7 +25,7 @@ CONTAINER_FILES="variables init ssh orchestration base reverse_proxy web"
 # web2 has been excluded for now
 
 for FILES in ${CONTAINER_FILES} ; do
-  source "${DIR}"/${CONTAINER_DIR}/${FILES}
+  source "${DIR}/${CONTAINER_DIR}/${FILES}"
 done
 
 check_requirements
