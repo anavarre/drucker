@@ -9,7 +9,7 @@ usage() {
   if [[ "$FIRST_ARG" == "--help" ]]; then
 cat <<EOF
 --dev     Prepare drucker for development work with no caching and helper modules enabled.
---prod    Opinionated setup with all known performance best practices enabled. !!! YET TO BE IMPLEMENTED !!!
+--prod    Opinionated setup with all known performance best practices enabled.
 EOF
     exit 0
   elif [[ -n "${FIRST_ARG}" ]] && [[ "${FIRST_ARG}" != "--dev" ]] && [[ "${FIRST_ARG}" != "--prod" ]]; then

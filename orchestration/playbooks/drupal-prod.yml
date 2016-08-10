@@ -1,0 +1,28 @@
+---
+- name: Disable settings.local.php
+  blockinfile:
+    dest: "{{ webroot }}/{{ user }}/sites/default/settings.php"
+    block: |
+      if (file_exists(__DIR__ . '/settings.local.php')) {
+        include __DIR__ . '/settings.local.php';
+      }
+
+    state: absent
+    marker: "# {mark} MANAGED SETTINGS.LOCAL.PHP BLOCK"
+
+- name: Enable Twig caching
+  blockinfile:
+    dest: "{{ webroot }}/{{ user }}/sites/development.services.yml"
+    block: |
+      parameters:
+          twig.config:
+              debug: true
+              auto_reload: true
+              cache: false
+    state: absent
+    marker: "# {mark} MANAGED TWIG CACHING BLOCK"
+  register: turn_on_twig_caching
+
+- name: Rebuild Drupal cache
+  command: drush @{{ user }}.{{ tld }} cache-rebuild
+  when: turn_on_twig_caching.changed
