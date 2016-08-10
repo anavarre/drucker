@@ -10,19 +10,25 @@
     state: absent
     marker: "# {mark} MANAGED SETTINGS.LOCAL.PHP BLOCK"
 
-- name: Enable Twig caching
-  blockinfile:
-    dest: "{{ webroot }}/{{ user }}/sites/development.services.yml"
-    block: |
-      parameters:
-          twig.config:
-              debug: true
-              auto_reload: true
-              cache: false
-    state: absent
-    marker: "# {mark} MANAGED TWIG CACHING BLOCK"
-  register: turn_on_twig_caching
+- name: Turn off Twig debugging
+  replace:
+    dest: "{{ webroot }}/{{ user }}/sites/default/services.yml"
+    regexp: '^(.*)    debug: true(.*)$'
+    replace: '\1    debug: false\2'
+  register: turn_off_twig_debugging
+
+- name: Turn off Twig auto_reload
+  replace:
+    dest: "{{ webroot }}/{{ user }}/sites/default/services.yml"
+    regexp: '^(.*)    auto_reload: true(.*)$'
+    replace: '\1    auto_reload: null\2'
+
+- name: Turn on Twig caching
+  replace:
+    dest: "{{ webroot }}/{{ user }}/sites/default/services.yml"
+    regexp: '^(.*)    cache: false(.*)$'
+    replace: '\1    cache: true\2'
 
 - name: Rebuild Drupal cache
   command: drush @{{ user }}.{{ tld }} cache-rebuild
-  when: turn_on_twig_caching.changed
+  when: turn_off_twig_debugging.changed

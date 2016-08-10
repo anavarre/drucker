@@ -31,19 +31,48 @@
     insertafter: EOF
     marker: "# {mark} MANAGED SETTINGS.LOCAL.PHP BLOCK"
 
-- name: Disable Twig caching
-  blockinfile:
-    dest: "{{ webroot }}/{{ user }}/sites/development.services.yml"
-    block: |
-      parameters:
-        twig.config:
-          debug: true
-          auto_reload: true
-          cache: false
-    insertafter: EOF
-    marker: "# {mark} MANAGED TWIG CACHING BLOCK"
-  register: turn_off_twig_caching
+- name: Check if services.yml exists
+  stat:
+    path: "{{ webroot }}/{{ user }}/sites/default/services.yml"
+  register: services_yml
+  ignore_errors: True
+
+- name: Create services.yml file
+  command: cp {{ webroot }}/{{ user }}/sites/default/default.services.yml {{ webroot }}/{{ user }}/sites/default/services.yml
+  when: services_yml.stat.exists == false
+
+# - name: Disable Twig caching
+#   blockinfile:
+#     dest: "{{ webroot }}/{{ user }}/sites/development.services.yml"
+#     block: |
+#       parameters:
+#         twig.config:
+#           debug: true
+#           auto_reload: true
+#           cache: false
+#     insertafter: EOF
+#     marker: "# {mark} MANAGED TWIG CACHING BLOCK"
+#   register: turn_off_twig_caching
+
+- name: Turn on Twig debugging
+  replace:
+    dest: "{{ webroot }}/{{ user }}/sites/default/services.yml"
+    regexp: '^(.*)    debug: false(.*)$'
+    replace: '\1    debug: true\2'
+  register: turn_on_twig_debugging
+
+- name: Turn on Twig auto_reload
+  replace:
+    dest: "{{ webroot }}/{{ user }}/sites/default/services.yml"
+    regexp: '^(.*)    auto_reload: null(.*)$'
+    replace: '\1    auto_reload: true\2'
+
+- name: Turn off Twig caching
+  replace:
+    dest: "{{ webroot }}/{{ user }}/sites/default/services.yml"
+    regexp: '^(.*)    cache: true(.*)$'
+    replace: '\1    cache: false\2'
 
 - name: Rebuild Drupal cache
   command: drush @{{ user }}.{{ tld }} cache-rebuild
-  when: turn_off_twig_caching.changed
+  when: turn_on_twig_debugging.changed
