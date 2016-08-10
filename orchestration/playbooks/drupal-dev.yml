@@ -36,14 +36,14 @@
     dest: "{{ webroot }}/{{ user }}/sites/development.services.yml"
     block: |
       parameters:
-          twig.config:
-              debug: true
-              auto_reload: true
-              cache: false
+        twig.config:
+          debug: true
+          auto_reload: true
+          cache: false
     insertafter: EOF
     marker: "# {mark} MANAGED TWIG CACHING BLOCK"
-  register: twig_caching
+  register: turn_off_twig_caching
 
 - name: Rebuild Drupal cache
   command: drush @{{ user }}.{{ tld }} cache-rebuild
-  when: twig_caching.changed
+  when: turn_off_twig_caching.changed
