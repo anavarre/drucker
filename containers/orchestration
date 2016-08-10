@@ -23,10 +23,9 @@ run_web_container_orchestration() {
       --prod)
       ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} dev=N prod=Y"
       ;;
-      *)
     esac
   else
-    ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
+    ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} dev=N prod=N"
   fi
 }
 
