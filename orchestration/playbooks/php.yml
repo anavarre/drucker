@@ -1,14 +1,16 @@
 ---
 - name: Check if PHP is installed
   stat:
-    path: /etc/php5/fpm/php.ini
+    path: /etc/php/7.0/fpm/php.ini
   register: fpm
 
-- name: Prepare for PHP-FPM installation
-  lineinfile:
-    dest: "/etc/apt/sources.list"
-    regexp: "deb http://httpredir.debian.org/debian {{ codename }} main"
-    line: "deb http://httpredir.debian.org/debian {{ codename }} main contrib non-free"
+- name: Add DOTDEB repositories
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+  with_items:
+    - deb http://packages.dotdeb.org {{ codename }} all
+    - deb-src http://packages.dotdeb.org {{ codename }} all
   when: fpm.stat.exists == false
 
 - name: Install PHP core packages
@@ -17,10 +19,10 @@
     state: installed
     update_cache: yes
   with_items:
-    - php5-fpm
-    - php5-cli
-    - php5-common
-    - php5-dev
+    - php7.0-fpm
+    - php7.0-cli
+    - php7.0-common
+    - php7.0-dev
     - libapache2-mod-fastcgi
   when: fpm.stat.exists == false
 
@@ -29,12 +31,12 @@
     name: "{{ item }}"
     state: installed
   with_items:
-    - php5-apcu
-    - php5-curl
-    - php5-gd
-    - php5-memcached
-    - php5-mysql
-    - php5-xsl
+    - php7.0-apcu
+    - php7.0-curl
+    - php7.0-gd
+    - php7.0-memcached
+    - php7.0-mysql
+    - php7.0-xsl
   when: fpm.stat.exists == false
 
 - name: Deploy fastcgi.conf template
@@ -50,56 +52,56 @@
     name: actions
   when: fpm.stat.exists == false
 
-- name: Check if php5 module is enabled
+- name: Check if php7.0 module is enabled
   stat:
-    path: /etc/apache2/mods-available/php5.conf
-  register: php5_module
+    path: /etc/apache2/mods-available/php7.0.conf
+  register: php7_module
 
-- name: Disable php5 module
+- name: Disable php7.0 module
   apache2_module:
     state: absent
-    name: php5
+    name: php7
   notify: Restart PHP-FPM
-  when: php5_module.stat.exists == true
+  when: php7_module.stat.exists == true
 
 - name: Increase max_input_time
   lineinfile:
-    dest: "/etc/php5/fpm/php.ini"
-    regexp: "max_input_time = 30"
+    dest: "/etc/php/7.0/fpm/php.ini"
+    regexp: "max_input_time = 60"
     line: "max_input_time = {{ max_input_time }}"
   when: fpm.stat.exists == false
 
 - name: Increase max_execution_time
   lineinfile:
-    dest: "/etc/php5/fpm/php.ini"
+    dest: "/etc/php/7.0/fpm/php.ini"
     regexp: "max_execution_time = 30"
     line: "max_execution_time = {{ max_execution_time }}"
   when: fpm.stat.exists == false
 
 - name: Increase memory_limit
   lineinfile:
-    dest: "/etc/php5/fpm/php.ini"
-    regexp: "memory_limit = 64M"
+    dest: "/etc/php/7.0/fpm/php.ini"
+    regexp: "memory_limit = 128M"
     line: "memory_limit = {{ memory_limit }}"
   when: fpm.stat.exists == false
 
-- name: Harden PHP
-  lineinfile:
-    dest: "/etc/php5/fpm/php.ini"
-    regexp: "SSLProtocol all"
-    line: "SSLProtocol all -SSLv2 -SSLv3"
-  when: fpm.stat.exists == false
+# - name: Harden PHP
+#   lineinfile:
+#     dest: "/etc/php/7.0/fpm/php.ini"
+#     regexp: "SSLProtocol all"
+#     line: "SSLProtocol all -SSLv2 -SSLv3"
+#   when: fpm.stat.exists == false
 
 - name: Add default timezone
   lineinfile:
-    dest: "/etc/php5/cli/php.ini"
+    dest: "/etc/php/7.0/cli/php.ini"
     regexp: ";date.timezone ="
     line: "date.timezone = UTC"
   notify: Restart Apache
   when: fpm.stat.exists == false
 
-- name: Support file upload progress through APC
-  lineinfile:
-    dest: /etc/php5/fpm/php.ini
-    line: "apc.rfc1867 = 1"
-  when: fpm.stat.exists == false
+# - name: Support file upload progress through APC
+#   lineinfile:
+#     dest: /etc/php/7.0/fpm/php.ini
+#     line: "apc.rfc1867 = 1"
+#   when: fpm.stat.exists == false
