@@ -1,7 +1,7 @@
 ---
 - name: Check if Xdebug is installed
   stat:
-    path: /usr/lib/php5/{{ php_extensions }}/xdebug.so
+    path: "{{ php_extensions }}/xdebug.so"
   register: xdebug
 
 - name: Check if Xdebug can be updated
@@ -33,7 +33,7 @@
   when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
 
 - name: Copy compiled Xdebug extension
-  command: cp /tmp/xdebug-{{ xdebug_stable_release }}/modules/xdebug.so /usr/lib/php5/{{ php_extensions }}
+  command: cp /tmp/xdebug-{{ xdebug_stable_release }}/modules/xdebug.so {{ php_extensions }}
   when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
 
 - name: Delete Xdebug temporary directory
@@ -43,14 +43,14 @@
   when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
 
 - name: Check Xdebug config in php.ini
-  shell: grep -o "xdebug.so" /etc/php5/fpm/php.ini || echo "absent"
+  shell: grep -o "xdebug.so" {{ php_ini }} || echo "absent"
   register: xdebug_config
 
 - name: Configure Xdebug in php.ini
   blockinfile:
-    dest: "/etc/php5/fpm/php.ini"
+    dest: "{{ php_ini }}"
     block: |
-      zend_extension = /usr/lib/php5/{{ php_extensions }}/xdebug.so
+      zend_extension = {{ php_extensions }}/xdebug.so
       xdebug.remote_host=localhost
       xdebug.remote_port=9000
       xdebug.remote_enable=1
