@@ -24,12 +24,6 @@
     validate_certs: no
   when: adminer.stat.exists == false or adminer_release.stdout == "update"
 
-- name: Delete outdated adminer file
-  file:
-    path: "{{ webroot }}/adminer/index.php"
-    state: absent
-  when: adminer_release.stdout == "update"
-
 - name: Rename adminer file
   command: mv {{ webroot }}/adminer/adminer-{{ adminer_stable_release }}-en.php {{ webroot }}/adminer/index.php
   when: adminer.stat.exists == false or adminer_release.stdout == "update"

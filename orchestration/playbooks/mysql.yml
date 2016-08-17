@@ -51,8 +51,6 @@
   with_items:
     - memcached
     - mytop
-    - phpmyadmin
-    - adminer
   when: mysql.stat.exists == false
 
 - name: Ensure MySQL is started
