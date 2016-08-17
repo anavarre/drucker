@@ -49,7 +49,7 @@
     state: installed
     force: yes
   with_items:
-    - memcached
+    #- memcached
     - mytop
   when: mysql.stat.exists == false
 
