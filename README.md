@@ -57,7 +57,7 @@ _drucker_ ships with the following software stack:
 | Drush             | 8.1.2           |
 | Drupal Console    | 1.0.0-beta5     |
 | Composer          | 1.2.0           |
-| phpMyAdmin        | 4.6.3           |
+| phpMyAdmin        | 4.6.4           |
 | adminer           | 4.2.5           |
 
 ## Installation
