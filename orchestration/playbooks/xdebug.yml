@@ -33,7 +33,7 @@
   when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
 
 - name: Copy compiled Xdebug extension
-  command: cp /tmp/xdebug-{{ xdebug_stable_release }}/modules/xdebug.so {{ php_extensions }}
+  command: cp /tmp/xdebug-{{ xdebug_stable_release }}/modules/xdebug.so {{ php_extensions }}/
   when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
 
 - name: Delete Xdebug temporary directory
