@@ -1,0 +1,67 @@
+---
+- name: Check if Tideways PHP Profiler is installed
+  stat:
+    path: "{{ php_extensions }}/tideways.so"
+  register: tideways
+
+- name: Download latest Tideways release
+  get_url:
+    url: https://github.com/tideways/php-profiler-extension/archive/v{{ tideways_stable_release }}.tar.gz
+    dest: /tmp/
+    validate_certs: no
+  when: tideways.stat.exists == false
+
+- name: Extract Tideways files
+  unarchive:
+    src: /tmp/php-profiler-extension-{{ tideways_stable_release }}.tar.gz
+    dest: /tmp/
+    copy: no
+  when: tideways.stat.exists == false
+
+- name: Compile Tideways
+  command: "{{ item }} chdir=/tmp/php-profiler-extension-{{ tideways_stable_release }}"
+  with_items:
+    - /usr/bin/phpize
+    - ./configure
+    - /usr/bin/make
+    - /usr/bin/make install
+  register: compile_tideways
+  when: tideways.stat.exists == false
+
+- name: Delete Tideways temporary directory
+  file:
+    path: /tmp/php-profiler-extension-{{ tideways_stable_release }}
+    state: absent
+  when: tideways.stat.exists == false
+
+- name: Check Tideways config in php.ini
+  shell: grep -o "tideways.so" {{ php_ini }} || echo "absent"
+  register: tideways_config
+
+- name: Create Tideways output directory
+  file:
+    path: /tmp/tideways/
+    state: directory
+    mode: 0777
+  when: tideways_config.stdout == "absent"
+
+- name: Configure Tideways in php.ini
+  blockinfile:
+    dest: "{{ php_ini }}"
+    block: |
+      extension={{ php_extensions }}/tideways.so
+      tideways.output_dir=/tmp/tideways/
+    marker: ; {mark} MANAGED tideways BLOCK
+  when: tideways_config.stdout == "absent"
+
+- name: Ensure Apache is restarted
+  service:
+    name: apache2
+    enabled: yes
+    state: restarted
+
+- name: Ensure PHP-FPM is restarted
+  service:
+    name: php7.0-fpm
+    enabled: yes
+    state: restarted

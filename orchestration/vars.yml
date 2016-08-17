@@ -18,6 +18,7 @@ user_programs_path: /usr/local/bin
 composer_stable_release: 1.2.0
 xdebug_stable_release: 2.4.1
 xdebug_ide_key: PHPSTORM
+tideways_stable_release: 4.0.5
 phpcs_stable_release: 2.6.1
 phpcbf_stable_release: 2.6.1
 codesniffer_extensions: php,module,inc,install,test,profile,theme
