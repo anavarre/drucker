@@ -4,6 +4,14 @@
     path: "{{ php_ini }}"
   register: fpm
 
+- name: Add Debian contrib and non-free repositories
+  # Brings support for FastCGI via libapache2-mod-fastcgi
+  lineinfile:
+    dest: "/etc/apt/sources.list"
+    regexp: "deb http://httpredir.debian.org/debian {{ codename }} main"
+    line: "deb http://httpredir.debian.org/debian {{ codename }} main contrib non-free"
+  when: fpm.stat.exists == false
+
 - name: Add DOTDEB repositories
   apt_repository:
     repo: "{{ item }}"
@@ -11,6 +19,12 @@
   with_items:
     - deb http://packages.dotdeb.org {{ codename }} all
     - deb-src http://packages.dotdeb.org {{ codename }} all
+  when: fpm.stat.exists == false
+
+- name: Add DOTDEB GPG signature
+  apt_key:
+    url: https://www.dotdeb.org/dotdeb.gpg
+    state: present
   when: fpm.stat.exists == false
 
 - name: Install PHP core packages
