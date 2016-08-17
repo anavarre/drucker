@@ -10,24 +10,33 @@
     state: absent
     marker: "# {mark} MANAGED SETTINGS.LOCAL.PHP BLOCK"
 
+- name: Check if services.yml exists
+  stat:
+    path: "{{ webroot }}/{{ user }}/sites/default/services.yml"
+  register: services_yml_prod
+  ignore_errors: True
+
 - name: Turn off Twig debugging
   replace:
     dest: "{{ webroot }}/{{ user }}/sites/default/services.yml"
     regexp: '^(.*)    debug: true(.*)$'
     replace: '\1    debug: false\2'
   register: turn_off_twig_debugging
+  when: services_yml_prod.stat.exists == true
 
 - name: Turn off Twig auto_reload
   replace:
     dest: "{{ webroot }}/{{ user }}/sites/default/services.yml"
     regexp: '^(.*)    auto_reload: true(.*)$'
     replace: '\1    auto_reload: null\2'
+  when: services_yml_prod.stat.exists == true
 
 - name: Turn on Twig caching
   replace:
     dest: "{{ webroot }}/{{ user }}/sites/default/services.yml"
     regexp: '^(.*)    cache: false(.*)$'
     replace: '\1    cache: true\2'
+  when: services_yml_prod.stat.exists == true
 
 - name: Rebuild Drupal cache
   command: drush @{{ user }}.{{ tld }} cache-rebuild

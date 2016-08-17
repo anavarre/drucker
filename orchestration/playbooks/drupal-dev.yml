@@ -34,12 +34,12 @@
 - name: Check if services.yml exists
   stat:
     path: "{{ webroot }}/{{ user }}/sites/default/services.yml"
-  register: services_yml
+  register: services_yml_dev
   ignore_errors: True
 
 - name: Create services.yml file
   command: cp {{ webroot }}/{{ user }}/sites/default/default.services.yml {{ webroot }}/{{ user }}/sites/default/services.yml
-  when: services_yml.stat.exists == false
+  when: services_yml_dev.stat.exists == false
 
 # - name: Disable Twig caching
 #   blockinfile:
