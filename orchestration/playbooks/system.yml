@@ -18,6 +18,8 @@
   - git
   - htop
   - iputils-ping
+  # phantomjs secret dependency
+  - libfontconfig1
   - logrotate
   - ncdu
   - netcat
