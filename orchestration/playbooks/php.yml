@@ -113,13 +113,6 @@
     line: "max_file_uploads = {{ max_file_uploads }}"
   when: fpm.stat.exists == false
 
-# - name: Harden PHP
-#   lineinfile:
-#     dest: "{{ php_ini }}"
-#     regexp: "SSLProtocol all"
-#     line: "SSLProtocol all -SSLv2 -SSLv3"
-#   when: fpm.stat.exists == false
-
 - name: Add default timezone
   lineinfile:
     dest: "{{ php_ini_cli }}"
