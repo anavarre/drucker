@@ -1,0 +1,61 @@
+---
+- name: Check if pecl-php-uploadprogress is installed
+  stat:
+    path: "{{ php_extensions }}/uploadprogress.so"
+  register: uploadprogress
+
+- name: Download latest pecl-php-uploadprogress release
+  get_url:
+    url: https://github.com/php/pecl-php-uploadprogress/archive/master.zip
+    dest: /tmp/
+    validate_certs: no
+  when: uploadprogress.stat.exists == false
+
+- name: Extract pecl-php-uploadprogress files
+  unarchive:
+    src: /tmp/pecl-php-uploadprogress-master.zip
+    dest: /tmp/
+    copy: no
+  when: uploadprogress.stat.exists == false
+
+- name: Compile pecl-php-uploadprogress
+  command: "{{ item }} chdir=/tmp/pecl-php-uploadprogress-master"
+  with_items:
+    - /usr/bin/phpize
+    - ./configure
+    - /usr/bin/make
+    - /usr/bin/make install
+  when: uploadprogress.stat.exists == false
+
+- name: Copy compiled pecl-php-uploadprogress extension
+  command: cp /tmp/pecl-php-uploadprogress-master/modules/uploadprogress.so {{ php_extensions }}/
+  when: uploadprogress.stat.exists == false
+
+- name: Delete pecl-php-uploadprogress temporary directory
+  file:
+    path: /tmp/pecl-php-uploadprogress-master
+    state: absent
+  when: uploadprogress.stat.exists == false
+
+- name: Check pecl-php-uploadprogress config in php.ini
+  shell: grep -o "uploadprogress.so" {{ php_ini }} || echo "absent"
+  register: uploadprogress_config
+  when: uploadprogress.stat.exists == false
+
+- name: Configure pecl-php-uploadprogress in php.ini
+  lineinfile:
+    dest: "{{ php_ini }}"
+    line: "extension={{ php_extensions }}/uploadprogress.so"
+  #when: uploadprogress_config.stdout == "absent"
+
+- name: Ensure Apache is restarted
+  service:
+    name: apache2
+    enabled: yes
+    state: restarted
+
+- name: Ensure PHP-FPM is restarted
+  service:
+    name: php7.0-fpm
+    enabled: yes
+    state: restarted

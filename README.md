@@ -40,25 +40,26 @@ You also need to [generate a SSH key](https://help.github.com/articles/generatin
 
 _drucker_ ships with the following software stack:
 
-| Software          | Version         |
-| -------------     |:---------------:|
-| Debian            | 8 (Jessie)      |
-| Varnish           | 4.1.2 or later  |
-| nginx             | 1.10.1 or later |
-| Apache            | 2.4.10 or later |
-| PHP-FPM           | 7.0.9 or later  |
-| Xdebug            | 2.4.1           |
-| Tideways Profiler | 4.0.5           |
-| Code Sniffer      | 2.6.1           |
-| phpmd             | 2.4.3           |
-| phantomjs         | 2.1.1           |
-| MySQL             | 5.5.49 or later |
-| Drupal            | 8.3.x           |
-| Drush             | 8.1.2           |
-| Drupal Console    | 1.0.0-beta5     |
-| Composer          | 1.2.0           |
-| phpMyAdmin        | 4.6.4           |
-| adminer           | 4.2.5           |
+| Software            | Version         |
+| --------------------|:---------------:|
+| Debian              | 8 (Jessie)      |
+| Varnish             | 4.1.2 or later  |
+| nginx               | 1.10.1 or later |
+| Apache              | 2.4.10 or later |
+| PHP-FPM             | 7.0.9 or later  |
+| Xdebug              | 2.4.1           |
+| PECL uploadprogress | master          |
+| Tideways Profiler   | 4.0.5           |
+| Code Sniffer        | 2.6.1           |
+| phpmd               | 2.4.3           |
+| phantomjs           | 2.1.1           |
+| MySQL               | 5.5.49 or later |
+| Drupal              | 8.3.x           |
+| Drush               | 8.1.2           |
+| Drupal Console      | 1.0.0-beta5     |
+| Composer            | 1.2.0           |
+| phpMyAdmin          | 4.6.4           |
+| adminer             | 4.2.5           |
 
 ## Installation
 

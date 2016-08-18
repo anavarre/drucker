@@ -114,12 +114,6 @@
   notify: Restart Apache
   when: fpm.stat.exists == false
 
-# - name: Support file upload progress through APC
-#   lineinfile:
-#     dest: "{{ php_ini }}"
-#     line: "apc.rfc1867 = 1"
-#   when: fpm.stat.exists == false
-
 - name: Ensure PHP extensions directory exists
   file:
     path: "{{ php_extensions }}"

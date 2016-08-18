@@ -10,6 +10,7 @@
   tasks:
     - include: playbooks/apache.yml
     - include: playbooks/php.yml
+    - include: playbooks/uploadprogress.yml
     - include: playbooks/xdebug.yml
     - include: playbooks/tideways.yml
     - include: playbooks/codesniffer.yml
