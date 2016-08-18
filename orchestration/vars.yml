@@ -27,6 +27,8 @@ phpmd_stable_version: 2.4.3
 max_input_time: 300
 max_execution_time: 300
 memory_limit: 256M
+upload_max_filesize: 100M
+max_file_uploads: 100
 
 # MySQL
 mysql_creds: root

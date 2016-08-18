@@ -99,6 +99,20 @@
     line: "memory_limit = {{ memory_limit }}"
   when: fpm.stat.exists == false
 
+- name: Increase upload_max_filesize
+  lineinfile:
+    dest: "{{ php_ini }}"
+    regexp: "upload_max_filesize = 2M"
+    line: "upload_max_filesize = {{ upload_max_filesize }}"
+  when: fpm.stat.exists == false
+
+- name: Increase max_file_uploads
+  lineinfile:
+    dest: "{{ php_ini }}"
+    regexp: "max_file_uploads = 20"
+    line: "max_file_uploads = {{ max_file_uploads }}"
+  when: fpm.stat.exists == false
+
 # - name: Harden PHP
 #   lineinfile:
 #     dest: "{{ php_ini }}"
