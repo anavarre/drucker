@@ -28,6 +28,10 @@
   register: compile_tideways
   when: tideways.stat.exists == false
 
+- name: Copy compiled Tideways extension
+  command: cp /tmp/php-profiler-extension-{{ tideways_stable_release }}/modules/tideways.so {{ php_extensions }}/
+  when: tideways.stat.exists == false
+
 - name: Delete Tideways temporary directory
   file:
     path: /tmp/php-profiler-extension-{{ tideways_stable_release }}
