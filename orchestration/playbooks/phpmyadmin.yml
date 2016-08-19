@@ -8,6 +8,7 @@
 - name: Check if phpMyAdmin can be updated
   shell: ls {{ webroot }}/phpmyadmin/RELEASE-DATE-{{ phpmyadmin_stable_release }} | tail -c 6
   register: phpmyadmin_update
+  changed_when: phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
 
 - name: Download latest phpMyAdmin release
   get_url:

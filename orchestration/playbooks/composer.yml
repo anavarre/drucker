@@ -8,6 +8,7 @@
   shell: composer --version | awk '{print $3}'
   register: composer_stable_release_check
   when: composer.stat.exists == true
+  changed_when: composer_stable_release_check.stdout != "{{ composer_stable_release }}"
 
 - name: Update Composer
   command: composer self-update
@@ -31,8 +32,9 @@
   when: composer.stat.exists == false
 
 - name: Check if composer is in PATH
-  shell: grep -o "export PATH=\"\$PATH:\$HOME/.composer/vendor/bin\"" /home/{{ user }}.bashrc || echo "absent"
+  shell: grep -o "export PATH=\"\$PATH:\$HOME/.composer/vendor/bin\"" /home/{{ user }}/.bashrc || echo "absent"
   register: composer_path
+  changed_when: composer_path.stdout == "absent"
 
 - name: Add composer to PATH
   lineinfile:

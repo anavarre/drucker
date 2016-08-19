@@ -5,9 +5,10 @@
   register: drupal_console
 
 - name: Check Drupal Console version
-  shell: drupal --version | awk '{print $4}'
+  shell: drupal --version | awk '{print $NF}' | cut -d '"' -f2
   register: drupal_console_stable_release_check
   when: drupal_console.stat.exists == true
+  changed_when: drupal_console_stable_release_check.stdout != "{{ drupal_console_stable_release }}"
 
 - name: Install Drupal Console globally
   get_url:
@@ -28,6 +29,7 @@
 - name: Check if Drupal Console has been configured in .bashrc
   shell: grep -o "source \"\$HOME/.console/console.rc\" 2>/dev/null" /home/{{ user }}.bashrc || echo "absent"
   register: drupal_console_bashrc
+  changed_when: drupal_console_bashrc == "absent"
 
 - name: Configure Drupal Console in .bashrc
   lineinfile:

@@ -13,11 +13,13 @@
   shell: phpcs --version | awk '{print $3}'
   register: phpcs_version
   when: phpcs.stat.exists == true
+  changed_when: phpcs_version.stdout != "{{ phpcs_stable_release }}"
 
 - name: Check phpcbf version
   shell: phpcbf --version | awk '{print $3}'
   register: phpcbf_version
   when: phpcbf.stat.exists == true
+  changed_when: phpcbf_version.stdout != "{{ phpcbf_stable_release }}"
 
 - name: Download phpcs PHAR file
   get_url:

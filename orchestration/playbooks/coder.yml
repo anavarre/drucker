@@ -11,6 +11,7 @@
 - name: Check if Coder bash aliases exist
   shell: egrep -o 'MANAGED CODE SNIFFER BLOCK' /home/{{ user }}/.bashrc || echo "absent"
   register: coder_aliases
+  changed_when: coder_aliases == "absent"
 
 - name: Add Code Sniffer aliases
   blockinfile:

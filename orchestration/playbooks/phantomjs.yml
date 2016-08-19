@@ -8,6 +8,7 @@
   command: phantomjs --version
   register: phantomjs_update
   when: phantomjs.stat.exists == true
+  changed_when: phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
 
 - name: Check if phantomjs archive exists
   stat:

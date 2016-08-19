@@ -8,6 +8,7 @@
   shell: ls /tmp/xdebug-{{ xdebug_stable_release }}.tgz | grep -o {{ xdebug_stable_release }} || echo "absent"
   register: xdebug_update
   when: xdebug.stat.exists == true
+  changed_when: xdebug_update.stdout == "absent"
 
 - name: Download latest Xdebug release
   get_url:
@@ -45,6 +46,7 @@
 - name: Check Xdebug config in php.ini
   shell: grep -o "xdebug.so" {{ php_ini }} || echo "absent"
   register: xdebug_config
+  changed_when: xdebug_config.stdout == "absent"
 
 - name: Configure Xdebug in php.ini
   blockinfile:

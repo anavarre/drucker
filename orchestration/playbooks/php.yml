@@ -51,6 +51,7 @@
     - php7.0-memcached
     - php7.0-mysql
     - php7.0-xsl
+    - php7.0-bz2
   when: fpm.stat.exists == false
 
 - name: Deploy fastcgi.conf template

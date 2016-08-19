@@ -186,6 +186,7 @@
 - name: Check if phpunit bash alias exists
   shell: grep -o "alias test='sudo -u www-data ./vendor/bin/phpunit -c core -v --debug'" /home/{{ user }}/.bash_aliases || echo "absent"
   register: phpunit_alias
+  changed_when: phpunit_alias.stdout == "absent"
 
 - name: Configure phpunit in .bash_aliases
   lineinfile:

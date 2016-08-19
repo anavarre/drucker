@@ -8,6 +8,7 @@
   shell: drush --version | awk '{print $4}' | head -n1
   register: drush_stable_release_check
   when: drush.stat.exists == true
+  changed_when: drush_stable_release_check.stdout != "{{ drush_stable_release }}"
 
 - name: Install Drush globally
   get_url:

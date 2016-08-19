@@ -8,6 +8,7 @@
   shell: phpmd --version | awk '{print $NF}'
   register: phpmd_stable_release_check
   when: phpmd.stat.exists == true
+  changed_when: phpmd_stable_release_check.stdout != "{{ phpmd_stable_version }}"
 
 - name: Install phpmd globally
   get_url:
@@ -20,6 +21,7 @@
 - name: Check if phpmd bash alias exists
   shell: egrep -o 'MANAGED PHPMD BLOCK' /home/{{ user }}/.bashrc || echo "absent"
   register: phpmd_alias
+  changed_when: phpmd_alias == "absent"
 
 - name: Add phpmd alias
   blockinfile:

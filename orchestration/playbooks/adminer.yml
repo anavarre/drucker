@@ -9,6 +9,7 @@
   shell: grep -o "version {{ adminer_stable_release }}" {{ webroot }}/adminer/index.php || echo "update"
   register: adminer_release
   when: adminer.stat.exists == true
+  changed_when: adminer_release == "update"
 
 - name: Create adminer directory
   file:

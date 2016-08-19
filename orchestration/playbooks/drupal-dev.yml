@@ -12,6 +12,7 @@
 - name: Check if cache bins have been disabled
   shell: grep -o "\$settings\['cache'\]\['bins'\]" settings.local.php || echo "absent"
   register: cache_bins
+  changed_when: cache_bins.stdout == "absent"
 
 - name: Disable cache bins
   replace:

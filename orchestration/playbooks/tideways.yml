@@ -41,6 +41,7 @@
 - name: Check Tideways config in php.ini
   shell: grep -o "tideways.so" {{ php_ini }} || echo "absent"
   register: tideways_config
+  changed_when: tideways_config == "absent"
 
 - name: Create Tideways output directory
   file:
