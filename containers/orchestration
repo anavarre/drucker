@@ -29,6 +29,12 @@ run_web_container_orchestration() {
   fi
 }
 
+run_db_container_orchestration() {
+  echo -e "${BLUE}Running ${DB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
+
+  ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/db.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
+}
+
 run_gluster_setup_container_orchestration() {
   echo -e "${BLUE}Running GlusterFS orchestration on the container...${COLOR_ENDING}"
 

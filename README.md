@@ -6,12 +6,13 @@
 
 _drucker_ is a [Docker](https://www.docker.com)-based [Drupal](https://www.drupal.org) stack managed by [Ansible](https://www.ansible.com) for orchestration. It automates creating [Debian](https://www.debian.org) containers on which it will deploy a common web stack to run Drupal applications.
 
-Currently, _drucker_ runs on 2 minimalistic containers:
+Currently, _drucker_ runs on 3 containers:
 
 * `drucker_reverse_proxy` (Varnish/nginx): Varnish listens on port 80 and sends traffic to the Apache backend via nginx on port 8080).
-* `drucker_web` (Apache/PHP/MySQL): Apache listens on port 80 and receives traffic from nginx.
+* `drucker_web` (Apache/PHP): Apache listens on port 80 and receives traffic from nginx.
+* `drucker_db` (MySQL): MySQL listens on port 3306 and allows the stack to act as a multi-tier environment.
 
-The plan is to make _drucker_ a true service-based suite of containers, to isolate MySQL from multiple Apache/PHP web nodes but also leverage GlusterFS for distributed network filesystem across N number of web containers. Load-Balancing and HA capabilities will also be enforced to replicate a production environment locally. When we have this, then a 1.0.0 release will be tagged. But for now, the aim is to get [0.2.0](https://github.com/anavarre/drucker/milestones/0.2.0) out the door and incrementally make things more stable and more fully-featured.
+The plan is to make _drucker_ a true service-based suite of containers, by leveraging GlusterFS for distributed network filesystem across N number of web containers. Load-Balancing and HA capabilities will also be enforced to replicate a production environment locally. When we have this, then a 1.0.0 release will be tagged. But for now, the aim is to incrementally make things more stable and more fully-featured.
 
 ## Requirements
 
@@ -30,7 +31,7 @@ ansible 2.0.2.0
 
 ### Disk space
 
-You need to have approximately 2GB available.
+You need to have approximately 2.5GB available.
 
 ### SSH
 
@@ -92,7 +93,7 @@ This will allow you to invoke `drucker` from anywhere on your system.
 Add the below in your `config` file (under `$HOME/.ssh`) or create the file if it doesn't exist.
 
 ```
-Host 203.0.113.99 203.0.113.2 203.0.113.10 203.0.113.11
+Host 203.0.113.99 203.0.113.2 203.0.113.10 203.0.113.11 203.0.113.12
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
   LogLevel=error

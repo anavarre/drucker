@@ -22,7 +22,7 @@ EOF
 usage "$@"
 
 CONTAINER_DIR="containers"
-CONTAINER_FILES="variables init ssh orchestration base reverse_proxy web"
+CONTAINER_FILES="variables init ssh orchestration base reverse_proxy web db"
 # web2 has been excluded for now
 
 for FILES in ${CONTAINER_FILES} ; do
@@ -36,5 +36,6 @@ pull_base_image_from_docker_hub
 build_init_image
 provision_base_container
 provision_reverse_proxy_container
+provision_db_container
 provision_web_container
 # provision_web2_container has been excluded for now

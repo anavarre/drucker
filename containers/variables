@@ -24,13 +24,16 @@ export GATEWAY="203.0.113.254"
 export BASE_CONTAINER_IP="203.0.113.99"
 export REVERSE_PROXY_IP="203.0.113.2"
 export WEB_IP="203.0.113.10"
+export DB_IP="203.0.113.12"
 export WEB2_IP="203.0.113.11"
 
 # Ports
 export HOST_REVERSE_PROXY_PORT="81"
 export REVERSE_PROXY_PORT="80"
 export HOST_WEB_PORT="8180"
+export HOST_DB_PORT="3307"
 export WEB_PORT="8080"
+export DB_PORT="3306"
 export HOST_WEB2_PORT="8181"
 export WEB2_PORT="8080"
 export HOST_TCP_GLUSTER_DAEMON_WEB="24005"
@@ -43,12 +46,15 @@ export HOST_TCP_GLUSTER_BRICK_WEB2="49151"
 export TCP_GLUSTER_BRICK_WEB2="49153"
 export HOST_TCP_PORT_MAPPER_WEB="2047"
 export TCP_PORT_MAPPER_WEB="2049"
+export HOST_TCP_PORT_MAPPER_DB="2051"
+export TCP_PORT_MAPPER_DB="2052"
 export HOST_TCP_PORT_MAPPER_WEB2="2048"
 export TCP_PORT_MAPPER_WEB2="2050"
 
 # Hostnames
 export REVERSE_PROXY_HOSTNAME="proxy.${TLD}"
 export DRUCKER_HOSTNAME="drucker.${TLD}"
+export DB_HOSTNAME="db.${TLD}"
 export WEB2_HOSTNAME="web2.${TLD}"
 
 # Images
@@ -57,6 +63,7 @@ export INIT_IMAGE="drucker:init"
 export BASE_IMAGE="drucker:base"
 export REVERSE_PROXY_IMAGE="drucker:reverse_proxy"
 export WEB_IMAGE="drucker:web"
+export DB_IMAGE="drucker:db"
 export WEB2_IMAGE="drucker:web2"
 
 # Containers
@@ -64,6 +71,9 @@ export BASE_CONTAINER="drucker_base"
 export WEB_CONTAINER="drucker_web"
 WEB_CONTAINER_EXISTS=$(docker ps -a | grep -o "${WEB_CONTAINER}")
 export WEB_CONTAINER_EXISTS
+export DB_CONTAINER="drucker_db"
+DB_CONTAINER_EXISTS=$(docker ps -a | grep -o "${DB_CONTAINER}")
+export DB_CONTAINER_EXISTS
 export REVERSE_PROXY_CONTAINER="drucker_reverse_proxy"
 export REVERSE_PROXY_CONTAINER_EXISTS
 REVERSE_PROXY_CONTAINER_EXISTS=$(docker ps -a | grep -o "${REVERSE_PROXY_CONTAINER}")

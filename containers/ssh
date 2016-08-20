@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 configure_ssh_access() {
-  if [[ (! ${WEB_CONTAINER_EXISTS}) || (! ${REVERSE_PROXY_CONTAINER_EXISTS}) ]]; then
+  if [[ (! ${WEB_CONTAINER_EXISTS}) || (! ${DB_CONTAINER_EXISTS}) || (! ${REVERSE_PROXY_CONTAINER_EXISTS}) ]]; then
     read -p "Enter path to SSH public key [${DEFAULT_SSH_PATH}]: " PUBKEY
     PUBKEY=${PUBKEY:-$DEFAULT_SSH_PATH}
 
@@ -35,6 +35,16 @@ configure_web_container_ssh_access() {
   docker cp /tmp/authorized_keys "${WEB_CONTAINER}":/home/"${USER}"/.ssh/authorized_keys
 
   docker exec -it "${WEB_CONTAINER}" chown -R "${USER}":"${USER}" /home/"${USER}"/.ssh
+
+  rm /tmp/authorized_keys
+}
+
+configure_db_container_ssh_access() {
+  cat "${PUBKEY}" > /tmp/authorized_keys
+
+  docker cp /tmp/authorized_keys "${DB_CONTAINER}":/home/"${USER}"/.ssh/authorized_keys
+
+  docker exec -it "${DB_CONTAINER}" chown -R "${USER}":"${USER}" /home/"${USER}"/.ssh
 
   rm /tmp/authorized_keys
 }

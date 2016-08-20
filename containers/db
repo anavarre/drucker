@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+DB_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${DB_IMAGE}")
+DB_CONTAINER_STARTED=$(docker ps | grep -o "${DB_CONTAINER}")
+
+# local_directory_mapping() {
+#   if [[ ! ${DB_CONTAINER_EXISTS} ]]; then
+#     read -p "Enter local path to store drucker sites [${DEFAULT_HOST_PATH}]: " HOST_PATH
+#     HOST_PATH=${HOST_PATH:-$DEFAULT_HOST_PATH}
+#   fi
+# }
+
+create_db_container_from_base_image() {
+  echo -e "${BLUE}Spinning up ${DB_CONTAINER} container with ID:${COLOR_ENDING}"
+
+  #local_directory_mapping
+
+  docker run --privileged=true --name "${DB_CONTAINER}" -it \
+  -h "${DB_HOSTNAME}" \
+  --net "${NETWORK}" \
+  --ip "${DB_IP}" \
+  -d -p "${HOST_DB_PORT}":"${DB_PORT}" \
+  -p "${HOST_TCP_PORT_MAPPER_DB}":"${TCP_PORT_MAPPER_DB}" \
+  "${BASE_IMAGE}" bash
+
+  configure_db_container_ssh_access
+  run_db_container_orchestration
+}
+
+create_db_container_from_db_image() {
+  echo -e "${BLUE}Spinning up ${DB_CONTAINER} container with ID:${COLOR_ENDING}"
+
+  #local_directory_mapping
+
+  docker run --privileged=true --name "${DB_CONTAINER}" -it \
+  -h "${DB_HOSTNAME}" \
+  --net "${NETWORK}" \
+  --ip "${DB_IP}" \
+  -d -p "${HOST_DB_PORT}":"${DB_PORT}" \
+  -p "${HOST_TCP_PORT_MAPPER_DB}":"${TCP_PORT_MAPPER_DB}" \
+  "${DB_IMAGE}" bash
+
+  configure_db_container_ssh_access
+  run_db_container_orchestration
+}
+
+create_db_image_from_db_container() {
+  echo -e "${BLUE}Committing ${DB_IMAGE} image from ${DB_CONTAINER} container...${COLOR_ENDING}"
+
+  docker commit -m "${DB_CONTAINER} on $(date +"%Y-%m-%d")" "${DB_CONTAINER}" "${DB_IMAGE}"
+
+  echo -e "${BLUE}Deleting initial container...${COLOR_ENDING}"
+  docker rm -f "${DB_CONTAINER}"
+  create_db_container_from_db_image
+}
+
+start_db_container() {
+  docker start "${DB_CONTAINER}" > /dev/null 2>&1
+}
+
+provision_db_container() {
+  if [[ ${DB_CONTAINER_EXISTS} ]]; then
+    echo -e "${GREEN}${DB_CONTAINER} container already exists.${COLOR_ENDING}"
+
+    if [[ ! ${DB_CONTAINER_STARTED} ]]; then
+      echo -e "${BLUE}Starting ${DB_CONTAINER} container...${COLOR_ENDING}"
+      start_db_container
+      run_db_container_orchestration
+    else
+      run_db_container_orchestration
+    fi
+  else
+    if [[ ${DB_IMAGE_EXISTS} ]]; then
+      echo -e "${GREEN}${DB_IMAGE} custom image already exists.${COLOR_ENDING}"
+      create_db_container_from_db_image
+    else
+      create_db_container_from_base_image
+      create_db_image_from_db_container
+    fi
+  fi
+}

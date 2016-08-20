@@ -7,5 +7,8 @@
 [drucker_web]
 203.0.113.10
 
+[drucker_db]
+203.0.113.12
+
 [drucker_web2]
 203.0.113.11
