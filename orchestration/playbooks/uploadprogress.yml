@@ -40,13 +40,13 @@
 - name: Check pecl-php-uploadprogress config in php.ini
   shell: grep -o "uploadprogress.so" {{ php_ini }} || echo "absent"
   register: uploadprogress_config
-  when: uploadprogress.stat.exists == false
+  changed_when: uploadprogress_config.stdout == "absent"
 
 - name: Configure pecl-php-uploadprogress in php.ini
   lineinfile:
     dest: "{{ php_ini }}"
     line: "extension={{ php_extensions }}/uploadprogress.so"
-  #when: uploadprogress_config.stdout == "absent"
+  when: uploadprogress_config.stdout == "absent"
 
 - name: Ensure Apache is restarted
   service:
