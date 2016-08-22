@@ -9,4 +9,3 @@
     - include: handlers.yml
   tasks:
     - include: playbooks/mysql.yml
-    # - include: playbooks/gluster.yml

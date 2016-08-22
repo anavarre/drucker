@@ -33,6 +33,13 @@
   command: mv {{ webroot}}/drupal-{{ drupal_dev_release }}-dev {{ webroot }}/{{ user }}
   when: drucker.stat.exists == false
 
+- name: Ensure we can manage remote MySQL databases
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - python-mysqldb
+
 - name: Check if drucker database exists
   stat:
     path: "/var/lib/mysql/{{ user }}"

@@ -1,9 +1,15 @@
 ---
 - name: Check if MySQL is installed
   stat:
-    path: /etc/mysql/my.cnf
+    path: "{{ my_cnf }}"
   register: mysql
   ignore_errors: True
+
+# ToDo: back up MySQL databases prior to deleting everything.
+
+- name: Clean up MySQL data directory
+  shell: rm -Rf {{ mysql_data }}/* warn=False
+  when: mysql.stat.exists == false
 
 - name: Install MySQL and utilities
   package:
@@ -16,21 +22,27 @@
     - python-mysqldb
     - mytop
     # memcached
+  update_cache: yes
   when: mysql.stat.exists == false
 
 - name: Set innodb_file_per_table
   lineinfile:
-    dest: /etc/mysql/my.cnf
+    dest: "{{ my_cnf }}"
     insertafter: "^datadir"
     line: "innodb_file_per_table = 1"
   when: mysql.stat.exists == false
 
+- name: Check if MySQL is configured to allow remote access
+  shell: grep -o "0.0.0.0" {{ my_cnf }} || echo "denied"
+  register: mysql_remote_access
+  changed_when: mysql_remote_access == "denied"
+
 - name: Configure MySQL to allow remote access
-  lineinfile:
-    dest: "/etc/mysql/my.cnf"
-    regexp: "bind-address            = 127.0.0.1"
-    line: "bind-address            = 0.0.0.0"
-  when: mysql.stat.exists == false
+  replace:
+    dest: "{{ my_cnf }}"
+    regexp: '^(.*)127.0.0.1(.*)$'
+    replace: '\1 0.0.0.0\2'
+  when: mysql_remote_access.stdout == "denied"
 
 - name: Start MySQL
   service:

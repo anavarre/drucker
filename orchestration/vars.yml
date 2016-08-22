@@ -32,6 +32,8 @@ upload_max_filesize: 100M
 max_file_uploads: 100
 
 # MySQL
+my_cnf: /etc/mysql/my.cnf
+mysql_data: /var/lib/mysql
 mysql_creds: root
 mysql_port: 3306
 mysql_stable_release: 5.5
