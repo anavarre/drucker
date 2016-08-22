@@ -15,6 +15,10 @@
     url: http://xdebug.org/files/xdebug-{{ xdebug_stable_release }}.tgz
     dest: /tmp
     validate_certs: no
+  register: xdebug_get_url_result
+  until: "'OK' in xdebug_get_url_result.msg"
+  retries: 3
+  delay: 10
   when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
 
 - name: Extract Xdebug files

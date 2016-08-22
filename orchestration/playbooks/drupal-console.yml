@@ -16,6 +16,10 @@
     dest: "{{ user_programs_path }}/drupal"
     mode: 0755
     validate_certs: no
+  register: console_get_url_result
+  until: "'OK' in console_get_url_result.msg"
+  retries: 3
+  delay: 10
   when: drupal_console.stat.exists == false
 
 - name: Update Drupal Console

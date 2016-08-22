@@ -23,6 +23,10 @@
     url: https://www.adminer.org/static/download/{{ adminer_stable_release }}/adminer-{{ adminer_stable_release }}-en.php
     dest: "{{ webroot }}/adminer"
     validate_certs: no
+  register: adminer_get_url_result
+  until: "'OK' in adminer_get_url_result.msg"
+  retries: 3
+  delay: 10
   when: adminer.stat.exists == false or adminer_release.stdout == "update"
 
 - name: Rename adminer file

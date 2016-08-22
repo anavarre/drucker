@@ -20,6 +20,10 @@
     url: https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
     dest: /tmp/
     validate_certs: no
+  register: phantomjs_get_url_result
+  until: "'OK' in phantomjs_get_url_result.msg"
+  retries: 3
+  delay: 10
   when: phantomjs.stat.exists == false or phantomjs_update.stdout != "{{ phantomjs_stable_version }}" and phantomjs_archive.stat.exists == false
 
 - name: Extract phantomjs files

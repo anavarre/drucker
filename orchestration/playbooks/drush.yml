@@ -16,4 +16,8 @@
     dest: "{{ user_programs_path }}/drush"
     mode: 0755
     validate_certs: no
+  register: drush_get_url_result
+  until: "'OK' in drush_get_url_result.msg"
+  retries: 3
+  delay: 10
   when: drush.stat.exists == false or drush_stable_release_check.stdout != "{{ drush_stable_release }}"

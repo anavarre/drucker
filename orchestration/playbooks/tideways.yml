@@ -9,6 +9,10 @@
     url: https://github.com/tideways/php-profiler-extension/archive/v{{ tideways_stable_release }}.tar.gz
     dest: /tmp/
     validate_certs: no
+  register: tideways_get_url_result
+  until: "'OK' in tideways_get_url_result.msg"
+  retries: 3
+  delay: 10
   when: tideways.stat.exists == false
 
 - name: Extract Tideways files

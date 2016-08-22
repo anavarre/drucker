@@ -27,6 +27,10 @@
     dest: /tmp
     mode: 0755
     validate_certs: no
+  register: codesniffer_get_url_result
+  until: "'OK' in codesniffer_get_url_result.msg"
+  retries: 3
+  delay: 10
   when: phpcs.stat.exists == false or phpcs_version.stdout != "{{ phpcs_stable_release }}"
 
 - name: Rename phpcs PHAR file

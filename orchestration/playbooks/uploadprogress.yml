@@ -9,6 +9,10 @@
     url: https://github.com/php/pecl-php-uploadprogress/archive/master.zip
     dest: /tmp/
     validate_certs: no
+  register: uploadprogress_get_url_result
+  until: "'OK' in uploadprogress_get_url_result.msg"
+  retries: 3
+  delay: 10
   when: uploadprogress.stat.exists == false
 
 - name: Extract pecl-php-uploadprogress files

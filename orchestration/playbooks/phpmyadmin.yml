@@ -15,6 +15,10 @@
     url: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_stable_release }}/phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
     dest: /tmp
     validate_certs: no
+  register: pma_get_url_result
+  until: "'OK' in pma_get_url_result.msg"
+  retries: 3
+  delay: 10
   when: phpmyadmin_version.stat.exists == false or phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
 
 - name: Extract phpMyAdmin files
