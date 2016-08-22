@@ -22,7 +22,6 @@
     - python-mysqldb
     - mytop
     # memcached
-  update_cache: yes
   when: mysql.stat.exists == false
 
 - name: Set innodb_file_per_table
