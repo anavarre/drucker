@@ -3,17 +3,17 @@
 DB_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${DB_IMAGE}")
 DB_CONTAINER_STARTED=$(docker ps | grep -o "${DB_CONTAINER}")
 
-# local_directory_mapping() {
-#   if [[ ! ${DB_CONTAINER_EXISTS} ]]; then
-#     read -p "Enter local path to store drucker sites [${DEFAULT_HOST_PATH}]: " HOST_PATH
-#     HOST_PATH=${HOST_PATH:-$DEFAULT_HOST_PATH}
-#   fi
-# }
+local_directory_mapping() {
+  if [[ ! ${DB_CONTAINER_EXISTS} ]]; then
+    read -p "Enter local path to store drucker databases [${DEFAULT_HOST_DB_PATH}]: " HOST_DB_PATH
+    HOST_DB_PATH=${HOST_DB_PATH:-$DEFAULT_HOST_DB_PATH}
+  fi
+}
 
 create_db_container_from_base_image() {
   echo -e "${BLUE}Spinning up ${DB_CONTAINER} container with ID:${COLOR_ENDING}"
 
-  #local_directory_mapping
+  local_directory_mapping
 
   docker run --privileged=true --name "${DB_CONTAINER}" -it \
   -h "${DB_HOSTNAME}" \
@@ -21,6 +21,7 @@ create_db_container_from_base_image() {
   --ip "${DB_IP}" \
   -d -p "${HOST_DB_PORT}":"${DB_PORT}" \
   -p "${HOST_TCP_PORT_MAPPER_DB}":"${TCP_PORT_MAPPER_DB}" \
+  -v "${HOST_DB_PATH}":"${CONTAINER_DB_PATH}" \
   "${BASE_IMAGE}" bash
 
   configure_db_container_ssh_access
@@ -30,7 +31,7 @@ create_db_container_from_base_image() {
 create_db_container_from_db_image() {
   echo -e "${BLUE}Spinning up ${DB_CONTAINER} container with ID:${COLOR_ENDING}"
 
-  #local_directory_mapping
+  local_directory_mapping
 
   docker run --privileged=true --name "${DB_CONTAINER}" -it \
   -h "${DB_HOSTNAME}" \
@@ -38,6 +39,7 @@ create_db_container_from_db_image() {
   --ip "${DB_IP}" \
   -d -p "${HOST_DB_PORT}":"${DB_PORT}" \
   -p "${HOST_TCP_PORT_MAPPER_DB}":"${TCP_PORT_MAPPER_DB}" \
+  -v "${HOST_DB_PATH}":"${CONTAINER_DB_PATH}" \
   "${DB_IMAGE}" bash
 
   configure_db_container_ssh_access
