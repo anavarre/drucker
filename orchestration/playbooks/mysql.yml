@@ -1,11 +1,11 @@
 ---
 - name: Check if MySQL is installed
   stat:
-    path: /var/lib/mysql
+    path: /etc/mysql/my.cnf
   register: mysql
   ignore_errors: True
 
-- name: Install MySQL
+- name: Install MySQL and utilities
   package:
     name: "{{ item }}"
     state: installed
@@ -14,6 +14,8 @@
     - mysql-client-{{ mysql_stable_release }}
     - mysql-server-{{ mysql_stable_release }}
     - python-mysqldb
+    - mytop
+    # memcached
   when: mysql.stat.exists == false
 
 - name: Set innodb_file_per_table
@@ -21,6 +23,13 @@
     dest: /etc/mysql/my.cnf
     insertafter: "^datadir"
     line: "innodb_file_per_table = 1"
+  when: mysql.stat.exists == false
+
+- name: Configure MySQL to allow remote access
+  lineinfile:
+    dest: "/etc/mysql/my.cnf"
+    regexp: "bind-address            = 127.0.0.1"
+    line: "bind-address            = 0.0.0.0"
   when: mysql.stat.exists == false
 
 - name: Start MySQL
@@ -32,25 +41,15 @@
     - mysql
   when: mysql.stat.exists == false
 
-- name: "Set MySQL root user password"
+- name: Set MySQL root user password
   mysql_user:
-    name: root
-    host: localhost
-    password: "{{ mysql_creds }}"
-    check_implicit_admin: yes
     login_user: "{{ mysql_creds }}"
     login_password: "{{ mysql_creds }}"
+    name: "{{ mysql_creds }}"
+    password: "{{ mysql_creds }}"
+    host: localhost
+    check_implicit_admin: yes
     state: present
-  when: mysql.stat.exists == false
-
-- name: Install MySQL utilities
-  package:
-    name: "{{ item }}"
-    state: installed
-    force: yes
-  with_items:
-    #- memcached
-    - mytop
   when: mysql.stat.exists == false
 
 - name: Ensure MySQL is started
@@ -58,3 +57,20 @@
     name: mysql
     enabled: yes
     state: started
+
+- name: Grant remote user access to all databases
+  mysql_user:
+    login_user: "{{ mysql_creds }}"
+    login_password: "{{ mysql_creds }}"
+    login_host: localhost
+    name: "{{ mysql_creds }}"
+    password: "{{ mysql_creds }}"
+    priv: "*.*:ALL"
+    host: "{{ web_ip }}"
+    state: present
+
+- name: Ensure MySQL is restarted
+  service:
+    name: mysql
+    enabled: yes
+    state: restarted

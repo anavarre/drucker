@@ -10,7 +10,6 @@
   tasks:
     - include: playbooks/apache.yml
     - include: playbooks/php.yml
-    - include: playbooks/mysql.yml
     - include: playbooks/composer.yml
     - include: playbooks/phpmyadmin.yml
     - include: playbooks/adminer.yml

@@ -81,7 +81,7 @@
   mysql_db:
     login_user: "{{ mysql_creds }}"
     login_password: "{{ mysql_creds }}"
-    login_host: localhost
+    login_host: "{{ db_ip }}"
     login_port: "{{ mysql_port }}"
     name: "{{ user }}"
     state: absent
@@ -91,7 +91,7 @@
   mysql_db:
     login_user: "{{ mysql_creds }}"
     login_password: "{{ mysql_creds }}"
-    login_host: localhost
+    login_host: "{{ db_ip }}"
     login_port: 3306
     name: drucker
     state: present
@@ -172,7 +172,7 @@
   when: drucker_aliases.stat.exists == false
 
 - name: Install Drupal
-  command: drush @{{ user }}.{{ tld }} site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@127.0.0.1:{{ mysql_port }}/{{ user }} --site-name={{ user }} --site-mail={{ drupal_creds }}@{{ user }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ user }}.{{ tld }}
+  command: drush @{{ user }}.{{ tld }} site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@{{ db_ip }}:{{ mysql_port }}/{{ user }} --site-name={{ user }} --site-mail={{ drupal_creds }}@{{ user }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ user }}.{{ tld }}
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Check if phpunit.xml file exists
