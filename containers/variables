@@ -15,8 +15,8 @@ export DEFAULT_SSH_PATH="$HOME/.ssh/id_rsa.pub"
 export DEFAULT_HOST_DB_PATH="/var/lib/mysql"
 export CONTAINER_DB_PATH="/var/lib/mysql"
 
-export HOST_PATH="/var/www/html"
-export CONTAINER_PATH="/var/www/html"
+export DEFAULT_HOST_HTML_PATH="/var/www/html"
+export CONTAINER_HTML_PATH="/var/www/html"
 
 # Networking
 export NETWORK="drucker"
