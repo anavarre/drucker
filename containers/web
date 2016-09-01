@@ -24,7 +24,7 @@ create_web_container_from_base_image() {
   -p "${HOST_TCP_GLUSTER_BRICK_WEB}":"${TCP_GLUSTER_BRICK_WEB}" \
   -p "${HOST_TCP_PORT_MAPPER_WEB}":"${TCP_PORT_MAPPER_WEB}" \
   -v "${HOST_HTML_PATH}":"${CONTAINER_HTML_PATH}" \
-  --volumes-from ${DB_CONTAINER} \
+  --volumes-from "${DB_CONTAINER}" \
   "${BASE_IMAGE}" bash
 
   configure_web_container_ssh_access
@@ -45,7 +45,7 @@ create_web_container_from_web_image() {
   -p "${HOST_TCP_GLUSTER_BRICK_WEB}":"${TCP_GLUSTER_BRICK_WEB}" \
   -p "${HOST_TCP_PORT_MAPPER_WEB}":"${TCP_PORT_MAPPER_WEB}" \
   -v "${HOST_HTML_PATH}":"${CONTAINER_HTML_PATH}" \
-  --volumes-from ${DB_CONTAINER} \
+  --volumes-from "${DB_CONTAINER}" \
   "${WEB_IMAGE}" bash
 
   configure_web_container_ssh_access
