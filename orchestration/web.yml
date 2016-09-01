@@ -8,6 +8,7 @@
   handlers:
     - include: handlers.yml
   tasks:
+    - include: playbooks/ssh-keys.yml
     - include: playbooks/apache.yml
     - include: playbooks/php.yml
     - include: playbooks/composer.yml
