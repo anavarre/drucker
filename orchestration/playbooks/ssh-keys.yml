@@ -6,7 +6,7 @@
   register: rsa_web
   ignore_errors: True
 
-- name: Generate SSH keys for remote MySQL access
+- name: Generate SSH key for remote MySQL access
   shell: ssh-keygen -b 4096 -t rsa -f /home/{{ user }}/.ssh/id_rsa -q -N ""
   args:
     creates: /home/{{ user }}/.ssh/id_rsa

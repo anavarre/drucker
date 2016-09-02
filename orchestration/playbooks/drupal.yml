@@ -58,6 +58,12 @@
     mode: 0777
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
+- name: Create libraries directory
+  file:
+    path: "{{ webroot }}/{{ user }}/libraries"
+    state: directory
+  when: drucker.stat.exists == false or drucker_db.stat.exists == false
+
 - name: Create simpletest directory
   file:
     path: "{{ webroot }}/{{ user }}/sites/simpletest"
