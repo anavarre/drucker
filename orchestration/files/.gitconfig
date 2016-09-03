@@ -19,6 +19,6 @@
   co = checkout
   st = status --untracked-files=all --ignored
   unstash = !git stash show -p | git apply -R
-  hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short -25
+  hist = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)[%an]%Creset' --abbrev-commit
   clean = clean -fdx
   reset = resert --hard
