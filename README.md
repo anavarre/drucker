@@ -54,7 +54,7 @@ _drucker_ ships with the following software stack:
 | Code Sniffer        | 2.6.1           |
 | phpmd               | 2.4.3           |
 | phantomjs           | 2.1.1           |
-| MySQL               | 5.5.49 or later |
+| MySQL               | 5.7.14 or later |
 | Drupal              | 8.3.x           |
 | Drush               | 8.1.2           |
 | Drupal Console      | 1.0.0-beta5     |

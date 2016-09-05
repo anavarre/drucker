@@ -1,4 +1,5 @@
 ---
+# See https://www.drupal.org/node/1561866 for improvements.
 - name: Check if pecl-php-uploadprogress is installed
   stat:
     path: "{{ php_extensions }}/uploadprogress.so"
