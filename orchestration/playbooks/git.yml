@@ -35,6 +35,39 @@
     owner: "{{ user }}"
     group: "{{ user }}"
 
+- name: Check if .bash-git-prompt exists
+  stat:
+    path: /home/{{ user }}/.bash-git-prompt
+  register: git_prompt
+
+- name: Install .bash-git-prompt for git-friendly prompt
+  get_url:
+    url: https://github.com/magicmonty/bash-git-prompt/archive/{{ prompt_stable_version }}.tar.gz
+    dest: /home/{{ user }}/
+    validate_certs: no
+  register: prompt_get_url_result
+  until: "'OK' in prompt_get_url_result.msg"
+  retries: 3
+  delay: 10
+  when: git_prompt.stat.exists == false
+
+- name: Extract bash-git-prompt files
+  unarchive:
+    src: /home/{{ user }}/bash-git-prompt-{{ prompt_stable_version }}.tar.gz
+    dest: /home/{{ user }}/
+    copy: no
+  when: git_prompt.stat.exists == false
+
+- name: Rename bash-git-prompt directory
+  command: mv /home/{{ user }}/bash-git-prompt-{{ prompt_stable_version }} /home/{{ user }}/.bash-git-prompt
+  when: git_prompt.stat.exists == false
+
+- name: Delete bash-git-prompt archive
+  file:
+    path: /home/{{ user }}/bash-git-prompt-{{ prompt_stable_version }}.tar.gz
+    state: absent
+  when: git_prompt.stat.exists == false
+
 - name: Check if .bashrc needs to be customized
   shell: grep -o "MANAGED GIT BLOCK" /home/{{ user }}/.bashrc || echo "absent"
   register: git_bashrc
@@ -52,7 +85,8 @@
       . ~/.git-prompt.sh
       fi
 
-      PS1='[\t] \u:\w$(__git_ps1 " (%s)")\$ '
+      source ~/.bash-git-prompt/gitprompt.sh
+      GIT_PROMPT_ONLY_IN_REPO=1
     insertafter: EOF
     marker: "# {mark} MANAGED GIT BLOCK"
   when: git_bashrc.stdout == "absent"

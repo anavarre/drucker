@@ -61,6 +61,7 @@ _drucker_ ships with the following software stack:
 | Composer            | 1.2.0           |
 | phpMyAdmin          | 4.6.4           |
 | adminer             | 4.2.5           |
+| bash-git-prompt     | 2.5.1           |
 
 ## Installation
 
