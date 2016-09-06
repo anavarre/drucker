@@ -42,19 +42,6 @@
   command: cp {{ webroot }}/{{ user }}/sites/default/default.services.yml {{ webroot }}/{{ user }}/sites/default/services.yml
   when: services_yml_dev.stat.exists == false
 
-# - name: Disable Twig caching
-#   blockinfile:
-#     dest: "{{ webroot }}/{{ user }}/sites/development.services.yml"
-#     block: |
-#       parameters:
-#         twig.config:
-#           debug: true
-#           auto_reload: true
-#           cache: false
-#     insertafter: EOF
-#     marker: "# {mark} MANAGED TWIG CACHING BLOCK"
-#   register: turn_off_twig_caching
-
 - name: Turn on Twig debugging
   replace:
     dest: "{{ webroot }}/{{ user }}/sites/default/services.yml"
