@@ -64,3 +64,16 @@
 - name: Rebuild Drupal cache
   command: drush @{{ user }}.{{ tld }} cache-rebuild
   when: turn_on_twig_debugging.changed
+
+- name: Check the Zend assertions status
+  shell: grep "^zend.assertions = -1" "{{ php_ini }}" || echo "on"
+  register: zend_assertions_enable
+  changed_when: zend_assertions_enable.stdout != "on"
+
+- name: Turn on Zend assertions
+  replace:
+    dest: "{{ php_ini }}"
+    regexp: '^(.*)zend.assertions = -1(.*)$'
+    replace: '\1zend.assertions = 1\2'
+  notify: Restart Apache
+  when: zend_assertions_enable.stdout != "on"
