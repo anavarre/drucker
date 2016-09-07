@@ -14,6 +14,7 @@
   get_url:
     url: https://github.com/drush-ops/drush/releases/download/{{ drush_stable_release }}/drush.phar
     dest: "{{ user_programs_path }}/drush"
+    force: yes
     mode: 0755
     validate_certs: no
   register: drush_get_url_result
