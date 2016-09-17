@@ -97,6 +97,7 @@
     login_host: "{{ db_ip }}"
     login_port: "{{ mysql_port }}"
     name: "{{ user }}"
+    config_file: "{{ my_cnf }}"
     state: absent
   when: drucker.stat.exists == false
 
@@ -105,8 +106,9 @@
     login_user: "{{ mysql_creds }}"
     login_password: "{{ mysql_creds }}"
     login_host: "{{ db_ip }}"
-    login_port: 3306
-    name: drucker
+    login_port: "{{ mysql_port }}"
+    name: "{{ user }}"
+    config_file: "{{ my_cnf }}"
     state: present
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 

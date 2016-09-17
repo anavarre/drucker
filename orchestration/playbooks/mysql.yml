@@ -37,16 +37,16 @@
   when: mysql.stat.exists == false
 
 - name: Check if MySQL is configured to allow remote access
-  shell: grep -o "0.0.0.0" {{ my_cnf }} || echo "denied"
-  register: mysql_remote_access
-  changed_when: mysql_remote_access == "denied"
+  shell: grep -o "0.0.0.0" {{ mysqld_cnf }} || echo "denied"
+  register: mysqld_remote_access
+  changed_when: mysqld_remote_access == "denied"
 
 - name: Configure MySQL to allow remote access
   replace:
-    dest: "{{ my_cnf }}"
+    dest: "{{ mysqld_cnf }}"
     regexp: '^(.*)127.0.0.1(.*)$'
     replace: '\1 0.0.0.0\2'
-  when: mysql_remote_access.stdout == "denied"
+  when: mysqld_remote_access.stdout == "denied"
 
 - name: Start MySQL
   service:

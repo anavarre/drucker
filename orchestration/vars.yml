@@ -33,6 +33,7 @@ max_file_uploads: 100
 
 # MySQL
 my_cnf: /etc/mysql/conf.d/mysql.cnf
+mysqld_cnf: /etc/mysql/mysql.conf.d/mysqld.cnf
 mysql_data: /var/lib/mysql
 mysql_creds: root
 mysql_port: 3306
