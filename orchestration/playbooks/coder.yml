@@ -5,8 +5,35 @@
   register: coder
 
 - name: Install Coder
-  command: composer global require drupal/coder --working-dir=/home/{{ user }}/.composer
+  composer:
+    command: require
+    arguments: drupal/coder {{ coder_stable_release }}
+    working_dir: /home/{{ user }}/.composer
   when: coder.stat.exists == false
+
+- name: Check if Coder is up-to-date
+  composer:
+    command: info
+    arguments: drupal/coder
+    working_dir: /home/{{ user }}/.composer
+  register: coder_stable_release_check
+  when: coder.stat.exists == true
+  changed_when: '"{{ coder_stable_release }}" not in coder_stable_release_check.stdout'
+
+- name: Update Coder
+  composer:
+    command: require
+    arguments: drupal/coder {{ coder_stable_release }}
+    working_dir: /home/{{ user }}/.composer
+  when: coder.stat.exists == true and "{{ coder_stable_release }}" not in coder_stable_release_check.stdout
+
+- name: Ensure .composer directory has correct permissions
+  file:
+    path: /home/{{ user }}/.composer
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    recurse: yes
 
 - name: Check if Coder bash aliases exist
   shell: egrep -o 'MANAGED CODE SNIFFER BLOCK' /home/{{ user }}/.bashrc || echo "absent"

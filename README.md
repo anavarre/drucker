@@ -51,6 +51,7 @@ _drucker_ ships with the following software stack:
 | Xdebug              | 2.4.1           |
 | PECL uploadprogress | master          |
 | Tideways Profiler   | 4.0.5           |
+| Coder               | 8.2.9           |
 | Code Sniffer        | 2.6.1           |
 | phpmd               | 2.4.3           |
 | phantomjs           | 2.1.1           |

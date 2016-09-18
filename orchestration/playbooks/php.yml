@@ -37,6 +37,7 @@
     - php7.0-cli
     - php7.0-common
     - php7.0-dev
+    - php7.0-mbstring
     - libapache2-mod-fastcgi
   when: fpm.stat.exists == false
 
