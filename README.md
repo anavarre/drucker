@@ -1,6 +1,6 @@
 # drucker: Drupal + Docker
 
-[![demo](https://asciinema.org/a/82436.png)](https://asciinema.org/a/82436)
+[![demo](https://asciinema.org/a/86718.png)](https://asciinema.org/a/86718)
 
 **This is a WIP (Work In Progress). Use at your own risk.**
 
