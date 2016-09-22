@@ -75,7 +75,7 @@
     dest: "{{ webroot }}/phpmyadmin/config.inc.php"
     regexp: "^(.*)localhost(.*)$"
     line: "$cfg['Servers'][$i]['host'] = '203.0.113.12';"
-  when: config_inc.stat.exists == true
+  when: config_inc.stat.exists == false
 
 - name: Check if phpMyAdmin vHost exists
   stat:
