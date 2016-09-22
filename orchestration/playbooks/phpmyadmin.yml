@@ -70,6 +70,13 @@
     insertafter: '^(.*)auth_type(.*)$'
   when: config_inc.stat.exists == false
 
+- name: Set connection to remote database server
+  lineinfile:
+    dest: "{{ webroot }}/phpmyadmin/config.inc.php"
+    regexp: "^(.*)localhost(.*)$"
+    line: "$cfg['Servers'][$i]['host'] = '203.0.113.12';"
+  when: config_inc.stat.exists == true
+
 - name: Check if phpMyAdmin vHost exists
   stat:
     path: /etc/apache2/sites-enabled/phpmyadmin.conf
