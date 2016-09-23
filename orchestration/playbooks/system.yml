@@ -28,6 +28,7 @@
   - patchutils
   - strace
   - sysstat
+  - time
   - vim
   - wget
 
