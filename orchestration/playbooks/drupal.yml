@@ -1,5 +1,5 @@
 ---
-- name: Check if Drupal archive exists
+- name: Check if latest Drupal dev archive exists
   stat:
     path: /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz
   register: drupal

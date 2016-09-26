@@ -23,6 +23,8 @@
     - include: playbooks/codesniffer.yml
     - include: playbooks/coder.yml
     - include: playbooks/phpmd.yml
+    - include: playbooks/drupal-reinstall.yml
+      when: reinstall == "Y"
     - include: playbooks/drupal.yml
     - include: playbooks/drupal-dev.yml
       when: dev == "Y"

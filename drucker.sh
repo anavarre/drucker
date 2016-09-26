@@ -8,13 +8,17 @@ usage() {
 
   if [[ "$FIRST_ARG" == "--help" ]]; then
 cat <<EOF
---dev     Prepare drucker for development work with no caching and helper modules enabled. WARNING: when running automated tests, 'twig_debug'
+--dev         Prepare drucker for development work with no caching and helper. modules enabled. WARNING: when running automated tests, 'twig_debug'
 should be set to FALSE.
---prod    Opinionated setup with all known performance best practices enabled.
+--prod        Opinionated setup with all known performance best practices enabled.
+--reinstall   Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
 EOF
     exit 0
-  elif [[ -n "${FIRST_ARG}" ]] && [[ "${FIRST_ARG}" != "--dev" ]] && [[ "${FIRST_ARG}" != "--prod" ]]; then
-    echo "Usage: drucker {--dev|--prod}"
+  elif [[ -n "${FIRST_ARG}" ]] && \
+       [[ "${FIRST_ARG}" != "--dev" ]] && \
+       [[ "${FIRST_ARG}" != "--prod" ]] && \
+       [[ "${FIRST_ARG}" != "--reinstall" ]]; then
+    echo "Usage: drucker {--dev|--prod|--reinstall}"
     exit 0
   fi
 }

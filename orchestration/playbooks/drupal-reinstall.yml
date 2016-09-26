@@ -1,0 +1,24 @@
+---
+- name: Check if latest Drupal dev archive exists
+  stat:
+    path: /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz
+  register: drupal_archive
+  ignore_errors: True
+
+- name: Deletes Drupal archive
+  file:
+    path: /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz
+    state: absent
+  when: drupal_archive.stat.exists == true
+
+- name: Check if drucker docroot exists
+  stat:
+    path: "{{ webroot }}/{{ user }}"
+  register: drucker_docroot
+  ignore_errors: True
+
+- name: Deletes drucker docroot
+  file:
+    path: "{{ webroot }}/{{ user }}"
+    state: absent
+  when: drucker_docroot.stat.exists == true
