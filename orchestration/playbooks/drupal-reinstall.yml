@@ -5,11 +5,15 @@
   register: drupal_archive
   ignore_errors: True
 
-- name: Deletes Drupal archive
+- name: Check if Drupal archive is outdated
+  shell: date -r /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz +%F
+  register: outdated_drupal
+
+- name: Delete Drupal archive
   file:
     path: /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz
     state: absent
-  when: drupal_archive.stat.exists == true
+  when: drupal_archive.stat.exists == true and outdated_drupal.stdout != "{{ ansible_date_time.date }}"
 
 - name: Check if drucker docroot exists
   stat:
