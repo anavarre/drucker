@@ -151,29 +151,9 @@ $ su drucker
 
 ### Reinstall Drupal from the current dev release
 
-Delete the `drucker` directory under `/var/www/html`
-
 ```
-$ rm -Rf /var/www/html/drucker
+$ drucker --reinstall
 ```
-
-Then run `drucker` again.
-
-### Reinstall Drupal from a newer dev release
-
-Delete the `drucker` directory under `/var/www/html`.
-
-```
-$ rm -Rf /var/www/html/drucker
-```
-
-Also delete the Drupal dev archive (e.g. `drupal-8.1.x-dev.tar.gz`) under `/tmp`
-
-```
-$ rm /tmp/drupal-8.1.x-dev.tar.gz
-```
-
-Then run `drucker` again.
 
 ### Reinstall Drupal from the existing codebase
 
