@@ -21,6 +21,7 @@
     - include: playbooks/tideways.yml
     - include: playbooks/phantomjs.yml
     - include: playbooks/codesniffer.yml
+    - include: playbooks/php-cs-fixer.yml
     - include: playbooks/coder.yml
     - include: playbooks/phpmd.yml
     - include: playbooks/drupal-reinstall.yml

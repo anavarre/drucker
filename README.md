@@ -53,6 +53,7 @@ _drucker_ ships with the following software stack:
 | Tideways Profiler   | 4.0.5           |
 | Coder               | 8.2.9           |
 | Code Sniffer        | 2.6.1           |
+| PHP-CS-Fixer        | 1.12.2          |
 | phpmd               | 2.4.3           |
 | phantomjs           | 2.1.1           |
 | MySQL               | 5.7.14 or later |
