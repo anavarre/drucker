@@ -47,7 +47,7 @@ _drucker_ ships with the following software stack:
 | Varnish             | 4.1.2 or later  |
 | nginx               | 1.10.1 or later |
 | Apache              | 2.4.10 or later |
-| PHP-FPM             | 7.0.9 or later  |
+| PHP-FPM             | 7.0.11 or later |
 | Xdebug              | 2.4.1           |
 | PECL uploadprogress | master          |
 | Tideways Profiler   | 4.0.5           |
