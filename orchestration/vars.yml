@@ -60,4 +60,4 @@ brick: /data/brick1/gv0
 gluster_mount_dir: /mnt/gfs
 
 # Misc
-prompt_stable_version: 2.5.1
+prompt_stable_version: 2.6.1
