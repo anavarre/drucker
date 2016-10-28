@@ -30,10 +30,13 @@
   when: mysql.stat.exists == false
 
 - name: Set innodb_file_per_table
-  lineinfile:
+  blockinfile:
     dest: "{{ my_cnf }}"
-    insertafter: "[mysql]"
-    line: "innodb_file_per_table = 1"
+    block: |
+      [mysqld]
+      innodb_file_per_table = 1
+    insertafter: EOF
+    marker: "# {mark} MANAGED INNODB BLOCK"
   when: mysql.stat.exists == false
 
 - name: Check if MySQL is configured to allow remote access
