@@ -16,7 +16,7 @@
 
 - name: Disable cache bins
   replace:
-    dest: "{{ webroot }}/{{ user }}/sites/settings.local.php"
+    dest: "{{ webroot }}/{{ user }}/{{default_site}}/settings.local.php"
     regexp: '^(.*)# \$settings\[''cache''\]\[''bins''\](.*)$'
     replace: '\1$settings[''cache''][''bins'']\2'
   when: settings_local.stat.exists == false or cache_bins.stdout == 'absent'
