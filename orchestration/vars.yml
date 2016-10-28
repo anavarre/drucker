@@ -46,6 +46,7 @@ adminer_stable_release: 4.2.5
 
 # Drupal & Tools
 drupal_creds: admin
+default_site: sites/default
 drupal_dev_release: 8.3.x
 drush_stable_release: 8.1.6
 drupal_console_stable_release: 1.0.0-rc6

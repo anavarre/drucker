@@ -47,13 +47,13 @@
 
 - name: Delete files directory when reinstalling
   file:
-    path: "{{ webroot }}/{{ user }}/sites/default/files"
+    path: "{{ webroot }}/{{ user }}/{{default_site}}/files"
     state: absent
   when: drucker_db.stat.exists == false
 
 - name: Create files directory
   file:
-    path: "{{ webroot }}/{{ user }}/sites/default/files"
+    path: "{{ webroot }}/{{ user }}/{{default_site}}/files"
     state: directory
     mode: 0777
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
@@ -73,17 +73,17 @@
 
 - name: Delete settings.php file when reinstalling
   file:
-    path: "{{ webroot }}/{{ user }}/sites/default/settings.php"
+    path: "{{ webroot }}/{{ user }}/{{default_site}}/settings.php"
     state: absent
   when: drucker_db.stat.exists == false
 
 - name: Create settings.php file
-  command: cp {{ webroot }}/{{ user }}/sites/default/default.settings.php {{ webroot }}/{{ user }}/sites/default/settings.php
+  command: cp {{ webroot }}/{{ user }}/{{default_site}}/default.settings.php {{ webroot }}/{{ user }}/{{default_site}}/settings.php
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Add trusted_host_patterns in settings.php
   blockinfile:
-    dest: "{{ webroot }}/{{ user }}/sites/default/settings.php"
+    dest: "{{ webroot }}/{{ user }}/{{default_site}}/settings.php"
     block: |
       $settings['trusted_host_patterns'] = array(
         '^{{ user }}\.local$',

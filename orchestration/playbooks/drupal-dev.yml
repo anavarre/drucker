@@ -1,12 +1,12 @@
 ---
 - name: Check if settings.local.php file exists
   stat:
-    path: "{{ webroot }}/{{ user }}/sites/settings.local.php"
+    path: "{{ webroot }}/{{ user }}/{{default_site}}/settings.local.php"
   register: settings_local
   ignore_errors: True
 
 - name: Create settings.local.php file
-  command: cp {{ webroot }}/{{ user }}/sites/example.settings.local.php {{ webroot }}/{{ user }}/sites/settings.local.php
+  command: cp {{ webroot }}/{{ user }}/sites/example.settings.local.php {{ webroot }}/{{ user }}/{{default_site}}/settings.local.php
   when: settings_local.stat.exists == false
 
 - name: Check if cache bins have been disabled
@@ -23,7 +23,7 @@
 
 - name: Enable settings.local.php
   blockinfile:
-    dest: "{{ webroot }}/{{ user }}/sites/default/settings.php"
+    dest: "{{ webroot }}/{{ user }}/{{default_site}}/settings.php"
     block: |
       if (file_exists(__DIR__ . '/settings.local.php')) {
         include __DIR__ . '/settings.local.php';
@@ -34,30 +34,30 @@
 
 - name: Check if services.yml exists
   stat:
-    path: "{{ webroot }}/{{ user }}/sites/default/services.yml"
+    path: "{{ webroot }}/{{ user }}/{{default_site}}/services.yml"
   register: services_yml_dev
   ignore_errors: True
 
 - name: Create services.yml file
-  command: cp {{ webroot }}/{{ user }}/sites/default/default.services.yml {{ webroot }}/{{ user }}/sites/default/services.yml
+  command: cp {{ webroot }}/{{ user }}/{{default_site}}/default.services.yml {{ webroot }}/{{ user }}/{{default_site}}/services.yml
   when: services_yml_dev.stat.exists == false
 
 - name: Turn on Twig debugging
   replace:
-    dest: "{{ webroot }}/{{ user }}/sites/default/services.yml"
+    dest: "{{ webroot }}/{{ user }}/{{default_site}}/services.yml"
     regexp: '^(.*)    debug: false(.*)$'
     replace: '\1    debug: true\2'
   register: turn_on_twig_debugging
 
 - name: Turn on Twig auto_reload
   replace:
-    dest: "{{ webroot }}/{{ user }}/sites/default/services.yml"
+    dest: "{{ webroot }}/{{ user }}/{{default_site}}/services.yml"
     regexp: '^(.*)    auto_reload: null(.*)$'
     replace: '\1    auto_reload: true\2'
 
 - name: Turn off Twig caching
   replace:
-    dest: "{{ webroot }}/{{ user }}/sites/default/services.yml"
+    dest: "{{ webroot }}/{{ user }}/{{default_site}}/services.yml"
     regexp: '^(.*)    cache: true(.*)$'
     replace: '\1    cache: false\2'
 
