@@ -202,22 +202,6 @@
     mode: 0644
   when: phpunit.stat.exists == false
 
-- name: Check if phpunit bash alias exists
-  shell: grep -o "alias test='sudo -u www-data ./vendor/bin/phpunit -c core -v --debug'" /home/{{ user }}/.bash_aliases || echo "absent"
-  register: phpunit_alias
-  changed_when: phpunit_alias.stdout == "absent"
-
-- name: Configure phpunit in .bash_aliases
-  lineinfile:
-    dest: /home/{{ user }}/.bash_aliases
-    line: "alias test='sudo -u www-data ./vendor/bin/phpunit -c core -v --debug'"
-    insertafter: EOF
-  when: phpunit_alias.stdout == 'absent'
-
-- name: Add all files under version control
-  shell: cd {{ webroot }}/{{ user }}/ && git add --all . && git commit -m "Initial commit"
-  when: drucker.stat.exists == false
-
 - name: Make sure files and dirs ownership is consistent
   file:
     path: "{{ webroot }}"
