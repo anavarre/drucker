@@ -51,3 +51,39 @@
     owner: "{{ user }}"
     group: "{{ user }}"
   when: bash_aliases.stat.exists == false
+
+- name: Check if .vimrc file exists
+  stat:
+    path: "{{ home }}/.vimrc"
+  register: vimrc
+  ignore_errors: True
+
+- name: Deploy .vimrc file
+  copy:
+    src: files/.vimrc
+    dest: "{{ home }}"
+    mode: 0644
+  when: vimrc.stat.exists == false
+
+- name: Check if .vim directory exists
+  stat:
+    path: "{{ home }}/.vim"
+  register: vim
+  ignore_errors: True
+
+- name: Deploy .vim directory
+  copy:
+    src: files/.vim
+    dest: "{{ home }}"
+    mode: 0755
+  when: vim.stat.exists == false
+
+- name: Make sure permissions are correct for Vim configuration files
+  file:
+    path: "{{ home }}/{{ item }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  with_items:
+    - .vimrc
+    - .vim
+  when: vim.stat.exists == false
