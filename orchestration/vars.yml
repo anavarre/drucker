@@ -3,6 +3,7 @@ user: drucker
 codename: jessie
 name: web
 tld: local
+home: /home/{{ user }}/
 
 # Apache
 web_ip: 203.0.113.10

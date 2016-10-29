@@ -40,13 +40,13 @@
 
 - name: Check if .bash_aliases exist
   stat:
-    path: /home/{{ user }}/.bash_aliases
+    path:"{{ home }}"/.bash_aliases
   register: bash_aliases
 
 - name: Deploy .bash_aliases
   copy:
     src: files/.bash_aliases
-    dest: /home/{{ user }}/
+    dest: "{{ home }}"
     mode: 0644
     owner: "{{ user }}"
     group: "{{ user }}"
