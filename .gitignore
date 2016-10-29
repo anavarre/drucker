@@ -1,1 +1,3 @@
 *.retry
+import/*
+!import/README.md

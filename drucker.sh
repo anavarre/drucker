@@ -4,9 +4,10 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 usage() {
-  FIRST_ARG=$1
+  export OPTION=$1
+  export SITENAME=$2
 
-  if [[ "$FIRST_ARG" == "--help" ]]; then
+  if [[ "$OPTION" == "--help" ]]; then
 cat <<EOF
 --dev         Prepare drucker for development work with no caching and helper. modules enabled. WARNING: when running automated tests, 'twig_debug'
 should be set to FALSE.
@@ -15,11 +16,11 @@ should be set to FALSE.
 --import      Imports the database, files and codebase from the import directory. Database must be have the .sql extension.
 EOF
     exit 0
-  elif [[ -n "${FIRST_ARG}" ]] && \
-       [[ "${FIRST_ARG}" != "--dev" ]] && \
-       [[ "${FIRST_ARG}" != "--prod" ]] && \
-       [[ "${FIRST_ARG}" != "--reinstall" ]] && \
-       [[ "${FIRST_ARG}" != "--import" ]]; then
+  elif [[ -n "${OPTION}" ]] && \
+       [[ "${OPTION}" != "--dev" ]] && \
+       [[ "${OPTION}" != "--prod" ]] && \
+       [[ "${OPTION}" != "--reinstall" ]] && \
+       [[ "${OPTION}" != "--import" ]]; then
     echo "Usage: drucker {--dev|--prod|--reinstall|--import}"
     exit 0
   fi
