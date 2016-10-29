@@ -12,13 +12,15 @@ cat <<EOF
 should be set to FALSE.
 --prod        Opinionated setup with all known performance best practices enabled.
 --reinstall   Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
+--import      Imports the database, files and codebase from the import directory. Database must be have the .sql extension.
 EOF
     exit 0
   elif [[ -n "${FIRST_ARG}" ]] && \
        [[ "${FIRST_ARG}" != "--dev" ]] && \
        [[ "${FIRST_ARG}" != "--prod" ]] && \
-       [[ "${FIRST_ARG}" != "--reinstall" ]]; then
-    echo "Usage: drucker {--dev|--prod|--reinstall}"
+       [[ "${FIRST_ARG}" != "--reinstall" ]] && \
+       [[ "${FIRST_ARG}" != "--import" ]]; then
+    echo "Usage: drucker {--dev|--prod|--reinstall|--import}"
     exit 0
   fi
 }
