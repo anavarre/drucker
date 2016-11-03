@@ -120,7 +120,7 @@ $ drucker --help
 should be set to FALSE.
 --prod        Opinionated setup with all known performance best practices enabled.
 --reinstall   Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
---import      Imports the database, files and codebase from the import directory. Database must be have the .sql.gz extension.
+--import      Imports the database, files and codebase from the import directory.
 ```
 
 The `--import [sitename]` parameter is a special beast. Please [read more about it in the wiki](https://github.com/anavarre/drucker/wiki/Importing-an-existing-site-to-drucker).

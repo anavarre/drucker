@@ -1,9 +1,17 @@
 ---
 - name: Check if MySQL dump exists
   stat:
-    path: "{{ webroot }}/import/{{ sitename }}.sql.gz"
-  register: dump
+    path: "{{ item }}"
+  with_first_found:
+    - files:
+      - "{{ webroot }}/import/{{ sitename }}.sql.gz"
+      - "{{ webroot }}/import/{{ sitename }}.sql"
+      skip: true
+  register: dump_detection
   ignore_errors: True
+
+- set_fact:
+    dump: "{{ dump_detection.results[0]['item'] }}"
 
 - name: Check if new database exists (or create it)
   mysql_db:
@@ -14,7 +22,6 @@
     config_file: "{{ my_cnf }}"
     name: "{{ sitename }}"
     state: present
-  when: dump.stat.exists == true
 
 - name: Restore MySQL dump
   mysql_db:
@@ -25,8 +32,10 @@
     config_file: "{{ my_cnf }}"
     name: "{{ sitename }}"
     state: import
-    target: "{{ webroot }}/import/{{ sitename }}.sql.gz"
-  when: dump.stat.exists == true
+    target: "{{ dump }}"
+
+- name: Archive imported database dump
+  command: mv {{ dump }} {{ webroot }}/import/archives/
 
 - name: Check if docroot exists
   stat:
@@ -39,31 +48,15 @@
   register: import_docroot
   when: docroot_check.stat.exists == false
 
+- name: Archive imported docroot
+  command: mv {{ webroot }}/import/{{ sitename }} {{ webroot }}/import/archives/
+  when: docroot_check.stat.exists == false
+
 - name: Make sure permissions are correct
   file:
     path: "{{ webroot }}/{{ sitename }}"
     owner: "{{ user }}"
     group: "{{ apache_user }}"
-
-- name: Check if database dump exists
-  stat:
-    path: "{{ webroot }}/import/{{ sitename }}.sql.gz"
-  register: db_dump
-  ignore_errors: True
-
-- name: Archive imported database dump
-  command: mv {{ webroot }}/import/{{ sitename }}.sql.gz {{ webroot }}/import/archives/
-  when: db_dump.stat.exists == true
-
-- name: Check if docroot exists
-  stat:
-    path: "{{ webroot }}/import/{{ sitename }}"
-  register: docroot_check
-  ignore_errors: True
-
-- name: Archive imported docroot
-  command: mv {{ webroot }}/import/{{ sitename }} {{ webroot }}/import/archives/
-  when: docroot_check.stat.exists == true
 
 - name: Check if vHost exists
   stat:
