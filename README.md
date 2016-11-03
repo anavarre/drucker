@@ -112,13 +112,18 @@ Simply run `drucker` if you have a bash alias, or invoke the `drucker.sh` script
 $ ./drucker.sh
 ```
 
-For more advanced usage, you can pass the `--dev` or `--prod` CLI parameters. This will configure `drucker` such as the environment becomes dev/prod friendly. The dev mode implies no caching, Twig debugging mode on and helper modules enabled. The prod mode applies all known recommended performance optimizations for near real-life conditions.
+For more advanced usage, you can pass several CLI parameters:
 
 ```
 $ drucker --help
---dev     Prepare drucker for development work with no caching and helper modules enabled.
---prod    Opinionated setup with all known performance best practices enabled.
+--dev         Prepare drucker for development work with no caching and helper. modules enabled. WARNING: when running automated tests, 'twig_debug'
+should be set to FALSE.
+--prod        Opinionated setup with all known performance best practices enabled.
+--reinstall   Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
+--import      Imports the database, files and codebase from the import directory. Database must be have the .sql.gz extension.
 ```
+
+The `--import [sitename]` parameter is a special beast. Please [read more about it in the wiki](https://github.com/anavarre/drucker/wiki/Importing-an-existing-site-to-drucker).
 
 At the beginning of the build process, _drucker_ will prompt you to enter the path to your SSH public key (in order to run [Ansible](https://www.ansible.com/) orchestration on your container). `~/.ssh/id_rsa.pub` is assumed, but you can enter the path to a custom public key then.
 
