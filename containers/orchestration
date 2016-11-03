@@ -15,20 +15,23 @@ run_reverse_proxy_container_orchestration() {
 run_web_container_orchestration() {
   echo -e "${BLUE}Running ${WEB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  if [[ -n "$FIRST_ARG" ]]; then
-    case "$FIRST_ARG" in
+  if [[ -n "$OPTION" ]]; then
+    case "$OPTION" in
       --dev)
-      ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} dev=Y prod=N reinstall=N"
+      ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} dev=Y prod=N reinstall=N import=N"
       ;;
       --prod)
-      ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} dev=N prod=Y reinstall=N"
+      ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} prod=Y dev=N reinstall=N import=N"
       ;;
       --reinstall)
-      ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} dev=N prod=N reinstall=Y"
+      ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} reinstall=Y dev=N prod=N import=N"
+      ;;
+      --import)
+      ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} import=Y dev=N prod=N reinstall=N sitename=${SITENAME}"
       ;;
     esac
   else
-    ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} dev=N prod=N reinstall=N"
+    ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} dev=N prod=N reinstall=N import=N"
   fi
 }
 

@@ -4,21 +4,27 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 usage() {
-  FIRST_ARG=$1
+  export OPTION=$1
+  export SITENAME=$2
 
-  if [[ "$FIRST_ARG" == "--help" ]]; then
+  if [[ "$OPTION" == "--help" ]]; then
 cat <<EOF
 --dev         Prepare drucker for development work with no caching and helper. modules enabled. WARNING: when running automated tests, 'twig_debug'
 should be set to FALSE.
 --prod        Opinionated setup with all known performance best practices enabled.
 --reinstall   Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
+--import      Imports the database, files and codebase from the import directory. Database must be have the .sql.gz extension.
 EOF
     exit 0
-  elif [[ -n "${FIRST_ARG}" ]] && \
-       [[ "${FIRST_ARG}" != "--dev" ]] && \
-       [[ "${FIRST_ARG}" != "--prod" ]] && \
-       [[ "${FIRST_ARG}" != "--reinstall" ]]; then
-    echo "Usage: drucker {--dev|--prod|--reinstall}"
+  elif [[ -n "${OPTION}" ]] && \
+       [[ "${OPTION}" != "--dev" ]] && \
+       [[ "${OPTION}" != "--prod" ]] && \
+       [[ "${OPTION}" != "--reinstall" ]] && \
+       [[ "${OPTION}" != "--import" ]]; then
+    echo "Usage: drucker {--dev|--prod|--reinstall|--import [sitename]}"
+    exit 0
+  elif [[ "${OPTION}" == "--import" ]] && [[ -z ${2} ]]; then
+    echo "Usage: drucker {--dev|--prod|--reinstall|--import [sitename]}"
     exit 0
   fi
 }
