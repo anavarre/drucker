@@ -7,11 +7,9 @@
 
 - name: Copy MySQL dump
   copy:
-    src: "{{ item }}"
+    src: import/{{ sitename }}.sql.gz
     dest: /tmp/{{ sitename }}.sql.gz
     mode: 0644
-  with_fileglob:
-    - import/*.sql.gz
   when: dump.stat.exists == false
 
 - name: Check if new database exists (or create it)
@@ -37,7 +35,7 @@
     target: /tmp/{{ sitename }}.sql.gz
   when: dump.stat.exists == false
 
-- name: Delete database dump
+- name: Delete temporary database dump
   file:
     path: /tmp/{{ sitename }}.sql.gz
     state: absent

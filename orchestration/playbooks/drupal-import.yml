@@ -1,0 +1,206 @@
+---
+- name: Check if docroot already exists
+  stat:
+    path: "{{ webroot }}/{{ sitename }}"
+  register: docroot_check
+  ignore_errors: True
+
+- name: Copy docroot for import
+  synchronize:
+    src: import/{{ sitename }}
+    dest: "{{ webroot }}/"
+    recursive: yes
+    times: no
+  register: test
+  when: docroot_check.stat.exists == false
+
+- debug: msg={{ test }}
+
+# - name: Copy docroot for import
+#   copy:
+#     src: import/{{ sitename }}
+#     dest: "{{ webroot }}/"
+#     owner: "{{ user }}"
+#     group: "{{ user }}"
+#   when: docroot_check.stat.exists == false
+
+# - name: Ensure we can manage remote MySQL databases
+#   package:
+#     name: "{{ item }}"
+#     state: present
+#   with_items:
+#     - python-mysqldb
+#
+# - name: Check if drucker database exists
+#   stat:
+#     path: "/var/lib/mysql/{{ user }}"
+#   register: drucker_db
+#
+# - name: Delete files directory when reinstalling
+#   file:
+#     path: "{{ webroot }}/{{ user }}/{{default_site}}/files"
+#     state: absent
+#   when: drucker_db.stat.exists == false
+#
+# - name: Create files directory
+#   file:
+#     path: "{{ webroot }}/{{ user }}/{{default_site}}/files"
+#     state: directory
+#     mode: 0777
+#   when: drucker.stat.exists == false or drucker_db.stat.exists == false
+#
+# - name: Create libraries directory
+#   file:
+#     path: "{{ webroot }}/{{ user }}/libraries"
+#     state: directory
+#   when: drucker.stat.exists == false or drucker_db.stat.exists == false
+#
+# - name: Create simpletest directory
+#   file:
+#     path: "{{ webroot }}/{{ user }}/sites/simpletest"
+#     state: directory
+#     mode: 0777
+#   when: drucker.stat.exists == false
+#
+# - name: Delete settings.php file when reinstalling
+#   file:
+#     path: "{{ webroot }}/{{ user }}/{{default_site}}/settings.php"
+#     state: absent
+#   when: drucker_db.stat.exists == false
+#
+# - name: Create settings.php file
+#   command: cp {{ webroot }}/{{ user }}/{{default_site}}/default.settings.php {{ webroot }}/{{ user }}/{{default_site}}/settings.php
+#   when: drucker.stat.exists == false or drucker_db.stat.exists == false
+#
+# - name: Add trusted_host_patterns in settings.php
+#   blockinfile:
+#     dest: "{{ webroot }}/{{ user }}/{{default_site}}/settings.php"
+#     block: |
+#       $settings['trusted_host_patterns'] = array(
+#         '^{{ user }}\.local$',
+#       );
+#   when: drucker.stat.exists == false or drucker_db.stat.exists == false
+#
+# - name: Ensure drucker database is wiped before installing
+#   mysql_db:
+#     login_user: "{{ mysql_creds }}"
+#     login_password: "{{ mysql_creds }}"
+#     login_host: "{{ db_ip }}"
+#     login_port: "{{ mysql_port }}"
+#     name: "{{ user }}"
+#     config_file: "{{ my_cnf }}"
+#     state: absent
+#   when: drucker.stat.exists == false
+#
+# - name: Create drucker database
+#   mysql_db:
+#     login_user: "{{ mysql_creds }}"
+#     login_password: "{{ mysql_creds }}"
+#     login_host: "{{ db_ip }}"
+#     login_port: "{{ mysql_port }}"
+#     name: "{{ user }}"
+#     config_file: "{{ my_cnf }}"
+#     state: present
+#   when: drucker.stat.exists == false or drucker_db.stat.exists == false
+#
+# - name: Check if drucker vHost exists
+#   stat:
+#     path: /etc/apache2/sites-enabled/{{ user }}.conf
+#   register: drucker_conf
+#   ignore_errors: True
+#
+# - name: Delete default vHost
+#   file:
+#     path: /etc/apache2/sites-available/000-default.conf
+#     state: absent
+#   when: drucker_conf.stat.exists == false
+#
+# - name: Delete default vHost symlink
+#   file:
+#     path: /etc/apache2/sites-enabled/000-default.conf
+#     state: absent
+#   when: drucker_conf.stat.exists == false
+#
+# - name: Deploy default vHost template
+#   copy:
+#     src: files/apache-template.conf
+#     dest: /etc/apache2/sites-available/
+#     mode: 0644
+#   when: drucker_conf.stat.exists == false
+#
+# - name: Rename default vHost template
+#   command: mv /etc/apache2/sites-available/apache-template.conf /etc/apache2/sites-available/{{ user }}.conf
+#   when: drucker_conf.stat.exists == false
+#
+# - name: Modify drucker vHost
+#   replace:
+#     dest: /etc/apache2/sites-available/{{ user }}.conf
+#     regexp: '^(.*)SITENAME(.*)$'
+#     replace: '\1{{ user }}\2'
+#   when: drucker_conf.stat.exists == false
+#
+# - name: Enable drucker vHost
+#   file:
+#     src: ../sites-available/{{ user }}.conf
+#     dest: /etc/apache2/sites-enabled/{{ user }}.conf
+#     state: link
+#   notify: Reload Apache
+#   when: drucker_conf.stat.exists == false
+#
+# - name: Check if drucker Drush aliases exist
+#   stat:
+#     path: /etc/drush/site-aliases/{{ user }}.aliases.drushrc.php
+#   register: drucker_aliases
+#
+# - name: Create site-aliases directory
+#   file:
+#     path: /etc/drush/site-aliases
+#     state: directory
+#   when: drucker_aliases.stat.exists == false
+#
+# - name: Deploy drucker Drush aliases
+#   copy:
+#     src: files/{{ user }}.aliases.drushrc.php
+#     dest: /etc/drush/site-aliases/{{ user }}.aliases.drushrc.php
+#     mode: 0644
+#   when: drucker_aliases.stat.exists == false
+#
+# - name: Create .drush directory
+#   file:
+#     path: "{{ item }}"
+#     state: directory
+#     mode: 0755
+#     owner: "{{ user }}"
+#     group: "{{ user }}"
+#   with_items:
+#     - /home/{{ user }}/.drush
+#     - /home/root/.drush
+#   when: drucker_aliases.stat.exists == false
+#
+# - name: Install Drupal
+#   command: drush @{{ user }}.{{ tld }} site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@{{ db_ip }}:{{ mysql_port }}/{{ user }} --site-name={{ user }} --site-mail={{ drupal_creds }}@{{ user }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ user }}.{{ tld }}
+#   when: drucker.stat.exists == false or drucker_db.stat.exists == false
+#
+# - name: Check if phpunit.xml file exists
+#   stat:
+#     path: "{{ webroot }}/{{ user }}/core/phpunit.xml"
+#   register: phpunit
+#
+# - name: Deploy phpunit.xml file
+#   copy:
+#     src: files/phpunit.xml
+#     dest: "{{ webroot }}/{{ user }}/core/"
+#     mode: 0644
+#   when: phpunit.stat.exists == false
+#
+# - name: Make sure files and dirs ownership is consistent
+#   file:
+#     path: "{{ webroot }}"
+#     owner: "{{ user }}"
+#     group: "{{ apache_user }}"
+#     mode: g+s
+#     recurse: yes
+#
+# - name: Add all files under version control
+#   shell: cd {{ webroot }}/{{ user }}/ && git init && git add --all . && git commit -m "Initial commit"
+#   when: drucker.stat.exists == false
