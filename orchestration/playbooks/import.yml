@@ -1,0 +1,117 @@
+---
+- name: Check if MySQL dump exists
+  stat:
+    path: "{{ webroot }}/import/{{ sitename }}.sql.gz"
+  register: dump
+  ignore_errors: True
+
+- name: Check if new database exists (or create it)
+  mysql_db:
+    login_user: "{{ mysql_creds }}"
+    login_password: "{{ mysql_creds }}"
+    login_host: "{{ db_ip }}"
+    login_port: "{{ mysql_port }}"
+    config_file: "{{ my_cnf }}"
+    name: "{{ sitename }}"
+    state: present
+  when: dump.stat.exists == true
+
+- name: Restore MySQL dump
+  mysql_db:
+    login_user: "{{ mysql_creds }}"
+    login_password: "{{ mysql_creds }}"
+    login_host: "{{ db_ip }}"
+    login_port: "{{ mysql_port }}"
+    config_file: "{{ my_cnf }}"
+    name: "{{ sitename }}"
+    state: import
+    target: "{{ webroot }}/import/{{ sitename }}.sql.gz"
+  when: dump.stat.exists == true
+
+- name: Check if docroot exists
+  stat:
+    path: "{{ webroot }}/{{ sitename }}"
+  register: docroot_check
+  ignore_errors: True
+
+- name: Import docroot
+  command: cp -R {{ webroot }}/import/{{ sitename }} {{ webroot }}/
+  register: import_docroot
+  when: docroot_check.stat.exists == false
+
+- name: Make sure permissions are correct
+  file:
+    path: "{{ webroot }}/{{ sitename }}"
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+
+- name: Check if database dump exists
+  stat:
+    path: "{{ webroot }}/import/{{ sitename }}.sql.gz"
+  register: db_dump
+  ignore_errors: True
+
+- name: Archive imported database dump
+  command: mv {{ webroot }}/import/{{ sitename }}.sql.gz {{ webroot }}/import/archives/
+  when: db_dump.stat.exists == true
+
+- name: Check if docroot exists
+  stat:
+    path: "{{ webroot }}/import/{{ sitename }}"
+  register: docroot_check
+  ignore_errors: True
+
+- name: Archive imported docroot
+  command: mv {{ webroot }}/import/{{ sitename }} {{ webroot }}/import/archives/
+  when: docroot_check.stat.exists == true
+
+- name: Check if vHost exists
+  stat:
+    path: /etc/apache2/sites-enabled/{{ sitename }}.conf
+  register: apache_conf
+  ignore_errors: True
+
+- name: Deploy default vHost template
+  copy:
+    src: files/apache-template.conf
+    dest: /etc/apache2/sites-available/
+    mode: 0644
+  when: apache_conf.stat.exists == false
+
+- name: Rename default vHost template
+  command: mv /etc/apache2/sites-available/apache-template.conf /etc/apache2/sites-available/{{ sitename }}.conf
+  when: apache_conf.stat.exists == false
+
+- name: Modify vHost
+  replace:
+    dest: /etc/apache2/sites-available/{{ sitename }}.conf
+    regexp: '^(.*)SITENAME(.*)$'
+    replace: '\1{{ sitename }}\2'
+  when: apache_conf.stat.exists == false
+
+- name: Enable vHost
+  file:
+    src: ../sites-available/{{ sitename }}.conf
+    dest: /etc/apache2/sites-enabled/{{ sitename }}.conf
+    state: link
+  notify: Reload Apache
+  when: apache_conf.stat.exists == false
+
+- name: Check if Drush aliases exist
+  stat:
+    path: /etc/drush/site-aliases/{{ sitename }}.aliases.drushrc.php
+  register: sitename_aliases
+
+- name: Deploy Drush aliases
+  copy:
+    src: files/{{ user }}.aliases.drushrc.php
+    dest: /etc/drush/site-aliases/{{ sitename }}.aliases.drushrc.php
+    mode: 0644
+  when: sitename_aliases.stat.exists == false
+
+- name: Update Drush aliases
+  replace:
+    dest: /etc/drush/site-aliases/{{ sitename }}.aliases.drushrc.php
+    regexp: '^(.*){{ user }}(.*)$'
+    replace: '\1{{ sitename }}\2'
+  when: sitename_aliases.stat.exists == false

@@ -202,6 +202,14 @@
     mode: 0644
   when: phpunit.stat.exists == false
 
+- name: Create import directories
+  file:
+    path: "{{ webroot }}/{{ item }}"
+    state: directory
+  with_items:
+    - import
+    - import/archives
+
 - name: Make sure files and dirs ownership is consistent
   file:
     path: "{{ webroot }}"
