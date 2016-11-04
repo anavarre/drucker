@@ -1,5 +1,5 @@
 ---
-- name: Check if MySQL dump exists
+- name: "IMPORT: Check if MySQL dump exists"
   stat:
     path: "{{ item }}"
   with_first_found:
@@ -14,7 +14,7 @@
     dump: "{{ dump_detection.results[0]['item'] }}"
   when: dump_detection.skipped is not defined
 
-- name: Check if new database exists (or create it)
+- name: "IMPORT: Create new database"
   mysql_db:
     login_user: "{{ mysql_creds }}"
     login_password: "{{ mysql_creds }}"
@@ -25,7 +25,7 @@
     state: present
   when: dump_detection.skipped is not defined
 
-- name: Restore MySQL dump
+- name: "IMPORT: Restore MySQL dump"
   mysql_db:
     login_user: "{{ mysql_creds }}"
     login_password: "{{ mysql_creds }}"
@@ -37,32 +37,32 @@
     target: "{{ dump }}"
   when: dump_detection.skipped is not defined
 
-- name: Archive imported database dump
+- name: "IMPORT: Archive imported database dump"
   command: mv {{ dump }} {{ webroot }}/import/archives/
   when: dump_detection.skipped is not defined
 
-- name: Check if docroot has already been deployed
+- name: "IMPORT: Check if docroot has already been deployed"
   stat:
     path: "{{ webroot }}/{{ sitename }}"
   register: docroot_check
   ignore_errors: True
 
-- name: Check if docroot exists
+- name: "IMPORT: Check if docroot exists"
   stat:
     path: "{{ webroot }}/import/{{ sitename }}"
   register: docroot_import
   ignore_errors: True
 
-- name: Import docroot
+- name: "IMPORT: Import docroot"
   command: cp -R {{ webroot }}/import/{{ sitename }} {{ webroot }}/
   register: import_docroot
   when: docroot_check.stat.exists == false and docroot_import.stat.exists == true
 
-- name: Archive imported docroot
+- name: "IMPORT: Archive imported docroot"
   command: mv {{ webroot }}/import/{{ sitename }} {{ webroot }}/import/archives/
   when: docroot_import.stat.exists == true
 
-- name: Make sure permissions are correct
+- name: "IMPORT: Make sure permissions are correct"
   file:
     path: "{{ webroot }}/{{ sitename }}"
     owner: "{{ user }}"
@@ -70,32 +70,32 @@
     recurse: yes
   when: docroot_check.stat.exists == false and docroot_import.stat.exists == true
 
-- name: Check if vHost exists
+- name: "IMPORT: Check if vHost exists"
   stat:
     path: /etc/apache2/sites-enabled/{{ sitename }}.conf
   register: apache_conf
   ignore_errors: True
   when: docroot_check.stat.exists == false
 
-- name: Deploy default vHost template
+- name: "IMPORT: Deploy default vHost template"
   copy:
     src: files/apache-template.conf
     dest: /etc/apache2/sites-available/
     mode: 0644
   when: apache_conf.stat.exists == false
 
-- name: Rename default vHost template
+- name: "IMPORT: Rename default vHost template"
   command: mv /etc/apache2/sites-available/apache-template.conf /etc/apache2/sites-available/{{ sitename }}.conf
   when: apache_conf.stat.exists == false
 
-- name: Modify vHost
+- name: "IMPORT: Modify vHost"
   replace:
     dest: /etc/apache2/sites-available/{{ sitename }}.conf
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1{{ sitename }}\2'
   when: apache_conf.stat.exists == false
 
-- name: Enable vHost
+- name: "IMPORT: Enable vHost"
   file:
     src: ../sites-available/{{ sitename }}.conf
     dest: /etc/apache2/sites-enabled/{{ sitename }}.conf
@@ -103,19 +103,19 @@
   notify: Reload Apache
   when: apache_conf.stat.exists == false
 
-- name: Check if Drush aliases exist
+- name: "IMPORT: Check if Drush aliases exist"
   stat:
     path: /etc/drush/site-aliases/{{ sitename }}.aliases.drushrc.php
   register: sitename_aliases
 
-- name: Deploy Drush aliases
+- name: "IMPORT: Deploy Drush aliases"
   copy:
     src: files/{{ user }}.aliases.drushrc.php
     dest: /etc/drush/site-aliases/{{ sitename }}.aliases.drushrc.php
     mode: 0644
   when: sitename_aliases.stat.exists == false
 
-- name: Update Drush aliases
+- name: "IMPORT: Update Drush aliases"
   replace:
     dest: /etc/drush/site-aliases/{{ sitename }}.aliases.drushrc.php
     regexp: '^(.*){{ user }}(.*)$'
