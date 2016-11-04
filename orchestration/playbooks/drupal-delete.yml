@@ -1,0 +1,45 @@
+---
+- name: Check if database exists
+  mysql_db:
+    login_user: "{{ mysql_creds }}"
+    login_password: "{{ mysql_creds }}"
+    login_host: "{{ db_ip }}"
+    login_port: "{{ mysql_port }}"
+    config_file: "{{ my_cnf }}"
+    name: "{{ sitename }}"
+    state: absent
+
+- name: Check if docroot exists
+  stat:
+    path: "{{ webroot }}/{{ sitename }}"
+  register: docroot_check
+  ignore_errors: True
+
+- name: Delete docroot
+  file:
+    path: "{{ webroot }}/{{ sitename }}"
+    state: absent
+  when: docroot_check.stat.exists == true
+
+- name: Check if vHost exists
+  stat:
+    path: /etc/apache2/sites-enabled/{{ sitename }}.conf
+  register: apache_conf
+  ignore_errors: True
+
+- name: Delete vHost
+  file:
+    path: /etc/apache2/sites-enabled/{{ sitename }}.conf
+    state: absent
+  when: apache_conf.stat.exists == true
+
+- name: Check if Drush aliases exist
+  stat:
+    path: /etc/drush/site-aliases/{{ sitename }}.aliases.drushrc.php
+  register: sitename_aliases
+
+- name: Delete Drush aliases
+  file:
+    path: /etc/drush/site-aliases/{{ sitename }}.aliases.drushrc.php
+    state: absent
+  when: sitename_aliases.stat.exists == true

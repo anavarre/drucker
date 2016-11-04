@@ -13,18 +13,20 @@ cat <<EOF
 should be set to FALSE.
 --prod        Opinionated setup with all known performance best practices enabled.
 --reinstall   Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
---import      Imports the database, files and codebase from the import directory. Database must be have the .sql.gz extension.
+--delete      Deletes an arbitrary docroot, vHost and corresponding database.
+--import      Imports the database, files and codebase from the import directory.
 EOF
     exit 0
   elif [[ -n "${OPTION}" ]] && \
        [[ "${OPTION}" != "--dev" ]] && \
        [[ "${OPTION}" != "--prod" ]] && \
        [[ "${OPTION}" != "--reinstall" ]] && \
+       [[ "${OPTION}" != "--delete" ]] && \
        [[ "${OPTION}" != "--import" ]]; then
-    echo "Usage: drucker {--dev|--prod|--reinstall|--import [sitename]}"
+    echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]}"
     exit 0
   elif [[ "${OPTION}" == "--import" ]] && [[ -z ${2} ]]; then
-    echo "Usage: drucker {--dev|--prod|--reinstall|--import [sitename]}"
+    echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]}"
     exit 0
   fi
 }

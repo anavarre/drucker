@@ -120,6 +120,7 @@ $ drucker --help
 should be set to FALSE.
 --prod        Opinionated setup with all known performance best practices enabled.
 --reinstall   Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
+--delete      Deletes an arbitrary docroot, vHost and corresponding database.
 --import      Imports the database, files and codebase from the import directory.
 ```
 
