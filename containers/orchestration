@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 
+export PLAYBOOK="ansible-playbook -i ${DIR}/orchestration/hosts --user=${USER} ${DIR}/orchestration"
+export EXTRA_VARS='--extra-vars "ansible_sudo_pass=${USER}"'
+
 run_base_container_orchestration() {
   echo -e "${BLUE}Running ${BASE_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/base.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
+  ${PLAYBOOK}/base.yml "${EXTRA_VARS}"
 }
 
 run_reverse_proxy_container_orchestration() {
   echo -e "${BLUE}Running ${REVERSE_PROXY_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/reverse_proxy.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
+  ${PLAYBOOK}/reverse_proxy.yml "${EXTRA_VARS}"
 }
 
 run_web_container_orchestration() {
@@ -18,42 +21,42 @@ run_web_container_orchestration() {
   if [[ -n "$OPTION" ]]; then
     case "$OPTION" in
       --dev)
-      ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} dev=Y prod=N reinstall=N delete=N import=N"
+      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} dev=Y prod=N reinstall=N delete=N import=N"
       ;;
       --prod)
-      ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} prod=Y dev=N reinstall=N delete=N import=N"
+      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} prod=Y dev=N reinstall=N delete=N import=N"
       ;;
       --reinstall)
-      ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} reinstall=Y dev=N prod=N delete=N import=N"
+      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} reinstall=Y dev=N prod=N delete=N import=N"
       ;;
       --import)
-      ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} import=Y dev=N prod=N reinstall=N delete=N sitename=${SITENAME}"
+      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} import=Y dev=N prod=N reinstall=N delete=N sitename=${SITENAME}"
       ;;
       --delete)
-      ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} delete=Y dev=N prod=N reinstall=N import=N sitename=${SITENAME}"
+      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y dev=N prod=N reinstall=N import=N sitename=${SITENAME}"
       ;;
     esac
   else
-    ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER} dev=N prod=N reinstall=N delete=N import=N"
+    ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} dev=N prod=N reinstall=N delete=N import=N"
   fi
 }
 
 run_db_container_orchestration() {
   echo -e "${BLUE}Running ${DB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/db.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
+  ${PLAYBOOK}/db.yml "${EXTRA_VARS}"
 }
 
 run_gluster_setup_container_orchestration() {
   echo -e "${BLUE}Running GlusterFS orchestration on the container...${COLOR_ENDING}"
 
-  ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/gluster-setup.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
+  ${PLAYBOOK}/gluster-setup.yml "${EXTRA_VARS}"
 }
 
 run_web2_container_orchestration() {
   echo -e "${BLUE}Running ${WEB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ansible-playbook -i "${DIR}"/orchestration/hosts "${DIR}"/orchestration/web2.yml --user="${USER}" --extra-vars "ansible_sudo_pass=${USER}"
+  ${PLAYBOOK}/web2.yml "${EXTRA_VARS}"
 
   run_gluster_setup_container_orchestration
 }
