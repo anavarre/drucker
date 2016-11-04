@@ -116,12 +116,17 @@ For more advanced usage, you can pass several CLI parameters:
 
 ```
 $ drucker --help
---dev         Prepare drucker for development work with no caching and helper. modules enabled. WARNING: when running automated tests, 'twig_debug'
-should be set to FALSE.
---prod        Opinionated setup with all known performance best practices enabled.
---reinstall   Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
---delete      Deletes an arbitrary docroot, vHost and corresponding database.
---import      Imports the database, files and codebase from the import directory.
+--dev                 Prepare drucker for development work with no caching and helper. modules enabled.
+                      WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
+
+--prod                Opinionated setup with all known performance best practices enabled.
+
+--reinstall           Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
+
+--delete [sitename]   Deletes an arbitrary docroot, vHost and corresponding database.
+
+--import [sitename]   Imports the database, files and codebase from the import directory.
+
 ```
 
 The `--import [sitename]` parameter is a special beast. Please [read more about it in the wiki](https://github.com/anavarre/drucker/wiki/Importing-an-existing-site-to-drucker).
