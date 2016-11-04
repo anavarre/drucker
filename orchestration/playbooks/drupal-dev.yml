@@ -1,27 +1,27 @@
 ---
-- name: Check if settings.local.php file exists
+- name: "DEV: Check if settings.local.php file exists"
   stat:
     path: "{{ webroot }}/{{ user }}/{{default_site}}/settings.local.php"
   register: settings_local
   ignore_errors: True
 
-- name: Create settings.local.php file
+- name: "DEV: Create settings.local.php file"
   command: cp {{ webroot }}/{{ user }}/sites/example.settings.local.php {{ webroot }}/{{ user }}/{{default_site}}/settings.local.php
   when: settings_local.stat.exists == false
 
-- name: Check if cache bins have been disabled
+- name: "DEV: Check if cache bins have been disabled"
   shell: grep -o "\$settings\['cache'\]\['bins'\]" settings.local.php || echo "absent"
   register: cache_bins
   changed_when: cache_bins.stdout == "absent"
 
-- name: Disable cache bins
+- name: "DEV: Disable cache bins"
   replace:
     dest: "{{ webroot }}/{{ user }}/{{default_site}}/settings.local.php"
     regexp: '^(.*)# \$settings\[''cache''\]\[''bins''\](.*)$'
     replace: '\1$settings[''cache''][''bins'']\2'
   when: settings_local.stat.exists == false or cache_bins.stdout == 'absent'
 
-- name: Enable settings.local.php
+- name: "DEV: Enable settings.local.php"
   blockinfile:
     dest: "{{ webroot }}/{{ user }}/{{default_site}}/settings.php"
     block: |
@@ -32,45 +32,45 @@
     insertafter: EOF
     marker: "# {mark} MANAGED SETTINGS.LOCAL.PHP BLOCK"
 
-- name: Check if services.yml exists
+- name: "DEV: Check if services.yml exists"
   stat:
     path: "{{ webroot }}/{{ user }}/{{default_site}}/services.yml"
   register: services_yml_dev
   ignore_errors: True
 
-- name: Create services.yml file
+- name: "DEV: Create services.yml file"
   command: cp {{ webroot }}/{{ user }}/{{default_site}}/default.services.yml {{ webroot }}/{{ user }}/{{default_site}}/services.yml
   when: services_yml_dev.stat.exists == false
 
-- name: Turn on Twig debugging
+- name: "DEV: Turn on Twig debugging"
   replace:
     dest: "{{ webroot }}/{{ user }}/{{default_site}}/services.yml"
     regexp: '^(.*)    debug: false(.*)$'
     replace: '\1    debug: true\2'
   register: turn_on_twig_debugging
 
-- name: Turn on Twig auto_reload
+- name: "DEV: Turn on Twig auto_reload"
   replace:
     dest: "{{ webroot }}/{{ user }}/{{default_site}}/services.yml"
     regexp: '^(.*)    auto_reload: null(.*)$'
     replace: '\1    auto_reload: true\2'
 
-- name: Turn off Twig caching
+- name: "DEV: Turn off Twig caching"
   replace:
     dest: "{{ webroot }}/{{ user }}/{{default_site}}/services.yml"
     regexp: '^(.*)    cache: true(.*)$'
     replace: '\1    cache: false\2'
 
-- name: Rebuild Drupal cache
+- name: "DEV: Rebuild Drupal cache"
   command: drush @{{ user }}.{{ tld }} cache-rebuild
   when: turn_on_twig_debugging.changed
 
-- name: Check the Zend assertions status
+- name: "DEV: Check the Zend assertions status"
   shell: grep "^zend.assertions = -1" "{{ php_ini }}" || echo "on"
   register: zend_assertions_enable
   changed_when: zend_assertions_enable.stdout != "on"
 
-- name: Turn on Zend assertions
+- name: "DEV: Turn on Zend assertions"
   replace:
     dest: "{{ php_ini }}"
     regexp: '^(.*)zend.assertions = -1(.*)$'
