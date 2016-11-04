@@ -12,6 +12,7 @@
 
 - set_fact:
     dump: "{{ dump_detection.results[0]['item'] }}"
+  when: dump_detection.skipped is not defined
 
 - name: Check if new database exists (or create it)
   mysql_db:
@@ -22,6 +23,7 @@
     config_file: "{{ my_cnf }}"
     name: "{{ sitename }}"
     state: present
+  when: dump_detection.skipped is not defined
 
 - name: Restore MySQL dump
   mysql_db:
@@ -33,24 +35,32 @@
     name: "{{ sitename }}"
     state: import
     target: "{{ dump }}"
+  when: dump_detection.skipped is not defined
 
 - name: Archive imported database dump
   command: mv {{ dump }} {{ webroot }}/import/archives/
+  when: dump_detection.skipped is not defined
 
-- name: Check if docroot exists
+- name: Check if docroot has already been deployed
   stat:
     path: "{{ webroot }}/{{ sitename }}"
   register: docroot_check
   ignore_errors: True
 
+- name: Check if docroot exists
+  stat:
+    path: "{{ webroot }}/import/{{ sitename }}"
+  register: docroot_import
+  ignore_errors: True
+
 - name: Import docroot
   command: cp -R {{ webroot }}/import/{{ sitename }} {{ webroot }}/
   register: import_docroot
-  when: docroot_check.stat.exists == false
+  when: docroot_check.stat.exists == false and docroot_import.stat.exists == true
 
 - name: Archive imported docroot
   command: mv {{ webroot }}/import/{{ sitename }} {{ webroot }}/import/archives/
-  when: docroot_check.stat.exists == false
+  when: docroot_import.stat.exists == true
 
 - name: Make sure permissions are correct
   file:
@@ -58,12 +68,14 @@
     owner: "{{ user }}"
     group: "{{ apache_user }}"
     recurse: yes
+  when: docroot_check.stat.exists == false and docroot_import.stat.exists == true
 
 - name: Check if vHost exists
   stat:
     path: /etc/apache2/sites-enabled/{{ sitename }}.conf
   register: apache_conf
   ignore_errors: True
+  when: docroot_check.stat.exists == false
 
 - name: Deploy default vHost template
   copy:
