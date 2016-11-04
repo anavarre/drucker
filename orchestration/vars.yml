@@ -17,7 +17,7 @@ php_ini: /etc/php/7.0/fpm/php.ini
 php_ini_cli: /etc/php/7.0/cli/php.ini
 php_extensions: /usr/lib/php/7.0/20131226
 user_programs_path: /usr/local/bin
-composer_stable_release: 1.2.1
+composer_stable_release: 1.2.2
 xdebug_stable_release: 2.4.1
 xdebug_ide_key: PHPSTORM
 tideways_stable_release: 4.0.5
