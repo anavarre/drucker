@@ -1,27 +1,27 @@
 ---
-- name: Check if latest Drupal dev archive exists
+- name: "REINSTALL: Check if latest Drupal dev archive exists"
   stat:
     path: /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz
   register: drupal_archive
   ignore_errors: True
 
-- name: Check if Drupal archive is outdated
+- name: "REINSTALL: Check if Drupal archive is outdated"
   shell: date -r /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz +%F
   register: outdated_drupal
 
-- name: Delete Drupal archive
+- name: "REINSTALL: Delete Drupal archive"
   file:
     path: /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz
     state: absent
   when: drupal_archive.stat.exists == true and outdated_drupal.stdout != "{{ ansible_date_time.date }}"
 
-- name: Check if drucker docroot exists
+- name: "REINSTALL: Check if drucker docroot exists"
   stat:
     path: "{{ webroot }}/{{ user }}"
   register: drucker_docroot
   ignore_errors: True
 
-- name: Deletes drucker docroot
+- name: "REINSTALL: Deletes drucker docroot"
   file:
     path: "{{ webroot }}/{{ user }}"
     state: absent
