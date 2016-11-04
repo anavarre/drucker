@@ -57,6 +57,7 @@
     path: "{{ webroot }}/{{ sitename }}"
     owner: "{{ user }}"
     group: "{{ apache_user }}"
+    recurse: yes
 
 - name: Check if vHost exists
   stat:
