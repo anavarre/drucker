@@ -9,7 +9,7 @@ usage() {
 
   if [[ "$OPTION" == "--help" ]]; then
 cat <<EOF
---dev                 Prepare drucker for development work with no caching and helper. modules enabled.
+--dev                 Prepare drucker for development work with no caching and helper modules enabled.
                       WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
 
 --prod                Opinionated setup with all known performance best practices enabled.
