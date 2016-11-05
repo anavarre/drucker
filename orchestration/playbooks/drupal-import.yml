@@ -37,9 +37,15 @@
     target: "{{ dump }}"
   when: dump_detection.skipped is not defined
 
+- name: "IMPORT: Check if archived database dump exists"
+  stat:
+    path: "{{ webroot }}/import/archives/{{ sitename }}"
+  register: db_archive
+  ignore_errors: True
+
 - name: "IMPORT: Archive imported database dump"
   command: mv {{ dump }} {{ webroot }}/import/archives/
-  when: dump_detection.skipped is not defined
+  when: dump_detection.skipped is not defined and db_archive.stat.exists == false
 
 - name: "IMPORT: Check if docroot has already been deployed"
   stat:
@@ -58,9 +64,15 @@
   register: import_docroot
   when: docroot_check.stat.exists == false and docroot_import.stat.exists == true
 
+- name: "IMPORT: Check if archived docroot exists"
+  stat:
+    path: "{{ webroot }}/import/archives/{{ sitename }}"
+  register: docroot_archive
+  ignore_errors: True
+
 - name: "IMPORT: Archive imported docroot"
   command: mv {{ webroot }}/import/{{ sitename }} {{ webroot }}/import/archives/
-  when: docroot_import.stat.exists == true
+  when: docroot_archive.stat.exists == false
 
 - name: "IMPORT: Make sure permissions are correct"
   file:
