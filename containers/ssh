@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export TMP_KEY="/TMP_KEY/authorized_keys"
+export TMP_KEY="/tmp/authorized_keys"
 export AUTH_KEY="/home/${USER}/.ssh/authorized_keys"
 export CHOWN_SSH="chown -R ${USER}:${USER} /home/${USER}/.ssh"
 
@@ -14,46 +14,46 @@ configure_ssh_access() {
 }
 
 configure_base_container_ssh_access() {
-  cat "${PUBKEY}" > ${TMP_KEY}
+  cat "${PUBKEY}" > "${TMP_KEY}"
 
-  docker cp ${TMP_KEY} "${BASE_CONTAINER}":${AUTH_KEY}
+  docker cp "${TMP_KEY}" "${BASE_CONTAINER}":"${AUTH_KEY}"
   docker exec -it "${BASE_CONTAINER}" ${CHOWN_SSH}
 
-  rm ${TMP_KEY}
+  rm "${TMP_KEY}"
 }
 
 configure_reverse_proxy_ssh_access() {
-  cat "${PUBKEY}" > ${TMP_KEY}
+  cat "${PUBKEY}" > "${TMP_KEY}"
 
-  docker cp ${TMP_KEY} "${REVERSE_PROXY_CONTAINER}":${AUTH_KEY}
+  docker cp "${TMP_KEY}" "${REVERSE_PROXY_CONTAINER}":"${AUTH_KEY}"
   docker exec -it "${REVERSE_PROXY_CONTAINER}" ${CHOWN_SSH}
 
   rm ${TMP_KEY}
 }
 
 configure_web_container_ssh_access() {
-  cat "${PUBKEY}" > ${TMP_KEY}
+  cat "${PUBKEY}" > "${TMP_KEY}"
 
-  docker cp ${TMP_KEY} "${WEB_CONTAINER}":${AUTH_KEY}
+  docker cp "${TMP_KEY}" "${WEB_CONTAINER}":"${AUTH_KEY}"
   docker exec -it "${WEB_CONTAINER}" ${CHOWN_SSH}
 
-  rm ${TMP_KEY}
+  rm "${TMP_KEY}"
 }
 
 configure_db_container_ssh_access() {
-  cat "${PUBKEY}" > ${TMP_KEY}
+  cat "${PUBKEY}" > "${TMP_KEY}"
 
-  docker cp ${TMP_KEY} "${DB_CONTAINER}":${AUTH_KEY}
+  docker cp "${TMP_KEY}" "${DB_CONTAINER}":"${AUTH_KEY}"
   docker exec -it "${DB_CONTAINER}" ${CHOWN_SSH}
 
-  rm ${TMP_KEY}
+  rm "${TMP_KEY}"
 }
 
 configure_web2_container_ssh_access() {
-  cat "${PUBKEY}" > ${TMP_KEY}
+  cat "${PUBKEY}" > "${TMP_KEY}"
 
-  docker cp ${TMP_KEY} "${WEB2_CONTAINER}":${AUTH_KEY}
+  docker cp "${TMP_KEY}" "${WEB2_CONTAINER}":"${AUTH_KEY}"
   docker exec -it "${WEB2_CONTAINER}" ${CHOWN_SSH}
 
-  rm ${TMP_KEY}
+  rm "${TMP_KEY}"
 }

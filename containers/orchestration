@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 
 export PLAYBOOK="ansible-playbook -i ${DIR}/orchestration/hosts --user=${USER} ${DIR}/orchestration"
-export EXTRA_VARS='--extra-vars "ansible_sudo_pass=${USER}"'
+export EXTRA_VARS="--extra-vars ansible_sudo_pass=${USER}"
 
 run_base_container_orchestration() {
   echo -e "${BLUE}Running ${BASE_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ${PLAYBOOK}/base.yml "${EXTRA_VARS}"
+  ${PLAYBOOK}/base.yml ${EXTRA_VARS}
 }
 
 run_reverse_proxy_container_orchestration() {
   echo -e "${BLUE}Running ${REVERSE_PROXY_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ${PLAYBOOK}/reverse_proxy.yml "${EXTRA_VARS}"
+  ${PLAYBOOK}/reverse_proxy.yml ${EXTRA_VARS}
 }
 
 run_web_container_orchestration() {
@@ -44,19 +44,19 @@ run_web_container_orchestration() {
 run_db_container_orchestration() {
   echo -e "${BLUE}Running ${DB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ${PLAYBOOK}/db.yml "${EXTRA_VARS}"
+  ${PLAYBOOK}/db.yml ${EXTRA_VARS}
 }
 
 run_gluster_setup_container_orchestration() {
   echo -e "${BLUE}Running GlusterFS orchestration on the container...${COLOR_ENDING}"
 
-  ${PLAYBOOK}/gluster-setup.yml "${EXTRA_VARS}"
+  ${PLAYBOOK}/gluster-setup.yml ${EXTRA_VARS}
 }
 
 run_web2_container_orchestration() {
   echo -e "${BLUE}Running ${WEB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ${PLAYBOOK}/web2.yml "${EXTRA_VARS}"
+  ${PLAYBOOK}/web2.yml ${EXTRA_VARS}
 
   run_gluster_setup_container_orchestration
 }
