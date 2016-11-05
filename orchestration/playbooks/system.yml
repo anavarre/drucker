@@ -40,7 +40,7 @@
 
 - name: Check if .bash_aliases exist
   stat:
-    path:"{{ home }}"/.bash_aliases
+    path: "{{ home }}/.bash_aliases"
   register: bash_aliases
 
 - name: Deploy .bash_aliases
