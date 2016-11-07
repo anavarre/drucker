@@ -2,8 +2,8 @@
 
 function wait() {
   sleep 2
-  echo --------------------------------------------- 
-  sleep 3 
+  echo ---------------------------------------------
+  sleep 3
 }
 
 function separator() {
@@ -38,7 +38,7 @@ ansible --version |\
   xargs echo Ansible version: |\
   cut -c -24 ;
 
-separator 
+separator
 
 echo "Now we can check both our Docker images and
 corresponding containers are alive and well."
@@ -75,14 +75,12 @@ wait
 $HOME/Sites/git/github/drucker/drucker.sh --help
 
 separator
-echo "We have both a --dev and a --prod mode.
-Assumptions are being made with each so you
-can type drucker only for the defaults.
 
---reinstall simply allows to spin up a new
-Drupal 8 install from scratch."
+echo "Assumptions are being made both with the --dev
+and --prod modes. Just type drucker if you wish
+to go with the defaults only."
 
-wait 
+wait
 separator
 
 echo "Let's go ahead and run drucker!"
