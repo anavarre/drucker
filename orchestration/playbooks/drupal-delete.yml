@@ -23,23 +23,23 @@
 
 - name: "DELETE: Check if vHost exists"
   stat:
-    path: /etc/apache2/sites-enabled/{{ sitename }}.conf
+    path: "{{ sites_enabled }}/{{ sitename }}.conf"
   register: apache_conf
   ignore_errors: True
 
 - name: "DELETE: Delete vHost"
   file:
-    path: /etc/apache2/sites-enabled/{{ sitename }}.conf
+    path: "{{ sites_enabled }}/{{ sitename }}.conf"
     state: absent
   when: apache_conf.stat.exists == true
 
 - name: "DELETE: Check if Drush aliases exist"
   stat:
-    path: /etc/drush/site-aliases/{{ sitename }}.aliases.drushrc.php
+    path: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
   register: sitename_aliases
 
 - name: "DELETE: Delete Drush aliases"
   file:
-    path: /etc/drush/site-aliases/{{ sitename }}.aliases.drushrc.php
+    path: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
     state: absent
   when: sitename_aliases.stat.exists == true

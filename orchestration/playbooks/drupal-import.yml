@@ -84,7 +84,7 @@
 
 - name: "IMPORT: Check if vHost exists"
   stat:
-    path: /etc/apache2/sites-enabled/{{ sitename }}.conf
+    path: "{{ sites_enabled }}/{{ sitename }}.conf"
   register: apache_conf
   ignore_errors: True
   when: docroot_check.stat.exists == false
@@ -92,17 +92,17 @@
 - name: "IMPORT: Deploy default vHost template"
   copy:
     src: files/apache-template.conf
-    dest: /etc/apache2/sites-available/
+    dest: "{{ sites_available }}"
     mode: 0644
   when: apache_conf.stat.exists == false
 
 - name: "IMPORT: Rename default vHost template"
-  command: mv /etc/apache2/sites-available/apache-template.conf /etc/apache2/sites-available/{{ sitename }}.conf
+  command: mv {{ sites_available }}/apache-template.conf {{ sites_available }}/{{ sitename }}.conf
   when: apache_conf.stat.exists == false
 
 - name: "IMPORT: Modify vHost"
   replace:
-    dest: /etc/apache2/sites-available/{{ sitename }}.conf
+    dest: "{{ sites_available }}/{{ sitename }}.conf"
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1{{ sitename }}\2'
   when: apache_conf.stat.exists == false
@@ -110,26 +110,26 @@
 - name: "IMPORT: Enable vHost"
   file:
     src: ../sites-available/{{ sitename }}.conf
-    dest: /etc/apache2/sites-enabled/{{ sitename }}.conf
+    dest: "{{ sites_enabled }}/{{ sitename }}.conf"
     state: link
   notify: Reload Apache
   when: apache_conf.stat.exists == false
 
 - name: "IMPORT: Check if Drush aliases exist"
   stat:
-    path: /etc/drush/site-aliases/{{ sitename }}.aliases.drushrc.php
+    path: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
   register: sitename_aliases
 
 - name: "IMPORT: Deploy Drush aliases"
   copy:
     src: files/{{ user }}.aliases.drushrc.php
-    dest: /etc/drush/site-aliases/{{ sitename }}.aliases.drushrc.php
+    dest: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
     mode: 0644
   when: sitename_aliases.stat.exists == false
 
 - name: "IMPORT: Update Drush aliases"
   replace:
-    dest: /etc/drush/site-aliases/{{ sitename }}.aliases.drushrc.php
+    dest: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
     regexp: '^(.*){{ user }}(.*)$'
     replace: '\1{{ sitename }}\2'
   when: sitename_aliases.stat.exists == false

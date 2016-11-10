@@ -11,6 +11,8 @@ db_ip: 203.0.113.12
 web2_ip: 203.0.113.11
 apache_user: www-data
 webroot: /var/www/html
+sites_available: /etc/apache2/sites-available
+sites_enabled: /etc/apache2/sites-enabled
 
 # PHP
 php_ini: /etc/php/7.0/fpm/php.ini
@@ -52,6 +54,7 @@ drupal_creds: admin
 default_site: sites/default
 drupal_dev_release: 8.3.x
 drush_stable_release: 8.1.6
+drush_aliases_path: /etc/drush/site-aliases
 drupal_console_stable_release: 1.0.0-rc8
 
 # Reverse proxy

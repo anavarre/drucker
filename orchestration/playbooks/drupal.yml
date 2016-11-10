@@ -114,36 +114,36 @@
 
 - name: Check if drucker vHost exists
   stat:
-    path: /etc/apache2/sites-enabled/{{ user }}.conf
+    path: "{{ sites_enabled }}/{{ user }}.conf"
   register: drucker_conf
   ignore_errors: True
 
 - name: Delete default vHost
   file:
-    path: /etc/apache2/sites-available/000-default.conf
+    path: "{{ sites_available }}/000-default.conf"
     state: absent
   when: drucker_conf.stat.exists == false
 
 - name: Delete default vHost symlink
   file:
-    path: /etc/apache2/sites-enabled/000-default.conf
+    path: "{{ sites_enabled }}/000-default.conf"
     state: absent
   when: drucker_conf.stat.exists == false
 
 - name: Deploy default vHost template
   copy:
     src: files/apache-template.conf
-    dest: /etc/apache2/sites-available/
+    dest: "{{ sites_available }}"
     mode: 0644
   when: drucker_conf.stat.exists == false
 
 - name: Rename default vHost template
-  command: mv /etc/apache2/sites-available/apache-template.conf /etc/apache2/sites-available/{{ user }}.conf
+  command: mv {{ sites_available }}/apache-template.conf {{ sites_available }}/{{ user }}.conf
   when: drucker_conf.stat.exists == false
 
 - name: Modify drucker vHost
   replace:
-    dest: /etc/apache2/sites-available/{{ user }}.conf
+    dest: "{{ sites_available }}/{{ user }}.conf"
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1{{ user }}\2'
   when: drucker_conf.stat.exists == false
@@ -151,26 +151,26 @@
 - name: Enable drucker vHost
   file:
     src: ../sites-available/{{ user }}.conf
-    dest: /etc/apache2/sites-enabled/{{ user }}.conf
+    dest: "{{ sites_enabled }}/{{ user }}.conf"
     state: link
   notify: Reload Apache
   when: drucker_conf.stat.exists == false
 
 - name: Check if drucker Drush aliases exist
   stat:
-    path: /etc/drush/site-aliases/{{ user }}.aliases.drushrc.php
+    path: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
   register: drucker_aliases
 
 - name: Create site-aliases directory
   file:
-    path: /etc/drush/site-aliases
+    path: "{{ drush_aliases_path }}"
     state: directory
   when: drucker_aliases.stat.exists == false
 
 - name: Deploy drucker Drush aliases
   copy:
     src: files/{{ user }}.aliases.drushrc.php
-    dest: /etc/drush/site-aliases/{{ user }}.aliases.drushrc.php
+    dest: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
     mode: 0644
   when: drucker_aliases.stat.exists == false
 
@@ -182,7 +182,7 @@
     owner: "{{ user }}"
     group: "{{ user }}"
   with_items:
-    - /home/{{ user }}/.drush
+    - "{{ home }}/.drush"
     - /home/root/.drush
   when: drucker_aliases.stat.exists == false
 

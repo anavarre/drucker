@@ -35,24 +35,24 @@
 
 - name: Check if adminer vHost exists
   stat:
-    path: /etc/apache2/sites-enabled/adminer.conf
+    path: "{{ sites_enabled }}/adminer.conf"
   register: adminer_conf
   ignore_errors: True
 
 - name: Deploy default vHost template
   copy:
     src: files/apache-template.conf
-    dest: /etc/apache2/sites-available/
+    dest: "{{ sites_available }}"
     mode: 0644
   when: adminer_conf.stat.exists == false
 
 - name: Rename default vHost template
-  command: mv /etc/apache2/sites-available/apache-template.conf /etc/apache2/sites-available/adminer.conf
+  command: mv {{ sites_available }}/apache-template.conf {{ sites_available }}/adminer.conf
   when: adminer_conf.stat.exists == false
 
 - name: Modify adminer vHost
   replace:
-    dest: /etc/apache2/sites-available/adminer.conf
+    dest: "{{ sites_available }}/adminer.conf"
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1adminer\2'
   when: adminer_conf.stat.exists == false
@@ -60,7 +60,7 @@
 - name: Enable adminer vHost
   file:
     src: ../sites-available/adminer.conf
-    dest: /etc/apache2/sites-enabled/adminer.conf
+    dest: "{{ sites_enabled }}/adminer.conf"
     state: link
   notify: Reload Apache
   when: adminer_conf.stat.exists == false
