@@ -11,7 +11,9 @@
   changed_when: composer_stable_release_check.stdout != "{{ composer_stable_release }}"
 
 - name: Update Composer
-  command: composer self-update
+  composer:
+    command: self-update
+    working_dir: "{{ composer_dir_path }}"
   when: composer.stat.exists == true and composer_stable_release_check.stdout != "{{ composer_stable_release }}"
 
 - name: Install Composer globally
@@ -31,10 +33,6 @@
     mode: 0755
   when: composer.stat.exists == false
 
-- name: Ensure Composer is up-to-date
-  command: "{{ user_programs_path }}/composer self-update"
-  when: composer.stat.exists == false
-
 - name: Check if composer is in PATH
   shell: grep -o "export PATH=\"\$PATH:\$HOME/.composer/vendor/bin\"" /home/{{ user }}/.bashrc || echo "absent"
   register: composer_path
@@ -42,21 +40,54 @@
 
 - name: Add composer to PATH
   lineinfile:
-    dest: /home/{{ user }}/.bashrc
+    dest: "{{ home }}/.bashrc"
     line: export PATH="$PATH:$HOME/.composer/vendor/bin"
     insertafter: EOF
   when: composer_path.stdout == 'absent'
 
 - name: Check if .composer directory exists
   stat:
-    path: /home/{{ user }}/.composer
+    path: "{{ composer_dir_path }}"
   register: composer_directory
 
 - name: Create .composer directory
   file:
-    path: /home/{{ user }}/.composer
+    path: "{{ composer_dir_path }}"
     state: directory
     owner: "{{ user }}"
     group: "{{ user }}"
     recurse: yes
   when: composer_directory.stat.exists == false
+
+- name: Check if composer.json file exists
+  stat:
+    path: "{{ composer_json_path }}"
+  register: composer_json
+
+- name: Deploy default composer.json file
+  copy:
+    src: files/composer.json
+    dest: "{{ composer_dir_path }}"
+    mode: 0644
+  when: composer_json.stat.exists == false
+
+- name: Prepare composer.json for Drupal Console installation
+  replace:
+    dest: "{{ composer_json_path }}"
+    regexp: '^(.*)drupal_console_version(.*)$'
+    replace: '\1"{{ drupal_console_stable_release }}"\2'
+  when: composer_json.stat.exists == false
+
+- name: Make sure permissions are correct for the .composer directory
+  file:
+    path: "{{ composer_dir_path }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    recurse: yes
+
+- name: Install Composer packages
+  composer:
+    command: install
+    working_dir: "{{ composer_dir_path }}"
+  become: yes
+  become_user: "{{ user }}"
