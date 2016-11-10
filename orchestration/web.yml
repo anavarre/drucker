@@ -35,4 +35,6 @@
       when: prod == "Y"
     - include: playbooks/drupal-import.yml
       when: import == "Y"
+    - include: playbooks/web-tests.yml
+      when: tests == "Y"
     # - include: playbooks/gluster.yml

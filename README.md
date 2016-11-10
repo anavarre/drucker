@@ -127,6 +127,7 @@ $ drucker --help
 
 --import [sitename]   Imports the database, files and codebase from the web container's import directory.
 
+--tests               Runs the Ansible test suite.
 ```
 
 The `--import [sitename]` parameter is a special beast. Please [read more about it in the wiki](https://github.com/anavarre/drucker/wiki/Importing-an-existing-site-to-drucker).

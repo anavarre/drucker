@@ -1,0 +1,43 @@
+---
+- name: "TEST: Composer needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ composer_dir_path }}"
+    - "{{ composer_dir_path }}/vendor"
+    - "{{ composer_json_path }}"
+    - "{{ user_programs_path }}/composer"
+  register: composer
+  failed_when: composer.stat.exists == false
+
+- name: "TEST: The composer binary should be executable"
+  stat:
+    path: "{{ user_programs_path }}/composer"
+  register: executable_composer
+
+- name: "TEST: The Composer binary isn't executable"
+  fail:
+    msg: "The Composer binary isn't executable"
+  when: executable_composer.stat.mode != "0755"
+
+- name: "TEST: Composer should use the latest stable release"
+  shell: composer --version | awk '{print $3}'
+  register: composer_version
+  become: yes
+  become_user: "{{ user }}"
+  changed_when: composer_version.stdout != "{{ composer_stable_release }}"
+  failed_when: composer_version.stdout != "{{ composer_stable_release }}"
+
+- name: "TEST: Composer should be in the $PATH"
+  shell: grep -o "export PATH=\"\$PATH:\$HOME/.composer/vendor/bin\"" {{ home }}/.bashrc || echo "absent"
+  register: composer_path
+  changed_when: composer_path.stdout == "absent"
+  failed_when: composer_path.stdout == "absent"
+
+- name: "TEST: Drupal Console should use the latest stable release"
+  shell: grep -o "{{ drupal_console_stable_release }}" {{ home }}/.composer/composer.json || echo "absent"
+  register: drupal_console_stable
+  changed_when: drupal_console_stable.stdout == "absent"
+  failed_when: drupal_console_stable.stdout == "absent"
+
+- debug: msg={{ drupal_console_stable }}

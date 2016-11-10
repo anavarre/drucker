@@ -34,7 +34,7 @@
   when: composer.stat.exists == false
 
 - name: Check if composer is in PATH
-  shell: grep -o "export PATH=\"\$PATH:\$HOME/.composer/vendor/bin\"" /home/{{ user }}/.bashrc || echo "absent"
+  shell: grep -o "export PATH=\"\$PATH:\$HOME/.composer/vendor/bin\"" {{ home }}/.bashrc || echo "absent"
   register: composer_path
   changed_when: composer_path.stdout == "absent"
 

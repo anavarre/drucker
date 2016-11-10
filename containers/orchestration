@@ -21,19 +21,22 @@ run_web_container_orchestration() {
   if [[ -n "$OPTION" ]]; then
     case "$OPTION" in
       --dev)
-      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} dev=Y prod=N reinstall=N delete=N import=N"
+      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} dev=Y prod=N reinstall=N delete=N import=N tests=N"
       ;;
       --prod)
-      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} prod=Y dev=N reinstall=N delete=N import=N"
+      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} prod=Y dev=N reinstall=N delete=N import=N tests=N"
       ;;
       --reinstall)
-      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} reinstall=Y dev=N prod=N delete=N import=N"
+      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} reinstall=Y dev=N prod=N delete=N import=N tests=N"
       ;;
       --import)
-      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} import=Y dev=N prod=N reinstall=N delete=N sitename=${SITENAME}"
+      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} import=Y dev=N prod=N reinstall=N delete=N tests=N sitename=${SITENAME}"
       ;;
       --delete)
-      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y dev=N prod=N reinstall=N import=N sitename=${SITENAME}"
+      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y dev=N prod=N reinstall=N import=N tests=N sitename=${SITENAME}"
+      ;;
+      --tests)
+      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} tests=Y reinstall=N dev=N prod=N delete=N import=N"
       ;;
     esac
   else

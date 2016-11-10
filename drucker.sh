@@ -19,6 +19,8 @@ cat <<EOF
 --delete [sitename]   Deletes an arbitrary docroot, vHost and corresponding database.
 
 --import [sitename]   Imports the database, files and codebase from the web container's import directory.
+
+--tests               Runs the Ansible test suite.
 EOF
     exit 0
   elif [[ -n "${OPTION}" ]] && \
@@ -26,11 +28,12 @@ EOF
        [[ "${OPTION}" != "--prod" ]] && \
        [[ "${OPTION}" != "--reinstall" ]] && \
        [[ "${OPTION}" != "--delete" ]] && \
-       [[ "${OPTION}" != "--import" ]]; then
-    echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]}"
+       [[ "${OPTION}" != "--import" ]] && \
+       [[ "${OPTION}" != "--tests" ]]; then
+    echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]|--tests}"
     exit 0
   elif [[ "${OPTION}" == "--import" ]] && [[ -z ${2} ]]; then
-    echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]}"
+    echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]|--tests}"
     exit 0
   fi
 }
