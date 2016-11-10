@@ -1,0 +1,16 @@
+- include: playbooks/ssh-keys.yml
+- include: playbooks/apache.yml
+- include: playbooks/php.yml
+- include: playbooks/composer.yml
+- include: playbooks/phpmyadmin.yml
+- include: playbooks/adminer.yml
+- include: playbooks/drush.yml
+- include: playbooks/drupal-console.yml
+- include: playbooks/uploadprogress.yml
+- include: playbooks/xdebug.yml
+- include: playbooks/tideways.yml
+- include: playbooks/phantomjs.yml
+- include: playbooks/codesniffer.yml
+- include: playbooks/php-cs-fixer.yml
+- include: playbooks/coder.yml
+- include: playbooks/phpmd.yml
