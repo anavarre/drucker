@@ -1,0 +1,7 @@
+{
+    "require": {
+        "drupal/console": drupal_console_version
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
