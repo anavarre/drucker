@@ -33,11 +33,3 @@
   register: composer_path
   changed_when: composer_path.stdout == "absent"
   failed_when: composer_path.stdout == "absent"
-
-- name: "TEST: Drupal Console should use the latest stable release"
-  shell: grep -o "{{ drupal_console_stable_release }}" {{ home }}/.composer/composer.json || echo "absent"
-  register: drupal_console_stable
-  changed_when: drupal_console_stable.stdout == "absent"
-  failed_when: drupal_console_stable.stdout == "absent"
-
-- debug: msg={{ drupal_console_stable }}

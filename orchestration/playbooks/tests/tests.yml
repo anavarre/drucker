@@ -1,0 +1,2 @@
+- include: playbooks/tests/composer-tests.yml
+- include: playbooks/tests/drupal-console-tests.yml
