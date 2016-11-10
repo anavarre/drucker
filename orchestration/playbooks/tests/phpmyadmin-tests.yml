@@ -1,0 +1,15 @@
+---
+- name: "TEST: phpMyAdmin needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ sites_enabled }}/phpmyadmin.conf"
+    - "{{ webroot }}/phpmyadmin/config.inc.php"
+  register: pma
+  failed_when: pma.stat.exists == false
+
+- name: "TEST: phpMyAdmin should use the latest stable release"
+  stat:
+    path: "{{ webroot }}/phpmyadmin/RELEASE-DATE-{{ phpmyadmin_stable_release }}"
+  register: pma_version
+  failed_when: pma_version.stat.exists == false
