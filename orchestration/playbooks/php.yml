@@ -58,7 +58,7 @@
 - name: Deploy fastcgi.conf template
   copy:
     src: files/fastcgi.conf
-    dest: /etc/apache2/mods-available/fastcgi.conf
+    dest: "{{ mods_available }}/fastcgi.conf"
     mode: 0644
   when: fpm.stat.exists == false
 
@@ -70,7 +70,7 @@
 
 - name: Check if php7.0 module is enabled
   stat:
-    path: /etc/apache2/mods-available/php7.0.conf
+    path: "{{ mods_available }}/php7.0.conf"
   register: php7_module
 
 - name: Disable php7.0 module

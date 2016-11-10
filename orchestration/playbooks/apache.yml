@@ -1,7 +1,7 @@
 ---
 - name: Check if Apache is installed
   stat:
-    path: /etc/apache2/conf-available/security.conf
+    path: "{{ conf_available }}/security.conf"
   register: apache
   ignore_errors: True
 
@@ -32,7 +32,7 @@
 
 - name: Fix the POODLE SSL v3 vulnerability
   lineinfile:
-    dest: "/etc/apache2/mods-available/ssl.conf"
+    dest: "{{ mods_available }}/ssl.conf"
     regexp: "SSLProtocol all"
     line: "\tSSLProtocol all -SSLv2 -SSLv3"
   when: apache.stat.exists == false

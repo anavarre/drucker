@@ -13,6 +13,8 @@ apache_user: www-data
 webroot: /var/www/html
 sites_available: /etc/apache2/sites-available
 sites_enabled: /etc/apache2/sites-enabled
+mods_available: /etc/apache2/mods-available
+conf_available: /etc/apache2/conf-available
 
 # PHP
 php_ini: /etc/php/7.0/fpm/php.ini
