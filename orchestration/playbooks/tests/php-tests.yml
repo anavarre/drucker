@@ -1,0 +1,29 @@
+---
+- name: "TEST: Check if PHP is installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ php_ini }}"
+    - "{{ mods_available }}/fastcgi.conf"
+    - "{{ mods_available }}/php7.0.conf"
+    - "{{ php_extensions }}"
+  register: php
+
+- name: "TEST: Check if PHP packages are installed"
+  shell: dpkg -l | grep {{ item }}
+  with_items:
+    - php7.0-fpm
+    - php7.0-cli
+    - php7.0-common
+    - php7.0-dev
+    - php7.0-mbstring
+    - libapache2-mod-fastcgi
+    - php7.0-apcu
+    - php7.0-curl
+    - php7.0-gd
+    - php7.0-memcached
+    - php7.0-mysql
+    - php7.0-xsl
+    - php7.0-bz2
+  register: php_packages
+  changed_when: php_packages == ''
