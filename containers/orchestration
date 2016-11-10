@@ -40,7 +40,7 @@ run_web_container_orchestration() {
       ;;
     esac
   else
-    ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} dev=N prod=N reinstall=N delete=N import=N"
+    ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} dev=N prod=N reinstall=N delete=N import=N tests=N"
   fi
 }
 
