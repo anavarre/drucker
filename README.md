@@ -4,7 +4,7 @@
 
 **This is a WIP (Work In Progress). Use at your own risk.**
 
-_drucker_ is a [Docker](https://www.docker.com)-based [Drupal](https://www.drupal.org) stack managed by [Ansible](https://www.ansible.com) for orchestration. It automates creating [Debian](https://www.debian.org) containers on which it will deploy a common web stack to run Drupal applications.
+_drucker_ is an opinionated [Docker](https://www.docker.com)-based [Drupal](https://www.drupal.org) stack managed by [Ansible](https://www.ansible.com) for orchestration. It automates creating [Debian](https://www.debian.org) containers on which it will deploy a common web stack to run Drupal applications.
 
 Currently, _drucker_ runs on 3 containers:
 
@@ -125,7 +125,7 @@ $ drucker --help
 
 --delete [sitename]   Deletes an arbitrary docroot, vHost and corresponding database.
 
---import [sitename]   Imports the database, files and codebase from the import directory.
+--import [sitename]   Imports the database, files and codebase from the web container's import directory.
 
 ```
 

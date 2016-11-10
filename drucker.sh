@@ -18,7 +18,7 @@ cat <<EOF
 
 --delete [sitename]   Deletes an arbitrary docroot, vHost and corresponding database.
 
---import [sitename]   Imports the database, files and codebase from the import directory.
+--import [sitename]   Imports the database, files and codebase from the web container's import directory.
 EOF
     exit 0
   elif [[ -n "${OPTION}" ]] && \
