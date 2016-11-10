@@ -5,7 +5,7 @@
   register: drupal_console
 
 - name: Check Drupal Console version
-  shell: drupal --version | awk '{print $NF}' | cut -d '"' -f2
+  shell: drupal --version | awk '{print $NF}' | head -n1
   register: drupal_console_stable_release_check
   when: drupal_console.stat.exists == true
   changed_when: drupal_console_stable_release_check.stdout != "{{ drupal_console_stable_release }}"

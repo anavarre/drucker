@@ -1,0 +1,28 @@
+---
+- name: "TEST: Drupal Console needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ user_programs_path }}/drupal"
+    - "{{ home }}/.console"
+  register: drupal_console
+  failed_when: drupal_console.stat.exists == false
+
+- name: "TEST: Drupal Console should use the latest stable release"
+  shell: grep -o "{{ drupal_console_stable_release }}" {{ home }}/.composer/composer.json || echo "absent"
+  register: drupal_console_stable
+  changed_when: drupal_console_stable.stdout == "absent"
+  failed_when: drupal_console_stable.stdout == "absent"
+
+- name: "TEST: Drupal Console Launcher should use the latest stable release"
+  shell: drupal --version | awk '{print $NF}' | head -n1
+  register: drupal_console_launcher_version
+  changed_when: drupal_console_launcher_version.stdout != "{{ drupal_console_stable_release }}"
+  failed_when: drupal_console_launcher_version.stdout != "{{ drupal_console_stable_release }}"
+  ignore_errors: true
+
+- name: "TEST: Check if Drupal Console has been configured in .bashrc"
+  shell: grep -o "source \"\$HOME/.console/console.rc\" 2>/dev/null" /home/{{ user }}.bashrc || echo "absent"
+  register: drupal_console_bashrc
+  changed_when: drupal_console_bashrc == "absent"
+  failed_when: drupal_console_bashrc == "absent"
