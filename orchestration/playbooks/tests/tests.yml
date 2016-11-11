@@ -1,5 +1,5 @@
 - include: playbooks/tests/php-tests.yml
-# - include: playbooks/tests/composer-tests.yml
-# - include: playbooks/tests/phpmyadmin-tests.yml
-# - include: playbooks/tests/adminer-tests.yml
-# - include: playbooks/tests/drupal-console-tests.yml
+- include: playbooks/tests/composer-tests.yml
+- include: playbooks/tests/phpmyadmin-tests.yml
+- include: playbooks/tests/adminer-tests.yml
+- include: playbooks/tests/drupal-console-tests.yml
