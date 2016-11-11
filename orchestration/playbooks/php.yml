@@ -119,7 +119,7 @@
   lineinfile:
     dest: "{{ php_ini_cli }}"
     regexp: ";date.timezone ="
-    line: "date.timezone = UTC"
+    line: "date.timezone = {{ timezone }}"
   notify: Restart Apache
   when: fpm.stat.exists == false
 

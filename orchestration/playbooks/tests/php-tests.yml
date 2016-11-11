@@ -4,8 +4,11 @@
     path: "{{ item }}"
   with_items:
     - "{{ php_ini }}"
-    - "{{ mods_available }}/fastcgi.conf"
-    - "{{ mods_available }}/php7.0.conf"
+    - "{{ php_ini_cli }}"
+    - "{{ mods_enabled }}/fastcgi.conf"
+    - "{{ mods_enabled }}/fastcgi.load"
+    - "{{ mods_enabled }}/actions.conf"
+    - "{{ mods_enabled }}/actions.load"
     - "{{ php_extensions }}"
   register: php
 
@@ -27,3 +30,23 @@
     - php7.0-bz2
   register: php_packages
   changed_when: php_packages == ''
+
+- name: "TEST: Check php.ini's custom configuration"
+  shell: grep -o "{{ item }}" {{ php_ini }} || echo "absent"
+  with_items:
+    - max_input_time = {{ max_input_time }}
+    - max_execution_time = {{ max_execution_time }}
+    - memory_limit = {{ memory_limit }}
+    - upload_max_filesize = {{ upload_max_filesize }}
+    - max_file_uploads = {{ max_file_uploads }}
+  register: php_ini_conf
+  changed_when: php_ini_conf.stdout == "absent"
+  failed_when: php_ini_conf.stdout == "absent"
+
+- name: "TEST: Check php.ini CLI's custom configuration"
+  shell: grep -o "{{ item }}" {{ php_ini_cli }} || echo "absent"
+  with_items:
+    - date.timezone = {{ timezone }}
+  register: php_ini_cli_conf
+  changed_when: php_ini_cli_conf.stdout == "absent"
+  failed_when: php_ini_cli_conf.stdout == "absent"

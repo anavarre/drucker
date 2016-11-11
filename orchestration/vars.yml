@@ -14,6 +14,7 @@ webroot: /var/www/html
 sites_available: /etc/apache2/sites-available
 sites_enabled: /etc/apache2/sites-enabled
 mods_available: /etc/apache2/mods-available
+mods_enabled: /etc/apache2/mods-enabled
 conf_available: /etc/apache2/conf-available
 
 # PHP
@@ -39,6 +40,7 @@ max_execution_time: 300
 memory_limit: 256M
 upload_max_filesize: 100M
 max_file_uploads: 100
+timezone: UTC
 
 # MySQL
 my_cnf: /etc/mysql/conf.d/mysql.cnf
