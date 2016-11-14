@@ -48,9 +48,9 @@ _drucker_ ships with the following software stack:
 | nginx               | 1.10.1 or later |
 | Apache              | 2.4.10 or later |
 | PHP-FPM             | 7.0.11 or later |
-| Xdebug              | 2.4.1           |
+| Xdebug              | 2.5.0RC1        |
 | PECL uploadprogress | master          |
-| Tideways Profiler   | 4.0.5           |
+| Tideways Profiler   | 4.0.7           |
 | Coder               | 8.2.9           |
 | Code Sniffer        | 2.6.1           |
 | PHP-CS-Fixer        | 1.12.2          |
@@ -59,7 +59,7 @@ _drucker_ ships with the following software stack:
 | MySQL               | 5.7.14 or later |
 | Drupal              | 8.3.x           |
 | Drush               | 8.1.6           |
-| Drupal Console      | 1.0.0-rc8       |
+| Drupal Console      | 1.0.0-rc9       |
 | Composer            | 1.2.2           |
 | phpMyAdmin          | 4.6.4           |
 | adminer             | 4.2.5           |

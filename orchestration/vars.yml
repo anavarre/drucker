@@ -25,9 +25,9 @@ user_programs_path: /usr/local/bin
 composer_stable_release: 1.2.2
 composer_dir_path: "{{ home }}/.composer"
 composer_json_path: "{{ home }}/.composer/composer.json"
-xdebug_stable_release: 2.4.1
+xdebug_stable_release: 2.5.0RC1
 xdebug_ide_key: PHPSTORM
-tideways_stable_release: 4.0.5
+tideways_stable_release: 4.0.7
 coder_stable_release: 8.2.9
 phpcs_stable_release: 2.6.1
 phpcbf_stable_release: 2.6.1
@@ -59,7 +59,7 @@ default_site: sites/default
 drupal_dev_release: 8.3.x
 drush_stable_release: 8.1.6
 drush_aliases_path: /etc/drush/site-aliases
-drupal_console_stable_release: 1.0.0-rc8
+drupal_console_stable_release: 1.0.0-rc9
 
 # Reverse proxy
 varnish_source: 4.1
