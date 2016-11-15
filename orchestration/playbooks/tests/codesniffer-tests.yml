@@ -1,0 +1,43 @@
+---
+- name: "TEST: CodeSniffer needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ user_programs_path }}/phpcs"
+    - "{{ user_programs_path }}/phpcbf"
+  register: xdebug_install
+  failed_when: xdebug_install.stat.exists == false
+
+- name: "TEST: CodeSniffer phpcs should use the latest stable release"
+  shell: phpcs --version | awk '{print $3}'
+  register: phpcs_version_check
+  changed_when: phpcs_version_check.stdout != "{{ phpcs_stable_release }}"
+  failed_when: phpcs_version_check.stdout != "{{ phpcs_stable_release }}"
+  ignore_errors: true
+
+- name: "TEST: CodeSniffer phpcbf should use the latest stable release"
+  shell: phpcbf --version | awk '{print $3}'
+  register: phpcbf_version_check
+  changed_when: phpcbf_version_check.stdout != "{{ phpcbf_stable_release }}"
+  failed_when: phpcbf_version_check.stdout != "{{ phpcbf_stable_release }}"
+  ignore_errors: true
+
+- name: "TEST: The CodeSniffer phpcs binary should be executable"
+  stat:
+    path: "{{ user_programs_path }}/phpcs"
+  register: executable_phpcs
+
+- name: "TEST: The CodeSniffer phpcs binary should be executable"
+  fail:
+    msg: "The CodeSniffer phpcs binary isn't executable"
+  when: executable_phpcs.stat.mode != "0755"
+
+- name: "TEST: The CodeSniffer phpcbf binary should be executable"
+  stat:
+    path: "{{ user_programs_path }}/phpcbf"
+  register: executable_phpcbf
+
+- name: "TEST: The CodeSniffer phpcbf binary should be executable"
+  fail:
+    msg: "The CodeSniffer phpcbf binary isn't executable"
+  when: executable_phpcbf.stat.mode != "0755"

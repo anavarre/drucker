@@ -9,7 +9,7 @@
   failed_when: drupal_console.stat.exists == false
 
 - name: "TEST: Drupal Console should use the latest stable release"
-  shell: grep -o "{{ drupal_console_stable_release }}" {{ home }}/.composer/composer.json || echo "absent"
+  shell: grep -o "{{ drupal_console_stable_release }}" {{ composer_json_path }} || echo "absent"
   register: drupal_console_stable
   changed_when: drupal_console_stable.stdout == "absent"
   failed_when: drupal_console_stable.stdout == "absent"

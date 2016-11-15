@@ -8,3 +8,6 @@
 - include: playbooks/tests/xdebug-tests.yml
 - include: playbooks/tests/tideways-tests.yml
 - include: playbooks/tests/phantomjs-tests.yml
+- include: playbooks/tests/codesniffer-tests.yml
+- include: playbooks/tests/php-cs-fixer-tests.yml
+- include: playbooks/tests/coder-tests.yml

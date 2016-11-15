@@ -1,21 +1,25 @@
 ---
 - name: Check if Coder is installed
   stat:
-    path: /home/{{ user }}/.composer/vendor/drupal/coder
+    path: "{{ composer_dir_path }}/vendor/drupal/coder"
   register: coder
 
 - name: Install Coder
   composer:
     command: require
     arguments: drupal/coder {{ coder_stable_release }}
-    working_dir: /home/{{ user }}/.composer
+    working_dir: "{{ composer_dir_path }}"
+  become: yes
+  become_user: "{{ user }}"
   when: coder.stat.exists == false
 
 - name: Check if Coder is up-to-date
   composer:
     command: info
     arguments: drupal/coder
-    working_dir: /home/{{ user }}/.composer
+    working_dir: "{{ composer_dir_path }}"
+  become: yes
+  become_user: "{{ user }}"
   register: coder_stable_release_check
   when: coder.stat.exists == true
   changed_when: '"{{ coder_stable_release }}" not in coder_stable_release_check.stdout'
@@ -24,25 +28,19 @@
   composer:
     command: require
     arguments: drupal/coder {{ coder_stable_release }}
-    working_dir: /home/{{ user }}/.composer
+    working_dir: "{{ composer_dir_path }}"
+  become: yes
+  become_user: "{{ user }}"
   when: coder.stat.exists == true and "{{ coder_stable_release }}" not in coder_stable_release_check.stdout
 
-- name: Ensure .composer directory has correct permissions
-  file:
-    path: /home/{{ user }}/.composer
-    state: directory
-    owner: "{{ user }}"
-    group: "{{ user }}"
-    recurse: yes
-
 - name: Check if Coder bash aliases exist
-  shell: egrep -o 'MANAGED CODE SNIFFER BLOCK' /home/{{ user }}/.bashrc || echo "absent"
+  shell: grep -o 'MANAGED CODE SNIFFER BLOCK' {{ home }}/.bashrc || echo "absent"
   register: coder_aliases
   changed_when: coder_aliases == "absent"
 
 - name: Add Code Sniffer aliases
   blockinfile:
-    dest: /home/{{ user }}/.bashrc
+    dest: "{{ home }}/.bashrc"
     block: |
       alias drupalcs="phpcs --standard=Drupal --extensions={{ codesniffer_extensions }}"
       alias drupalpractice="phpcs --standard=DrupalPractice --extensions={{ codesniffer_extensions }}"
@@ -52,5 +50,5 @@
   when: coder_aliases.stdout == 'absent'
 
 - name: Register Drupal and DrupalPractice with PHPCS
-  command: phpcs --config-set installed_paths /home/{{ user }}/.composer/vendor/drupal/coder/coder_sniffer
+  command: phpcs --config-set installed_paths {{ composer_dir_path }}/vendor/drupal/coder/coder_sniffer
   when: coder.stat.exists == false

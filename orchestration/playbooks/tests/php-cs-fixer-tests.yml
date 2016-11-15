@@ -1,0 +1,23 @@
+---
+- name: "TEST: php-cs-fixer needs to be correctly installed"
+  stat:
+    path: "{{ user_programs_path }}/php-cs-fixer"
+  register: php_cs_fixer
+  failed_when: php_cs_fixer.stat.exists == false
+
+- name: "TEST: php-cs-fixer should use the latest stable release"
+  shell: php-cs-fixer --version | awk '{print $5}'
+  register: php_cs_fixer_version_check
+  changed_when: php_cs_fixer_version_check.stdout != "{{ php_cs_fixer_stable_release }}"
+  failed_when: php_cs_fixer_version_check.stdout != "{{ php_cs_fixer_stable_release }}"
+  ignore_errors: true
+
+- name: "TEST: The php-cs-fixer binary should be executable"
+  stat:
+    path: "{{ user_programs_path }}/php-cs-fixer"
+  register: executable_php_cs_fixer
+
+- name: "TEST: The php-cs-fixer binary isn't executable"
+  fail:
+    msg: "The php-cs-fixer binary isn't executable"
+  when: executable_php_cs_fixer.stat.mode != "0755"
