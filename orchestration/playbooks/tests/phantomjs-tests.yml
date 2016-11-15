@@ -1,0 +1,18 @@
+---
+- name: "TEST: PhantomJS needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ user_programs_path }}/phantomjs"
+  register: phantomjs
+  failed_when: phantomjs.stat.exists == false
+
+- name: "TEST: The phantomjs binary should be executable"
+  stat:
+    path: "{{ user_programs_path }}/phantomjs"
+  register: executable_phantomjs
+
+- name: "TEST: The phantomjs binary isn't executable"
+  fail:
+    msg: "The phantomjs binary isn't executable"
+  when: executable_phantomjs.stat.mode != "0755"

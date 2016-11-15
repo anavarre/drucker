@@ -5,3 +5,4 @@
 - include: playbooks/tests/drush-tests.yml
 - include: playbooks/tests/drupal-console-tests.yml
 - include: playbooks/tests/xdebug-tests.yml
+- include: playbooks/tests/phantomjs-tests.yml
