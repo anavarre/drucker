@@ -4,3 +4,4 @@
 - include: playbooks/tests/adminer-tests.yml
 - include: playbooks/tests/drush-tests.yml
 - include: playbooks/tests/drupal-console-tests.yml
+- include: playbooks/tests/xdebug-tests.yml

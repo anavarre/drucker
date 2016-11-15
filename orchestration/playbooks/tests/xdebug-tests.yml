@@ -1,0 +1,14 @@
+---
+- name: "TEST: Xdebug needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ php_extensions }}/xdebug.so"
+  register: xdebug_install
+  failed_when: xdebug_install.stat.exists == false
+
+- name: "TEST: Xdebug should be configured in php.ini"
+  shell: grep -o "xdebug.so" {{ php_ini }} || echo "absent"
+  register: xdebug_phpini
+  changed_when: xdebug_phpini == "absent"
+  failed_when: xdebug_phpini == "absent"
