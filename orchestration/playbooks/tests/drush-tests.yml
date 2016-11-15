@@ -16,3 +16,13 @@
   changed_when: drush_version_check.stdout != "{{ drush_stable_release }}"
   failed_when: drush_version_check.stdout != "{{ drush_stable_release }}"
   ignore_errors: true
+
+- name: "TEST: The Drush binary should be executable"
+  stat:
+    path: "{{ user_programs_path }}/drush"
+  register: executable_drush
+
+- name: "TEST: The Drush binary isn't executable"
+  fail:
+    msg: "The Drush binary isn't executable"
+  when: executable_drush.stat.mode != "0755"
