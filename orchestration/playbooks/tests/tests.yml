@@ -2,4 +2,5 @@
 - include: playbooks/tests/composer-tests.yml
 - include: playbooks/tests/phpmyadmin-tests.yml
 - include: playbooks/tests/adminer-tests.yml
+- include: playbooks/tests/drush-tests.yml
 - include: playbooks/tests/drupal-console-tests.yml

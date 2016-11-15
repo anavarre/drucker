@@ -58,7 +58,7 @@ _drucker_ ships with the following software stack:
 | phantomjs           | 2.1.1           |
 | MySQL               | 5.7.14 or later |
 | Drupal              | 8.3.x           |
-| Drush               | 8.1.6           |
+| Drush               | 8.1.7           |
 | Drupal Console      | 1.0.0-rc9       |
 | Composer            | 1.2.2           |
 | phpMyAdmin          | 4.6.4           |

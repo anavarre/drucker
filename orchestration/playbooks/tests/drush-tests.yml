@@ -1,0 +1,18 @@
+---
+- name: "TEST: Drush needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ user_programs_path }}/drush"
+    - "{{ drush_aliases_path }}"
+    - "{{ home }}/.drush"
+    - /home/root/.drush
+  register: drush
+  failed_when: drush.stat.exists == false
+
+- name: "TEST: Drush should use the latest stable release"
+  shell: drush --version | awk '{print $4}' | head -n1
+  register: drush_version_check
+  changed_when: drush_version_check.stdout != "{{ drush_stable_release }}"
+  failed_when: drush_version_check.stdout != "{{ drush_stable_release }}"
+  ignore_errors: true
