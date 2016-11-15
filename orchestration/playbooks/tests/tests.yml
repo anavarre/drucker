@@ -1,3 +1,4 @@
+- include: playbooks/tests/ssh-keys-tests.yml
 - include: playbooks/tests/apache-tests.yml
 - include: playbooks/tests/php-tests.yml
 - include: playbooks/tests/composer-tests.yml

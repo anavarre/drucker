@@ -2,19 +2,19 @@
 # Allows Drush to bootstrap a remote DB.
 - name: Check if SSH key exists
   stat:
-    path: /home/{{ user }}/.ssh/id_rsa
+    path: "{{ home }}/.ssh/id_rsa"
   register: rsa_web
   ignore_errors: True
 
 - name: Generate SSH key for remote MySQL access
-  shell: ssh-keygen -b 4096 -t rsa -f /home/{{ user }}/.ssh/id_rsa -q -N ""
+  shell: ssh-keygen -b 4096 -t rsa -f {{ home }}/.ssh/id_rsa -q -N ""
   args:
-    creates: /home/{{ user }}/.ssh/id_rsa
+    creates: "{{ home }}/.ssh/id_rsa"
   when: rsa_web.stat.exists == false
 
 - name: Make sure permissions are correct on SSH keys
   file:
-    path: /home/{{ user }}/.ssh/{{ item }}
+    path: "{{ home }}/.ssh/{{ item }}"
     owner: "{{ user }}"
     group: "{{ user }}"
   with_items:
