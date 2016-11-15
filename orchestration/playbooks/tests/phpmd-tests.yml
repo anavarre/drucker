@@ -1,0 +1,31 @@
+---
+- name: "TEST: phpmd needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ user_programs_path }}/phpmd"
+  register: phpmd
+  failed_when: phpmd.stat.exists == false
+
+- name: "TEST: phpmd should use the latest stable release"
+  shell: phpmd --version | awk '{print $NF}'
+  register: phpmd_version_check
+  changed_when: phpmd_version_check.stdout != "{{ phpmd_stable_version }}"
+  failed_when: phpmd_version_check.stdout != "{{ phpmd_stable_version }}"
+  ignore_errors: true
+
+- name: "TEST: The phpmd binary should be executable"
+  stat:
+    path: "{{ user_programs_path }}/phpmd"
+  register: executable_phpmd
+
+- name: "TEST: The phpmd binary isn't executable"
+  fail:
+    msg: "The phpmd binary isn't executable"
+  when: executable_phpmd.stat.mode != "0755"
+
+- name: "TEST: Check if Coder has been configured in .bashrc"
+  shell: grep -o 'MANAGED PHPMD BLOCK' {{ home }}/.bashrc || echo "absent"
+  register: phpmd_bashrc
+  changed_when: phpmd_bashrc.stdout == "absent"
+  failed_when: phpmd_bashrc.stdout == "absent"

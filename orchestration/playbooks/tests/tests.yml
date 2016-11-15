@@ -13,3 +13,4 @@
 - include: playbooks/tests/codesniffer-tests.yml
 - include: playbooks/tests/php-cs-fixer-tests.yml
 - include: playbooks/tests/coder-tests.yml
+- include: playbooks/tests/phpmd-tests.yml
