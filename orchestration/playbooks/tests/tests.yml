@@ -6,4 +6,5 @@
 - include: playbooks/tests/drupal-console-tests.yml
 - include: playbooks/tests/uploadprogress-tests.yml
 - include: playbooks/tests/xdebug-tests.yml
+- include: playbooks/tests/tideways-tests.yml
 - include: playbooks/tests/phantomjs-tests.yml

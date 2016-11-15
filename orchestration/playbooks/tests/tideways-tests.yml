@@ -1,0 +1,25 @@
+---
+- name: "TEST: Tideways needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ php_extensions }}/tideways.so"
+    - /tmp/tideways/
+  register: tideways
+  failed_when: tideways.stat.exists == false
+
+- name: "TEST: Tideways should be configured in php.ini"
+  shell: grep -o "tideways.so" {{ php_ini }} || echo "absent"
+  register: tideways_phpini
+  changed_when: tideways_phpini == "absent"
+  failed_when: tideways_phpini == "absent"
+
+- name: "TEST: The Tideways output directory should be writable"
+  stat:
+    path: /tmp/tideways/
+  register: writable_tideways
+
+- name: "TEST: The Tideways output directory should be writable"
+  fail:
+    msg: "The Tideways output directory isn't writable"
+  when: writable_tideways.stat.mode != "0777"
