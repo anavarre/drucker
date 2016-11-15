@@ -1,10 +1,11 @@
 ---
-- name: Check if Drupal Console is installed
+# Drupal Console Launcher
+- name: Check if Drupal Console Launcher is installed
   stat:
     path: "{{ user_programs_path }}/drupal"
   register: drupal_console
 
-- name: Check Drupal Console version
+- name: Check Drupal Console Launcher version
   shell: drupal --version | awk '{print $NF}' | head -n1
   register: drupal_console_stable_release_check
   when: drupal_console.stat.exists == true
@@ -22,9 +23,29 @@
   delay: 10
   when: drupal_console.stat.exists == false
 
-- name: Update Drupal Console
+- name: Update Drupal Console Launcher
   command: drupal self-update
   when: drupal_console.stat.exists == true and drupal_console_stable_release_check.stdout != "{{ drupal_console_stable_release }}"
+
+# Drupal Console Composer package
+- name: Check Drupal Console version in composer.json file
+  shell: grep -E "\"drupal/console*.*" "{{ composer_json_path }}" | awk '{print $NF}' | tr -d '",'
+  register: drupal_console_composer_package
+
+- name: Update Drupal Console Composer package version in composer.json
+  replace:
+    dest: "{{ composer_json_path }}"
+    regexp: '^(.*)"{{ drupal_console_composer_package.stdout }}"(.*)$'
+    replace: '\1"{{ drupal_console_stable_release }}"\2'
+  when: drupal_console_composer_package.stdout != "{{ drupal_console_stable_release }}"
+
+- name: Update Drupal Console Composer package
+  composer:
+    command: update
+    working_dir: "{{ composer_dir_path }}"
+  become: yes
+  become_user: "{{ user }}"
+  when: drupal_console_composer_package.stdout != "{{ drupal_console_stable_release }}"
 
 - name: Initialize Drupal Console
   command: drupal init --override --no-interaction
@@ -39,7 +60,7 @@
 
 - name: Configure Drupal Console in .bashrc
   lineinfile:
-    dest: /home/{{ user }}/.bashrc
+    dest: "{{ home }}/.bashrc"
     line: "source \"$HOME/.console/console.rc\" 2>/dev/null"
     insertafter: EOF
   when: drupal_console_bashrc.stdout == 'absent'
