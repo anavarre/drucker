@@ -1,0 +1,30 @@
+---
+- name: "TEST: Apache needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ conf_available }}/security.conf"
+    - "{{ mods_enabled }}/rewrite.load"
+    - "{{ mods_enabled }}/proxy_http.load"
+  register: apache
+  failed_when: apache.stat.exists == false
+
+- name: "TEST: Check if Apache packages are installed"
+  shell: dpkg -l | grep {{ item }}
+  with_items:
+    - apache2
+    - apache2-utils
+  register: apache_packages
+  changed_when: apache_packages == ''
+
+- name: "TEST: APACHE_RUN_USER should be set"
+  shell: grep -o "export APACHE_RUN_USER={{ user }}" /etc/apache2/envvars || echo "absent"
+  register: apache_run_user
+  changed_when: apache_run_user.stdout == "absent"
+  failed_when: apache_run_user.stdout == "absent"
+
+- name: "TEST: The POODLE SSL v3 vulnerability should be fixed"
+  shell: grep -o "SSLProtocol all -SSLv2 -SSLv3" {{ mods_available }}/ssl.conf || echo "absent"
+  register: poodle
+  changed_when: poodle.stdout == "absent"
+  failed_when: poodle.stdout == "absent"
