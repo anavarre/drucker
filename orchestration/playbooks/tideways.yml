@@ -4,6 +4,11 @@
     path: "{{ php_extensions }}/tideways.so"
   register: tideways
 
+- name: Check if Tideways can be updated
+  shell: php -c {{ php_ini }} -i | grep 'tideways' | grep -o '{{ tideways_stable_release }}' || echo 'update'
+  register: tideways_version_check
+  changed_when: tideways_version_check == "update"
+
 - name: Download latest Tideways release
   get_url:
     url: https://github.com/tideways/php-profiler-extension/archive/v{{ tideways_stable_release }}.tar.gz
@@ -13,14 +18,14 @@
   until: "'OK' in tideways_get_url_result.msg"
   retries: 3
   delay: 10
-  when: tideways.stat.exists == false
+  when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
 
 - name: Extract Tideways files
   unarchive:
     src: /tmp/php-profiler-extension-{{ tideways_stable_release }}.tar.gz
     dest: /tmp/
     copy: no
-  when: tideways.stat.exists == false
+  when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
 
 - name: Compile Tideways
   command: "{{ item }} chdir=/tmp/php-profiler-extension-{{ tideways_stable_release }}"
@@ -30,17 +35,17 @@
     - /usr/bin/make
     - /usr/bin/make install
   register: compile_tideways
-  when: tideways.stat.exists == false
+  when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
 
 - name: Copy compiled Tideways extension
   command: cp /tmp/php-profiler-extension-{{ tideways_stable_release }}/modules/tideways.so {{ php_extensions }}/
-  when: tideways.stat.exists == false
+  when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
 
 - name: Delete Tideways temporary directory
   file:
     path: /tmp/php-profiler-extension-{{ tideways_stable_release }}
     state: absent
-  when: tideways.stat.exists == false
+  when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
 
 - name: Check Tideways config in php.ini
   shell: grep -o "tideways.so" {{ php_ini }} || echo "absent"

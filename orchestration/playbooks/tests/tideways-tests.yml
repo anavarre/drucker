@@ -8,6 +8,12 @@
   register: tideways
   failed_when: tideways.stat.exists == false
 
+- name: "TEST: Tideways should use the latest stable release"
+  shell: php -c {{ php_ini }} -i | grep 'tideways' | grep -o '{{ tideways_stable_release }}' || echo 'update'
+  register: tideways_version_check
+  changed_when: tideways_version_check.stdout == "update"
+  failed_when: tideways_version_check.stdout == "update"
+
 - name: "TEST: Tideways should be configured in php.ini"
   shell: grep -o "tideways.so" {{ php_ini }} || echo "absent"
   register: tideways_phpini
