@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+
+SEARCH_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${SEARCH_IMAGE}")
+SEARCH_CONTAINER_STARTED=$(docker ps | grep -o "${SEARCH_CONTAINER}")
+
+create_search_container_from_base_image() {
+  echo -e "${BLUE}Spinning up ${SEARCH_CONTAINER} container with ID:${COLOR_ENDING}"
+
+  docker run --privileged=true --name "${SEARCH_CONTAINER}" -it \
+  -h "${SEARCH_HOSTNAME}" \
+  --net "${NETWORK}" \
+  --ip "${SEARCH_IP}" \
+  -d "${BASE_IMAGE}" bash
+  # -d -p "${HOST_SEARCH_PORT}":"${SEARCH_PORT}" \
+  # -p "${HOST_TCP_PORT_MAPPER_SEARCH}":"${TCP_PORT_MAPPER_SEARCH}" \
+  # -v "${HOST_SEARCH_PATH}":"${CONTAINER_SEARCH_PATH}" \
+  # "${BASE_IMAGE}" bash
+
+  configure_search_container_ssh_access
+  run_search_container_orchestration
+}
+
+create_search_container_from_search_image() {
+  echo -e "${BLUE}Spinning up ${SEARCH_CONTAINER} container with ID:${COLOR_ENDING}"
+
+  docker run --privileged=true --name "${SEARCH_CONTAINER}" -it \
+  -h "${SEARCH_HOSTNAME}" \
+  --net "${NETWORK}" \
+  --ip "${SEARCH_IP}" \
+  -d "${SEARCH_IMAGE}" bash
+  # -d -p "${HOST_SEARCH_PORT}":"${SEARCH_PORT}" \
+  # -p "${HOST_TCP_PORT_MAPPER_SEARCH}":"${TCP_PORT_MAPPER_SEARCH}" \
+  # -v "${HOST_SEARCH_PATH}":"${CONTAINER_SEARCH_PATH}" \
+  # "${SEARCH_IMAGE}" bash
+
+  configure_search_container_ssh_access
+  run_search_container_orchestration
+}
+
+create_search_image_from_search_container() {
+  echo -e "${BLUE}Committing ${SEARCH_IMAGE} image from ${SEARCH_CONTAINER} container...${COLOR_ENDING}"
+
+  docker commit -m "${SEARCH_CONTAINER} on $(date +"%Y-%m-%d")" "${SEARCH_CONTAINER}" "${SEARCH_IMAGE}"
+
+  echo -e "${BLUE}Deleting initial container...${COLOR_ENDING}"
+  docker rm -f "${SEARCH_CONTAINER}"
+  create_search_container_from_search_image
+}
+
+start_search_container() {
+  docker start "${SEARCH_CONTAINER}" > /dev/null 2>&1
+}
+
+provision_search_container() {
+  if [[ ${SEARCH_CONTAINER_EXISTS} ]]; then
+    echo -e "${GREEN}${SEARCH_CONTAINER} container already exists.${COLOR_ENDING}"
+
+    if [[ ! ${SEARCH_CONTAINER_STARTED} ]]; then
+      echo -e "${BLUE}Starting ${SEARCH_CONTAINER} container...${COLOR_ENDING}"
+      start_search_container
+      run_search_container_orchestration
+    else
+      run_search_container_orchestration
+    fi
+  else
+    if [[ ${SEARCH_IMAGE_EXISTS} ]]; then
+      echo -e "${GREEN}${SEARCH_IMAGE} custom image already exists.${COLOR_ENDING}"
+      create_search_container_from_search_image
+    else
+      create_search_container_from_base_image
+      create_search_image_from_search_container
+    fi
+  fi
+}

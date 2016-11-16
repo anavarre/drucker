@@ -1,0 +1,11 @@
+---
+- hosts: drucker_search
+  become: yes
+
+  gather_facts: yes
+  vars_files:
+    - vars.yml
+  handlers:
+    - include: handlers.yml
+  tasks:
+    - include: playbooks/apachesolr.yml

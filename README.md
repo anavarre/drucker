@@ -2,15 +2,14 @@
 
 [![demo](https://asciinema.org/a/91897.png)](https://asciinema.org/a/91897)
 
-**This is a WIP (Work In Progress). Use at your own risk.**
-
 _drucker_ is an opinionated [Docker](https://www.docker.com)-based [Drupal](https://www.drupal.org) stack managed by [Ansible](https://www.ansible.com) for orchestration. It automates creating [Debian](https://www.debian.org) containers on which it will deploy a common web stack to run Drupal applications.
 
-Currently, _drucker_ runs on 3 containers:
+Currently, _drucker_ runs on 4 containers:
 
 * `drucker_reverse_proxy` (Varnish/nginx: `203.0.113.2`): Varnish listens on port 80 and sends traffic to the Apache backend via nginx on port 8080).
 * `drucker_web` (Apache/PHP: `203.0.113.10`): Apache listens on port 80 and receives traffic from nginx.
 * `drucker_db` (MySQL: `203.0.113.12`): MySQL listens on port 3306 and allows the stack to act as a multi-tier environment.
+* `drucker_search` (MySQL: `203.0.113.13`): Apache Solr.
 
 The plan is to make _drucker_ a true service-based suite of containers, by leveraging GlusterFS for distributed network filesystem across N number of web containers. Load-Balancing and HA capabilities will also be enforced to replicate a production environment locally. When we have this, then a 1.0.0 release will be tagged. But for now, the aim is to incrementally make things more stable and more fully-featured.
 
@@ -47,6 +46,7 @@ _drucker_ ships with the following software stack:
 | Varnish             | 4.1.2 or later  |
 | nginx               | 1.10.1 or later |
 | Apache              | 2.4.10 or later |
+| Apache Solr         | 6.3.0           |
 | PHP-FPM             | 7.0.11 or later |
 | Xdebug              | 2.5.0RC1        |
 | PECL uploadprogress | master          |

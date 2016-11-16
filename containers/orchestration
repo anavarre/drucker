@@ -50,6 +50,12 @@ run_db_container_orchestration() {
   ${PLAYBOOK}/db.yml ${EXTRA_VARS}
 }
 
+run_search_container_orchestration() {
+  echo -e "${BLUE}Running ${SEARCH_CONTAINER} orchestration on the container...${COLOR_ENDING}"
+
+  ${PLAYBOOK}/search.yml ${EXTRA_VARS}
+}
+
 run_gluster_setup_container_orchestration() {
   echo -e "${BLUE}Running GlusterFS orchestration on the container...${COLOR_ENDING}"
 
