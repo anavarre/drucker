@@ -70,5 +70,8 @@ reverse_proxy_port: 80
 brick: /data/brick1/gv0
 gluster_mount_dir: /mnt/gfs
 
+# Java (williamyeh.oracle-java)
+java_version: 8
+
 # Misc
 prompt_stable_version: 2.6.1

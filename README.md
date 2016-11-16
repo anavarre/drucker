@@ -9,7 +9,7 @@ Currently, _drucker_ runs on 4 containers:
 * `drucker_reverse_proxy` (Varnish/nginx: `203.0.113.2`): Varnish listens on port 80 and sends traffic to the Apache backend via nginx on port 8080).
 * `drucker_web` (Apache/PHP: `203.0.113.10`): Apache listens on port 80 and receives traffic from nginx.
 * `drucker_db` (MySQL: `203.0.113.12`): MySQL listens on port 3306 and allows the stack to act as a multi-tier environment.
-* `drucker_search` (MySQL: `203.0.113.13`): Apache Solr.
+* `drucker_search` (MySQL: `203.0.113.13`): Apache Solr instance.
 
 The plan is to make _drucker_ a true service-based suite of containers, by leveraging GlusterFS for distributed network filesystem across N number of web containers. Load-Balancing and HA capabilities will also be enforced to replicate a production environment locally. When we have this, then a 1.0.0 release will be tagged. But for now, the aim is to incrementally make things more stable and more fully-featured.
 
@@ -46,7 +46,8 @@ _drucker_ ships with the following software stack:
 | Varnish             | 4.1.2 or later  |
 | nginx               | 1.10.1 or later |
 | Apache              | 2.4.10 or later |
-| Apache Solr         | 6.3.0           |
+| Apache Solr         | 6.2.0 or later  |
+| Java                | 8               |
 | PHP-FPM             | 7.0.11 or later |
 | Xdebug              | 2.5.0RC1        |
 | PECL uploadprogress | master          |
@@ -71,6 +72,7 @@ Add the below host entries in your hosts file:
 
 ```
 203.0.113.2    drucker.local phpmyadmin.local adminer.local
+203.0.113.13   search.local
 ```
 
 This will ensure you can access:
@@ -78,6 +80,7 @@ This will ensure you can access:
 * `drucker.local`: Drupal 8
 * `phpmyadmin.local`: phpMyAdmin (MySQL/MariaDB database management tool)
 * `adminer.local`: adminer (Database management tool in a single file)
+* `search.local`: Apache Solr's dashboard
 
 **Recommended**: add the below bash alias entry in your `.bashrc` or `.bash_aliases` file:
 
@@ -96,7 +99,7 @@ This will allow you to invoke `drucker` from anywhere on your system.
 Add the below in your `config` file (under `$HOME/.ssh`) or create the file if it doesn't exist.
 
 ```
-Host 203.0.113.99 203.0.113.2 203.0.113.10 203.0.113.11 203.0.113.12
+Host 203.0.113.99 203.0.113.2 203.0.113.10 203.0.113.11 203.0.113.12 203.0.113.13
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
   LogLevel=error
