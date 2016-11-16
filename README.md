@@ -40,31 +40,31 @@ You also need to [generate a SSH key](https://help.github.com/articles/generatin
 
 _drucker_ ships with the following software stack:
 
-| Software            | Version         |
-| --------------------|:---------------:|
-| Debian              | 8 (Jessie)      |
-| Varnish             | 4.1.2 or later  |
-| nginx               | 1.10.1 or later |
-| Apache              | 2.4.10 or later |
-| Apache Solr         | 6.2.0 or later  |
-| Java                | 8               |
-| PHP-FPM             | 7.0.11 or later |
-| Xdebug              | 2.5.0RC1        |
-| PECL uploadprogress | master          |
-| Tideways Profiler   | 4.0.7           |
-| Coder               | 8.2.9           |
-| Code Sniffer        | 2.6.1           |
-| PHP-CS-Fixer        | 1.12.2          |
-| phpmd               | 2.4.3           |
-| phantomjs           | 2.1.1           |
-| MySQL               | 5.7.14 or later |
-| Drupal              | 8.3.x           |
-| Drush               | 8.1.7           |
-| Drupal Console      | 1.0.0-rc9       |
-| Composer            | 1.2.2           |
-| phpMyAdmin          | 4.6.4           |
-| adminer             | 4.2.5           |
-| bash-git-prompt     | 2.6.1           |
+| Software            | Version         | Ansible source |
+| --------------------|:---------------:|:--------:
+| Debian              | 8 (Jessie)      | [debian:latest](https://hub.docker.com/_/debian/)    |
+| Varnish             | 4.1.2 or later  | Custom build   |
+| nginx               | 1.10.1 or later | Custom build   |
+| Apache              | 2.4.10 or later | Custom build    |
+| Apache Solr         | 6.2.0 or later  | [geerlingguy.solr](https://galaxy.ansible.com/geerlingguy/solr/) |
+| Java                | 8               | [williamyeh.oracle-java](https://galaxy.ansible.com/williamyeh/oracle-java/)    |
+| PHP-FPM             | 7.0.11 or later | Custom build   |
+| Xdebug              | 2.5.0RC1        | Custom build   |
+| PECL uploadprogress | master          | Custom build   |
+| Tideways Profiler   | 4.0.7           | Custom build   |
+| Coder               | 8.2.9           | Custom build   |
+| Code Sniffer        | 2.6.1           | Custom build   |
+| PHP-CS-Fixer        | 1.12.2          | Custom build   |
+| phpmd               | 2.4.3           | Custom build   |
+| phantomjs           | 2.1.1           | Custom build   |
+| MySQL               | 5.7.14 or later | Custom build   |
+| Drupal              | 8.3.x           | Custom build   |
+| Drush               | 8.1.7           | Custom build   |
+| Drupal Console      | 1.0.0-rc9       | Custom build   |
+| Composer            | 1.2.2           | Custom build   |
+| phpMyAdmin          | 4.6.4           | Custom build   |
+| adminer             | 4.2.5           | Custom build   |
+| bash-git-prompt     | 2.6.1           | Custom build   |
 
 ## Installation
 
