@@ -30,7 +30,7 @@ ansible 2.0.2.0
 
 ### Disk space
 
-You need to have approximately 2.5GB available.
+You need to have approximately 3GB available.
 
 ### SSH
 
@@ -40,7 +40,7 @@ You also need to [generate a SSH key](https://help.github.com/articles/generatin
 
 _drucker_ ships with the following software stack:
 
-| Software            | Version         | Ansible source |
+| Software            | Version         | Source |
 | --------------------|:---------------:|:--------:
 | Debian              | 8 (Jessie)      | [debian:latest](https://hub.docker.com/_/debian/)    |
 | Varnish             | 4.1.2 or later  | Custom build   |
