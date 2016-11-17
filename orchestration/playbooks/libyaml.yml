@@ -1,0 +1,31 @@
+---
+- name: Check if the LibYAML C parser is installed
+  stat:
+    path: /tmp/yaml-{{ libyaml_stable_release}}.tar.gz
+  register: libyaml
+
+- name: Download latest LibYAML release
+  get_url:
+    url: http://pyyaml.org/download/libyaml/yaml-{{ libyaml_stable_release }}.tar.gz
+    dest: /tmp/
+    validate_certs: no
+  register: libyaml_get_url_result
+  until: "'OK' in libyaml_get_url_result.msg"
+  retries: 3
+  delay: 10
+  when: libyaml.stat.exists == false
+
+- name: Extract LibYAML files
+  unarchive:
+    src: /tmp/yaml-{{ libyaml_stable_release}}.tar.gz
+    dest: /tmp/
+    copy: no
+  when: libyaml.stat.exists == false
+
+- name: Compile LibYAML
+  command: "{{ item }} chdir=/tmp/yaml-{{ libyaml_stable_release}}"
+  with_items:
+    - ./configure
+    - /usr/bin/make
+    - /usr/bin/make install
+  when: libyaml.stat.exists == false

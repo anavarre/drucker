@@ -1,0 +1,66 @@
+---
+# See change record: https://www.drupal.org/node/2769555
+- name: Check if the PECL YAML extension is installed
+  stat:
+    path: "{{ php_extensions }}/yaml.so"
+  register: pecl_yaml
+
+- name: Download latest PECL YAML release
+  get_url:
+    url: https://github.com/php/pecl-file_formats-yaml/archive/{{ pecl_yaml_stable_release }}.tar.gz
+    dest: /tmp/
+    validate_certs: no
+  register: pecl_yaml_get_url_result
+  until: "'OK' in pecl_yaml_get_url_result.msg"
+  retries: 3
+  delay: 10
+  when: pecl_yaml.stat.exists == false
+
+- name: Extract PECL YAML files
+  unarchive:
+    src: /tmp/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}.tar.gz
+    dest: /tmp/
+    copy: no
+  when: pecl_yaml.stat.exists == false
+
+- name: Compile PECL YAML
+  command: "{{ item }} chdir=/tmp/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}"
+  with_items:
+    - /usr/bin/phpize
+    - ./configure
+    - /usr/bin/make
+    - /usr/bin/make install
+  when: pecl_yaml.stat.exists == false
+
+- name: Copy compiled PECL YAML extension
+  command: cp /tmp/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}/modules/yaml.so {{ php_extensions }}/
+  when: pecl_yaml.stat.exists == false
+
+- name: Delete PECL YAML temporary directory
+  file:
+    path: /tmp/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}
+    state: absent
+  when: pecl_yaml.stat.exists == false
+
+- name: Check PECL YAML config in php.ini
+  shell: grep -o "yaml.so" {{ php_ini }} || echo "absent"
+  register: pecl_yaml_config
+  changed_when: pecl_yaml_config.stdout == "absent"
+
+- name: Configure PECL YAML in php.ini
+  lineinfile:
+    dest: "{{ php_ini }}"
+    line: "extension={{ php_extensions }}/yaml.so"
+  when: pecl_yaml_config.stdout == "absent"
+
+- name: Ensure Apache is restarted
+  service:
+    name: apache2
+    enabled: yes
+    state: restarted
+
+- name: Ensure PHP-FPM is restarted
+  service:
+    name: php7.0-fpm
+    enabled: yes
+    state: restarted

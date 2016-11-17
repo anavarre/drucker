@@ -27,6 +27,8 @@ composer_dir_path: "{{ home }}/.composer"
 composer_json_path: "{{ home }}/.composer/composer.json"
 xdebug_stable_release: 2.5.0RC1
 xdebug_ide_key: PHPSTORM
+libyaml_stable_release: 0.1.7
+pecl_yaml_stable_release: 2.0.0
 tideways_stable_release: 4.0.7
 coder_stable_release: 8.2.9
 phpcs_stable_release: 2.6.1

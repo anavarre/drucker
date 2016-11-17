@@ -51,6 +51,8 @@ _drucker_ ships with the following software stack:
 | PHP-FPM             | 7.0.11 or later | Custom build   |
 | Xdebug              | 2.5.0RC1        | Custom build   |
 | PECL uploadprogress | master          | Custom build   |
+| PECL YAML           | 2.0.0           | Custom build   |
+| LibYAML             | 0.1.7           | Custom build   |
 | Tideways Profiler   | 4.0.7           | Custom build   |
 | Coder               | 8.2.9           | Custom build   |
 | Code Sniffer        | 2.6.1           | Custom build   |

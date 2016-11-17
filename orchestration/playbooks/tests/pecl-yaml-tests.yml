@@ -1,0 +1,14 @@
+---
+- name: "TEST: PECL YAML needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ php_extensions }}/yaml.so"
+  register: pecl_yaml
+  failed_when: pecl_yaml.stat.exists == false
+
+- name: "TEST: PECL YAML should be configured in php.ini"
+  shell: grep -o "yaml.so" {{ php_ini }} || echo "absent"
+  register: pecl_yaml_phpini
+  changed_when: pecl_yaml_phpini == "absent"
+  failed_when: pecl_yaml_phpini == "absent"
