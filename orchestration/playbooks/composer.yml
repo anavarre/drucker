@@ -12,7 +12,7 @@
 
 - name: Install Composer globally
   get_url:
-    url: https://getcomposer.org/composer.phar
+    url: https://getcomposer.org/download/{{ composer_stable_release }}/composer.phar
     dest: "{{ composer_binary }}"
     validate_certs: no
     force: yes
@@ -26,7 +26,7 @@
   file:
     path: "{{ composer_binary }}"
     mode: 0755
-  when: composer.stat.exists == false
+  when: composer.stat.exists == false or composer_stable_release_check.stdout != "{{ composer_stable_release }}"
 
 - name: Check if composer is in PATH
   shell: grep -o "export PATH=\"\$PATH:\$HOME/.composer/vendor/bin\"" {{ bashrc }} || echo "absent"
