@@ -153,12 +153,13 @@
     src: ../sites-available/{{ user }}.conf
     dest: "{{ sites_enabled }}/{{ user }}.conf"
     state: link
+    force: yes
   notify: Reload Apache
   when: drucker_vhost.stat.exists == false
 
 - name: Check if drucker Drush aliases exist
   stat:
-    path: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
+    path: "{{ drucker_aliases }}"
   register: drucker_aliases
 
 - name: Create site-aliases directory
@@ -173,6 +174,7 @@
     dest: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
     mode: 0644
   when: drucker_aliases.stat.exists == false
+  ignore_errors: true
 
 - name: Create .drush directory
   file:
@@ -182,7 +184,7 @@
     owner: "{{ user }}"
     group: "{{ user }}"
   with_items:
-    - "{{ home }}/.drush"
+    - "{{ drush_dir }}"
     - /home/root/.drush
   when: drucker_aliases.stat.exists == false
 

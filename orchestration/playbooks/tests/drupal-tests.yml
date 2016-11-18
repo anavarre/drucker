@@ -3,24 +3,25 @@
   stat:
     path: "{{ item }}"
   with_items:
-    - "{{ webroot }}/{{ user }}"
-    - "{{ webroot }}/{{ user }}/{{default_site}}/files"
-    - "{{ webroot }}/{{ user }}/libraries"
-    - "{{ webroot }}/{{ user }}/{{default_site}}/settings.php"
-    - "{{ webroot }}/{{ user }}/sites/simpletest"
-    - "{{ webroot }}/{{ user }}/.git"
-    - "{{ webroot }}/{{ user }}/.gitignore"
-    - /var/lib/mysql/{{ user }}
+    - "{{ docroot }}"
+    - "{{ files_dir }}"
+    - "{{ libraries_dir }}"
+    - "{{ settings_php }}"
+    - "{{ services_yml }}"
+    - "{{ simpletest_dir }}"
+    - "{{ docroot }}/.git"
+    - "{{ docroot }}/.gitignore"
+    - "{{ mysql_data }}/{{ user }}"
     - "{{ sites_enabled }}/{{ user }}.conf"
     - "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
-    - "{{ webroot }}/{{ user }}/core/phpunit.xml"
-    - "{{ webroot }}/import"
-    - "{{ webroot }}/import/archives"
+    - "{{ phpunit_xml }}"
+    - "{{ import_dir }}"
+    - "{{ archives_dir }}"
   register: drupal
   failed_when: drupal.stat.exists == false
 
 - name: "TEST: settings.php should hold the correct trusted_host_patterns setting"
-  shell: grep -o "{{ user }}.local" {{ webroot }}/{{ user }}/{{default_site}}/settings.php || echo "missing"
+  shell: grep -o "{{ user }}.local" {{ settings_php }} || echo "missing"
   register: trusted_host_patterns
   changed_when: trusted_host_patterns == "missing"
   failed_when: trusted_host_patterns == "missing"

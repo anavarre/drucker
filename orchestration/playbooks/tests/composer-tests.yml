@@ -6,13 +6,13 @@
     - "{{ composer_dir_path }}"
     - "{{ composer_dir_path }}/vendor"
     - "{{ composer_json_path }}"
-    - "{{ user_programs_path }}/composer"
+    - "{{ composer_binary }}"
   register: composer
   failed_when: composer.stat.exists == false
 
 - name: "TEST: The composer binary should be executable"
   stat:
-    path: "{{ user_programs_path }}/composer"
+    path: "{{ composer_binary }}"
   register: executable_composer
 
 - name: "TEST: The Composer binary isn't executable"

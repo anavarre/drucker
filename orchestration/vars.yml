@@ -4,11 +4,33 @@ codename: jessie
 name: web
 tld: local
 home: /home/{{ user }}
+sources_list: /etc/apt/sources.list
+bashrc: "{{ home }}/.bashrc"
+bash_aliases: "{{ home }}/.bash_aliases"
+prompt_stable_version: 2.6.1
 
-# Apache
+# Git
+git_completion: "{{ home }}/.git-completion.bash"
+git_prompt: "{{ home }}/.git-prompt.sh"
+git_config: "{{ home }}/.gitconfig"
+bash_git_prompt: "{{ home }}/.bash-git-prompt"
+
+# VIM
+vim_dir: "{{ home }}/.vim"
+vimrc: "{{ home }}/.vimrc"
+
+# SSH
+sshd_config: /etc/ssh/sshd_config
+id_rsa: "{{ home }}/.ssh/id_rsa"
+id_rsa_pub: "{{ home }}/.ssh/id_rsa.pub"
+
+# Networking
 web_ip: 203.0.113.10
 db_ip: 203.0.113.12
 web2_ip: 203.0.113.11
+search_ip: 203.0.113.13
+
+# Apache
 apache_user: www-data
 webroot: /var/www/html
 sites_available: /etc/apache2/sites-available
@@ -17,32 +39,67 @@ mods_available: /etc/apache2/mods-available
 mods_enabled: /etc/apache2/mods-enabled
 conf_available: /etc/apache2/conf-available
 
+# vHosts
+vhost_template: "{{ sites_available }}/apache-template.conf"
+drucker_conf: "{{ sites_available }}/{{ user }}.conf"
+phpmyadmin_vhost: "{{ sites_enabled }}/phpmyadmin.conf"
+adminer_vhost: "{{ sites_enabled }}/adminer.conf"
+drucker_available_vhost: "{{ sites_available }}/{{ user }}.conf"
+drucker_vhost: "{{ sites_enabled }}/{{ user }}.conf"
+
 # PHP
-php_ini: /etc/php/7.0/fpm/php.ini
-php_ini_cli: /etc/php/7.0/cli/php.ini
 php_extensions: /usr/lib/php/7.0/20131226
 user_programs_path: /usr/local/bin
-composer_stable_release: 1.2.2
-composer_dir_path: "{{ home }}/.composer"
-composer_json_path: "{{ home }}/.composer/composer.json"
-xdebug_stable_release: 2.5.0RC1
-xdebug_ide_key: PHPSTORM
-libyaml_stable_release: 0.1.7
-pecl_yaml_stable_release: 2.0.0
-tideways_stable_release: 4.0.7
-coder_stable_release: 8.2.9
-phpcs_stable_release: 2.6.1
-phpcbf_stable_release: 2.6.1
-codesniffer_extensions: php,module,inc,install,test,profile,theme
-php_cs_fixer_stable_release: 1.12.2
-phantomjs_stable_version: 2.1.1
-phpmd_stable_version: 2.4.3
+
+# php.ini
+php_ini: /etc/php/7.0/fpm/php.ini
+php_ini_cli: /etc/php/7.0/cli/php.ini
 max_input_time: 300
 max_execution_time: 300
 memory_limit: 256M
 upload_max_filesize: 100M
 max_file_uploads: 100
 timezone: UTC
+
+# Composer
+composer_stable_release: 1.2.2
+composer_binary: "{{ user_programs_path }}/composer"
+composer_dir_path: "{{ home }}/.composer"
+composer_json_path: "{{ home }}/.composer/composer.json"
+
+# XDebug
+xdebug_stable_release: 2.5.0RC1
+xdebug_ide_key: PHPSTORM
+
+# PECL YAML
+libyaml_stable_release: 0.1.7
+pecl_yaml_stable_release: 2.0.0
+
+# Tideways
+tideways_stable_release: 4.0.7
+
+# Coder
+coder_stable_release: 8.2.9
+coder_binary: "{{ composer_dir_path }}/vendor/drupal/coder"
+
+# PHPcs & PHPcbf
+phpcs_stable_release: 2.6.1
+phpcbf_stable_release: 2.6.1
+
+# CodeSniffer
+codesniffer_extensions: php,module,inc,install,test,profile,theme
+codesniffer_binary: "{{ composer_dir_path }}/vendor/drupal/coder/coder_sniffer"
+
+# PHP-CS-Fixer
+php_cs_fixer_stable_release: 1.12.2
+php_cs_fixer_binary: "{{ user_programs_path }}/php-cs-fixer"
+
+# PhantomJS
+phantomjs_stable_version: 2.1.1
+phantomjs_binary: "{{ user_programs_path }}/phantomjs"
+
+# PHPmd
+phpmd_stable_version: 2.4.3
 
 # MySQL
 my_cnf: /etc/mysql/conf.d/mysql.cnf
@@ -52,21 +109,58 @@ mysql_creds: root
 mysql_port: 3306
 mysql_apt_config_tool: 0.7.3-1
 mysql_stable_release: 5.5
-phpmyadmin_stable_release: 4.6.4
-adminer_stable_release: 4.2.5
 
-# Drupal & Tools
+# phpMyAdmin
+phpmyadmin_stable_release: 4.6.4
+phpmyadmin_root: "{{ webroot }}/phpmyadmin"
+phpmyadmin_config_sample: "{{ phpmyadmin_root }}/config.sample.inc.php"
+phpmyadmin_config: "{{ phpmyadmin_root }}/config.inc.php"
+
+# Adminer
+adminer_stable_release: 4.2.5
+adminer_root: "{{ webroot }}/adminer"
+
+# Drupal
 drupal_creds: admin
 default_site: sites/default
+docroot: "{{ webroot }}/{{ user }}"
+default_settings_php: "{{ docroot }}/{{default_site}}/default.settings.php"
+settings_php: "{{ docroot }}/{{default_site}}/settings.php"
+settings_local_php: "{{ docroot }}/{{default_site}}/settings.local.php"
+default_services_yml: "{{ docroot }}/{{default_site}}/default.services.yml"
+services_yml: "{{ docroot }}/{{default_site}}/services.yml"
+files_dir: "{{ docroot }}/{{default_site}}/files"
+libraries_dir: "{{ docroot }}/libraries"
+simpletest_dir: "{{ docroot }}/sites/simpletest"
+phpunit_xml: "{{ docroot }}/core/phpunit.xml"
+import_dir: "{{ webroot }}/import"
+archives_dir: "{{ webroot }}/import/archives"
 drupal_dev_release: 8.3.x
-drush_stable_release: 8.1.7
-drush_aliases_path: /etc/drush/site-aliases
-drupal_console_stable_release: 1.0.0-rc9
 
-# Reverse proxy
+# Drush
+drush_stable_release: 8.1.7
+drush_binary: "{{ user_programs_path }}/drush"
+drush_dir: "{{ home }}/.drush"
+drush_aliases_path: /etc/drush/site-aliases
+drucker_aliases: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
+
+# Drupal Console
+drupal_console_stable_release: 1.0.0-rc9
+drupal_console_binary: "{{ user_programs_path }}/drupal"
+
+# Varnish
 varnish_source: 4.1
 varnish_stable_release: 4.0.2.1
 reverse_proxy_port: 80
+varnish_config: /etc/default/varnish
+varnish_default_path: /etc/varnish/
+
+# nginx
+nginx_conf_dir: /etc/nginx/conf.d
+nginx_default_conf: "{{ nginx_conf_dir }}/default.conf"
+nginx_conf: /etc/nginx/nginx.conf
+nginx_default_site: /etc/nginx/sites-enabled/default
+drucker_nginx_vhost: /etc/nginx/conf.d/{{ user }}.conf
 
 # GlusterFS
 brick: /data/brick1/gv0
@@ -74,6 +168,3 @@ gluster_mount_dir: /mnt/gfs
 
 # Java (williamyeh.oracle-java)
 java_version: 8
-
-# Misc
-prompt_stable_version: 2.6.1
