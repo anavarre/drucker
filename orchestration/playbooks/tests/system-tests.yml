@@ -1,0 +1,34 @@
+---
+- name: "TEST: System files need to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ bash_aliases }}"
+    - "{{ vimrc }}"
+    - "{{ vim_dir }}"
+  register: system
+  failed_when: system.stat.exists == false
+
+- name: "TEST: System packages need to be correctly installed"
+  shell: dpkg -l | grep {{ item }}
+  with_items:
+    - ack-grep
+    - curl
+    - dstat
+    - git
+    - htop
+    - iputils-ping
+    - libfontconfig1
+    - logrotate
+    - ncdu
+    - netcat
+    - net-tools
+    - ntp
+    - patchutils
+    - strace
+    - sysstat
+    - time
+    - vim
+    - wget
+  register: system_packages
+  changed_when: system_packages == ''

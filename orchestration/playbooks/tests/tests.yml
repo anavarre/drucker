@@ -1,5 +1,7 @@
+- include: playbooks/tests/system-tests.yml
 - include: playbooks/tests/git-tests.yml
 - include: playbooks/tests/ssh-keys-tests.yml
+# Stack tests
 - include: playbooks/tests/apache-tests.yml
 - include: playbooks/tests/php-tests.yml
 - include: playbooks/tests/composer-tests.yml
