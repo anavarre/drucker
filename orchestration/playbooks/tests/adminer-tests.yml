@@ -3,14 +3,14 @@
   stat:
     path: "{{ item }}"
   with_items:
-    - "{{ webroot }}/adminer"
-    - "{{ webroot }}/adminer/index.php"
+    - "{{ adminer_root }}"
+    - "{{ adminer_root }}/index.php"
     - "{{ sites_enabled }}/adminer.conf"
   register: adminer
   failed_when: adminer.stat.exists == false
 
 - name: "TEST: Adminer should be at the latest version"
-  shell: grep -o "version {{ adminer_stable_release }}" {{ webroot }}/adminer/index.php || echo "update"
+  shell: grep -o "version {{ adminer_stable_release }}" {{ adminer_root }}/index.php || echo "update"
   register: adminer_release
   changed_when: adminer_release == "update"
   failed_when: adminer_release == "update"

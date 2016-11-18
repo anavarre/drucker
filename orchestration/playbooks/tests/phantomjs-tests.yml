@@ -3,13 +3,13 @@
   stat:
     path: "{{ item }}"
   with_items:
-    - "{{ user_programs_path }}/phantomjs"
+    - "{{ phantomjs_binary }}"
   register: phantomjs
   failed_when: phantomjs.stat.exists == false
 
 - name: "TEST: The phantomjs binary should be executable"
   stat:
-    path: "{{ user_programs_path }}/phantomjs"
+    path: "{{ phantomjs_binary }}"
   register: executable_phantomjs
 
 - name: "TEST: The phantomjs binary isn't executable"

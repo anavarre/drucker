@@ -25,7 +25,7 @@
   when: executable_phpmd.stat.mode != "0755"
 
 - name: "TEST: Check if Coder has been configured in .bashrc"
-  shell: grep -o 'MANAGED PHPMD BLOCK' {{ home }}/.bashrc || echo "absent"
+  shell: grep -o 'MANAGED PHPMD BLOCK' {{ bashrc }} || echo "absent"
   register: phpmd_bashrc
   changed_when: phpmd_bashrc.stdout == "absent"
   failed_when: phpmd_bashrc.stdout == "absent"

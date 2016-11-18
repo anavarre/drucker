@@ -1,7 +1,7 @@
 ---
 - name: "TEST: Coder needs to be correctly installed"
   stat:
-    path: "{{ composer_dir_path }}/vendor/drupal/coder"
+    path: "{{ coder_binary }}"
   register: coder
   failed_when: coder.stat.exists == false
 
@@ -12,7 +12,7 @@
   failed_when: coder_stable.stdout == "absent"
 
 - name: "TEST: Check if Coder has been configured in .bashrc"
-  shell: grep -o 'MANAGED CODE SNIFFER BLOCK' {{ home }}/.bashrc || echo "absent"
+  shell: grep -o 'MANAGED CODE SNIFFER BLOCK' {{ bashrc }} || echo "absent"
   register: coder_bashrc
   changed_when: coder_bashrc.stdout == "absent"
   failed_when: coder_bashrc.stdout == "absent"

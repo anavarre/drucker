@@ -3,7 +3,7 @@
   stat:
     path: "{{ item }}"
   with_items:
-    - "{{ user_programs_path }}/drupal"
+    - "{{ drupal_console_binary }}"
     - "{{ home }}/.console"
   register: drupal_console
   failed_when: drupal_console.stat.exists == false
@@ -22,7 +22,7 @@
   ignore_errors: true
 
 - name: "TEST: Check if Drupal Console has been configured in .bashrc"
-  shell: grep -o "source \"\$HOME/.console/console.rc\" 2>/dev/null" /home/{{ user }}.bashrc || echo "absent"
+  shell: grep -o "source \"\$HOME/.console/console.rc\" 2>/dev/null" {{ bashrc }} || echo "absent"
   register: drupal_console_bashrc
   changed_when: drupal_console_bashrc == "absent"
   failed_when: drupal_console_bashrc == "absent"

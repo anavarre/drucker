@@ -3,7 +3,7 @@
   stat:
     path: "{{ item }}"
   with_items:
-    - "{{ user_programs_path }}/drush"
+    - "{{ drush_binary }}"
     - "{{ drush_aliases_path }}"
     - "{{ home }}/.drush"
     - /home/root/.drush
@@ -19,7 +19,7 @@
 
 - name: "TEST: The Drush binary should be executable"
   stat:
-    path: "{{ user_programs_path }}/drush"
+    path: "{{ drush_binary }}"
   register: executable_drush
 
 - name: "TEST: The Drush binary isn't executable"

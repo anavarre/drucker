@@ -29,7 +29,7 @@
   failed_when: composer_version.stdout != "{{ composer_stable_release }}"
 
 - name: "TEST: Composer should be in the $PATH"
-  shell: grep -o "export PATH=\"\$PATH:\$HOME/.composer/vendor/bin\"" {{ home }}/.bashrc || echo "absent"
+  shell: grep -o "export PATH=\"\$PATH:\$HOME/.composer/vendor/bin\"" {{ bashrc }} || echo "absent"
   register: composer_path
   changed_when: composer_path.stdout == "absent"
   failed_when: composer_path.stdout == "absent"

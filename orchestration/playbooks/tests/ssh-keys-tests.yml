@@ -3,13 +3,13 @@
   stat:
     path: "{{ item }}"
   with_items:
-    - "{{ home }}/.ssh/id_rsa"
-    - "{{ home }}/.ssh/id_rsa.pub"
+    - "{{ id_rsa }}"
+    - "{{ id_rsa_pub }}"
   register: ssh_keys
   failed_when: ssh_keys.stat.exists == false
 
 - name: "TEST: Public SSH key needs to have 4096 bits"
-  shell: ssh-keygen -l -f {{ home }}/.ssh/id_rsa.pub | awk '{print $1}'
+  shell: ssh-keygen -l -f {{ id_rsa_pub }} | awk '{print $1}'
   register: ssh_bits
   changed_when: ssh_bits.stdout != "4096"
   failed_when: ssh_bits.stdout != "4096"
