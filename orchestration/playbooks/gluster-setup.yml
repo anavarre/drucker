@@ -40,12 +40,12 @@
   register: files_brick
 
 - name: Move files dir to the brick
-  command: mv "{{ webroot }}/{{ user }}/{{default_site}}/files" "{{ brick }}/"
+  command: mv "{{ files_dir }}" "{{ brick }}/"
   when: (files_brick.stat.exists == false) and (inventory_hostname != "{{ web2_ip }}")
 
 - name: Create Drucker GFS symlink
   file:
     src: "{{ gluster_mount_dir }}/files"
-    dest: "{{ webroot }}/{{ user }}/{{default_site}}/files"
+    dest: "{{ files_dir }}"
     state: link
   when: files_brick.stat.exists == true

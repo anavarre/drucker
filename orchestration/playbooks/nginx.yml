@@ -1,7 +1,7 @@
 ---
 - name: Check if nginx is installed
   stat:
-    path: /etc/nginx/nginx.conf
+    path: "{{ nginx_conf }}"
   register: nginx
   ignore_errors: True
 
@@ -31,48 +31,48 @@
 
 - name: Check if default nginx site exists
   stat:
-    path: /etc/nginx/sites-enabled/default
+    path: "{{ nginx_default_site }}"
   register: nginx_default
   ignore_errors: True
 
 - name: Delete default nginx site
   file:
-    path: /etc/nginx/sites-enabled/default
+    path: "{{ nginx_default_site }}"
     state: absent
   when: nginx_default.stat.exists == true
 
 - name: Check if default nginx site configuration exists
   stat:
-    path: /etc/nginx/conf.d/default.conf
+    path: "{{ nginx_default_conf }}"
   register: nginx_default_configuration
   ignore_errors: True
 
 - name: Delete default nginx site configuration
   file:
-    path: /etc/nginx/conf.d/default.conf
+    path: "{{ nginx_default_conf }}"
     state: absent
   when: nginx_default_configuration.stat.exists == true
 
 - name: Check if nginx drucker host exists
   stat:
-    path: /etc/nginx/conf.d/{{ user }}.conf
+    path: "{{ drucker_nginx_vhost }}"
   register: nginx_drucker_host
   ignore_errors: True
 
 - name: Deploy nginx template
   copy:
     src: files/nginx-template.conf
-    dest: /etc/nginx/conf.d/
+    dest: "{{ nginx_conf_dir }}"
     mode: 0644
   when: nginx_drucker_host.stat.exists == false
 
 - name: Rename nginx template
-  command: mv /etc/nginx/conf.d/nginx-template.conf /etc/nginx/conf.d/{{ user }}.conf
+  command: mv {{ nginx_conf_dir }}/nginx-template.conf "{{ drucker_nginx_vhost }}"
   when: nginx_drucker_host.stat.exists == false
 
 - name: Modify nginx proxy_pass
   replace:
-    dest: /etc/nginx/conf.d/{{ user }}.conf
+    dest: "{{ drucker_nginx_vhost }}"
     regexp: '^(.*)proxy_pass http://0.0.0.0:{{ reverse_proxy_port }};(.*)$'
     replace: '\1proxy_pass http://{{ web_ip }}:{{ reverse_proxy_port }};\2'
   when: nginx_drucker_host.stat.exists == false

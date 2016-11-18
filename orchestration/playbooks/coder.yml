@@ -1,7 +1,7 @@
 ---
 - name: Check if Coder is installed
   stat:
-    path: "{{ composer_dir_path }}/vendor/drupal/coder"
+    path: "{{ coder_binary }}"
   register: coder
 
 - name: Install Coder
@@ -34,13 +34,13 @@
   when: coder.stat.exists == true and "{{ coder_stable_release }}" not in coder_stable_release_check.stdout
 
 - name: Check if Coder bash aliases exist
-  shell: grep -o 'MANAGED CODE SNIFFER BLOCK' {{ home }}/.bashrc || echo "absent"
+  shell: grep -o 'MANAGED CODE SNIFFER BLOCK' {{ bashrc }} || echo "absent"
   register: coder_aliases
   changed_when: coder_aliases == "absent"
 
 - name: Add Code Sniffer aliases
   blockinfile:
-    dest: "{{ home }}/.bashrc"
+    dest: "{{ bashrc }}"
     block: |
       alias drupalcs="phpcs --standard=Drupal --extensions={{ codesniffer_extensions }}"
       alias drupalpractice="phpcs --standard=DrupalPractice --extensions={{ codesniffer_extensions }}"
@@ -50,5 +50,5 @@
   when: coder_aliases.stdout == 'absent'
 
 - name: Register Drupal and DrupalPractice with PHPCS
-  command: phpcs --config-set installed_paths {{ composer_dir_path }}/vendor/drupal/coder/coder_sniffer
+  command: phpcs --config-set installed_paths {{ codesniffer_binary }}
   when: coder.stat.exists == false

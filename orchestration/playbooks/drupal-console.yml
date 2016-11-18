@@ -2,7 +2,7 @@
 # Drupal Console Launcher
 - name: Check if Drupal Console Launcher is installed
   stat:
-    path: "{{ user_programs_path }}/drupal"
+    path: "{{ drupal_console_binary }}"
   register: drupal_console
 
 - name: Check Drupal Console Launcher version
@@ -14,7 +14,7 @@
 - name: Install Drupal Console launcher
   get_url:
     url: https://github.com/hechoendrupal/drupal-console-launcher/releases/download/{{ drupal_console_stable_release }}/drupal.phar
-    dest: "{{ user_programs_path }}/drupal"
+    dest: "{{ drupal_console_binary }}"
     mode: 0755
     validate_certs: no
   register: console_get_url_result
@@ -54,13 +54,13 @@
   become_user: "{{ user }}"
 
 - name: Check if Drupal Console has been configured in .bashrc
-  shell: grep -o "source \"\$HOME/.console/console.rc\" 2>/dev/null" /home/{{ user }}.bashrc || echo "absent"
+  shell: grep -o "source \"\$HOME/.console/console.rc\" 2>/dev/null" {{ bashrc }} || echo "absent"
   register: drupal_console_bashrc
   changed_when: drupal_console_bashrc == "absent"
 
 - name: Configure Drupal Console in .bashrc
   lineinfile:
-    dest: "{{ home }}/.bashrc"
+    dest: "{{ bashrc }}"
     line: "source \"$HOME/.console/console.rc\" 2>/dev/null"
     insertafter: EOF
   when: drupal_console_bashrc.stdout == 'absent'

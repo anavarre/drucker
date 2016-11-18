@@ -1,80 +1,94 @@
 ---
 - name: Check if .git-completion.bash exists
   stat:
-    path: /home/{{ user }}/.git-completion.bash
+    path: "{{ git_completion }}"
   register: git_completion
 
 - name: Deploy .git-completion.bash
   copy:
     src: files/.git-completion.bash
-    dest: /home/{{ user }}/
+    dest: "{{ home }}"
     mode: 0644
     owner: "{{ user }}"
     group: "{{ user }}"
+  become: yes
+  become_user: "{{ user }}"
   when: git_completion.stat.exists == false
 
 - name: Check if .git-prompt.sh exists
   stat:
-    path: /home/{{ user }}/.git-prompt.sh
+    path: "{{ git_prompt }}"
   register: git_prompt
 
 - name: Deploy .git-prompt.sh
   copy:
     src: files/.git-prompt.sh
-    dest: /home/{{ user }}/
+    dest: "{{ home }}"
     mode: 0644
     owner: "{{ user }}"
     group: "{{ user }}"
+  become: yes
+  become_user: "{{ user }}"
   when: git_prompt.stat.exists == false
+
+- name: Check if .gitconfig exists
+  stat:
+    path: "{{ git_config }}"
+  register: git_config
 
 - name: Deploy .gitconfig
   copy:
     src: files/.gitconfig
-    dest: /home/{{ user }}/
+    dest: "{{ home }}"
     mode: 0644
     owner: "{{ user }}"
     group: "{{ user }}"
+  become: yes
+  become_user: "{{ user }}"
+  when: git_config.stat.exists == false
 
 - name: Check if .bash-git-prompt exists
   stat:
-    path: /home/{{ user }}/.bash-git-prompt
-  register: git_prompt
+    path: "{{ bash_git_prompt }}"
+  register: bash_git_prompt
 
 - name: Install .bash-git-prompt for git-friendly prompt
   get_url:
     url: https://github.com/magicmonty/bash-git-prompt/archive/{{ prompt_stable_version }}.tar.gz
-    dest: /home/{{ user }}/
+    dest: "{{ home }}"
     validate_certs: no
   register: prompt_get_url_result
   until: "'OK' in prompt_get_url_result.msg"
   retries: 3
   delay: 10
-  when: git_prompt.stat.exists == false
+  when: bash_git_prompt.stat.exists == false
 
 - name: Extract bash-git-prompt files
   unarchive:
-    src: /home/{{ user }}/bash-git-prompt-{{ prompt_stable_version }}.tar.gz
-    dest: /home/{{ user }}/
+    src: "{{ home }}/bash-git-prompt-{{ prompt_stable_version }}.tar.gz"
+    dest: "{{ home }}"
     copy: no
-  when: git_prompt.stat.exists == false
+  become: yes
+  become_user: "{{ user }}"
+  when: bash_git_prompt.stat.exists == false
 
 - name: Rename bash-git-prompt directory
-  command: mv /home/{{ user }}/bash-git-prompt-{{ prompt_stable_version }} /home/{{ user }}/.bash-git-prompt
-  when: git_prompt.stat.exists == false
+  command: mv {{ home }}/bash-git-prompt-{{ prompt_stable_version }} "{{ bash_git_prompt }}"
+  when: bash_git_prompt.stat.exists == false
 
 - name: Delete bash-git-prompt archive
   file:
-    path: /home/{{ user }}/bash-git-prompt-{{ prompt_stable_version }}.tar.gz
+    path: "{{ home }}/bash-git-prompt-{{ prompt_stable_version }}.tar.gz"
     state: absent
-  when: git_prompt.stat.exists == false
+  when: bash_git_prompt.stat.exists == false
 
 - name: Check if .bashrc needs to be customized
-  shell: grep -o "MANAGED GIT BLOCK" /home/{{ user }}/.bashrc || echo "absent"
+  shell: grep -o "MANAGED GIT BLOCK" {{ bashrc }} || echo "absent"
   register: git_bashrc
 
 - name: Customize .bashrc
   blockinfile:
-    dest: /home/{{ user }}/.bashrc
+    dest: "{{ bashrc }}"
     block: |
       # Git
       if [ -f ~/.git-completion.bash ]; then

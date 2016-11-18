@@ -1,12 +1,12 @@
 ---
 - name: Check phpMyAdmin version
   stat:
-    path: "{{ webroot }}/phpmyadmin/RELEASE-DATE-{{ phpmyadmin_stable_release }}"
+    path: "{{ phpmyadmin_root }}/RELEASE-DATE-{{ phpmyadmin_stable_release }}"
   register: phpmyadmin_version
   ignore_errors: True
 
 - name: Check if phpMyAdmin can be updated
-  shell: ls {{ webroot }}/phpmyadmin/RELEASE-DATE-{{ phpmyadmin_stable_release }} | tail -c 6
+  shell: ls {{ phpmyadmin_root }}/RELEASE-DATE-{{ phpmyadmin_stable_release }} | tail -c 6
   register: phpmyadmin_update
   changed_when: phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
 
@@ -30,12 +30,12 @@
 
 - name: Delete outdated phpMyAdmin version
   file:
-    path: "{{ webroot }}/phpmyadmin"
+    path: "{{ phpmyadmin_root }}"
     state: absent
   when: phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
 
 - name: Rename phpMyAdmin directory
-  command: mv {{ webroot }}/phpMyAdmin-{{ phpmyadmin_stable_release }}-english {{ webroot }}/phpmyadmin
+  command: mv {{ phpmyadmin_root }}-{{ phpmyadmin_stable_release }}-english {{ phpmyadmin_root }}
   when: phpmyadmin_version.stat.exists == false or phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
 
 - name: Delete phpMyAdmin archive
@@ -46,24 +46,24 @@
 
 - name: Check if config.inc.php exists
   stat:
-    path: "{{ webroot }}/phpmyadmin/config.inc.php"
+    path: "{{ phpmyadmin_config }}"
   register: config_inc
   ignore_errors: True
 
 - name: Create config.inc.php file
-  command: cp {{ webroot }}/phpmyadmin/config.sample.inc.php {{ webroot }}/phpmyadmin/config.inc.php
+  command: cp {{ phpmyadmin_config_sample }} {{ phpmyadmin_config }}
   when: config_inc.stat.exists == false
 
 - name: Define config auth for phpMyAdmin
   lineinfile:
-    dest: "{{ webroot }}/phpmyadmin/config.inc.php"
+    dest: "{{ phpmyadmin_config }}"
     regexp: '^(.*)auth_type(.*)$'
     line: "$cfg['Servers'][$i]['auth_type'] = 'config';"
   when: config_inc.stat.exists == false
 
 - name: Log in automatically to phpMyAdmin
   blockinfile:
-    dest: "{{ webroot }}/phpmyadmin/config.inc.php"
+    dest: "{{ phpmyadmin_config }}"
     block: |
       $cfg['Servers'][$i]['username'] = '{{ mysql_creds }}';
       $cfg['Servers'][$i]['password'] = '{{ mysql_creds }}';
@@ -72,14 +72,14 @@
 
 - name: Set connection to remote database server
   lineinfile:
-    dest: "{{ webroot }}/phpmyadmin/config.inc.php"
+    dest: "{{ phpmyadmin_config }}"
     regexp: "^(.*)localhost(.*)$"
     line: "$cfg['Servers'][$i]['host'] = '203.0.113.12';"
   when: config_inc.stat.exists == false
 
 - name: Check if phpMyAdmin vHost exists
   stat:
-    path: "{{ sites_enabled }}/phpmyadmin.conf"
+    path: "{{ phpmyadmin_vhost }}"
   register: phpmyadmin_conf
   ignore_errors: True
 
@@ -91,7 +91,7 @@
   when: phpmyadmin_conf.stat.exists == false
 
 - name: Rename default vHost template
-  command: mv {{ sites_available }}/apache-template.conf {{ sites_available }}/phpmyadmin.conf
+  command: mv {{ vhost_template }} {{ sites_available }}/phpmyadmin.conf
   when: phpmyadmin_conf.stat.exists == false
 
 - name: Modify phpMyAdmin vHost
@@ -104,7 +104,7 @@
 - name: Enable phpMyAdmin vHost
   file:
     src: ../sites-available/phpmyadmin.conf
-    dest: "{{ sites_enabled }}/phpmyadmin.conf"
+    dest: "{{ phpmyadmin_vhost }}"
     state: link
   notify: Reload Apache
   when: phpmyadmin_conf.stat.exists == false

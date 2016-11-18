@@ -1,7 +1,7 @@
 ---
 - name: Check if Drush is installed
   stat:
-    path: "{{ user_programs_path }}/drush"
+    path: "{{ drush_binary }}"
   register: drush
 
 - name: Check Drush version
@@ -13,7 +13,7 @@
 - name: Install Drush globally
   get_url:
     url: https://github.com/drush-ops/drush/releases/download/{{ drush_stable_release }}/drush.phar
-    dest: "{{ user_programs_path }}/drush"
+    dest: "{{ drush_binary }}"
     force: yes
     mode: 0755
     validate_certs: no

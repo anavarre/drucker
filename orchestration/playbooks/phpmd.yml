@@ -23,13 +23,13 @@
   when: phpmd.stat.exists == false or phpmd_stable_release_check.stdout != "{{ phpmd_stable_version }}"
 
 - name: Check if phpmd bash alias exists
-  shell: grep -o 'MANAGED PHPMD BLOCK' {{ home }}/.bashrc || echo "absent"
+  shell: grep -o 'MANAGED PHPMD BLOCK' {{ bashrc }} || echo "absent"
   register: phpmd_alias
   changed_when: phpmd_alias == "absent"
 
 - name: Add phpmd alias
   blockinfile:
-    dest: "{{ home }}/.bashrc"
+    dest: "{{ bashrc }}"
     block: |
       function phpmd { /usr/local/bin/phpmd "$1" text cleancode,codesize,controversial,design,naming,unusedcode; }
       export -f phpmd

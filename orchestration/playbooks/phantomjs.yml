@@ -1,7 +1,7 @@
 ---
 - name: Check if phantomjs is installed
   stat:
-    path: "{{ user_programs_path }}/phantomjs"
+    path: "{{ phantomjs_binary }}"
   register: phantomjs
 
 - name: Check if phantomjs can be updated
@@ -35,7 +35,7 @@
 
 - name: Delete outdated phantomjs executable
   file:
-    path: "{{ user_programs_path }}/phantomjs"
+    path: "{{ phantomjs_binary }}"
     state: absent
   when: phantomjs.stat.exists == true and phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
 
@@ -45,7 +45,7 @@
 
 - name: Make phantomjs executable
   file:
-    path: "{{ user_programs_path }}/phantomjs"
+    path: "{{ phantomjs_binary }}"
     mode: 0755
   when: phantomjs.stat.exists == false or phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
 

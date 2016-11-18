@@ -1,7 +1,7 @@
 ---
 - name: "SSH Hardening"
   lineinfile:
-    dest: "/etc/ssh/sshd_config"
+    dest: "{{ sshd_config }}"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     state: present

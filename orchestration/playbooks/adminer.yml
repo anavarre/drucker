@@ -1,19 +1,19 @@
 ---
 - name: Check if adminer is installed
   stat:
-    path: "{{ webroot }}/adminer/index.php"
+    path: "{{ adminer_root }}/index.php"
   register: adminer
   ignore_errors: True
 
 - name: Check adminer version
-  shell: grep -o "version {{ adminer_stable_release }}" {{ webroot }}/adminer/index.php || echo "update"
+  shell: grep -o "version {{ adminer_stable_release }}" {{ adminer_root }}/index.php || echo "update"
   register: adminer_release
   when: adminer.stat.exists == true
   changed_when: adminer_release == "update"
 
 - name: Create adminer directory
   file:
-    path: "{{ webroot }}/adminer"
+    path: "{{ adminer_root }}"
     state: directory
     mode: 0755
   when: adminer.stat.exists == false
@@ -21,7 +21,7 @@
 - name: Download latest adminer release
   get_url:
     url: https://www.adminer.org/static/download/{{ adminer_stable_release }}/adminer-{{ adminer_stable_release }}-en.php
-    dest: "{{ webroot }}/adminer"
+    dest: "{{ adminer_root }}"
     validate_certs: no
   register: adminer_get_url_result
   until: "'OK' in adminer_get_url_result.msg"
@@ -30,12 +30,12 @@
   when: adminer.stat.exists == false or adminer_release.stdout == "update"
 
 - name: Rename adminer file
-  command: mv {{ webroot }}/adminer/adminer-{{ adminer_stable_release }}-en.php {{ webroot }}/adminer/index.php
+  command: mv {{ adminer_root }}/adminer-{{ adminer_stable_release }}-en.php {{ adminer_root }}/index.php
   when: adminer.stat.exists == false or adminer_release.stdout == "update"
 
 - name: Check if adminer vHost exists
   stat:
-    path: "{{ sites_enabled }}/adminer.conf"
+    path: "{{ adminer_vhost }}"
   register: adminer_conf
   ignore_errors: True
 
@@ -47,7 +47,7 @@
   when: adminer_conf.stat.exists == false
 
 - name: Rename default vHost template
-  command: mv {{ sites_available }}/apache-template.conf {{ sites_available }}/adminer.conf
+  command: mv {{ vhost_template }} {{ sites_available }}/adminer.conf
   when: adminer_conf.stat.exists == false
 
 - name: Modify adminer vHost
@@ -60,7 +60,7 @@
 - name: Enable adminer vHost
   file:
     src: ../sites-available/adminer.conf
-    dest: "{{ sites_enabled }}/adminer.conf"
+    dest: "{{ adminer_vhost }}"
     state: link
   notify: Reload Apache
   when: adminer_conf.stat.exists == false

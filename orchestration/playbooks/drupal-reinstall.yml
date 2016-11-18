@@ -17,12 +17,12 @@
 
 - name: "REINSTALL: Check if drucker docroot exists"
   stat:
-    path: "{{ webroot }}/{{ user }}"
+    path: "{{ docroot }}"
   register: drucker_docroot
   ignore_errors: True
 
 - name: "REINSTALL: Deletes drucker docroot"
   file:
-    path: "{{ webroot }}/{{ user }}"
+    path: "{{ docroot }}"
     state: absent
   when: drucker_docroot.stat.exists == true

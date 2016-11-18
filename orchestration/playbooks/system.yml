@@ -40,7 +40,7 @@
 
 - name: Check if .bash_aliases exist
   stat:
-    path: "{{ home }}/.bash_aliases"
+    path: "{{ bash_aliases }}"
   register: bash_aliases
 
 - name: Deploy .bash_aliases
@@ -50,11 +50,13 @@
     mode: 0644
     owner: "{{ user }}"
     group: "{{ user }}"
+  become: yes
+  become_user: "{{ user }}"
   when: bash_aliases.stat.exists == false
 
 - name: Check if .vimrc file exists
   stat:
-    path: "{{ home }}/.vimrc"
+    path: "{{ vimrc }}"
   register: vimrc
   ignore_errors: True
 
@@ -63,12 +65,14 @@
     src: files/.vimrc
     dest: "{{ home }}"
     mode: 0644
+  become: yes
+  become_user: "{{ user }}"
   when: vimrc.stat.exists == false
 
 - name: Check if .vim directory exists
   stat:
-    path: "{{ home }}/.vim"
-  register: vim
+    path: "{{ vim_dir }}"
+  register: vim_dir
   ignore_errors: True
 
 - name: Deploy .vim directory
@@ -76,14 +80,6 @@
     src: files/.vim
     dest: "{{ home }}"
     mode: 0755
-  when: vim.stat.exists == false
-
-- name: Make sure permissions are correct for Vim configuration files
-  file:
-    path: "{{ home }}/{{ item }}"
-    owner: "{{ user }}"
-    group: "{{ user }}"
-  with_items:
-    - .vimrc
-    - .vim
-  when: vim.stat.exists == false
+  become: yes
+  become_user: "{{ user }}"
+  when: vim_dir.stat.exists == false

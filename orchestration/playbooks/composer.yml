@@ -34,13 +34,13 @@
   when: composer.stat.exists == false
 
 - name: Check if composer is in PATH
-  shell: grep -o "export PATH=\"\$PATH:\$HOME/.composer/vendor/bin\"" {{ home }}/.bashrc || echo "absent"
+  shell: grep -o "export PATH=\"\$PATH:\$HOME/.composer/vendor/bin\"" {{ bashrc }} || echo "absent"
   register: composer_path
   changed_when: composer_path.stdout == "absent"
 
 - name: Add composer to PATH
   lineinfile:
-    dest: "{{ home }}/.bashrc"
+    dest: "{{ bashrc }}"
     line: export PATH="$PATH:$HOME/.composer/vendor/bin"
     insertafter: EOF
   when: composer_path.stdout == 'absent'
@@ -69,6 +69,8 @@
     src: files/composer.json
     dest: "{{ composer_dir_path }}"
     mode: 0644
+  become: yes
+  become_user: "{{ user }}"
   when: composer_json.stat.exists == false
 
 - name: Prepare composer.json for Drupal Console installation

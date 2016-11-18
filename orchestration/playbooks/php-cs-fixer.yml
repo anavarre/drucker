@@ -1,7 +1,7 @@
 ---
 - name: Check if PHP-CS-Fixer is installed
   stat:
-    path: "{{ user_programs_path }}/php-cs-fixer"
+    path: "{{ php_cs_fixer_binary }}"
   register: php_cs_fixer
 
 - name: Check PHP-CS-Fixer version

@@ -4,8 +4,8 @@
     path: "{{ item }}"
   with_first_found:
     - files:
-      - "{{ webroot }}/import/{{ sitename }}.sql.gz"
-      - "{{ webroot }}/import/{{ sitename }}.sql"
+      - "{{ import_dir }}/{{ sitename }}.sql.gz"
+      - "{{ import_dir }}/{{ sitename }}.sql"
       skip: true
   register: dump_detection
   ignore_errors: True
@@ -39,12 +39,12 @@
 
 - name: "IMPORT: Check if archived database dump exists"
   stat:
-    path: "{{ webroot }}/import/archives/{{ sitename }}"
+    path: "{{ {{ archives_dir }}/{{ sitename }}"
   register: db_archive
   ignore_errors: True
 
 - name: "IMPORT: Archive imported database dump"
-  command: mv {{ dump }} {{ webroot }}/import/archives/
+  command: mv {{ dump }} {{ archives_dir }}/
   when: dump_detection.skipped is not defined and db_archive.stat.exists == false
 
 - name: "IMPORT: Check if docroot has already been deployed"
@@ -55,23 +55,23 @@
 
 - name: "IMPORT: Check if docroot exists"
   stat:
-    path: "{{ webroot }}/import/{{ sitename }}"
+    path: "{{ import_dir }}/{{ sitename }}"
   register: docroot_import
   ignore_errors: True
 
 - name: "IMPORT: Import docroot"
-  command: cp -R {{ webroot }}/import/{{ sitename }} {{ webroot }}/
+  command: cp -R {{ import_dir }}/{{ sitename }} {{ webroot }}/
   register: import_docroot
   when: docroot_check.stat.exists == false and docroot_import.stat.exists == true
 
 - name: "IMPORT: Check if archived docroot exists"
   stat:
-    path: "{{ webroot }}/import/archives/{{ sitename }}"
+    path: "{{ {{ archives_dir }} }}/{{ sitename }}"
   register: docroot_archive
   ignore_errors: True
 
 - name: "IMPORT: Archive imported docroot"
-  command: mv {{ webroot }}/import/{{ sitename }} {{ webroot }}/import/archives/
+  command: mv {{ import_dir }}/{{ sitename }} {{ archives_dir }}
   when: docroot_archive.stat.exists == false
 
 - name: "IMPORT: Make sure permissions are correct"
@@ -97,7 +97,7 @@
   when: apache_conf.stat.exists == false
 
 - name: "IMPORT: Rename default vHost template"
-  command: mv {{ sites_available }}/apache-template.conf {{ sites_available }}/{{ sitename }}.conf
+  command: mv {{ vhost_template }} {{ sites_available }}/{{ sitename }}.conf
   when: apache_conf.stat.exists == false
 
 - name: "IMPORT: Modify vHost"

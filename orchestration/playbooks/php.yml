@@ -7,7 +7,7 @@
 - name: Add Debian contrib and non-free repositories
   # Brings support for FastCGI via libapache2-mod-fastcgi
   lineinfile:
-    dest: "/etc/apt/sources.list"
+    dest: "{{ sources_list }}"
     regexp: "deb http://httpredir.debian.org/debian {{ codename }} main"
     line: "deb http://httpredir.debian.org/debian {{ codename }} main contrib non-free"
   when: fpm.stat.exists == false
