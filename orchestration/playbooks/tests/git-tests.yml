@@ -1,0 +1,16 @@
+---
+- name: "TEST: Git needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ git_completion }}"
+    - "{{ git_prompt }}"
+    - "{{ bash_git_prompt }}"
+    - "{{ git_config }}"
+  register: git
+
+- name: "TEST: Check if Git has been configured in .bashrc"
+  shell: grep -o 'MANAGED GIT BLOCK' {{ bashrc }} || echo "absent"
+  register: git_bashrc
+  changed_when: git_bashrc.stdout == "absent"
+  failed_when: git_bashrc.stdout == "absent"
