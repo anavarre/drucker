@@ -28,6 +28,8 @@
 
 - name: "TEST: Make sure the codebase was added under version control"
   shell: git log --oneline | grep -o "Initial commit" || echo 'no commit'
+  args:
+    warn: no
   register: initial_commit
   changed_when: initial_commit == "no commit"
   failed_when: initial_commit == "no commit"
