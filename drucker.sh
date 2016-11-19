@@ -48,6 +48,11 @@ for FILES in ${CONTAINER_FILES} ; do
   source "${DIR}/${CONTAINER_DIR}/${FILES}"
 done
 
+if [[ "$OPTION" == "--tests" ]]; then
+  run_tests
+  exit 0
+fi
+
 check_requirements
 configure_ssh_access
 create_custom_bridge_network
