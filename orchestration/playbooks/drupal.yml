@@ -86,7 +86,7 @@
     dest: "{{ settings_php }}"
     block: |
       $settings['trusted_host_patterns'] = array(
-        '^{{ user }}\.local$',
+        '^{{ user }}\.{{ tld }}$',
       );
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 

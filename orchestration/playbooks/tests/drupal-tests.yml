@@ -21,7 +21,7 @@
   failed_when: drupal.stat.exists == false
 
 - name: "TEST: settings.php should hold the correct trusted_host_patterns setting"
-  shell: grep -o "{{ user }}.local" {{ settings_php }} || echo "missing"
+  shell: grep -o "{{ user }}.{{ tld }}" {{ settings_php }} || echo "missing"
   register: trusted_host_patterns
   changed_when: trusted_host_patterns == "missing"
   failed_when: trusted_host_patterns == "missing"
