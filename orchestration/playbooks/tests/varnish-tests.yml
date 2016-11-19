@@ -1,0 +1,18 @@
+---
+- name: "TEST: Varnish needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ varnish_config }}"
+    - "{{ varnish_default_path }}"
+    - "{{ varnish_default_vcl }}"
+  register: varnish
+  failed_when: varnish.stat.exists == false
+
+- name: "TEST: Check if Varnish packages are installed"
+  shell: dpkg -l | grep {{ item }}
+  with_items:
+    - apt-transport-https
+    - varnish
+  register: varnish_packages
+  changed_when: varnish_packages == ''

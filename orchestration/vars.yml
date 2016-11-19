@@ -154,6 +154,7 @@ varnish_stable_release: 4.0.2.1
 reverse_proxy_port: 80
 varnish_config: /etc/default/varnish
 varnish_default_path: /etc/varnish/
+varnish_default_vcl: "{{ varnish_default_path }}/default.vcl"
 
 # nginx
 nginx_conf_dir: /etc/nginx/conf.d
@@ -161,6 +162,7 @@ nginx_default_conf: "{{ nginx_conf_dir }}/default.conf"
 nginx_conf: /etc/nginx/nginx.conf
 nginx_default_site: /etc/nginx/sites-enabled/default
 drucker_nginx_vhost: /etc/nginx/conf.d/{{ user }}.conf
+nginx_fake_ssl: /etc/nginx/ssl
 
 # GlusterFS
 brick: /data/brick1/gv0

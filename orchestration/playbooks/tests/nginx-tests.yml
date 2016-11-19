@@ -1,0 +1,30 @@
+---
+- name: "TEST: nginx needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ nginx_conf }}"
+    - "{{ drucker_nginx_vhost }}"
+    - "{{ nginx_fake_ssl }}"
+  register: nginx
+  failed_when: nginx.stat.exists == false
+
+- name: "TEST: nginx default files should not exist"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ nginx_default_site }}"
+    - "{{ nginx_default_conf }}"
+  register: nginx_default_files
+  failed_when: nginx_default_files.stat.exists == true
+
+- name: "TEST: Check if nginx package is installed"
+  shell: dpkg -l | grep nginx
+  register: nginx_package
+  changed_when: nginx_package == ''
+
+- name: "TEST: nginx proxy_pass should be set"
+  shell: grep -o "proxy_pass http://{{ web_ip }}:{{ reverse_proxy_port }}" "{{ drucker_nginx_vhost }}" || echo "missing"
+  register: nginx_proxy_pass
+  changed_when: nginx_proxy_pass.stdout == "missing"
+  failed_when: nginx_proxy_pass.stdout == "missing"

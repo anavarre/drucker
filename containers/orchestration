@@ -4,8 +4,14 @@ export PLAYBOOK="ansible-playbook -i ${DIR}/orchestration/hosts --user=${USER} $
 export EXTRA_VARS="--extra-vars ansible_sudo_pass=${USER}"
 
 run_tests() {
-  echo -e "${BLUE}Running the test suite...${COLOR_ENDING}"
-  ${PLAYBOOK}/tests.yml ${EXTRA_VARS}
+  echo -e "${BLUE}Running the reverse proxy test suite...${COLOR_ENDING}"
+  ${PLAYBOOK}/reverse-proxy-tests.yml ${EXTRA_VARS}
+
+  echo -e "${BLUE}Running the database test suite...${COLOR_ENDING}"
+  ${PLAYBOOK}/db-tests.yml ${EXTRA_VARS}
+
+  echo -e "${BLUE}Running the web test suite...${COLOR_ENDING}"
+  ${PLAYBOOK}/web-tests.yml ${EXTRA_VARS}
 }
 
 run_base_container_orchestration() {

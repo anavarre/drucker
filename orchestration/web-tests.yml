@@ -8,4 +8,4 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - include: playbooks/tests/run-tests.yml
+    - include: playbooks/tests/run-web-tests.yml

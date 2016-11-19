@@ -1,0 +1,31 @@
+---
+- name: "TEST: MySQL needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ my_cnf }}"
+    - "{{ mysqld_cnf }}"
+    - "{{ mysql_data }}"
+  register: mysql
+  failed_when: mysql.stat.exists == false
+
+- name: "TEST: Check if MySQL packages are installed"
+  shell: dpkg -l | grep {{ item }}
+  with_items:
+    - mysql-community-server
+    - python-mysqldb
+    - mytop
+  register: mysql_packages
+  changed_when: mysql_packages == ''
+
+- name: "TEST: Check if MySQL innodb_file_per_table setting is configured"
+  shell: grep -o "innodb_file_per_table = 1" "{{ my_cnf }}" || echo "missing"
+  register: innodb_setting
+  changed_when: innodb_setting.stdout == "missing"
+  failed_when: innodb_setting.stdout == "missing"
+
+- name: "TEST: Check if MySQL remote access is configured"
+  shell: grep -o "0.0.0.0" {{ mysqld_cnf }} || echo "denied"
+  register: remote_access
+  changed_when: remote_access.stdout == "denied"
+  failed_when: remote_access.stdout == "denied"
