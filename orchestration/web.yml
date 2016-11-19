@@ -9,6 +9,7 @@
     - include: handlers.yml
   tasks:
     - include: playbooks/stack.yml
+      when: reinstall == "N"
     - include: playbooks/drupal-reinstall.yml
       when: reinstall == "Y"
     - include: playbooks/drupal-delete.yml

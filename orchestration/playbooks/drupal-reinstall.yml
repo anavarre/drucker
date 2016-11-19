@@ -26,3 +26,5 @@
     path: "{{ docroot }}"
     state: absent
   when: drucker_docroot.stat.exists == true
+
+- include: playbooks/drupal.yml
