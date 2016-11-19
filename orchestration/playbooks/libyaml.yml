@@ -29,3 +29,9 @@
     - /usr/bin/make
     - /usr/bin/make install
   when: libyaml.stat.exists == false
+
+- name: Delete temporary PECL YAML directory
+  file:
+    path: /tmp/yaml-{{ libyaml_stable_release }}
+    state: absent
+  when: libyaml.stat.exists == false
