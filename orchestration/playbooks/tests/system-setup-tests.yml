@@ -1,4 +1,10 @@
 ---
+- name: "TEST: System needs to be cleaned up"
+  shell: dpkg -l | grep vim-tiny || echo "absent"
+  register: system_cleanup
+  changed_when: system_cleanup.stdout != 'absent'
+  failed_when: system_cleanup.stdout != 'absent'
+
 - name: "TEST: System files need to be correctly installed"
   stat:
     path: "{{ item }}"
