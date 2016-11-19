@@ -168,3 +168,6 @@ gluster_mount_dir: /mnt/gfs
 
 # Java (williamyeh.oracle-java)
 java_version: 8
+
+# Apache Solr
+solr_port: 8983

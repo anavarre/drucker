@@ -28,3 +28,13 @@
   register: poodle
   changed_when: poodle.stdout == "absent"
   failed_when: poodle.stdout == "absent"
+
+- name: "TEST: All URLs should be accessible"
+  uri:
+    url: "{{ item }}"
+  with_items:
+    - http://{{ user }}.{{ tld }}
+    # To test the below URLs /etc/hosts should be modified.
+    # - http://search.{{ tld }}:{{ solr_port }}/solr/#
+    # - http://phpmyadmin.{{ tld }}
+    # - http://adminer.{{ tld }}
