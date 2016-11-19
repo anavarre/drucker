@@ -7,7 +7,7 @@ run_tests() {
   echo -e "${BLUE}Running the system test suite...${COLOR_ENDING}"
   ${PLAYBOOK}/system-tests.yml ${EXTRA_VARS}
 
-echo -e "${BLUE}Running the reverse proxy test suite...${COLOR_ENDING}"
+  echo -e "${BLUE}Running the reverse proxy test suite...${COLOR_ENDING}"
   ${PLAYBOOK}/reverse-proxy-tests.yml ${EXTRA_VARS}
 
   echo -e "${BLUE}Running the database test suite...${COLOR_ENDING}"

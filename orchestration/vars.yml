@@ -7,13 +7,13 @@ home: /home/{{ user }}
 sources_list: /etc/apt/sources.list
 bashrc: "{{ home }}/.bashrc"
 bash_aliases: "{{ home }}/.bash_aliases"
-prompt_stable_version: 2.6.1
 
 # Git
 git_completion: "{{ home }}/.git-completion.bash"
 git_prompt: "{{ home }}/.git-prompt.sh"
 git_config: "{{ home }}/.gitconfig"
 bash_git_prompt: "{{ home }}/.bash-git-prompt"
+bash_git_prompt_stable_version: 2.6.1
 
 # VIM
 vim_dir: "{{ home }}/.vim"

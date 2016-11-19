@@ -8,6 +8,7 @@
     - "{{ bash_git_prompt }}"
     - "{{ git_config }}"
   register: git
+  failed_when: git.stat.exists == false
 
 - name: "TEST: Check if Git has been configured in .bashrc"
   shell: grep -o 'MANAGED GIT BLOCK' {{ bashrc }} || echo "absent"

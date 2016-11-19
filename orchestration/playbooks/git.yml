@@ -47,40 +47,45 @@
   become_user: "{{ user }}"
   when: git_config.stat.exists == false
 
-- name: Check if .bash-git-prompt exists
+- name: Check if bash-git-prompt archive exists
   stat:
-    path: "{{ bash_git_prompt }}"
-  register: bash_git_prompt
+    path: /tmp/bash-git-prompt-{{ bash_git_prompt_stable_version }}.tar.gz
+  register: bash_git_prompt_archive
 
-- name: Install .bash-git-prompt for git-friendly prompt
+- name: Check if bash-git-prompt can be updated
+  shell: ls /tmp/bash-git-prompt-{{ bash_git_prompt_stable_version }}.tar.gz | grep -o "{{ bash_git_prompt_stable_version }}" || echo "outdated"
+  register: bash_git_prompt_update
+  changed_when: bash_git_prompt_update.stdout != "{{ bash_git_prompt_stable_version }}"
+
+- name: Download .bash-git-prompt archive
   get_url:
-    url: https://github.com/magicmonty/bash-git-prompt/archive/{{ prompt_stable_version }}.tar.gz
-    dest: "{{ home }}"
+    url: https://github.com/magicmonty/bash-git-prompt/archive/{{ bash_git_prompt_stable_version }}.tar.gz
+    dest: /tmp
     validate_certs: no
   register: prompt_get_url_result
   until: "'OK' in prompt_get_url_result.msg"
   retries: 3
   delay: 10
-  when: bash_git_prompt.stat.exists == false
+  when: bash_git_prompt_archive.stat.exists == false or bash_git_prompt_update.stdout != "{{ bash_git_prompt_stable_version }}"
 
 - name: Extract bash-git-prompt files
   unarchive:
-    src: "{{ home }}/bash-git-prompt-{{ prompt_stable_version }}.tar.gz"
-    dest: "{{ home }}"
+    src: /tmp/bash-git-prompt-{{ bash_git_prompt_stable_version }}.tar.gz
+    dest: /tmp
     copy: no
   become: yes
   become_user: "{{ user }}"
-  when: bash_git_prompt.stat.exists == false
+  when: bash_git_prompt_archive.stat.exists == false or bash_git_prompt_update.stdout != "{{ bash_git_prompt_stable_version }}"
 
-- name: Rename bash-git-prompt directory
-  command: mv {{ home }}/bash-git-prompt-{{ prompt_stable_version }} "{{ bash_git_prompt }}"
-  when: bash_git_prompt.stat.exists == false
-
-- name: Delete bash-git-prompt archive
+- name: Delete outdated .bash-git-prompt directory
   file:
-    path: "{{ home }}/bash-git-prompt-{{ prompt_stable_version }}.tar.gz"
+    path: "{{ bash_git_prompt }}"
     state: absent
-  when: bash_git_prompt.stat.exists == false
+  when: bash_git_prompt_update.stdout != "{{ bash_git_prompt_stable_version }}"
+
+- name: Rename and move bash-git-prompt directory
+  command: mv /tmp/bash-git-prompt-{{ bash_git_prompt_stable_version }} {{ home }}/.bash-git-prompt
+  when: bash_git_prompt_archive.stat.exists == false or bash_git_prompt_update.stdout != "{{ bash_git_prompt_stable_version }}"
 
 - name: Check if .bashrc needs to be customized
   shell: grep -o "MANAGED GIT BLOCK" {{ bashrc }} || echo "absent"
