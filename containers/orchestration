@@ -32,6 +32,16 @@ reinstall_drupal() {
   ${PLAYBOOK}/reinstall.yml --extra-vars "ansible_sudo_pass=${USER} reinstall=Y"
 }
 
+drupal_dev_mode() {
+  echo -e "${BLUE}Configuring Drupal for development...${COLOR_ENDING}"
+  ${PLAYBOOK}/dev.yml --extra-vars "ansible_sudo_pass=${USER} dev=Y"
+}
+
+drupal_prod_mode() {
+  echo -e "${BLUE}Configuring Drupal for production...${COLOR_ENDING}"
+  ${PLAYBOOK}/prod.yml --extra-vars "ansible_sudo_pass=${USER} prod=Y"
+}
+
 run_base_container_orchestration() {
   echo -e "${BLUE}Running ${BASE_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
@@ -47,18 +57,7 @@ run_reverse_proxy_container_orchestration() {
 run_web_container_orchestration() {
   echo -e "${BLUE}Running ${WEB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  if [[ -n "$OPTION" ]]; then
-    case "$OPTION" in
-      --dev)
-      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} dev=Y prod=N"
-      ;;
-      --prod)
-      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} prod=Y dev=N"
-      ;;
-    esac
-  else
-    ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} dev=N prod=N"
-  fi
+  ${PLAYBOOK}/web.yml ${EXTRA_VARS}
 }
 
 run_db_container_orchestration() {

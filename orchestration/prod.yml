@@ -8,5 +8,4 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - include: playbooks/stack.yml
-    # - include: playbooks/gluster.yml
+    - include: playbooks/drupal-prod.yml

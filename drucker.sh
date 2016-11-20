@@ -66,6 +66,14 @@ if [[ -n "$OPTION" ]]; then
     reinstall_drupal
     exit 0
     ;;
+    --dev)
+    drupal_dev_mode
+    exit 0
+    ;;
+    --prod)
+    drupal_prod_mode
+    exit 0
+    ;;
   esac
 fi
 
