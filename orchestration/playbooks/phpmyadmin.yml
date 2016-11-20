@@ -35,7 +35,7 @@
   when: phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
 
 - name: Rename phpMyAdmin directory
-  command: mv {{ phpmyadmin_root }}-{{ phpmyadmin_stable_release }}-english {{ phpmyadmin_root }}
+  command: mv {{ webroot }}/phpMyAdmin-{{ phpmyadmin_stable_release }}-english {{ phpmyadmin_root }}
   when: phpmyadmin_version.stat.exists == false or phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
 
 - name: Delete phpMyAdmin archive
