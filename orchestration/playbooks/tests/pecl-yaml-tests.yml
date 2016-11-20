@@ -13,7 +13,7 @@
   changed_when: pecl_yaml_phpini == "absent"
   failed_when: pecl_yaml_phpini == "absent"
 
-- name: "TEST: Temporary YAML parser directory should not exist"
+- name: "TEST: Temporary C YAML parser directory should not exist"
   stat:
     path: /tmp/yaml-{{ libyaml_stable_release }}
   register: pecl_yaml_temp_dir

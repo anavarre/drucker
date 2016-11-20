@@ -30,7 +30,7 @@
     - /usr/bin/make install
   when: libyaml.stat.exists == false
 
-- name: Delete temporary PECL YAML directory
+- name: Delete temporary C YAML parser directory
   file:
     path: /tmp/yaml-{{ libyaml_stable_release }}
     state: absent
