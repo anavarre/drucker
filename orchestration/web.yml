@@ -10,8 +10,6 @@
   tasks:
     - include: playbooks/stack.yml
       when: reinstall == "N"
-    - include: playbooks/drupal-reinstall.yml
-      when: reinstall == "Y"
     - include: playbooks/drupal-dev.yml
       when: dev == "Y"
     - include: playbooks/drupal-prod.yml

@@ -27,6 +27,11 @@ delete_site() {
   ${PLAYBOOK}/delete.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y sitename=${SITENAME}"
 }
 
+reinstall_drupal() {
+  echo -e "${BLUE}Reinstalling Drupal...${COLOR_ENDING}"
+  ${PLAYBOOK}/reinstall.yml --extra-vars "ansible_sudo_pass=${USER} reinstall=Y"
+}
+
 run_base_container_orchestration() {
   echo -e "${BLUE}Running ${BASE_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
@@ -45,23 +50,14 @@ run_web_container_orchestration() {
   if [[ -n "$OPTION" ]]; then
     case "$OPTION" in
       --dev)
-      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} dev=Y prod=N reinstall=N delete=N"
+      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} dev=Y prod=N"
       ;;
       --prod)
-      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} prod=Y dev=N reinstall=N delete=N"
-      ;;
-      --reinstall)
-      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} reinstall=Y dev=N prod=N delete=N"
-      ;;
-      --import)
-      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} dev=N prod=N reinstall=N delete=N sitename=${SITENAME}"
-      ;;
-      --delete)
-      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y dev=N prod=N reinstall=N sitename=${SITENAME}"
+      ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} prod=Y dev=N"
       ;;
     esac
   else
-    ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} dev=N prod=N reinstall=N delete=N"
+    ${PLAYBOOK}/web.yml --extra-vars "ansible_sudo_pass=${USER} dev=N prod=N"
   fi
 }
 

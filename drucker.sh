@@ -62,6 +62,10 @@ if [[ -n "$OPTION" ]]; then
     delete_site
     exit 0
     ;;
+    --reinstall)
+    reinstall_drupal
+    exit 0
+    ;;
   esac
 fi
 
