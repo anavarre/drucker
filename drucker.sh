@@ -3,81 +3,14 @@
 # Invoke the script from anywhere (e.g .bashrc alias)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-usage() {
-  export OPTION=$1
-  export SITENAME=$2
+source "${DIR}"/functions
 
-  if [[ "$OPTION" == "--help" ]]; then
-cat <<EOF
---dev                 Prepare drucker for development work with no caching and helper modules enabled.
-                      WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
+export OPTION=$1
+export SITENAME=$2
 
---prod                Opinionated setup with all known performance best practices enabled.
+container_files
 
---reinstall           Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
-
---delete [sitename]   Deletes an arbitrary docroot, vHost and corresponding database.
-
---import [sitename]   Imports the database, files and codebase from the web container's import directory.
-
---tests               Runs the Ansible test suite.
-EOF
-    exit 0
-  elif [[ -n "${OPTION}" ]] && \
-       [[ "${OPTION}" != "--dev" ]] && \
-       [[ "${OPTION}" != "--prod" ]] && \
-       [[ "${OPTION}" != "--reinstall" ]] && \
-       [[ "${OPTION}" != "--delete" ]] && \
-       [[ "${OPTION}" != "--import" ]] && \
-       [[ "${OPTION}" != "--tests" ]]; then
-    echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]|--tests}"
-    exit 0
-  fi
-}
-
-usage "$@"
-
-CONTAINER_DIR="containers"
-CONTAINER_FILES="variables init ssh orchestration base reverse_proxy web db search"
-# web2 has been excluded for now
-
-for FILES in ${CONTAINER_FILES} ; do
-  source "${DIR}/${CONTAINER_DIR}/${FILES}"
-done
-
-if [[ -n "$OPTION" ]]; then
-  case "$OPTION" in
-    --tests)
-    run_tests
-    exit 0
-    ;;
-    --import)
-    if [[ "${OPTION}" == "--import" ]] && [[ -z ${2} ]]; then
-      echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]|--tests}"
-      exit 0
-    else
-      import_site
-      exit 0
-    fi
-    ;;
-    --delete)
-    delete_site
-    exit 0
-    ;;
-    --reinstall)
-    reinstall_drupal
-    exit 0
-    ;;
-    --dev)
-    drupal_dev_mode
-    exit 0
-    ;;
-    --prod)
-    drupal_prod_mode
-    exit 0
-    ;;
-  esac
-fi
+drucker_argument
 
 check_requirements
 configure_ssh_access
