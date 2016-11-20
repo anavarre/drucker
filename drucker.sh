@@ -51,6 +51,9 @@ done
 if [[ "$OPTION" == "--tests" ]]; then
   run_tests
   exit 0
+elif [[ "$OPTION" == "--import" ]]; then
+  import_site
+  exit 0
 fi
 
 check_requirements
