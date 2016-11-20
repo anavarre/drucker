@@ -32,9 +32,6 @@ EOF
        [[ "${OPTION}" != "--tests" ]]; then
     echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]|--tests}"
     exit 0
-  elif [[ "${OPTION}" == "--import" ]] && [[ -z ${2} ]]; then
-    echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]|--tests}"
-    exit 0
   fi
 }
 
@@ -55,8 +52,13 @@ if [[ -n "$OPTION" ]]; then
     exit 0
     ;;
     --import)
-    import_site
-    exit 0
+    if [[ "${OPTION}" == "--import" ]] && [[ -z ${2} ]]; then
+      echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]|--tests}"
+      exit 0
+    else
+      import_site
+      exit 0
+    fi
     ;;
     --delete)
     delete_site
