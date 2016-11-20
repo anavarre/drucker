@@ -48,12 +48,21 @@ for FILES in ${CONTAINER_FILES} ; do
   source "${DIR}/${CONTAINER_DIR}/${FILES}"
 done
 
-if [[ "$OPTION" == "--tests" ]]; then
-  run_tests
-  exit 0
-elif [[ "$OPTION" == "--import" ]]; then
-  import_site
-  exit 0
+if [[ -n "$OPTION" ]]; then
+  case "$OPTION" in
+    --tests)
+    run_tests
+    exit 0
+    ;;
+    --import)
+    import_site
+    exit 0
+    ;;
+    --delete)
+    delete_site
+    exit 0
+    ;;
+  esac
 fi
 
 check_requirements

@@ -12,8 +12,6 @@
       when: reinstall == "N"
     - include: playbooks/drupal-reinstall.yml
       when: reinstall == "Y"
-    - include: playbooks/drupal-delete.yml
-      when: delete == "Y"
     - include: playbooks/drupal-dev.yml
       when: dev == "Y"
     - include: playbooks/drupal-prod.yml

@@ -22,6 +22,11 @@ import_site() {
   ${PLAYBOOK}/import.yml --extra-vars "ansible_sudo_pass=${USER} import=Y sitename=${SITENAME}"
 }
 
+delete_site() {
+  echo -e "${BLUE}Deleting docroot ${SITENAME}...${COLOR_ENDING}"
+  ${PLAYBOOK}/delete.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y sitename=${SITENAME}"
+}
+
 run_base_container_orchestration() {
   echo -e "${BLUE}Running ${BASE_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
