@@ -53,7 +53,7 @@ correctly configured."
 
 wait
 
-tail -n1 /etc/hosts
+tail -n2 /etc/hosts
 
 separator
 echo "To make sure SSH access will be working, we
@@ -61,7 +61,7 @@ also need to confirm our config file exists"
 
 wait
 
-cat /home/anavarre/.ssh/config
+cat ~/.ssh/config
 
 separator
 echo ">>>> You can find all of the above in the README.md file."
