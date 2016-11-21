@@ -17,10 +17,11 @@ drucker_argument() {
        [[ "${OPTION}" != "--reinstall" ]] && \
        [[ "${OPTION}" != "--delete" ]] && \
        [[ "${OPTION}" != "--import" ]] && \
+       [[ "${OPTION}" != "--help" ]] && \
        [[ "${OPTION}" != "--tests" ]]; then
     echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]|--tests}"
     exit 0
-  elif [[ -n "$OPTION" ]]; then
+  else
     case "$OPTION" in
       --help)
 cat <<EOF
