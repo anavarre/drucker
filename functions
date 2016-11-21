@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+
+
 container_files() {
   CONTAINER_DIR="containers"
   CONTAINER_FILES="variables init ssh orchestration base reverse_proxy web db search"
@@ -8,6 +10,11 @@ container_files() {
   for FILES in ${CONTAINER_FILES} ; do
     source "${DIR}/${CONTAINER_DIR}/${FILES}"
   done
+}
+
+drucker_usage() {
+  echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]|--tests}"
+  exit 0
 }
 
 drucker_argument() {
@@ -19,8 +26,7 @@ drucker_argument() {
        [[ "${OPTION}" != "--import" ]] && \
        [[ "${OPTION}" != "--help" ]] && \
        [[ "${OPTION}" != "--tests" ]]; then
-    echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]|--tests}"
-    exit 0
+    drucker_usage
   else
     case "$OPTION" in
       --help)
@@ -41,13 +47,17 @@ EOF
       exit 0
       ;;
       --tests)
-      run_tests
-      exit 0
+      if [[ "${OPTION}" == "--tests" ]] && [[ ! -z ${SITENAME} ]]; then
+        drucker_usage
+        exit 0
+      else
+        run_tests
+        exit 0
+      fi
       ;;
       --import)
       if [[ "${OPTION}" == "--import" ]] && [[ -z ${SITENAME} ]]; then
-        echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]|--tests}"
-        exit 0
+        drucker_usage
       else
         import_site
         exit 0
@@ -55,24 +65,35 @@ EOF
       ;;
       --delete)
       if [[ "${OPTION}" == "--delete" ]] && [[ -z ${SITENAME} ]]; then
-        echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]|--tests}"
-        exit 0
+        drucker_usage
       else
         delete_site
         exit 0
       fi
       ;;
       --reinstall)
-      reinstall_drupal
-      exit 0
+      if [[ "${OPTION}" == "--reinstall" ]] && [[ ! -z ${SITENAME} ]]; then
+        drucker_usage
+      else
+        reinstall_drupal
+        exit 0
+      fi
       ;;
       --dev)
-      drupal_dev_mode
-      exit 0
+      if [[ "${OPTION}" == "--dev" ]] && [[ ! -z ${SITENAME} ]]; then
+        drucker_usage
+      else
+        drupal_dev_mode
+        exit 0
+      fi
       ;;
       --prod)
-      drupal_prod_mode
-      exit 0
+      if [[ "${OPTION}" == "--prod" ]] && [[ ! -z ${SITENAME} ]]; then
+        drucker_usage
+      else
+        drupal_prod_mode
+        exit 0
+      fi
       ;;
     esac
   fi
