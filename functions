@@ -54,8 +54,13 @@ EOF
       fi
       ;;
       --delete)
-      delete_site
-      exit 0
+      if [[ "${OPTION}" == "--delete" ]] && [[ -z ${SITENAME} ]]; then
+        echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]|--tests}"
+        exit 0
+      else
+        delete_site
+        exit 0
+      fi
       ;;
       --reinstall)
       reinstall_drupal
