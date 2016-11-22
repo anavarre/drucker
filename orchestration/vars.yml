@@ -42,6 +42,7 @@ conf_available: /etc/apache2/conf-available
 # vHosts
 vhost_template: "{{ sites_available }}/apache-template.conf"
 drucker_conf: "{{ sites_available }}/{{ user }}.conf"
+phpmyadmin_available_vhost: "{{ sites_available }}/phpmyadmin.conf"
 phpmyadmin_vhost: "{{ sites_enabled }}/phpmyadmin.conf"
 adminer_vhost: "{{ sites_enabled }}/adminer.conf"
 drucker_available_vhost: "{{ sites_available }}/{{ user }}.conf"
@@ -112,9 +113,13 @@ mysql_stable_release: 5.5
 
 # phpMyAdmin
 phpmyadmin_stable_release: 4.6.4
+phpmyadmin_archive_filename: phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
+phpmyadmin_archive_path: /tmp/phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
+phpmyadmin_temp_dirname: phpMyAdmin-{{ phpmyadmin_stable_release }}-english
 phpmyadmin_root: "{{ webroot }}/phpmyadmin"
 phpmyadmin_config_sample: "{{ phpmyadmin_root }}/config.sample.inc.php"
 phpmyadmin_config: "{{ phpmyadmin_root }}/config.inc.php"
+phpmyadmin_release_date_file: "{{ phpmyadmin_root }}/RELEASE-DATE-{{ phpmyadmin_stable_release }}"
 
 # Adminer
 adminer_stable_release: 4.2.5

@@ -1,18 +1,18 @@
 ---
 - name: Check phpMyAdmin version
   stat:
-    path: "{{ phpmyadmin_root }}/RELEASE-DATE-{{ phpmyadmin_stable_release }}"
+    path: "{{ phpmyadmin_release_date_file }}"
   register: phpmyadmin_version
   ignore_errors: True
 
 - name: Check if phpMyAdmin can be updated
-  shell: ls {{ phpmyadmin_root }}/RELEASE-DATE-{{ phpmyadmin_stable_release }} | tail -c 6
+  shell: ls {{ phpmyadmin_release_date_file }} | tail -c 6
   register: phpmyadmin_update
   changed_when: phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
 
 - name: Download latest phpMyAdmin release
   get_url:
-    url: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_stable_release }}/phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
+    url: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_stable_release }}/{{ phpmyadmin_archive_filename }}
     dest: /tmp
     validate_certs: no
   register: pma_get_url_result
@@ -23,7 +23,7 @@
 
 - name: Extract phpMyAdmin files
   unarchive:
-    src: /tmp/phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
+    src: "{{ phpmyadmin_archive_path }}"
     dest: "{{ webroot }}"
     copy: no
   when: phpmyadmin_version.stat.exists == false or phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
@@ -35,12 +35,12 @@
   when: phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
 
 - name: Rename phpMyAdmin directory
-  command: mv {{ webroot }}/phpMyAdmin-{{ phpmyadmin_stable_release }}-english {{ phpmyadmin_root }}
+  command: mv {{ webroot }}/{{ phpmyadmin_temp_dirname }} {{ phpmyadmin_root }}
   when: phpmyadmin_version.stat.exists == false or phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
 
 - name: Delete phpMyAdmin archive
   file:
-    path: /tmp/phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
+    path: "{{ phpmyadmin_archive_path }}"
     state: absent
   when: phpmyadmin_version.stat.exists == false or phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
 
@@ -74,7 +74,7 @@
   lineinfile:
     dest: "{{ phpmyadmin_config }}"
     regexp: "^(.*)localhost(.*)$"
-    line: "$cfg['Servers'][$i]['host'] = '203.0.113.12';"
+    line: "$cfg['Servers'][$i]['host'] = '{{ db_ip }}';"
   when: config_inc.stat.exists == false
 
 - name: Check if phpMyAdmin vHost exists
@@ -91,12 +91,12 @@
   when: phpmyadmin_conf.stat.exists == false
 
 - name: Rename default vHost template
-  command: mv {{ vhost_template }} {{ sites_available }}/phpmyadmin.conf
+  command: mv {{ vhost_template }} {{ phpmyadmin_available_vhost }}
   when: phpmyadmin_conf.stat.exists == false
 
 - name: Modify phpMyAdmin vHost
   replace:
-    dest: "{{ sites_available }}/phpmyadmin.conf"
+    dest: "{{ phpmyadmin_available_vhost }}"
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1phpmyadmin\2'
   when: phpmyadmin_conf.stat.exists == false

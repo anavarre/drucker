@@ -5,11 +5,12 @@
   with_items:
     - "{{ phpmyadmin_vhost }}"
     - "{{ phpmyadmin_config }}"
+    - "{{ phpmyadmin_release_date_file }}"
   register: pma
   failed_when: pma.stat.exists == false
 
 - name: "TEST: phpMyAdmin should use the latest stable release"
   stat:
-    path: "{{ phpmyadmin_root }}/RELEASE-DATE-{{ phpmyadmin_stable_release }}"
+    path: "{{ phpmyadmin_release_date_file }}"
   register: pma_version
   failed_when: pma_version.stat.exists == false
