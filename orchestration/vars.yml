@@ -14,6 +14,7 @@ git_prompt: "{{ home }}/.git-prompt.sh"
 git_config: "{{ home }}/.gitconfig"
 bash_git_prompt: "{{ home }}/.bash-git-prompt"
 bash_git_prompt_stable_version: 2.6.1
+bash_git_prompt_archive: /tmp/bash-git-prompt-{{ bash_git_prompt_stable_version }}.tar.gz
 
 # VIM
 vim_dir: "{{ home }}/.vim"
@@ -62,6 +63,10 @@ upload_max_filesize: 100M
 max_file_uploads: 100
 timezone: UTC
 
+# PECL Upload Progress
+uploadprogress_release: master
+uploadprogress_archive: /tmp/pecl-php-uploadprogress-{{ uploadprogress_release }}.zip
+
 # Composer
 composer_stable_release: 1.2.2
 composer_binary: "{{ user_programs_path }}/composer"
@@ -70,14 +75,18 @@ composer_json_path: "{{ home }}/.composer/composer.json"
 
 # XDebug
 xdebug_stable_release: 2.5.0RC1
+xdebug_archive: /tmp/xdebug-{{ xdebug_stable_release }}.tgz
 xdebug_ide_key: PHPSTORM
 
 # PECL YAML
 libyaml_stable_release: 0.1.7
+libyaml_archive: /tmp/yaml-{{ libyaml_stable_release }}.tar.gz
 pecl_yaml_stable_release: 2.0.0
+pecl_yaml_archive: /tmp/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}.tar.gz
 
 # Tideways
 tideways_stable_release: 4.0.7
+tideways_archive: /tmp/php-profiler-extension-{{ tideways_stable_release }}.tar.gz
 
 # Coder
 coder_stable_release: 8.2.9
@@ -141,6 +150,7 @@ phpunit_xml: "{{ docroot }}/core/phpunit.xml"
 import_dir: "{{ webroot }}/import"
 archives_dir: "{{ webroot }}/import/archives"
 drupal_dev_release: 8.3.x
+drupal_archive: /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz
 
 # Drush
 drush_stable_release: 8.1.7

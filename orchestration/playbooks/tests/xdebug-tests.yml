@@ -4,6 +4,7 @@
     path: "{{ item }}"
   with_items:
     - "{{ php_extensions }}/xdebug.so"
+    - "{{ xdebug_archive }}"
   register: xdebug_install
   failed_when: xdebug_install.stat.exists == false
 

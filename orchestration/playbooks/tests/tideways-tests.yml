@@ -4,6 +4,7 @@
     path: "{{ item }}"
   with_items:
     - "{{ php_extensions }}/tideways.so"
+    - "{{ tideways_archive }}"
     - /tmp/tideways/
   register: tideways
   failed_when: tideways.stat.exists == false

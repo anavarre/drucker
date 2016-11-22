@@ -22,7 +22,7 @@
 
 - name: Extract Tideways files
   unarchive:
-    src: /tmp/php-profiler-extension-{{ tideways_stable_release }}.tar.gz
+    src: "{{ tideways_archive }}"
     dest: /tmp/
     copy: no
   when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"

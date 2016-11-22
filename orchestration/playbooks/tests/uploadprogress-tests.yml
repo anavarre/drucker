@@ -4,6 +4,7 @@
     path: "{{ item }}"
   with_items:
     - "{{ php_extensions }}/uploadprogress.so"
+    - "{{ uploadprogress_archive }}"
   register: uploadprogress
   failed_when: uploadprogress.stat.exists == false
 

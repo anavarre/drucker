@@ -1,17 +1,18 @@
 ---
 - name: "REINSTALL: Check if latest Drupal dev archive exists"
   stat:
-    path: /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz
+    path: "{{ drupal_archive }}"
   register: drupal_archive
   ignore_errors: True
 
 - name: "REINSTALL: Check if Drupal archive is outdated"
-  shell: date -r /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz +%F
+  command: date -r "{{ drupal_archive.stat.path }}" +%F
   register: outdated_drupal
+  when: drupal_archive.stat.exists == true
 
 - name: "REINSTALL: Delete Drupal archive"
   file:
-    path: /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz
+    path: "{{ drupal_archive }}"
     state: absent
   when: drupal_archive.stat.exists == true and outdated_drupal.stdout != "{{ ansible_date_time.date }}"
 

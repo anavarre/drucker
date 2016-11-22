@@ -7,6 +7,7 @@
     - "{{ git_prompt }}"
     - "{{ bash_git_prompt }}"
     - "{{ git_config }}"
+    - "{{ bash_git_prompt_archive }}"
   register: git
   failed_when: git.stat.exists == false
 

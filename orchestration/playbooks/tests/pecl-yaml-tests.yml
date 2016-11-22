@@ -4,6 +4,8 @@
     path: "{{ item }}"
   with_items:
     - "{{ php_extensions }}/yaml.so"
+    - "{{ pecl_yaml_archive }}"
+    - "{{ libyaml_archive }}"
   register: pecl_yaml
   failed_when: pecl_yaml.stat.exists == false
 

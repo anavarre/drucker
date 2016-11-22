@@ -18,7 +18,7 @@
 
 - name: Extract pecl-php-uploadprogress files
   unarchive:
-    src: /tmp/pecl-php-uploadprogress-master.zip
+    src: "{{ uploadprogress_archive }}"
     dest: /tmp/
     copy: no
   when: uploadprogress.stat.exists == false
