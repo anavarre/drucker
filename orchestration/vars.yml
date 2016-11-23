@@ -26,6 +26,7 @@ id_rsa: "{{ home }}/.ssh/id_rsa"
 id_rsa_pub: "{{ home }}/.ssh/id_rsa.pub"
 
 # Networking
+gateway_ip: 203.0.113.254
 web_ip: 203.0.113.10
 db_ip: 203.0.113.12
 web2_ip: 203.0.113.11
@@ -75,8 +76,10 @@ composer_json_path: "{{ home }}/.composer/composer.json"
 
 # XDebug
 xdebug_stable_release: 2.5.0RC1
+xdebug_extension: xdebug.so
+xdebug_extension_path: "{{ php_extensions }}/xdebug.so"
 xdebug_archive: /tmp/xdebug-{{ xdebug_stable_release }}.tgz
-xdebug_ide_key: PHPSTORM
+xdebug_remote_host: "{{ gateway_ip }}"
 
 # PECL YAML
 libyaml_stable_release: 0.1.7
