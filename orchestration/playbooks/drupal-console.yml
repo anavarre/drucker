@@ -13,7 +13,7 @@
 
 - name: Install Drupal Console launcher
   get_url:
-    url: https://github.com/hechoendrupal/drupal-console-launcher/releases/download/{{ drupal_console_stable_release }}/drupal.phar
+    url: "{{ drupal_console_download_link }}"
     dest: "{{ drupal_console_binary }}"
     mode: 0755
     validate_certs: no

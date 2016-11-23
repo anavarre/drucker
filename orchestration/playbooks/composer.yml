@@ -12,7 +12,7 @@
 
 - name: Install Composer globally
   get_url:
-    url: https://getcomposer.org/download/{{ composer_stable_release }}/composer.phar
+    url: "{{ composer_download_link }}"
     dest: "{{ composer_binary }}"
     validate_certs: no
     force: yes
@@ -61,7 +61,7 @@
 
 - name: Deploy default composer.json file
   copy:
-    src: files/composer.json
+    src: "{{ composer_json_source_file }}"
     dest: "{{ composer_dir_path }}"
     mode: 0644
   become: yes

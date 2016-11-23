@@ -5,15 +5,15 @@
   register: xdebug
 
 - name: Check if Xdebug can be updated
-  shell: ls /tmp/xdebug-{{ xdebug_stable_release }}.tgz | grep -o {{ xdebug_stable_release }} || echo "absent"
+  shell: ls {{ xdebug_archive_path }} | grep -o {{ xdebug_stable_release }} || echo "absent"
   register: xdebug_update
   when: xdebug.stat.exists == true
   changed_when: xdebug_update.stdout == "absent"
 
 - name: Download latest Xdebug release
   get_url:
-    url: http://xdebug.org/files/xdebug-{{ xdebug_stable_release }}.tgz
-    dest: /tmp
+    url: "{{ xdebug_download_link }}"
+    dest: "{{ download_dir }}"
     validate_certs: no
   register: xdebug_get_url_result
   until: "'OK' in xdebug_get_url_result.msg"
@@ -23,13 +23,13 @@
 
 - name: Extract Xdebug files
   unarchive:
-    src: /tmp/xdebug-{{ xdebug_stable_release }}.tgz
-    dest: /tmp/
+    src: "{{ xdebug_archive_path }}"
+    dest: "{{ download_dir }}"
     copy: no
   when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
 
 - name: Compile Xdebug
-  command: "{{ item }} chdir=/tmp/xdebug-{{ xdebug_stable_release }}"
+  command: "{{ item }} chdir={{ xdebug_unarchived_path }}"
   with_items:
     - /usr/bin/phpize
     - ./configure
@@ -38,17 +38,17 @@
   when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
 
 - name: Copy compiled Xdebug extension
-  command: cp /tmp/xdebug-{{ xdebug_stable_release }}/modules/{{ xdebug_extension }} {{ php_extensions }}/
+  command: cp {{ xdebug_unarchived_path }}/modules/{{ xdebug_extension_name }} {{ php_extensions }}
   when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
 
 - name: Delete Xdebug temporary directory
   file:
-    path: /tmp/xdebug-{{ xdebug_stable_release }}
+    path: "{{ xdebug_unarchived_path }}"
     state: absent
   when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
 
 - name: Check Xdebug config in php.ini
-  shell: grep -o "{{ xdebug_extension }}" {{ php_ini }} || echo "absent"
+  shell: grep -o "{{ xdebug_extension_name }}" {{ php_ini }} || echo "absent"
   register: xdebug_config
   changed_when: xdebug_config.stdout == "absent"
 

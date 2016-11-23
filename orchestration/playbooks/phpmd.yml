@@ -1,7 +1,7 @@
 ---
 - name: Check if phpmd is installed
   stat:
-    path: "{{ user_programs_path }}/phpmd"
+    path: "{{ phpmd_binary }}"
   register: phpmd
 
 - name: Check phpmd version
@@ -12,7 +12,7 @@
 
 - name: Install phpmd globally
   get_url:
-    url: http://static.phpmd.org/php/{{ phpmd_stable_version }}/phpmd.phar
+    url: "{{ phpmd_download_link }}"
     dest: "{{ user_programs_path }}/phpmd"
     mode: 0755
     validate_certs: no

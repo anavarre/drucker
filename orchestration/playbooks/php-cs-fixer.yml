@@ -12,8 +12,8 @@
 
 - name: Download PHP-CS-Fixer PHAR file
   get_url:
-    url: https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v{{ php_cs_fixer_stable_release }}/php-cs-fixer.phar
-    dest: /tmp
+    url: "{{ php_cs_fixer_download_link }}"
+    dest: "{{ download_dir }}"
     mode: 0755
     validate_certs: no
   register: php_cs_fixer_get_url_result
@@ -23,9 +23,9 @@
   when: php_cs_fixer.stat.exists == false or php_cs_fixer_version.stdout != "{{ php_cs_fixer_stable_release }}"
 
 - name: Rename PHP-CS-Fixer PHAR file
-  command: mv /tmp/php-cs-fixer.phar /tmp/php-cs-fixer
+  command: mv {{ php_cs_fixer_temp_phar }} {{ php_cs_fixer_temp_path }}
   when: php_cs_fixer.stat.exists == false or php_cs_fixer_version.stdout != "{{ php_cs_fixer_stable_release }}"
 
 - name: Install PHP-CS-Fixer globally
-  command: mv /tmp/php-cs-fixer {{ user_programs_path }}/
+  command: mv {{ php_cs_fixer_temp_path }} {{ user_programs_path }}
   when: php_cs_fixer.stat.exists == false or php_cs_fixer_version.stdout != "{{ php_cs_fixer_stable_release }}"

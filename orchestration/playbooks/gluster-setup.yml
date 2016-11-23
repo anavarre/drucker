@@ -11,7 +11,7 @@
 
 - name: Check if Gluster volume already exists
   stat:
-    path: /var/lib/glusterd/vols/gv0
+    path: "{{ gluster_gv0 }}"
   register: gluster_volume_check
 
 - name: Create Gluster volume
@@ -20,7 +20,7 @@
   when: gluster_volume_check.stat.exists == false
 
 - name: Check if Gluster volume has already been started
-  shell: grep status /var/lib/glusterd/vols/gv0/info | tail -c 2
+  shell: grep status {{ gluster_gv0 }}/info | tail -c 2
   register: gluster_volume_is_started
 
 - name: Start Gluster volume
@@ -40,7 +40,7 @@
   register: files_brick
 
 - name: Move files dir to the brick
-  command: mv "{{ files_dir }}" "{{ brick }}/"
+  command: mv {{ files_dir }} {{ brick }}
   when: (files_brick.stat.exists == false) and (inventory_hostname != "{{ web2_ip }}")
 
 - name: Create Drucker GFS symlink

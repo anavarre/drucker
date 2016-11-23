@@ -13,7 +13,7 @@
 
 - name: Install MySQL APT repository config tool
   apt:
-    deb: http://dev.mysql.com/get/mysql-apt-config_{{ mysql_apt_config_tool }}_all.deb
+    deb: "{{ mysql_apt_repo }}"
   when: mysql.stat.exists == false
 
 - name: Install MySQL and utilities

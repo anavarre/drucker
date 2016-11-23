@@ -44,7 +44,7 @@
   ignore_errors: True
 
 - name: "IMPORT: Archive imported database dump"
-  command: mv {{ dump }} {{ archives_dir }}/
+  command: mv {{ dump }} {{ archives_dir }}
   when: dump_detection.skipped is not defined and db_archive.stat.exists == false
 
 - name: "IMPORT: Check if docroot has already been deployed"
@@ -90,7 +90,7 @@
 
 - name: "IMPORT: Deploy default vHost template"
   copy:
-    src: files/apache-template.conf
+    src: "{{ apache_template_source_file }}"
     dest: "{{ sites_available }}"
     mode: 0644
   when: apache_conf.stat.exists == false

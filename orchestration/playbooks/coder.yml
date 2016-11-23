@@ -7,7 +7,7 @@
 - name: Install Coder
   composer:
     command: require
-    arguments: drupal/coder {{ coder_stable_release }}
+    arguments: "{{ coder_composer_package }} {{ coder_stable_release }}"
     working_dir: "{{ composer_dir_path }}"
   become: yes
   become_user: "{{ user }}"
@@ -16,7 +16,7 @@
 - name: Check if Coder is up-to-date
   composer:
     command: info
-    arguments: drupal/coder
+    arguments: "{{ coder_composer_package }}"
     working_dir: "{{ composer_dir_path }}"
   become: yes
   become_user: "{{ user }}"
@@ -27,7 +27,7 @@
 - name: Update Coder
   composer:
     command: require
-    arguments: drupal/coder {{ coder_stable_release }}
+    arguments: "{{ coder_composer_package }} {{ coder_stable_release }}"
     working_dir: "{{ composer_dir_path }}"
   become: yes
   become_user: "{{ user }}"

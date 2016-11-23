@@ -1,14 +1,14 @@
 ---
 - name: Check if latest Drupal dev archive exists
   stat:
-    path: /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz
+    path: "{{ drupal_archive }}"
   register: drupal
   ignore_errors: True
 
 - name: Download latest Drupal (dev) release
   get_url:
-    url: https://ftp.drupal.org/files/projects/drupal-{{ drupal_dev_release }}-dev.tar.gz
-    dest: /tmp
+    url: "{{ drupal_download_link }}"
+    dest: "{{ download_dir }}"
     validate_certs: no
   register: drupal_get_url_result
   until: "'OK' in drupal_get_url_result.msg"
@@ -24,7 +24,7 @@
 
 - name: Extract Drupal files
   unarchive:
-    src: /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz
+    src: "{{ drupal_archive }}"
     dest: "{{ webroot }}"
     copy: no
   when: drucker.stat.exists == false
@@ -124,19 +124,19 @@
 
 - name: Delete default vHost
   file:
-    path: "{{ sites_available }}/000-default.conf"
+    path: "{{ default_vhost }}"
     state: absent
   when: drucker_vhost.stat.exists == false
 
 - name: Delete default vHost symlink
   file:
-    path: "{{ sites_enabled }}/000-default.conf"
+    path: "{{ default_vhost }}"
     state: absent
   when: drucker_vhost.stat.exists == false
 
 - name: Deploy default vHost template
   copy:
-    src: files/apache-template.conf
+    src: "{{ apache_template_source_file }}"
     dest: "{{ sites_available }}"
     mode: 0644
   when: drucker_vhost.stat.exists == false
@@ -155,7 +155,7 @@
 - name: Enable drucker vHost
   file:
     src: ../sites-available/{{ user }}.conf
-    dest: "{{ sites_enabled }}/{{ user }}.conf"
+    dest: "{{ drucker_vhost }}"
     state: link
     force: yes
   notify: Reload Apache
@@ -174,8 +174,8 @@
 
 - name: Deploy drucker Drush aliases
   copy:
-    src: files/{{ user }}.aliases.drushrc.php
-    dest: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
+    src: "{{ drucker_aliases_source_file }}"
+    dest: "{{ drucker_aliases }}"
     mode: 0644
   when: drucker_aliases.stat.exists == false
   ignore_errors: true
@@ -203,7 +203,7 @@
 
 - name: Deploy phpunit.xml file
   copy:
-    src: files/phpunit.xml
+    src: "{{ phpunit_source_file }}"
     dest: "{{ docroot }}/core/"
     mode: 0644
   when: phpunit.stat.exists == false
@@ -239,13 +239,13 @@
 
 - name: Check if .gitignore exists
   stat:
-    path: "{{ docroot }}/.gitignore"
+    path: "{{ drupal_gitignore }}"
   register: gitignore
   ignore_errors: True
 
 - name: Create .gitignore file
   copy:
-    src: files/.gitignore
+    src: "{{ gitignore_source_file }}"
     dest: "{{ docroot }}"
     mode: 0644
   become: yes

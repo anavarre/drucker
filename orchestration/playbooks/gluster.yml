@@ -1,19 +1,19 @@
 ---
 - name: Check if GlusterFS has been installed
   stat:
-    path: /etc/glusterfs/glusterd.vol
+    path: "{{ gluster_vol_path }}"
   register: gluster
   ignore_errors: True
 
 - name: Prepare for GlusterFS installation 1/2
   apt_key:
-    url: http://download.gluster.org/pub/gluster/glusterfs/LATEST/rsa.pub
+    url: "{{ gluster_pub_key }}"
     state: present
   when: gluster.stat.exists == false
 
 - name: Prepare for GlusterFS installation 2/2
   apt_repository:
-    repo: 'deb http://download.gluster.org/pub/gluster/glusterfs/LATEST/Debian/{{ codename }}/apt {{ codename }} main'
+    repo: "{{ gluster_deb }}"
     state: present
   when: gluster.stat.exists == false
 

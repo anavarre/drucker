@@ -15,13 +15,13 @@
 
 - name: Prepare for Varnish installation 2/3
   apt_key:
-    url: https://repo.varnish-cache.org/GPG-key.txt
+    url: "{{ varnish_gpg_key }}"
     state: present
   when: varnish.stat.exists == false
 
 - name: Prepare for Varnish installation 3/3
   apt_repository:
-    repo: 'deb https://repo.varnish-cache.org/debian/ {{ codename }} varnish-{{ varnish_source }}'
+    repo: "{{ varnish_deb }}"
     state: present
   when: varnish.stat.exists == false
 
@@ -36,14 +36,14 @@
 
 - name: Deploy Varnish template
   copy:
-    src: files/varnish
+    src: "{{ varnish_conf_source_file }}"
     dest: /etc/default/
     mode: 0644
   when: varnish.stat.exists == false
 
 - name: "Deploy Varnish's default VCL template"
   copy:
-    src: files/default.vcl
+    src: "{{ varnish_default_vcl_source_file}}"
     dest: "{{ varnish_default_path }}"
     mode: 0644
   when: varnish.stat.exists == false

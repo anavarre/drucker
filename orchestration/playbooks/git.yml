@@ -6,7 +6,7 @@
 
 - name: Deploy .git-completion.bash
   copy:
-    src: files/.git-completion.bash
+    src: "{{ git_completion_source_file }}"
     dest: "{{ home }}"
     mode: 0644
     owner: "{{ user }}"
@@ -22,7 +22,7 @@
 
 - name: Deploy .git-prompt.sh
   copy:
-    src: files/.git-prompt.sh
+    src: "{{ git_prompt_source_file }}"
     dest: "{{ home }}"
     mode: 0644
     owner: "{{ user }}"
@@ -38,7 +38,7 @@
 
 - name: Deploy .gitconfig
   copy:
-    src: files/.gitconfig
+    src: "{{ git_config_source_file }}"
     dest: "{{ home }}"
     mode: 0644
     owner: "{{ user }}"
@@ -49,18 +49,18 @@
 
 - name: Check if bash-git-prompt archive exists
   stat:
-    path: /tmp/bash-git-prompt-{{ bash_git_prompt_stable_version }}.tar.gz
+    path: "{{ bash_git_prompt_archive_path }}"
   register: bash_git_prompt_archive
 
 - name: Check if bash-git-prompt can be updated
-  shell: ls /tmp/bash-git-prompt-{{ bash_git_prompt_stable_version }}.tar.gz | grep -o "{{ bash_git_prompt_stable_version }}" || echo "outdated"
+  shell: ls {{ bash_git_prompt_archive_path }} | grep -o "{{ bash_git_prompt_stable_version }}" || echo "outdated"
   register: bash_git_prompt_update
   changed_when: bash_git_prompt_update.stdout != "{{ bash_git_prompt_stable_version }}"
 
 - name: Download .bash-git-prompt archive
   get_url:
-    url: https://github.com/magicmonty/bash-git-prompt/archive/{{ bash_git_prompt_stable_version }}.tar.gz
-    dest: /tmp
+    url: "{{ bash_git_prompt_download_link }}"
+    dest: "{{ download_dir }}"
     validate_certs: no
   register: prompt_get_url_result
   until: "'OK' in prompt_get_url_result.msg"
@@ -70,8 +70,8 @@
 
 - name: Extract bash-git-prompt files
   unarchive:
-    src: /tmp/bash-git-prompt-{{ bash_git_prompt_stable_version }}.tar.gz
-    dest: /tmp
+    src: "{{ bash_git_prompt_archive_path }}"
+    dest: "{{ download_dir }}"
     copy: no
   become: yes
   become_user: "{{ user }}"
@@ -84,7 +84,7 @@
   when: bash_git_prompt_update.stdout != "{{ bash_git_prompt_stable_version }}"
 
 - name: Rename and move bash-git-prompt directory
-  command: mv /tmp/bash-git-prompt-{{ bash_git_prompt_stable_version }} {{ home }}/.bash-git-prompt
+  command: mv {{ bash_git_prompt_temp_path }} {{ bash_git_prompt }}
   when: bash_git_prompt_archive.stat.exists == false or bash_git_prompt_update.stdout != "{{ bash_git_prompt_stable_version }}"
 
 - name: Check if .bashrc needs to be customized

@@ -1,7 +1,7 @@
 ---
 - name: Check if Apache is installed
   stat:
-    path: "{{ conf_available }}/security.conf"
+    path: "{{ apache_security_conf }}"
   register: apache
   ignore_errors: True
 
@@ -25,14 +25,14 @@
 
 - name: Ensure APACHE_RUN_USER is set to the expected user
   lineinfile:
-    dest: "/etc/apache2/envvars"
+    dest: "{{ apache_envvars }}"
     regexp: "export APACHE_RUN_USER=www-data"
     line: "export APACHE_RUN_USER={{ user }}"
   when: apache.stat.exists == false
 
 - name: Fix the POODLE SSL v3 vulnerability
   lineinfile:
-    dest: "{{ mods_available }}/ssl.conf"
+    dest: "{{ apache_ssl_mod }}"
     regexp: "SSLProtocol all"
     line: "\tSSLProtocol all -SSLv2 -SSLv3"
   when: apache.stat.exists == false

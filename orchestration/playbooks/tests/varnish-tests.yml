@@ -6,6 +6,7 @@
     - "{{ varnish_config }}"
     - "{{ varnish_default_path }}"
     - "{{ varnish_default_vcl }}"
+    - "{{ varnish_source_list_path }}"
   register: varnish
   failed_when: varnish.stat.exists == false
 

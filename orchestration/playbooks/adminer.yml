@@ -1,12 +1,12 @@
 ---
 - name: Check if adminer is installed
   stat:
-    path: "{{ adminer_root }}/index.php"
+    path: "{{ adminer_index }}"
   register: adminer
   ignore_errors: True
 
 - name: Check adminer version
-  shell: grep -o "version {{ adminer_stable_release }}" {{ adminer_root }}/index.php || echo "update"
+  shell: grep -o "version {{ adminer_stable_release }}" {{ adminer_index }} || echo "update"
   register: adminer_release
   when: adminer.stat.exists == true
   changed_when: adminer_release == "update"
@@ -30,7 +30,7 @@
   when: adminer.stat.exists == false or adminer_release.stdout == "update"
 
 - name: Rename adminer file
-  command: mv {{ adminer_root }}/adminer-{{ adminer_stable_release }}-en.php {{ adminer_root }}/index.php
+  command: mv {{ adminer_root }}/adminer-{{ adminer_stable_release }}-en.php {{ adminer_index }}
   when: adminer.stat.exists == false or adminer_release.stdout == "update"
 
 - name: Check if adminer vHost exists
@@ -47,12 +47,12 @@
   when: adminer_conf.stat.exists == false
 
 - name: Rename default vHost template
-  command: mv {{ vhost_template }} {{ sites_available }}/adminer.conf
+  command: mv {{ vhost_template }} {{ adminer_available_vhost }}
   when: adminer_conf.stat.exists == false
 
 - name: Modify adminer vHost
   replace:
-    dest: "{{ sites_available }}/adminer.conf"
+    dest: "{{ adminer_available_vhost }}"
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1adminer\2'
   when: adminer_conf.stat.exists == false

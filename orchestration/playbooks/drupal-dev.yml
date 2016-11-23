@@ -6,7 +6,7 @@
   ignore_errors: True
 
 - name: "DEV: Create settings.local.php file"
-  command: cp {{ docroot }}/sites/example.settings.local.php {{ settings_local_php }}
+  command: cp {{ example_settings_local_php }} {{ settings_local_php }}
   when: settings_local.stat.exists == false
 
 - name: "DEV: Check if cache bins have been disabled"

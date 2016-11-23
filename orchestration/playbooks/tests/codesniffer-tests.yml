@@ -3,8 +3,8 @@
   stat:
     path: "{{ item }}"
   with_items:
-    - "{{ user_programs_path }}/phpcs"
-    - "{{ user_programs_path }}/phpcbf"
+    - "{{ phpcs_binary }}"
+    - "{{ phpcbf_binary }}"
   register: xdebug_install
   failed_when: xdebug_install.stat.exists == false
 
@@ -24,7 +24,7 @@
 
 - name: "TEST: The CodeSniffer phpcs binary should be executable"
   stat:
-    path: "{{ user_programs_path }}/phpcs"
+    path: "{{ phpcs_binary }}"
   register: executable_phpcs
 
 - name: "TEST: The CodeSniffer phpcs binary should be executable"
@@ -34,7 +34,7 @@
 
 - name: "TEST: The CodeSniffer phpcbf binary should be executable"
   stat:
-    path: "{{ user_programs_path }}/phpcbf"
+    path: "{{ phpcbf_binary }}"
   register: executable_phpcbf
 
 - name: "TEST: The CodeSniffer phpcbf binary should be executable"

@@ -12,8 +12,8 @@
 
 - name: Download latest phpMyAdmin release
   get_url:
-    url: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_stable_release }}/{{ phpmyadmin_archive_filename }}
-    dest: /tmp
+    url: "{{ phpmyadmin_download_link }}"
+    dest: "{{ download_dir }}"
     validate_certs: no
   register: pma_get_url_result
   until: "'OK' in pma_get_url_result.msg"

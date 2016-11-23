@@ -2,13 +2,13 @@
 # See change record: https://www.drupal.org/node/2769555
 - name: Check if the PECL YAML extension is installed
   stat:
-    path: "{{ php_extensions }}/yaml.so"
+    path: "{{ pecl_yaml_extension_path }}"
   register: pecl_yaml
 
 - name: Download latest PECL YAML release
   get_url:
-    url: https://github.com/php/pecl-file_formats-yaml/archive/{{ pecl_yaml_stable_release }}.tar.gz
-    dest: /tmp/
+    url: "{{ pecl_yaml_download_link }}"
+    dest: "{{ download_dir }}"
     validate_certs: no
   register: pecl_yaml_get_url_result
   until: "'OK' in pecl_yaml_get_url_result.msg"
@@ -18,13 +18,13 @@
 
 - name: Extract PECL YAML files
   unarchive:
-    src: /tmp/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}.tar.gz
-    dest: /tmp/
+    src: "{{ pecl_yaml_archive }}"
+    dest: "{{ download_dir }}"
     copy: no
   when: pecl_yaml.stat.exists == false
 
 - name: Compile PECL YAML
-  command: "{{ item }} chdir=/tmp/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}"
+  command: "{{ item }} chdir={{ pecl_yaml_temp_path }}"
   with_items:
     - /usr/bin/phpize
     - ./configure
@@ -33,24 +33,24 @@
   when: pecl_yaml.stat.exists == false
 
 - name: Copy compiled PECL YAML extension
-  command: cp /tmp/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}/modules/yaml.so {{ php_extensions }}/
+  command: cp {{ pecl_yaml_temp_path }}/modules/{{ pecl_yaml_extension_name }} {{ php_extensions }}
   when: pecl_yaml.stat.exists == false
 
 - name: Delete PECL YAML temporary directory
   file:
-    path: /tmp/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}
+    path: "{{ pecl_yaml_temp_path }}"
     state: absent
   when: pecl_yaml.stat.exists == false
 
 - name: Check PECL YAML config in php.ini
-  shell: grep -o "yaml.so" {{ php_ini }} || echo "absent"
+  shell: grep -o "{{ pecl_yaml_extension_name }}" {{ php_ini }} || echo "absent"
   register: pecl_yaml_config
   changed_when: pecl_yaml_config.stdout == "absent"
 
 - name: Configure PECL YAML in php.ini
   lineinfile:
     dest: "{{ php_ini }}"
-    line: "extension={{ php_extensions }}/yaml.so"
+    line: "extension={{ pecl_yaml_extension_path }}"
   when: pecl_yaml_config.stdout == "absent"
 
 - name: Ensure Apache is restarted

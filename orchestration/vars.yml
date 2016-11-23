@@ -5,8 +5,31 @@ name: web
 tld: local
 home: /home/{{ user }}
 sources_list: /etc/apt/sources.list
+sources_list_d: /etc/apt/sources.list.d
 bashrc: "{{ home }}/.bashrc"
 bash_aliases: "{{ home }}/.bash_aliases"
+download_dir: /tmp
+
+# Source files
+source_file_dir: files
+git_completion_source_file: "{{ source_file_dir }}/.git-completion.bash"
+git_prompt_source_file: "{{ source_file_dir }}/.git-prompt.sh"
+git_config_source_file: "{{ source_file_dir }}/.gitconfig"
+apache_template_source_file: "{{ source_file_dir }}/apache-template.conf"
+drucker_aliases_source_file: "{{ source_file_dir }}/{{ user }}.aliases.drushrc.php"
+phpunit_source_file: "{{ source_file_dir }}/phpunit.xml"
+gitignore_source_file: "{{ source_file_dir }}/.gitignore"
+composer_json_source_file: "{{ source_file_dir }}/composer.json"
+nginx_template_source_file: "{{ source_file_dir }}/nginx-template.conf"
+varnish_conf_source_file: "{{ source_file_dir }}/varnish"
+varnish_default_vcl_source_file: "{{ source_file_dir }}/default.vcl"
+bash_aliases_source_file: "{{ source_file_dir }}/.bash_aliases"
+vimrc_source_file: "{{ source_file_dir }}/.vimrc"
+fastcgi_source_file: "{{ source_file_dir }}/fastcgi.conf"
+
+# Source directories
+ssl_source_dir: "{{ source_file_dir }}/ssl"
+vim_source_dir: "{{ source_file_dir }}/.vim"
 
 # Git
 git_completion: "{{ home }}/.git-completion.bash"
@@ -14,7 +37,9 @@ git_prompt: "{{ home }}/.git-prompt.sh"
 git_config: "{{ home }}/.gitconfig"
 bash_git_prompt: "{{ home }}/.bash-git-prompt"
 bash_git_prompt_stable_version: 2.6.1
-bash_git_prompt_archive: /tmp/bash-git-prompt-{{ bash_git_prompt_stable_version }}.tar.gz
+bash_git_prompt_download_link: https://github.com/magicmonty/bash-git-prompt/archive/{{ bash_git_prompt_stable_version }}.tar.gz
+bash_git_prompt_archive_path: "{{ download_dir }}/bash-git-prompt-{{ bash_git_prompt_stable_version }}.tar.gz"
+bash_git_prompt_temp_path: "{{ download_dir }}/bash-git-prompt-{{ bash_git_prompt_stable_version }}"
 
 # VIM
 vim_dir: "{{ home }}/.vim"
@@ -34,18 +59,29 @@ search_ip: 203.0.113.13
 
 # Apache
 apache_user: www-data
+apache2_dir: /etc/apache2
 webroot: /var/www/html
-sites_available: /etc/apache2/sites-available
-sites_enabled: /etc/apache2/sites-enabled
-mods_available: /etc/apache2/mods-available
-mods_enabled: /etc/apache2/mods-enabled
-conf_available: /etc/apache2/conf-available
+sites_available: "{{ apache2_dir }}/sites-available"
+sites_enabled: "{{ apache2_dir }}/sites-enabled"
+mods_available: "{{ apache2_dir }}/mods-available"
+mods_enabled: "{{ apache2_dir }}/mods-enabled"
+conf_available: "{{ apache2_dir }}/conf-available"
+apache_security_conf: "{{ conf_available }}/security.conf"
+apache_envvars: "{{ apache2_dir }}/envvars"
+apache_ssl_mod: "{{ mods_available }}/ssl.conf"
+apache_rewrite_mod: "{{ mods_enabled }}/rewrite.load"
+apache_proxy_http_mod: "{{ mods_enabled }}/proxy_http.load"
+apache_fastcgi_mod: "{{ mods_available }}/fastcgi.conf"
+apache_php_mod: "{{ mods_available }}/php7.0.conf"
 
 # vHosts
+default_available_vhost: "{{ sites_available }}/000-default.conf"
+default_vhost: "{{ sites_enabled }}/000-default.conf"
 vhost_template: "{{ sites_available }}/apache-template.conf"
 drucker_conf: "{{ sites_available }}/{{ user }}.conf"
 phpmyadmin_available_vhost: "{{ sites_available }}/phpmyadmin.conf"
 phpmyadmin_vhost: "{{ sites_enabled }}/phpmyadmin.conf"
+adminer_available_vhost: "{{ sites_available }}/adminer.conf"
 adminer_vhost: "{{ sites_enabled }}/adminer.conf"
 drucker_available_vhost: "{{ sites_available }}/{{ user }}.conf"
 drucker_vhost: "{{ sites_enabled }}/{{ user }}.conf"
@@ -53,6 +89,9 @@ drucker_vhost: "{{ sites_enabled }}/{{ user }}.conf"
 # PHP
 php_extensions: /usr/lib/php/7.0/20131226
 user_programs_path: /usr/local/bin
+php_deb: deb http://packages.dotdeb.org {{ codename }} all
+php_deb_src: deb-src http://packages.dotdeb.org {{ codename }} all
+dotdeb_gpg: https://www.dotdeb.org/dotdeb.gpg
 
 # php.ini
 php_ini: /etc/php/7.0/fpm/php.ini
@@ -66,38 +105,70 @@ timezone: UTC
 
 # PECL Upload Progress
 uploadprogress_release: master
-uploadprogress_archive: /tmp/pecl-php-uploadprogress-{{ uploadprogress_release }}.zip
+uploadprogress_download_link: https://github.com/php/pecl-php-uploadprogress/archive/{{ uploadprogress_release }}.zip
+uploadprogress_temp_path: "{{ download_dir }}/pecl-php-uploadprogress-{{ uploadprogress_release}}"
+uploadprogress_archive: "{{ uploadprogress_temp_path }}.zip"
+uploadprogress_extension_name: uploadprogress.so
+uploadprogress_extension_path: "{{ php_extensions }}/{{ uploadprogress_extension_name }}"
 
 # Composer
 composer_stable_release: 1.2.2
+composer_download_link: https://getcomposer.org/download/{{ composer_stable_release }}/composer.phar
 composer_binary: "{{ user_programs_path }}/composer"
 composer_dir_path: "{{ home }}/.composer"
 composer_json_path: "{{ home }}/.composer/composer.json"
 
 # XDebug
-xdebug_stable_release: 2.5.0RC1
-xdebug_extension: xdebug.so
-xdebug_extension_path: "{{ php_extensions }}/xdebug.so"
-xdebug_archive: /tmp/xdebug-{{ xdebug_stable_release }}.tgz
+xdebug_stable_release: 2.5.0rc1
+xdebug_download_link: http://xdebug.org/files/xdebug-{{ xdebug_stable_release }}.tgz
+xdebug_extension_name: xdebug.so
+xdebug_extension_path: "{{ php_extensions }}/{{ xdebug_extension_name }}"
+xdebug_archive_path: "{{ download_dir }}/xdebug-{{ xdebug_stable_release }}.tgz"
 xdebug_remote_host: "{{ gateway_ip }}"
+# This is temporary until there's a stable 2.5.0 release.
+xdebug_unarchived_path: "{{ download_dir }}/xdebug-2.5.0RC1"
+
+# LibYAML
+libyaml_stable_release: 0.1.7
+libyaml_download_link: https://github.com/yaml/libyaml/archive/{{ libyaml_stable_release }}.tar.gz
+libyaml_temp_path: "{{ download_dir }}/yaml-{{ libyaml_stable_release }}"
+libyaml_archive_path: "{{ libyaml_temp_path }}.tar.gz"
 
 # PECL YAML
-libyaml_stable_release: 0.1.7
-libyaml_archive: /tmp/yaml-{{ libyaml_stable_release }}.tar.gz
 pecl_yaml_stable_release: 2.0.0
-pecl_yaml_archive: /tmp/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}.tar.gz
+pecl_yaml_download_link: https://github.com/php/pecl-file_formats-yaml/archive/{{ pecl_yaml_stable_release }}.tar.gz
+pecl_yaml_extension_name: yaml.so
+pecl_yaml_extension_path: "{{ php_extensions }}/{{ pecl_yaml_extension_name }}"
+pecl_yaml_temp_path: "{{ download_dir }}/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}"
+pecl_yaml_archive: "{{ pecl_yaml_temp_path }}.tar.gz"
 
 # Tideways
 tideways_stable_release: 4.0.7
-tideways_archive: /tmp/php-profiler-extension-{{ tideways_stable_release }}.tar.gz
+tideways_download_link: https://github.com/tideways/php-profiler-extension/archive/v{{ tideways_stable_release }}.tar.gz
+tideways_archive: "{{ download_dir }}/php-profiler-extension-{{ tideways_stable_release }}.tar.gz"
+tideways_extension_name: tideways.so
+tideways_extension_path: "{{ php_extensions }}/{{ tideways_extension_name }}"
+tideways_output_dir: "{{ download_dir }}/tideways/"
+tideways_temp_dir: "{{ download_dir }}/php-profiler-extension-{{ tideways_stable_release }}"
 
 # Coder
 coder_stable_release: 8.2.9
+coder_composer_package: drupal/coder
 coder_binary: "{{ composer_dir_path }}/vendor/drupal/coder"
 
-# PHPcs & PHPcbf
+# PHPcs
 phpcs_stable_release: 2.6.1
+phpcs_download_link: https://github.com/squizlabs/PHP_CodeSniffer/releases/download/{{ phpcs_stable_release }}/phpcs.phar
+phpcs_binary: "{{ user_programs_path }}/phpcs"
+phpcs_temp_phar: "{{ download_dir }}/phpcs.phar"
+phpcs_temp_path: "{{ download_dir }}/phpcs"
+
+# PHPcbf
 phpcbf_stable_release: 2.6.1
+phpcbf_download_link: https://github.com/squizlabs/PHP_CodeSniffer/releases/download/{{ phpcbf_stable_release }}/phpcbf.phar
+phpcbf_binary: "{{ user_programs_path }}/phpcbf"
+phpcbf_temp_phar: "{{ download_dir }}/phpcbf.phar"
+phpcbf_temp_path: "{{ download_dir }}/phpcbf"
 
 # CodeSniffer
 codesniffer_extensions: php,module,inc,install,test,profile,theme
@@ -105,28 +176,38 @@ codesniffer_binary: "{{ composer_dir_path }}/vendor/drupal/coder/coder_sniffer"
 
 # PHP-CS-Fixer
 php_cs_fixer_stable_release: 1.12.2
+php_cs_fixer_download_link: https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v{{ php_cs_fixer_stable_release }}/php-cs-fixer.phar
 php_cs_fixer_binary: "{{ user_programs_path }}/php-cs-fixer"
+php_cs_fixer_temp_phar: "{{ download_dir }}/php-cs-fixer.phar"
+php_cs_fixer_temp_path: "{{ download_dir }}/php-cs-fixer"
 
 # PhantomJS
 phantomjs_stable_version: 2.1.1
+phantomjs_download_link: https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
 phantomjs_binary: "{{ user_programs_path }}/phantomjs"
+phantomjs_temp_path: "{{ download_dir }}/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64"
+phantomjs_archive_path: "{{ phantomjs_temp_path }}.tar.bz2"
 
 # PHPmd
 phpmd_stable_version: 2.4.3
+phpmd_download_link: http://static.phpmd.org/php/{{ phpmd_stable_version }}/phpmd.phar
+phpmd_binary: "{{ user_programs_path }}/phpmd"
 
 # MySQL
+mysql_apt_config_tool: 0.7.3-1
+mysql_apt_repo: http://dev.mysql.com/get/mysql-apt-config_{{ mysql_apt_config_tool }}_all.deb
 my_cnf: /etc/mysql/conf.d/mysql.cnf
 mysqld_cnf: /etc/mysql/mysql.conf.d/mysqld.cnf
 mysql_data: /var/lib/mysql
 mysql_creds: root
 mysql_port: 3306
-mysql_apt_config_tool: 0.7.3-1
 mysql_stable_release: 5.5
 
 # phpMyAdmin
 phpmyadmin_stable_release: 4.6.4
 phpmyadmin_archive_filename: phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
-phpmyadmin_archive_path: /tmp/phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
+phpmyadmin_download_link: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_stable_release }}/{{ phpmyadmin_archive_filename }}
+phpmyadmin_archive_path: "{{ download_dir }}/phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz"
 phpmyadmin_temp_dirname: phpMyAdmin-{{ phpmyadmin_stable_release }}-english
 phpmyadmin_root: "{{ webroot }}/phpmyadmin"
 phpmyadmin_config_sample: "{{ phpmyadmin_root }}/config.sample.inc.php"
@@ -136,13 +217,17 @@ phpmyadmin_release_date_file: "{{ phpmyadmin_root }}/RELEASE-DATE-{{ phpmyadmin_
 # Adminer
 adminer_stable_release: 4.2.5
 adminer_root: "{{ webroot }}/adminer"
+adminer_index: "{{ adminer_root }}/index.php"
 
 # Drupal
 drupal_creds: admin
 default_site: sites/default
 docroot: "{{ webroot }}/{{ user }}"
+drupal_git: "{{ docroot }}/.git"
+drupal_gitignore: "{{ docroot }}/.gitignore"
 default_settings_php: "{{ docroot }}/{{default_site}}/default.settings.php"
 settings_php: "{{ docroot }}/{{default_site}}/settings.php"
+example_settings_local_php: "{{ docroot }}/sites/example.settings.local.php"
 settings_local_php: "{{ docroot }}/{{default_site}}/settings.local.php"
 default_services_yml: "{{ docroot }}/{{default_site}}/default.services.yml"
 services_yml: "{{ docroot }}/{{default_site}}/services.yml"
@@ -153,10 +238,12 @@ phpunit_xml: "{{ docroot }}/core/phpunit.xml"
 import_dir: "{{ webroot }}/import"
 archives_dir: "{{ webroot }}/import/archives"
 drupal_dev_release: 8.3.x
-drupal_archive: /tmp/drupal-{{ drupal_dev_release }}-dev.tar.gz
+drupal_download_link: https://ftp.drupal.org/files/projects/drupal-{{ drupal_dev_release }}-dev.tar.gz
+drupal_archive: "{{ download_dir }}/drupal-{{ drupal_dev_release }}-dev.tar.gz"
 
 # Drush
 drush_stable_release: 8.1.7
+drush_download_link: https://github.com/drush-ops/drush/releases/download/{{ drush_stable_release }}/drush.phar
 drush_binary: "{{ user_programs_path }}/drush"
 drush_dir: "{{ home }}/.drush"
 drush_aliases_path: /etc/drush/site-aliases
@@ -164,27 +251,42 @@ drucker_aliases: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
 
 # Drupal Console
 drupal_console_stable_release: 1.0.0-rc9
+drupal_console_download_link: https://github.com/hechoendrupal/drupal-console-launcher/releases/download/{{ drupal_console_stable_release }}/drupal.phar
 drupal_console_binary: "{{ user_programs_path }}/drupal"
 
 # Varnish
 varnish_source: 4.1
+varnish_gpg_key: https://repo.varnish-cache.org/GPG-key.txt
+varnish_deb: deb https://repo.varnish-cache.org/debian/ {{ codename }} varnish-{{ varnish_source }}
 varnish_stable_release: 4.0.2.1
 reverse_proxy_port: 80
 varnish_config: /etc/default/varnish
-varnish_default_path: /etc/varnish/
+varnish_default_path: /etc/varnish
 varnish_default_vcl: "{{ varnish_default_path }}/default.vcl"
+varnish_source_list_path: "{{ sources_list_d }}/repo_varnish_cache_org_debian.list"
+
 
 # nginx
-nginx_conf_dir: /etc/nginx/conf.d
+nginx_source_list_path: "{{ sources_list_d }}/nginx_org_packages_debian.list"
+nginx_signing_key: http://nginx.org/keys/nginx_signing.key
+nginx_deb: deb http://nginx.org/packages/debian/ {{ codename }} nginx
+nginx_deb_src: deb-src http://nginx.org/packages/debian/ {{ codename }} nginx
+nginx_conf_dir: /etc/nginx
+nginx_conf_d: "{{ nginx_conf_dir }}/conf.d"
+nginx_default_template: "{{ nginx_conf_dir }}/nginx-template.conf"
 nginx_default_conf: "{{ nginx_conf_dir }}/default.conf"
-nginx_conf: /etc/nginx/nginx.conf
-nginx_default_site: /etc/nginx/sites-enabled/default
-drucker_nginx_vhost: /etc/nginx/conf.d/{{ user }}.conf
-nginx_fake_ssl: /etc/nginx/ssl
+nginx_conf: "{{ nginx_conf_dir }}/nginx.conf"
+nginx_default_site: "{{ nginx_conf_dir }}/sites-enabled/default"
+drucker_nginx_vhost: "{{ nginx_conf_dir }}/{{ user }}.conf"
+nginx_fake_ssl: "{{ nginx_conf_dir }}/ssl"
 
 # GlusterFS
 brick: /data/brick1/gv0
 gluster_mount_dir: /mnt/gfs
+gluster_vol_path: /etc/glusterfs/glusterd.vol
+gluster_pub_key: http://download.gluster.org/pub/gluster/glusterfs/LATEST/rsa.pub
+gluster_deb: deb http://download.gluster.org/pub/gluster/glusterfs/LATEST/Debian/{{ codename }}/apt {{ codename }} main
+gluster_gv0: /var/lib/glusterd/vols/gv0
 
 # Java (williamyeh.oracle-java)
 java_version: 8

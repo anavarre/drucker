@@ -45,7 +45,7 @@
 
 - name: Deploy .bash_aliases
   copy:
-    src: files/.bash_aliases
+    src: "{{ bash_aliases_source_file}}"
     dest: "{{ home }}"
     mode: 0644
     owner: "{{ user }}"
@@ -62,7 +62,7 @@
 
 - name: Deploy .vimrc file
   copy:
-    src: files/.vimrc
+    src: "{{ vimrc_source_file }}"
     dest: "{{ home }}"
     mode: 0644
   become: yes
@@ -77,7 +77,7 @@
 
 - name: Deploy .vim directory
   copy:
-    src: files/.vim
+    src: "{{ vim_source_dir }}"
     dest: "{{ home }}"
     mode: 0755
   become: yes

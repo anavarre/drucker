@@ -17,8 +17,8 @@
 
 - name: Download latest phantomjs release
   get_url:
-    url: https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
-    dest: /tmp/
+    url: "{{ phantomjs_download_link }}"
+    dest: "{{ download_dir }}"
     validate_certs: no
   register: phantomjs_get_url_result
   until: "'OK' in phantomjs_get_url_result.msg"
@@ -28,8 +28,8 @@
 
 - name: Extract phantomjs files
   unarchive:
-    src: /tmp/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
-    dest: /tmp/
+    src: "{{ phantomjs_archive_path }}"
+    dest: "{{ download_dir }}"
     copy: no
   when: phantomjs.stat.exists == false or phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
 
@@ -40,7 +40,7 @@
   when: phantomjs.stat.exists == true and phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
 
 - name: Install phantomjs globally
-  command: mv /tmp/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64/bin/phantomjs "{{ user_programs_path }}"
+  command: mv {{ phantomjs_archive_path }}/bin/phantomjs {{ user_programs_path }}
   when: phantomjs.stat.exists == false or phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
 
 - name: Make phantomjs executable
@@ -51,9 +51,9 @@
 
 - name: Delete phantomjs temporary directory
   file:
-    path: /tmp/{{ item }}
+    path: "{{ item }}"
     state: absent
   with_items:
-    - phantomjs-{{ phantomjs_stable_version }}-linux-x86_64
-    - phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
+    - "{{ phantomjs_temp_path }}"
+    - "{{ phantomjs_archive_path }}"
   when: phantomjs.stat.exists == false or phantomjs_update.stdout != "{{ phantomjs_stable_version }}"

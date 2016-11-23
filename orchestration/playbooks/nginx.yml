@@ -7,7 +7,7 @@
 
 - name: Prepare for nginx installation 1/2
   apt_key:
-    url: http://nginx.org/keys/nginx_signing.key
+    url: "{{ nginx_signing_key }}"
     state: present
   when: nginx.stat.exists == false
 
@@ -16,8 +16,8 @@
     repo: "{{ item }}"
     state: present
   with_items:
-    - 'deb http://nginx.org/packages/debian/ {{ codename }} nginx'
-    - 'deb-src http://nginx.org/packages/debian/ {{ codename }} nginx'
+    - "{{ nginx_deb }}"
+    - "{{ nginx_deb_src }}"
   when: nginx.stat.exists == false
 
 - name: Install nginx
@@ -61,13 +61,13 @@
 
 - name: Deploy nginx template
   copy:
-    src: files/nginx-template.conf
+    src: "{{ nginx_template_source_file }}"
     dest: "{{ nginx_conf_dir }}"
     mode: 0644
   when: nginx_drucker_host.stat.exists == false
 
 - name: Rename nginx template
-  command: mv {{ nginx_conf_dir }}/nginx-template.conf "{{ drucker_nginx_vhost }}"
+  command: mv {{ nginx_default_template }} {{ drucker_nginx_vhost }}
   when: nginx_drucker_host.stat.exists == false
 
 - name: Modify nginx proxy_pass
@@ -79,8 +79,8 @@
 
 - name: Support fake SSL
   copy:
-    src: files/ssl
-    dest: /etc/nginx/
+    src: "{{ ssl_source_dir }}"
+    dest: "{{ nginx_fake_ssl }}"
     mode: 0755
   when: nginx_drucker_host.stat.exists == false
 

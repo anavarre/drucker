@@ -3,20 +3,20 @@
   stat:
     path: "{{ item }}"
   with_items:
-    - "{{ php_extensions }}/yaml.so"
+    - "{{ pecl_yaml_extension_path }}"
     - "{{ pecl_yaml_archive }}"
-    - "{{ libyaml_archive }}"
+    - "{{ libyaml_archive_path }}"
   register: pecl_yaml
   failed_when: pecl_yaml.stat.exists == false
 
 - name: "TEST: PECL YAML should be configured in php.ini"
-  shell: grep -o "yaml.so" {{ php_ini }} || echo "absent"
+  shell: grep -o "{{ pecl_yaml_extension_name }}" {{ php_ini }} || echo "absent"
   register: pecl_yaml_phpini
   changed_when: pecl_yaml_phpini == "absent"
   failed_when: pecl_yaml_phpini == "absent"
 
 - name: "TEST: Temporary C YAML parser directory should not exist"
   stat:
-    path: /tmp/yaml-{{ libyaml_stable_release }}
+    path: "{{ libyaml_temp_path }}"
   register: pecl_yaml_temp_dir
   failed_when: pecl_yaml_temp_dir.stat.exists == true

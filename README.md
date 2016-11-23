@@ -49,7 +49,7 @@ _drucker_ ships with the following software stack:
 | Apache Solr         | 6.2.0 or later  | [geerlingguy.solr](https://galaxy.ansible.com/geerlingguy/solr/) |
 | Java                | 8               | [williamyeh.oracle-java](https://galaxy.ansible.com/williamyeh/oracle-java/)    |
 | PHP-FPM             | 7.0.11 or later | Custom build   |
-| Xdebug              | 2.5.0RC1        | Custom build   |
+| Xdebug              | 2.5.0rc1        | Custom build   |
 | PECL uploadprogress | master          | Custom build   |
 | PECL YAML           | 2.0.0           | Custom build   |
 | LibYAML             | 0.1.7           | Custom build   |

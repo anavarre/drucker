@@ -12,7 +12,7 @@
 
 - name: Install Drush globally
   get_url:
-    url: https://github.com/drush-ops/drush/releases/download/{{ drush_stable_release }}/drush.phar
+    url: "{{ drush_download_link }}"
     dest: "{{ drush_binary }}"
     force: yes
     mode: 0755

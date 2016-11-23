@@ -17,13 +17,13 @@
     repo: "{{ item }}"
     state: present
   with_items:
-    - deb http://packages.dotdeb.org {{ codename }} all
-    - deb-src http://packages.dotdeb.org {{ codename }} all
+    - "{{ php_deb }}"
+    - "{{ php_deb_src }}"
   when: fpm.stat.exists == false
 
 - name: Add DOTDEB GPG signature
   apt_key:
-    url: https://www.dotdeb.org/dotdeb.gpg
+    url: "{{ dotdeb_gpg }}"
     state: present
   when: fpm.stat.exists == false
 
@@ -57,8 +57,8 @@
 
 - name: Deploy fastcgi.conf template
   copy:
-    src: files/fastcgi.conf
-    dest: "{{ mods_available }}/fastcgi.conf"
+    src: "{{ fastcgi_source_file }}"
+    dest: "{{ apache_fastcgi_mod }}"
     mode: 0644
   when: fpm.stat.exists == false
 
@@ -70,7 +70,7 @@
 
 - name: Check if php7.0 module is enabled
   stat:
-    path: "{{ mods_available }}/php7.0.conf"
+    path: "{{ apache_php_mod }}"
   register: php7_module
 
 - name: Disable php7.0 module

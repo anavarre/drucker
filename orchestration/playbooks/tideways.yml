@@ -1,7 +1,7 @@
 ---
 - name: Check if Tideways PHP Profiler is installed
   stat:
-    path: "{{ php_extensions }}/tideways.so"
+    path: "{{ tideways_extension_path }}"
   register: tideways
 
 - name: Check if Tideways can be updated
@@ -11,8 +11,8 @@
 
 - name: Download latest Tideways release
   get_url:
-    url: https://github.com/tideways/php-profiler-extension/archive/v{{ tideways_stable_release }}.tar.gz
-    dest: /tmp/
+    url: "{{ tideways_download_link }}"
+    dest: "{{ download_dir }}"
     validate_certs: no
   register: tideways_get_url_result
   until: "'OK' in tideways_get_url_result.msg"
@@ -23,12 +23,12 @@
 - name: Extract Tideways files
   unarchive:
     src: "{{ tideways_archive }}"
-    dest: /tmp/
+    dest: "{{ download_dir }}"
     copy: no
   when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
 
 - name: Compile Tideways
-  command: "{{ item }} chdir=/tmp/php-profiler-extension-{{ tideways_stable_release }}"
+  command: "{{ item }} chdir={{ tideways_temp_dir }}"
   with_items:
     - /usr/bin/phpize
     - ./configure
@@ -38,23 +38,23 @@
   when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
 
 - name: Copy compiled Tideways extension
-  command: cp /tmp/php-profiler-extension-{{ tideways_stable_release }}/modules/tideways.so {{ php_extensions }}/
+  command: cp {{ tideways_temp_dir }}/modules/{{ tideways_extension_name }} {{ php_extensions }}
   when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
 
 - name: Delete Tideways temporary directory
   file:
-    path: /tmp/php-profiler-extension-{{ tideways_stable_release }}
+    path: "{{ tideways_temp_dir }}"
     state: absent
   when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
 
 - name: Check Tideways config in php.ini
-  shell: grep -o "tideways.so" {{ php_ini }} || echo "absent"
+  shell: grep -o "{{ tideways_extension_name }}" {{ php_ini }} || echo "absent"
   register: tideways_config
   changed_when: tideways_config == "absent"
 
 - name: Create Tideways output directory
   file:
-    path: /tmp/tideways/
+    path: "{{ tideways_output_dir }}"
     state: directory
     mode: 0777
   when: tideways_config.stdout == "absent"
@@ -63,8 +63,8 @@
   blockinfile:
     dest: "{{ php_ini }}"
     block: |
-      extension={{ php_extensions }}/tideways.so
-      tideways.output_dir=/tmp/tideways/
+      extension={{ tideways_extension_path }}
+      tideways.output_dir={{ tideways_output_dir }}/
     marker: ; {mark} MANAGED tideways BLOCK
   when: tideways_config.stdout == "absent"
 

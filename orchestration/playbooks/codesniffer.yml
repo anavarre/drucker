@@ -1,12 +1,12 @@
 ---
 - name: Check if Code Sniffer phpcs is installed
   stat:
-    path: "{{ user_programs_path }}/phpcs"
+    path: "{{ phpcs_binary }}"
   register: phpcs
 
 - name: Check if Code Sniffer phpcbf is installed
   stat:
-    path: "{{ user_programs_path }}/phpcbf"
+    path: "{{ phpcbf_binary }}"
   register: phpcbf
 
 - name: Check phpcs version
@@ -23,8 +23,8 @@
 
 - name: Download phpcs PHAR file
   get_url:
-    url: https://github.com/squizlabs/PHP_CodeSniffer/releases/download/{{ phpcs_stable_release }}/phpcs.phar
-    dest: /tmp
+    url: "{{ phpcs_download_link }}"
+    dest: "{{ download_dir }}"
     mode: 0755
     validate_certs: no
   register: codesniffer_get_url_result
@@ -34,25 +34,25 @@
   when: phpcs.stat.exists == false or phpcs_version.stdout != "{{ phpcs_stable_release }}"
 
 - name: Rename phpcs PHAR file
-  command: mv /tmp/phpcs.phar /tmp/phpcs
+  command: mv {{ phpcs_temp_phar }} {{ phpcs_temp_path }}
   when: phpcs.stat.exists == false or phpcs_version.stdout != "{{ phpcs_stable_release }}"
 
 - name: Install phpcs globally
-  command: mv /tmp/phpcs {{ user_programs_path }}/
+  command: mv {{ phpcs_temp_path }} {{ user_programs_path }}
   when: phpcs.stat.exists == false or phpcs_version.stdout != "{{ phpcs_stable_release }}"
 
 - name: Download phpcbf PHAR file
   get_url:
-    url: https://github.com/squizlabs/PHP_CodeSniffer/releases/download/{{ phpcbf_stable_release }}/phpcbf.phar
-    dest: /tmp
+    url: "{{ phpcbf_download_link }}"
+    dest: "{{ download_dir }}"
     mode: 0755
     validate_certs: no
   when: phpcbf.stat.exists == false or phpcbf_version.stdout != "{{ phpcbf_stable_release }}"
 
 - name: Rename phpcbf PHAR file
-  command: mv /tmp/phpcbf.phar /tmp/phpcbf
+  command: mv {{ phpcbf_temp_phar }} {{ phpcbf_temp_path }}
   when: phpcbf.stat.exists == false or phpcbf_version.stdout != "{{ phpcbf_stable_release }}"
 
 - name: Install phpcbf globally
-  command: mv /tmp/phpcbf {{ user_programs_path }}/
+  command: mv {{ phpcbf_temp_path }} {{ user_programs_path }}
   when: phpcbf.stat.exists == false or phpcbf_version.stdout != "{{ phpcbf_stable_release }}"
