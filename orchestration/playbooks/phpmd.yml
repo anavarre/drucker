@@ -13,9 +13,10 @@
 - name: Install phpmd globally
   get_url:
     url: "{{ phpmd_download_link }}"
-    dest: "{{ user_programs_path }}/phpmd"
+    dest: "{{ phpmd_binary }}"
     mode: 0755
     validate_certs: no
+    force: yes
   register: phpmd_get_url_result
   until: "'OK' in phpmd_get_url_result.msg"
   retries: 3

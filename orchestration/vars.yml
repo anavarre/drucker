@@ -191,7 +191,7 @@ phantomjs_temp_path: "{{ download_dir }}/phantomjs-{{ phantomjs_stable_version }
 phantomjs_archive_path: "{{ phantomjs_temp_path }}.tar.bz2"
 
 # PHPmd
-phpmd_stable_version: 2.4.3
+phpmd_stable_version: 2.5.0
 phpmd_download_link: http://static.phpmd.org/php/{{ phpmd_stable_version }}/phpmd.phar
 phpmd_binary: "{{ user_programs_path }}/phpmd"
 
@@ -260,7 +260,7 @@ drush_aliases_path: /etc/drush/site-aliases
 drucker_aliases: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
 
 # Drupal Console
-drupal_console_stable_release: 1.0.0-rc9
+drupal_console_stable_release: 1.0.0-rc10
 drupal_console_download_link: https://github.com/hechoendrupal/drupal-console-launcher/releases/download/{{ drupal_console_stable_release }}/drupal.phar
 drupal_console_binary: "{{ user_programs_path }}/drupal"
 

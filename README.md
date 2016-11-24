@@ -57,12 +57,12 @@ _drucker_ ships with the following software stack:
 | Coder               | 8.2.9           | Custom build   |
 | Code Sniffer        | 2.6.1           | Custom build   |
 | PHP-CS-Fixer        | 1.12.2          | Custom build   |
-| phpmd               | 2.4.3           | Custom build   |
+| phpmd               | 2.5.0           | Custom build   |
 | phantomjs           | 2.1.1           | Custom build   |
 | MySQL               | 5.7.14 or later | Custom build   |
 | Drupal              | 8.3.x           | Custom build   |
 | Drush               | 8.1.7           | Custom build   |
-| Drupal Console      | 1.0.0-rc9       | Custom build   |
+| Drupal Console      | 1.0.0-rc10      | Custom build   |
 | Composer            | 1.2.2           | Custom build   |
 | phpMyAdmin          | 4.6.4           | Custom build   |
 | adminer             | 4.2.5           | Custom build   |
