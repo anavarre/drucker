@@ -85,6 +85,8 @@ adminer_available_vhost: "{{ sites_available }}/adminer.conf"
 adminer_vhost: "{{ sites_enabled }}/adminer.conf"
 drucker_available_vhost: "{{ sites_available }}/{{ user }}.conf"
 drucker_vhost: "{{ sites_enabled }}/{{ user }}.conf"
+imported_site_vhost: "{{ sites_enabled }}/{{ sitename }}.conf"
+imported_site_available_vhost: "{{ sites_available }}/{{ sitename }}.conf"
 
 # PHP
 php_extensions: /usr/lib/php/7.0/20131226
@@ -130,7 +132,7 @@ xdebug_unarchived_path: "{{ download_dir }}/xdebug-2.5.0RC1"
 
 # LibYAML
 libyaml_stable_release: 0.1.7
-libyaml_download_link: https://github.com/yaml/libyaml/archive/{{ libyaml_stable_release }}.tar.gz
+libyaml_download_link: http://pyyaml.org/download/libyaml/yaml-{{ libyaml_stable_release }}.tar.gz
 libyaml_temp_path: "{{ download_dir }}/yaml-{{ libyaml_stable_release }}"
 libyaml_archive_path: "{{ libyaml_temp_path }}.tar.gz"
 
@@ -235,11 +237,19 @@ files_dir: "{{ docroot }}/{{default_site}}/files"
 libraries_dir: "{{ docroot }}/libraries"
 simpletest_dir: "{{ docroot }}/sites/simpletest"
 phpunit_xml: "{{ docroot }}/core/phpunit.xml"
-import_dir: "{{ webroot }}/import"
-archives_dir: "{{ webroot }}/import/archives"
 drupal_dev_release: 8.3.x
 drupal_download_link: https://ftp.drupal.org/files/projects/drupal-{{ drupal_dev_release }}-dev.tar.gz
 drupal_archive: "{{ download_dir }}/drupal-{{ drupal_dev_release }}-dev.tar.gz"
+
+# Import
+import_dir: "{{ webroot }}/import"
+imported_site_aliases: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
+archives_dir: "{{ webroot }}/import/archives"
+import_archive_path: "{{ archives_dir }}/{{ sitename }}"
+import_sqlgz: "{{ import_dir }}/{{ sitename }}.sql.gz"
+import_sql: "{{ import_dir }}/{{ sitename }}.sql"
+import_sitename_path: "{{ import_dir }}/{{ sitename }}"
+imported_docroot: "{{ webroot }}/{{ sitename }}"
 
 # Drush
 drush_stable_release: 8.1.7
@@ -267,6 +277,7 @@ varnish_source_list_path: "{{ sources_list_d }}/repo_varnish_cache_org_debian.li
 
 
 # nginx
+nginx_port: 8080
 nginx_source_list_path: "{{ sources_list_d }}/nginx_org_packages_debian.list"
 nginx_signing_key: http://nginx.org/keys/nginx_signing.key
 nginx_deb: deb http://nginx.org/packages/debian/ {{ codename }} nginx
@@ -274,11 +285,10 @@ nginx_deb_src: deb-src http://nginx.org/packages/debian/ {{ codename }} nginx
 nginx_conf_dir: /etc/nginx
 nginx_conf_d: "{{ nginx_conf_dir }}/conf.d"
 nginx_default_template: "{{ nginx_conf_dir }}/nginx-template.conf"
-nginx_default_conf: "{{ nginx_conf_dir }}/default.conf"
-nginx_conf: "{{ nginx_conf_dir }}/nginx.conf"
+nginx_default_conf: "{{ nginx_conf_d }}/default.conf"
 nginx_default_site: "{{ nginx_conf_dir }}/sites-enabled/default"
-drucker_nginx_vhost: "{{ nginx_conf_dir }}/{{ user }}.conf"
-nginx_fake_ssl: "{{ nginx_conf_dir }}/ssl"
+nginx_conf: "{{ nginx_conf_dir }}/nginx.conf"
+drucker_nginx_vhost: "{{ nginx_conf_d }}/{{ user }}.conf"
 
 # GlusterFS
 brick: /data/brick1/gv0

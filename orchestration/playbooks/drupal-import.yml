@@ -4,8 +4,8 @@
     path: "{{ item }}"
   with_first_found:
     - files:
-      - "{{ import_dir }}/{{ sitename }}.sql.gz"
-      - "{{ import_dir }}/{{ sitename }}.sql"
+      - "{{ import_sqlgz }}"
+      - "{{ import_sql }}"
       skip: true
   register: dump_detection
   ignore_errors: True
@@ -39,7 +39,7 @@
 
 - name: "IMPORT: Check if archived database dump exists"
   stat:
-    path: "{{ archives_dir }}/{{ sitename }}"
+    path: "{{ import_archive_path }}"
   register: db_archive
   ignore_errors: True
 
@@ -49,34 +49,34 @@
 
 - name: "IMPORT: Check if docroot has already been deployed"
   stat:
-    path: "{{ webroot }}/{{ sitename }}"
+    path: "{{ imported_docroot }}"
   register: docroot_check
   ignore_errors: True
 
 - name: "IMPORT: Check if docroot exists"
   stat:
-    path: "{{ import_dir }}/{{ sitename }}"
+    path: "{{ import_sitename_path }}"
   register: docroot_import
   ignore_errors: True
 
 - name: "IMPORT: Import docroot"
-  command: cp -R {{ import_dir }}/{{ sitename }} {{ webroot }}/
+  command: cp -R {{ import_sitename_path }} {{ webroot }}
   register: import_docroot
   when: docroot_check.stat.exists == false and docroot_import.stat.exists == true
 
 - name: "IMPORT: Check if archived docroot exists"
   stat:
-    path: "{{ archives_dir }}/{{ sitename }}"
+    path: "{{ import_archive_path }}"
   register: docroot_archive
   ignore_errors: True
 
 - name: "IMPORT: Archive imported docroot"
-  command: mv {{ import_dir }}/{{ sitename }} {{ archives_dir }}
+  command: mv {{ import_sitename_path }} {{ archives_dir }}
   when: docroot_archive.stat.exists == false
 
 - name: "IMPORT: Make sure permissions are correct"
   file:
-    path: "{{ webroot }}/{{ sitename }}"
+    path: "{{ imported_docroot }}"
     owner: "{{ user }}"
     group: "{{ apache_user }}"
     recurse: yes
@@ -84,7 +84,7 @@
 
 - name: "IMPORT: Check if vHost exists"
   stat:
-    path: "{{ sites_enabled }}/{{ sitename }}.conf"
+    path: "{{ imported_site_vhost }}"
   register: apache_conf
   ignore_errors: True
 
@@ -96,12 +96,12 @@
   when: apache_conf.stat.exists == false
 
 - name: "IMPORT: Rename default vHost template"
-  command: mv {{ vhost_template }} {{ sites_available }}/{{ sitename }}.conf
+  command: mv {{ vhost_template }} {{ imported_site_available_vhost }}
   when: apache_conf.stat.exists == false
 
 - name: "IMPORT: Modify vHost"
   replace:
-    dest: "{{ sites_available }}/{{ sitename }}.conf"
+    dest: "{{ imported_site_available_vhost }}"
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1{{ sitename }}\2'
   when: apache_conf.stat.exists == false
@@ -109,26 +109,26 @@
 - name: "IMPORT: Enable vHost"
   file:
     src: ../sites-available/{{ sitename }}.conf
-    dest: "{{ sites_enabled }}/{{ sitename }}.conf"
+    dest: "{{ imported_site_vhost }}"
     state: link
   notify: Reload Apache
   when: apache_conf.stat.exists == false
 
 - name: "IMPORT: Check if Drush aliases exist"
   stat:
-    path: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
+    path: "{{ imported_site_aliases }}"
   register: sitename_aliases
 
 - name: "IMPORT: Deploy Drush aliases"
   copy:
-    src: files/{{ user }}.aliases.drushrc.php
-    dest: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
+    src: "{{ drucker_aliases_source_file }}"
+    dest: "{{ imported_site_aliases }}"
     mode: 0644
   when: sitename_aliases.stat.exists == false
 
 - name: "IMPORT: Update Drush aliases"
   replace:
-    dest: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
+    dest: "{{ imported_site_aliases }}"
     regexp: '^(.*){{ user }}(.*)$'
     replace: '\1{{ sitename }}\2'
   when: sitename_aliases.stat.exists == false

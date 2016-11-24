@@ -80,9 +80,9 @@
 - name: Support fake SSL
   copy:
     src: "{{ ssl_source_dir }}"
-    dest: "{{ nginx_fake_ssl }}"
+    dest: "{{ nginx_conf_dir }}"
     mode: 0755
-  when: nginx_drucker_host.stat.exists == false
+  #when: nginx_drucker_host.stat.exists == false
 
 - name: Ensure nginx is started
   service:

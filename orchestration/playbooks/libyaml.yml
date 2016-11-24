@@ -1,8 +1,8 @@
 ---
-- name: Check if the LibYAML C parser is installed
+- name: Check if the LibYAML C parser archive exists
   stat:
     path: "{{ libyaml_archive_path }}"
-  register: libyaml
+  register: libyaml_archive
 
 - name: Download latest LibYAML release
   get_url:
@@ -13,14 +13,14 @@
   until: "'OK' in libyaml_get_url_result.msg"
   retries: 3
   delay: 10
-  when: libyaml.stat.exists == false
+  when: libyaml_archive.stat.exists == false
 
 - name: Extract LibYAML files
   unarchive:
     src: "{{ libyaml_archive_path }}"
     dest: "{{ download_dir }}"
     copy: no
-  when: libyaml.stat.exists == false
+  when: libyaml_archive.stat.exists == false
 
 - name: Compile LibYAML
   command: "{{ item }} chdir={{ libyaml_temp_path }}"
@@ -28,10 +28,10 @@
     - ./configure
     - /usr/bin/make
     - /usr/bin/make install
-  when: libyaml.stat.exists == false
+  when: libyaml_archive.stat.exists == false
 
 - name: Delete temporary C YAML parser directory
   file:
     path: "{{ libyaml_temp_path }}"
     state: absent
-  when: libyaml.stat.exists == false
+  when: libyaml_archive.stat.exists == false

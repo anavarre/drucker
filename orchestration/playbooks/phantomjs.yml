@@ -40,7 +40,7 @@
   when: phantomjs.stat.exists == true and phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
 
 - name: Install phantomjs globally
-  command: mv {{ phantomjs_archive_path }}/bin/phantomjs {{ user_programs_path }}
+  command: mv {{ phantomjs_temp_path }}/bin/phantomjs {{ user_programs_path }}
   when: phantomjs.stat.exists == false or phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
 
 - name: Make phantomjs executable

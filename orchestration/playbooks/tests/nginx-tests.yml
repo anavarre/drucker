@@ -23,7 +23,7 @@
   with_items:
     - "{{ nginx_conf }}"
     - "{{ drucker_nginx_vhost }}"
-    - "{{ nginx_fake_ssl }}"
+    - "{{ nginx_conf_dir }}"
     - "{{ nginx_source_list_path }}"
   register: nginx
   failed_when: nginx.stat.exists == false

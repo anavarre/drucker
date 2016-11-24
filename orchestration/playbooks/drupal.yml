@@ -119,38 +119,38 @@
 - name: Check if drucker vHost exists
   stat:
     path: "{{ drucker_vhost }}"
-  register: drucker_vhost
+  register: drucker_vhost_check
   ignore_errors: True
 
 - name: Delete default vHost
   file:
     path: "{{ default_vhost }}"
     state: absent
-  when: drucker_vhost.stat.exists == false
+  when: drucker_vhost_check.stat.exists == false
 
 - name: Delete default vHost symlink
   file:
     path: "{{ default_vhost }}"
     state: absent
-  when: drucker_vhost.stat.exists == false
+  when: drucker_vhost_check.stat.exists == false
 
 - name: Deploy default vHost template
   copy:
     src: "{{ apache_template_source_file }}"
     dest: "{{ sites_available }}"
     mode: 0644
-  when: drucker_vhost.stat.exists == false
+  when: drucker_vhost_check.stat.exists == false
 
 - name: Rename default vHost template
   command: mv {{ vhost_template }} "{{ drucker_available_vhost }}"
-  when: drucker_vhost.stat.exists == false
+  when: drucker_vhost_check.stat.exists == false
 
 - name: Modify drucker vHost
   replace:
     dest: "{{ drucker_available_vhost }}"
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1{{ user }}\2'
-  when: drucker_vhost.stat.exists == false
+  when: drucker_vhost_check.stat.exists == false
 
 - name: Enable drucker vHost
   file:
@@ -158,8 +158,9 @@
     dest: "{{ drucker_vhost }}"
     state: link
     force: yes
+  register: test
   notify: Reload Apache
-  when: drucker_vhost.stat.exists == false
+  when: drucker_vhost_check.stat.exists == false
 
 - name: Check if drucker Drush aliases exist
   stat:
@@ -175,7 +176,7 @@
 - name: Deploy drucker Drush aliases
   copy:
     src: "{{ drucker_aliases_source_file }}"
-    dest: "{{ drucker_aliases }}"
+    dest: "{{ drush_aliases_path }}"
     mode: 0644
   when: drucker_aliases.stat.exists == false
   ignore_errors: true
