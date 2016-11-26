@@ -94,6 +94,7 @@ user_programs_path: /usr/local/bin
 php_deb: deb http://packages.dotdeb.org {{ codename }} all
 php_deb_src: deb-src http://packages.dotdeb.org {{ codename }} all
 dotdeb_gpg: https://www.dotdeb.org/dotdeb.gpg
+apcu_stable_release: 5.1.7
 
 # php.ini
 php_ini: /etc/php/7.0/fpm/php.ini

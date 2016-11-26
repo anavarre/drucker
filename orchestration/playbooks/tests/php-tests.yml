@@ -50,3 +50,9 @@
   register: php_ini_cli_conf
   changed_when: php_ini_cli_conf.stdout == "absent"
   failed_when: php_ini_cli_conf.stdout == "absent"
+
+- name: "TEST: APCu is expected to run the latest stable version"
+  shell: dpkg -l | grep php7.0-apcu | grep -o "{{ apcu_stable_release }}" || echo "different"
+  register: apcu_version
+  changed_when: apcu_version.stdout == "different"
+  failed_when: apcu_version.stdout == "different"
