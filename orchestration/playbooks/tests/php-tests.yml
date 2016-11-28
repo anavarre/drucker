@@ -5,10 +5,8 @@
   with_items:
     - "{{ php_ini }}"
     - "{{ php_ini_cli }}"
-    - "{{ mods_enabled }}/fastcgi.conf"
-    - "{{ mods_enabled }}/fastcgi.load"
-    - "{{ mods_enabled }}/actions.conf"
-    - "{{ mods_enabled }}/actions.load"
+    - "{{ apache_fastcgi_conf }}"
+    - "{{ apache_fastcgi_mod }}"
     - "{{ php_extensions }}"
   register: php
 

@@ -58,14 +58,8 @@
 - name: Deploy fastcgi.conf template
   copy:
     src: "{{ fastcgi_source_file }}"
-    dest: "{{ apache_fastcgi_mod }}"
+    dest: "{{ apache_fastcgi_conf }}"
     mode: 0644
-  when: fpm.stat.exists == false
-
-- name: Enable actions module
-  apache2_module:
-    state: present
-    name: actions
   when: fpm.stat.exists == false
 
 - name: Check if php7.0 module is enabled

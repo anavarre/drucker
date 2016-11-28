@@ -14,11 +14,12 @@
     - apache2-utils
   when: apache.stat.exists == false
 
-- name: Enable mod_rewrite and proxy_http
+- name: Enable required Apache modules
   apache2_module:
     name: "{{ item }}"
     state: present
   with_items:
+    - actions
     - rewrite
     - proxy_http
   when: apache.stat.exists == false

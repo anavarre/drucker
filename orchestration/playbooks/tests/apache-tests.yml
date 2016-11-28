@@ -4,6 +4,7 @@
     path: "{{ item }}"
   with_items:
     - "{{ apache_security_conf }}"
+    - "{{ apache_actions_mod }}"
     - "{{ apache_rewrite_mod }}"
     - "{{ apache_proxy_http_mod }}"
   register: apache

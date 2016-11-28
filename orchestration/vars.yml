@@ -69,10 +69,12 @@ conf_available: "{{ apache2_dir }}/conf-available"
 apache_security_conf: "{{ conf_available }}/security.conf"
 apache_envvars: "{{ apache2_dir }}/envvars"
 apache_ssl_mod: "{{ mods_available }}/ssl.conf"
+apache_actions_mod: "{{ mods_enabled }}/actions.load"
 apache_rewrite_mod: "{{ mods_enabled }}/rewrite.load"
 apache_proxy_http_mod: "{{ mods_enabled }}/proxy_http.load"
-apache_fastcgi_mod: "{{ mods_available }}/fastcgi.conf"
 apache_php_mod: "{{ mods_available }}/php7.0.conf"
+apache_fastcgi_conf: "{{ mods_available }}/fastcgi.conf"
+apache_fastcgi_mod: "{{ mods_enabled }}/fastcgi.load"
 
 # vHosts
 default_available_vhost: "{{ sites_available }}/000-default.conf"
