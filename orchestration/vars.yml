@@ -263,8 +263,10 @@ drush_aliases_path: /etc/drush/site-aliases
 drucker_aliases: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
 
 # Drupal Console
-drupal_console_stable_release: 1.0.0-rc10
-drupal_console_download_link: https://github.com/hechoendrupal/drupal-console-launcher/releases/download/{{ drupal_console_stable_release }}/drupal.phar
+drupal_console_launcher_stable_release: 1.0.0-rc10
+drupal_console_composer_package: drupal/console
+drupal_console_composer_package_version: ~1.0
+drupal_console_launcher_download_link: https://github.com/hechoendrupal/drupal-console-launcher/releases/download/{{ drupal_console_launcher_stable_release }}/drupal.phar
 drupal_console_binary: "{{ user_programs_path }}/drupal"
 
 # Varnish

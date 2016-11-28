@@ -9,7 +9,7 @@
   failed_when: drupal_console.stat.exists == false
 
 - name: "TEST: Drupal Console should use the latest stable release"
-  shell: grep -o "{{ drupal_console_stable_release }}" {{ composer_json_path }} || echo "absent"
+  shell: grep -o "{{ drupal_console_composer_package_version }}" {{ composer_json_path }} || echo "absent"
   register: drupal_console_stable
   changed_when: drupal_console_stable.stdout == "absent"
   failed_when: drupal_console_stable.stdout == "absent"
@@ -17,8 +17,8 @@
 - name: "TEST: Drupal Console Launcher should use the latest stable release"
   shell: drupal --version | awk '{print $NF}' | head -n1
   register: drupal_console_launcher_version
-  changed_when: drupal_console_launcher_version.stdout != "{{ drupal_console_stable_release }}"
-  failed_when: drupal_console_launcher_version.stdout != "{{ drupal_console_stable_release }}"
+  changed_when: drupal_console_launcher_version.stdout != "{{ drupal_console_launcher_stable_release }}"
+  failed_when: drupal_console_launcher_version.stdout != "{{ drupal_console_launcher_stable_release }}"
   ignore_errors: true
 
 - name: "TEST: Check if Drupal Console has been configured in .bashrc"
