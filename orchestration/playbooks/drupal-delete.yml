@@ -29,8 +29,11 @@
 
 - name: "DELETE: Delete vHost"
   file:
-    path: "{{ sites_enabled }}/{{ sitename }}.conf"
+    path: "{{ item }}"
     state: absent
+  with_items:
+    - "{{ sites_available }}/{{ sitename }}.conf"
+    - "{{ sites_enabled }}/{{ sitename }}.conf"
   when: apache_conf.stat.exists == true
 
 - name: "DELETE: Check if Drush aliases exist"

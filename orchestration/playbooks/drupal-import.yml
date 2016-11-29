@@ -132,3 +132,25 @@
     regexp: '^(.*){{ user }}(.*)$'
     replace: '\1{{ sitename }}\2'
   when: sitename_aliases.stat.exists == false
+
+- name: "IMPORT: Check if default settings.php exists"
+  stat:
+    path: "{{ imported_docroot }}/{{ default_site }}/settings.php"
+  register: default_settings
+
+- name: "IMPORT: Allow new site to connect to remote MySQL"
+  blockinfile:
+    dest: "{{ imported_docroot }}/{{ default_site }}/settings.php"
+    block: |
+      $databases['default']['default'] = [
+        'database' => '{{ sitename }}',
+        'username' => '{{ mysql_creds }}',
+        'password' => '{{ mysql_creds }}',
+        'prefix' => '',
+        'host' => '{{ db_ip }}',
+        'port' => '{{ mysql_port }}',
+        'driver' => 'mysql',
+      ];
+    insertafter: EOF
+    marker: "# {mark} MANAGED REMOTE MYSQL CONNECTION BLOCK"
+  when: default_settings.stat.exists == true
