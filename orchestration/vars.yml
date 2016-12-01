@@ -117,7 +117,7 @@ uploadprogress_extension_name: uploadprogress.so
 uploadprogress_extension_path: "{{ php_extensions }}/{{ uploadprogress_extension_name }}"
 
 # Composer
-composer_stable_release: 1.2.2
+composer_stable_release: 1.2.3
 composer_download_link: https://getcomposer.org/download/{{ composer_stable_release }}/composer.phar
 composer_binary: "{{ user_programs_path }}/composer"
 composer_dir_path: "{{ home }}/.composer"
@@ -255,7 +255,7 @@ import_sitename_path: "{{ import_dir }}/{{ sitename }}"
 imported_docroot: "{{ webroot }}/{{ sitename }}"
 
 # Drush
-drush_stable_release: 8.1.7
+drush_stable_release: 8.1.8
 drush_download_link: https://github.com/drush-ops/drush/releases/download/{{ drush_stable_release }}/drush.phar
 drush_binary: "{{ user_programs_path }}/drush"
 drush_dir: "{{ home }}/.drush"
