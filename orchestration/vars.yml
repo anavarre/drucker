@@ -240,9 +240,9 @@ files_dir: "{{ docroot }}/{{default_site}}/files"
 libraries_dir: "{{ docroot }}/libraries"
 simpletest_dir: "{{ docroot }}/sites/simpletest"
 phpunit_xml: "{{ docroot }}/core/phpunit.xml"
-drupal_dev_release: 8.3.x
-drupal_download_link: https://ftp.drupal.org/files/projects/drupal-{{ drupal_dev_release }}-dev.tar.gz
-drupal_archive: "{{ download_dir }}/drupal-{{ drupal_dev_release }}-dev.tar.gz"
+drupal_release: 8.3.x-dev
+drupal_download_link: https://ftp.drupal.org/files/projects/drupal-{{ drupal_release }}.tar.gz
+drupal_archive: "{{ download_dir }}/drupal-{{ drupal_release }}.tar.gz"
 
 # Import
 import_dir: "{{ webroot }}/import"

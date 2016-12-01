@@ -30,7 +30,7 @@
   when: drucker.stat.exists == false
 
 - name: Rename Drupal directory
-  command: mv {{ webroot}}/drupal-{{ drupal_dev_release }}-dev {{ docroot }}
+  command: mv {{ webroot}}/drupal-{{ drupal_release }} {{ docroot }}
   when: drucker.stat.exists == false
 
 - name: Ensure we can manage remote MySQL databases
