@@ -255,8 +255,8 @@ import_sitename_path: "{{ import_dir }}/{{ sitename }}"
 imported_docroot: "{{ webroot }}/{{ sitename }}"
 
 # Drush
-drush_stable_release: 8.1.8
-drush_download_link: https://github.com/drush-ops/drush/releases/download/{{ drush_stable_release }}/drush.phar
+drush_unstable_release: 9.0-dev-dev
+drush_download_link: https://s3.amazonaws.com/files.drush.org/drush-unstable.phar
 drush_binary: "{{ user_programs_path }}/drush"
 drush_dir: "{{ home }}/.drush"
 drush_aliases_path: /etc/drush/site-aliases

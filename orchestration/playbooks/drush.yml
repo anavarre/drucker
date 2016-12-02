@@ -4,11 +4,10 @@
     path: "{{ drush_binary }}"
   register: drush
 
-- name: Check Drush version
-  shell: drush --version | awk '{print $4}' | head -n1
-  register: drush_stable_release_check
+- name: Check if Drush can be updated
+  command: date -r "{{ drush_binary }}" +%F
+  register: outdated_drush
   when: drush.stat.exists == true
-  changed_when: drush_stable_release_check.stdout != "{{ drush_stable_release }}"
 
 - name: Install Drush globally
   get_url:
@@ -21,4 +20,4 @@
   until: "'OK' in drush_get_url_result.msg"
   retries: 3
   delay: 10
-  when: drush.stat.exists == false or drush_stable_release_check.stdout != "{{ drush_stable_release }}"
+  when: drush.stat.exists == false or outdated_drush.stdout != "{{ ansible_date_time.date }}"

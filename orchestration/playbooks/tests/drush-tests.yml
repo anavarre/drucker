@@ -5,16 +5,15 @@
   with_items:
     - "{{ drush_binary }}"
     - "{{ drush_aliases_path }}"
-    - "{{ home }}/.drush"
-    - /home/root/.drush
+    - "{{ drush_dir }}"
   register: drush
   failed_when: drush.stat.exists == false
 
-- name: "TEST: Drush should use the latest stable release"
+- name: "TEST: Drush should use the latest unstable release"
   shell: drush --version | awk '{print $4}' | head -n1
   register: drush_version_check
-  changed_when: drush_version_check.stdout != "{{ drush_stable_release }}"
-  failed_when: drush_version_check.stdout != "{{ drush_stable_release }}"
+  changed_when: drush_version_check.stdout != "{{ drush_unstable_release }}"
+  failed_when: drush_version_check.stdout != "{{ drush_unstable_release }}"
   ignore_errors: true
 
 - name: "TEST: The Drush binary should be executable"
