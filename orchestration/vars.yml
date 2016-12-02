@@ -32,6 +32,7 @@ ssl_source_dir: "{{ source_file_dir }}/ssl"
 vim_source_dir: "{{ source_file_dir }}/.vim"
 
 # Git
+git_repo_directory: "{{ www_dir }}/repo"
 git_completion: "{{ home }}/.git-completion.bash"
 git_prompt: "{{ home }}/.git-prompt.sh"
 git_config: "{{ home }}/.gitconfig"
@@ -60,7 +61,8 @@ search_ip: 203.0.113.13
 # Apache
 apache_user: www-data
 apache2_dir: /etc/apache2
-webroot: /var/www/html
+www_dir: /var/www
+webroot: "{{ www_dir }}/html"
 sites_available: "{{ apache2_dir }}/sites-available"
 sites_enabled: "{{ apache2_dir }}/sites-enabled"
 mods_available: "{{ apache2_dir }}/mods-available"
@@ -240,9 +242,9 @@ files_dir: "{{ docroot }}/{{default_site}}/files"
 libraries_dir: "{{ docroot }}/libraries"
 simpletest_dir: "{{ docroot }}/sites/simpletest"
 phpunit_xml: "{{ docroot }}/core/phpunit.xml"
-drupal_release: 8.3.x-dev
-drupal_download_link: https://ftp.drupal.org/files/projects/drupal-{{ drupal_release }}.tar.gz
-drupal_archive: "{{ download_dir }}/drupal-{{ drupal_release }}.tar.gz"
+drupal_head: 8.3.x
+drupal_git_clone_url: https://git.drupal.org/project/drupal.git
+drupal_git_clone_path: "{{ git_repo_directory }}/drupal"
 
 # Import
 import_dir: "{{ webroot }}/import"

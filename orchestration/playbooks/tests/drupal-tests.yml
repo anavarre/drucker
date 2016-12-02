@@ -17,7 +17,7 @@
     - "{{ phpunit_xml }}"
     - "{{ import_dir }}"
     - "{{ archives_dir }}"
-    - "{{ drupal_archive }}"
+    - "{{ drupal_git_clone_path }}"
   register: drupal
   failed_when: drupal.stat.exists == false
 

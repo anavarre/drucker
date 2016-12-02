@@ -1,20 +1,32 @@
 ---
-- name: Check if latest Drupal dev archive exists
+- name: Check if repo directory exists
   stat:
-    path: "{{ drupal_archive }}"
-  register: drupal
+    path: "{{ git_repo_directory }}"
+  register: git_repo_dir
   ignore_errors: True
 
-- name: Download latest Drupal (dev) release
-  get_url:
-    url: "{{ drupal_download_link }}"
-    dest: "{{ download_dir }}"
-    validate_certs: no
-  register: drupal_get_url_result
-  until: "'OK' in drupal_get_url_result.msg"
-  retries: 3
-  delay: 10
-  when: drupal.stat.exists == false
+- name: Create repo directory
+  file:
+    path: "{{ git_repo_directory }}"
+    state: directory
+  become: yes
+  become_user: "{{ user }}"
+  when: git_repo_dir.stat.exists == false
+
+- name: Check if Drupal clone exists
+  stat:
+    path: "{{ drupal_git_clone_path }}"
+  register: git_clone_dir
+  ignore_errors: True
+
+- name: Clone Drupal repository (this can take a while...)
+  git:
+    repo: "{{ drupal_git_clone_url }}"
+    dest: "{{ drupal_git_clone_path }}"
+    version: 8.3.x
+  become: yes
+  become_user: "{{ user }}"
+  when: git_clone_dir.stat.exists == false
 
 - name: Check if drucker docroot exists
   stat:
@@ -22,15 +34,10 @@
   register: drucker
   ignore_errors: True
 
-- name: Extract Drupal files
-  unarchive:
-    src: "{{ drupal_archive }}"
-    dest: "{{ webroot }}"
-    copy: no
-  when: drucker.stat.exists == false
-
-- name: Rename Drupal directory
-  command: mv {{ webroot}}/drupal-{{ drupal_release }} {{ docroot }}
+- name: Copy Drupal directory
+  command: cp -R {{ drupal_git_clone_path }} {{ docroot }}
+  become: yes
+  become_user: "{{ user }}"
   when: drucker.stat.exists == false
 
 - name: Ensure we can manage remote MySQL databases
@@ -56,12 +63,16 @@
     path: "{{ files_dir }}"
     state: directory
     mode: 0777
+  become: yes
+  become_user: "{{ user }}"
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Create libraries directory
   file:
     path: "{{ libraries_dir }}"
     state: directory
+  become: yes
+  become_user: "{{ user }}"
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Create simpletest directory
@@ -69,6 +80,8 @@
     path: "{{ simpletest_dir }}"
     state: directory
     mode: 0777
+  become: yes
+  become_user: "{{ user }}"
   when: drucker.stat.exists == false
 
 - name: Delete settings.php file when reinstalling
@@ -79,10 +92,14 @@
 
 - name: Create settings.php file
   command: cp {{ default_settings_php }} {{ settings_php }}
+  become: yes
+  become_user: "{{ user }}"
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Create services.yml file
   command: cp {{ default_services_yml }} {{ services_yml }}
+  become: yes
+  become_user: "{{ user }}"
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Add trusted_host_patterns in settings.php
@@ -183,18 +200,36 @@
 
 - name: Create .drush directory
   file:
-    path: "{{ item }}"
+    path: "{{ drush_dir }}"
     state: directory
     mode: 0755
     owner: "{{ user }}"
     group: "{{ user }}"
-  with_items:
-    - "{{ drush_dir }}"
-    - /home/root/.drush
   when: drucker_aliases.stat.exists == false
+
+- name: Pull vendor dependencies
+  composer:
+    command: install
+    working_dir: "{{ docroot }}"
+  become: yes
+  become_user: "{{ user }}"
+  when: drucker.stat.exists == false
 
 - name: Install Drupal
   command: drush @{{ user }}.{{ tld }} site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@{{ db_ip }}:{{ mysql_port }}/{{ user }} --site-name={{ user }} --site-mail={{ drupal_creds }}@{{ user }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ user }}.{{ tld }}
+  become: yes
+  become_user: "{{ user }}"
+  when: drucker.stat.exists == false or drucker_db.stat.exists == false
+
+- name: Retrieve path to sync directory
+  shell: drush @{{ user }}.{{ tld }} st | grep Sync | awk '{print $NF}'
+  register: sync_dir
+  when: drucker.stat.exists == false or drucker_db.stat.exists == false
+
+- name: Make sure the sync directory is writable
+  file:
+    path: "{{ docroot }}/{{ sync_dir.stdout }}"
+    mode: 0777
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Check if phpunit.xml file exists
@@ -207,6 +242,8 @@
     src: "{{ phpunit_source_file }}"
     dest: "{{ docroot }}/core/"
     mode: 0644
+  become: yes
+  become_user: "{{ user }}"
   when: phpunit.stat.exists == false
 
 - name: Check if import directories exist
@@ -224,19 +261,11 @@
     state: directory
     mode: 0755
     owner: "{{ user }}"
-    group: "{{ user }}"
+    group: "{{ apache_user }}"
   with_items:
     - "{{ import_dir }}"
     - "{{ archives_dir }}"
   when: import_directories.results[0]['item'] or import_directories.results[1]['item']
-
-- name: Make sure files and dirs ownership is consistent
-  file:
-    path: "{{ webroot }}"
-    owner: "{{ user }}"
-    group: "{{ apache_user }}"
-    mode: g+s
-    recurse: yes
 
 - name: Check if .gitignore exists
   stat:
@@ -253,6 +282,8 @@
   become_user: "{{ user }}"
   when: gitignore.stat.exists == false
 
-- name: Add all files under version control
-  shell: cd {{ docroot }}/ && git init && git add --all . && git commit -m "Initial commit"
+- name: Add all new files under version control
+  shell: cd {{ docroot }}/ && git add --all . && git commit -m "Initial drucker commit"
+  become: yes
+  become_user: "{{ user }}"
   when: drucker.stat.exists == false

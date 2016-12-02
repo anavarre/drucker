@@ -1,4 +1,12 @@
 ---
+- name: Ensure /var/www has correct permissions
+  file:
+    path: "{{ www_dir }}"
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+    mode: g+s
+    recurse: yes
+
 - name: Check if Apache is installed
   stat:
     path: "{{ apache_security_conf }}"
