@@ -270,6 +270,7 @@ drupal_console_composer_package: drupal/console
 drupal_console_composer_package_version: ~1.0
 drupal_console_launcher_download_link: https://github.com/hechoendrupal/drupal-console-launcher/releases/download/{{ drupal_console_launcher_stable_release }}/drupal.phar
 drupal_console_binary: "{{ user_programs_path }}/drupal"
+drupal_console_config_file: "{{ home }}/.console/config.yml"
 
 # Varnish
 varnish_source: 4.1

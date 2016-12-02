@@ -25,3 +25,19 @@
   when: drucker_docroot.stat.exists == true
 
 - include: playbooks/drupal.yml
+
+- name: Set up Drupal Console to work with the new docroot 1/2
+  composer:
+    command: require
+    arguments: "{{ drupal_console_composer_package }}:{{ drupal_console_composer_package_version }} --prefer-dist --optimize-autoloader"
+    working_dir: "{{ docroot }}"
+  become: yes
+  become_user: "{{ user }}"
+
+- name: Set up Drupal Console to work with the new docroot 2/2
+  composer:
+    command: update
+    arguments: "{{ drupal_console_composer_package }} --with-dependencies"
+    working_dir: "{{ docroot }}"
+  become: yes
+  become_user: "{{ user }}"
