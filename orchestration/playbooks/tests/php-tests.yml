@@ -54,3 +54,9 @@
   register: apcu_version
   changed_when: apcu_version.stdout == "different"
   failed_when: apcu_version.stdout == "different"
+
+- name: "TEST: php-fpm service needs to be started"
+  command: service php7.0-fpm status | grep -o "is running"
+  register: php_fpm_service
+  changed_when: php_fpm_service.stdout == "is running"
+  failed_when: php_fpm_service.stdout == "is running"

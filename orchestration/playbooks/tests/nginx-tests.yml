@@ -47,3 +47,9 @@
   register: nginx_proxy_pass
   changed_when: nginx_proxy_pass.stdout == "missing"
   failed_when: nginx_proxy_pass.stdout == "missing"
+
+- name: "TEST: nginx service needs to be started"
+  command: service nginx status | grep -o "is running"
+  register: nginx_service
+  changed_when: nginx_service.stdout == "is running"
+  failed_when: nginx_service.stdout == "is running"

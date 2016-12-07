@@ -29,3 +29,9 @@
   register: remote_access
   changed_when: remote_access.stdout == "denied"
   failed_when: remote_access.stdout == "denied"
+
+- name: "TEST: MySQL service needs to be started"
+  command: service mysql status | grep -o "is running"
+  register: mysql_service
+  changed_when: mysql_service.stdout == "is running"
+  failed_when: mysql_service.stdout == "is running"
