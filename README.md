@@ -50,7 +50,7 @@ _drucker_ ships with the following software stack:
 | Java                | 8               | [williamyeh.oracle-java](https://galaxy.ansible.com/williamyeh/oracle-java/) (2.10.0)    |
 | PHP-FPM             | 7.0.13 or later | Custom build   |
 | APCu                | 5.1.7           | APT            |
-| Xdebug              | 2.5.0rc1        | Custom build   |
+| Xdebug              | 2.5.0           | Custom build   |
 | PECL uploadprogress | master          | Custom build   |
 | PECL YAML           | 2.0.0           | Custom build   |
 | LibYAML             | 0.1.7           | Custom build   |
@@ -64,7 +64,7 @@ _drucker_ ships with the following software stack:
 | Drupal              | 8.3.x           | Custom build   |
 | Drush               | 9.0-dev         | Custom build   |
 | Drupal Console      | 1.0.0-rc10      | Custom build   |
-| Composer            | 1.2.3           | Custom build   |
+| Composer            | 1.2.4           | Custom build   |
 | phpMyAdmin          | 4.6.5           | Custom build   |
 | adminer             | 4.2.5           | Custom build   |
 | bash-git-prompt     | 2.6.1           | Custom build   |

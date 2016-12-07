@@ -119,21 +119,21 @@ uploadprogress_extension_name: uploadprogress.so
 uploadprogress_extension_path: "{{ php_extensions }}/{{ uploadprogress_extension_name }}"
 
 # Composer
-composer_stable_release: 1.2.3
+composer_stable_release: 1.2.4
 composer_download_link: https://getcomposer.org/download/{{ composer_stable_release }}/composer.phar
 composer_binary: "{{ user_programs_path }}/composer"
 composer_dir_path: "{{ home }}/.composer"
 composer_json_path: "{{ home }}/.composer/composer.json"
 
 # XDebug
-xdebug_stable_release: 2.5.0rc1
+xdebug_stable_release: 2.5.0
 xdebug_download_link: http://xdebug.org/files/xdebug-{{ xdebug_stable_release }}.tgz
 xdebug_extension_name: xdebug.so
 xdebug_extension_path: "{{ php_extensions }}/{{ xdebug_extension_name }}"
 xdebug_archive_path: "{{ download_dir }}/xdebug-{{ xdebug_stable_release }}.tgz"
 xdebug_remote_host: "{{ gateway_ip }}"
 # This is temporary until there's a stable 2.5.0 release.
-xdebug_unarchived_path: "{{ download_dir }}/xdebug-2.5.0RC1"
+xdebug_unarchived_path: "{{ download_dir }}/xdebug-{{ xdebug_stable_release }}"
 
 # LibYAML
 libyaml_stable_release: 0.1.7
