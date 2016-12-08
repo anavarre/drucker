@@ -20,7 +20,7 @@
 
 - name: Download latest adminer release
   get_url:
-    url: https://www.adminer.org/static/download/{{ adminer_stable_release }}/adminer-{{ adminer_stable_release }}-en.php
+    url: "{{ adminer_download_link }}"
     dest: "{{ adminer_root }}"
     validate_certs: no
   register: adminer_get_url_result

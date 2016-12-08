@@ -223,6 +223,7 @@ phpmyadmin_release_date_file: "{{ phpmyadmin_root }}/RELEASE-DATE-{{ phpmyadmin_
 
 # Adminer
 adminer_stable_release: 4.2.5
+adminer_download_link: https://github.com/vrana/adminer/releases/download/v{{ adminer_stable_release }}/adminer-{{ adminer_stable_release }}-en.php
 adminer_root: "{{ webroot }}/adminer"
 adminer_index: "{{ adminer_root }}/index.php"
 
