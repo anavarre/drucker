@@ -41,3 +41,8 @@
     working_dir: "{{ docroot }}"
   become: yes
   become_user: "{{ user }}"
+
+- name: Add new vendor files under version control
+  shell: git -C {{ docroot }} add . && git -C {{ docroot }} commit -m "Extra commit for vendor files"
+  become: yes
+  become_user: "{{ user }}"

@@ -283,7 +283,7 @@
   when: gitignore.stat.exists == false
 
 - name: Add all new files under version control
-  shell: cd {{ docroot }}/ && git add --all . && git commit -m "Initial drucker commit"
+  shell: git -C {{ docroot }} add . && git -C {{ docroot }} commit -m "Initial drucker commit"
   become: yes
   become_user: "{{ user }}"
   when: drucker.stat.exists == false
