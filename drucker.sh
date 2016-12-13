@@ -3,6 +3,7 @@
 # Invoke the script from anywhere (e.g .bashrc alias)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+# shellcheck source=/dev/null
 source "${DIR}"/functions
 
 export OPTION=$1

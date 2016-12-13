@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-
-
 container_files() {
   CONTAINER_DIR="containers"
   CONTAINER_FILES="variables init ssh orchestration base reverse_proxy web db search"

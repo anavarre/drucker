@@ -30,7 +30,7 @@ ansible 2.0.2.0
 
 ### Disk space
 
-You need to have approximately 3GB available.
+You need to have approximately 4GB available.
 
 ### SSH
 
