@@ -21,4 +21,4 @@
   unstash = !git stash show -p | git apply -R
   hist = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)[%an]%Creset' --abbrev-commit
   clean = clean -fdx
-  reset = resert --hard
+  reset = reset --hard
