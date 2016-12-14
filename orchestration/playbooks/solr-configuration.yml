@@ -1,0 +1,30 @@
+---
+- name: Check if Apache Solr configuration files are installed
+  shell: grep -o "search_api_solr" {{ solr_configuration_path }}/schema.xml | head -n1 || echo "missing"
+  register: solr_conf_files
+  changed_when: solr_conf_files.stdout == "missing"
+
+- name: Download Apache Solr configuration from search_api_solr
+  get_url:
+    url: http://cgit.drupalcode.org/search_api_solr/tree/solr-conf/6.x/{{ item }}?h=8.x-1.x
+    dest: "{{ solr_configuration_path }}"
+    validate_certs: no
+  with_items:
+    - elevate.xml
+    - mapping-ISOLatin1Accent.txt
+    - protwords.txt
+    - schema.xml
+    - schema_extra_fields.xml
+    - schema_extra_types.xml
+    - schema_legacy_fields.xml
+    - schema_legacy_types.xml
+    - solrconfig.xml
+    - solrconfig_spellcheck.xml
+    - solrcore.properties
+    - stopwords.txt
+    - synonyms.txt
+  register: search_api_solr_config_get_url_result
+  until: "'OK' in search_api_solr_config_get_url_result.msg"
+  retries: 3
+  delay: 10
+  when: solr_conf_files.stdout == "missing"

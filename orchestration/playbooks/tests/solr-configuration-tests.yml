@@ -1,0 +1,21 @@
+---
+- name: "TEST: Check that all Apache Solr configuration files exist"
+  stat:
+    path: "{{ solr_configuration_path }}"
+  ignore_errors: True
+  with_items:
+    - elevate.xml
+    - mapping-ISOLatin1Accent.txt
+    - protwords.txt
+    - schema.xml
+    - schema_extra_fields.xml
+    - schema_extra_types.xml
+    - schema_legacy_fields.xml
+    - schema_legacy_types.xml
+    - solrconfig.xml
+    - solrconfig_spellcheck.xml
+    - solrcore.properties
+    - stopwords.txt
+    - synonyms.txt
+  register: solr_conf_files_check
+  failed_when: solr_conf_files_check.stat.exists == false

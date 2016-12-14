@@ -15,6 +15,9 @@ run_tests() {
 
   echo -e "${BLUE}Running the web test suite...${COLOR_ENDING}"
   ${PLAYBOOK}/web-tests.yml ${EXTRA_VARS}
+
+  echo -e "${BLUE}Running the search test suite...${COLOR_ENDING}"
+  ${PLAYBOOK}/search-tests.yml ${EXTRA_VARS}
 }
 
 import_site() {
