@@ -1,8 +1,7 @@
 ---
 - name: "TEST: Check that all Apache Solr configuration files exist"
   stat:
-    path: "{{ solr_configuration_path }}"
-  ignore_errors: True
+    path: "{{ solr_configuration_path }}/{{ item }}"
   with_items:
     - elevate.xml
     - mapping-ISOLatin1Accent.txt
@@ -19,3 +18,15 @@
     - synonyms.txt
   register: solr_conf_files_check
   failed_when: solr_conf_files_check.stat.exists == false
+
+- name: "TEST: Apache Solr schema must be tuned for search_api_solr"
+  shell: grep -o "search_api_solr" {{ solr_configuration_path }}/schema.xml | head -n1 || echo "missing"
+  register: solr_conf_files_check
+  changed_when: solr_conf_files_check.stdout == "missing"
+  failed_when: solr_conf_files_check.stdout == "missing"
+
+- name: "TEST: Make sure Apache Solr server is running"
+  shell: "{{ solr_binary }} status | grep 'running on port {{ solr_port }}' || echo 'not running'"
+  register: solr_status
+  changed_when: solr_status.stdout == "not running"
+  failed_when: solr_status.stdout == "not running"

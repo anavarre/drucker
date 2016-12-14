@@ -315,3 +315,4 @@ java_version: 8
 solr_port: 8983
 solr_core: collection1
 solr_configuration_path: /var/solr/data/{{ solr_core }}/conf
+solr_binary: /opt/solr/bin/solr
