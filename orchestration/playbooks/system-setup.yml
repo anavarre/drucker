@@ -21,6 +21,7 @@
   # phantomjs secret dependency
   - libfontconfig1
   - logrotate
+  - lsof
   - ncdu
   - netcat
   - net-tools
