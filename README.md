@@ -121,7 +121,7 @@ Where should we store drucker sites locally? [/var/www/html]:
 Where should we store drucker databases locally? [/var/lib/mysql]:
 ```
 
-On the first run, `drucker` will prompt you with the path to your SSH public key, but also will try to map the `drucker` sites and databases paths to local directories of your choice, so that containers are disposable by still preserving your data. You can totally override the defaults paths and this information will be stored in the `config` file going forward.
+On the first run, `drucker` will prompt you with the path to your SSH public key, but will also try to map the `drucker` sites and databases paths to local directories of your choice, so that containers are disposable by still preserving your data. You can totally override the default paths and this information will be stored in the `config` file going forward.
 
 To prevent Git from prompting you with changes to the `config` file, you can exclude it from the Git tracking entirely with:
 
@@ -159,19 +159,19 @@ At the beginning of the build process, _drucker_ will prompt you to enter the pa
 
 When spinning up the web container, drucker will try to map its web directory to a local path (`/var/www/html`) on your computer. Feel free to change this default path to one that is more convenient.
 
-To connect to a container as the privileged _drucker_, simply type:
+To connect to a container as the privileged _drucker_ user, simply type:
 
 ```
 $ docker exec -u drucker -it <container_name> bash
 ```
 
-To connect to a container as root, type:
+To connect to a container as _root_, type:
 
 ```
 $ docker exec -it <container_name> bash
 ```
 
-To log in as the `drucker` username (which is recommended and _is_ a sudoer), simply type:
+As _root_, if you wish to log in as the _drucker_ username again (which is recommended and _is_ a sudoer), simply type:
 
 ```
 $ su drucker
@@ -179,21 +179,11 @@ $ su drucker
 
 ## Passwords:
 
-* drucker user on the container: `drucker`
+* _drucker_ user on the container: `drucker`
 * MySQL credentials: `root`/`root`
 * Drupal credentials: `admin`/`admin`
 
 ## Tips and tricks
-
-### Reinstall Drupal from the current dev release
-
-```
-$ drucker --reinstall
-```
-
-### Reinstall Drupal from the existing codebase
-
-Delete the `drucker` database. Then run `drucker` again.
 
 ### Delete a container
 
