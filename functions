@@ -1,11 +1,53 @@
 #!/usr/bin/env bash
 
-container_files() {
+set_local_ssh_path() {
+  if [[ -f config ]] && [[ $(grep 'key_path' ${DIR}/config) ]]; then
+    export DEFAULT_SSH_PATH="$HOME/.ssh/id_rsa.pub"
+    read -p "Enter path to SSH public key [${DEFAULT_SSH_PATH}]: " PUBKEY
+    PUBKEY=${PUBKEY:-$DEFAULT_SSH_PATH}
+
+    sed -i "s#key_path#${PUBKEY}#g" ${DIR}/config
+  else
+    READ_PUBKEY_VAR_LINE=$(sed -n 3p ${DIR}/config | tr -d '"')
+    export PUBKEY=${READ_PUBKEY_VAR_LINE:18}
+  fi
+}
+
+set_local_html_path() {
+  if [[ -f config ]] && [[ $(grep 'html_path' ${DIR}/config) ]]; then
+    export DEFAULT_HOST_HTML_PATH="/var/www/html"
+
+    read -p "Where should we store drucker sites locally? [${DEFAULT_HOST_HTML_PATH}]: " HOST_HTML_PATH
+    HOST_HTML_PATH=${HOST_HTML_PATH:-$DEFAULT_HOST_HTML_PATH}
+
+    sed -i "s#html_path#${HOST_HTML_PATH}#g" ${DIR}/config
+  else
+    READ_HTML_VAR_LINE=$(sed -n 4p ${DIR}/config | tr -d '"')
+    export HOST_HTML_PATH=${READ_HTML_VAR_LINE:23}
+  fi
+}
+
+set_local_db_path() {
+  if [[ -f config ]] && [[ $(grep 'db_path' ${DIR}/config) ]]; then
+    export DEFAULT_HOST_DB_PATH="/var/lib/mysql"
+
+    read -p "Where should we store drucker databases locally? [${DEFAULT_HOST_DB_PATH}]: " HOST_DB_PATH
+    HOST_DB_PATH=${HOST_DB_PATH:-$DEFAULT_HOST_DB_PATH}
+
+    sed -i "s#db_path#${HOST_DB_PATH}#g" ${DIR}/config
+  else
+    READ_DB_VAR_LINE=$(sed -n 5p ${DIR}/config | tr -d '"')
+    export HOST_DB_PATH=${READ_DB_VAR_LINE:21}
+  fi
+}
+
+load_container_files() {
   CONTAINER_DIR="containers"
   CONTAINER_FILES="variables init ssh orchestration base reverse_proxy web db search"
   # web2 has been excluded for now
 
   for FILES in ${CONTAINER_FILES} ; do
+    # shellcheck source=/dev/null
     source "${DIR}/${CONTAINER_DIR}/${FILES}"
   done
 }

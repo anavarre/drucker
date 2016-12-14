@@ -4,15 +4,6 @@ export TMP_KEY="/tmp/authorized_keys"
 export AUTH_KEY="/home/${USER}/.ssh/authorized_keys"
 export CHOWN_SSH="chown -R ${USER}:${USER} /home/${USER}/.ssh"
 
-configure_ssh_access() {
-  if [[ (! ${WEB_CONTAINER_EXISTS}) || (! ${DB_CONTAINER_EXISTS}) || (! ${REVERSE_PROXY_CONTAINER_EXISTS}) || (! ${SEARCH_CONTAINER_EXISTS}) ]]; then
-    read -p "Enter path to SSH public key [${DEFAULT_SSH_PATH}]: " PUBKEY
-    PUBKEY=${PUBKEY:-$DEFAULT_SSH_PATH}
-
-    echo -e "${BLUE}Configuring SSH access to the container...${COLOR_ENDING}"
-  fi
-}
-
 configure_base_container_ssh_access() {
   cat "${PUBKEY}" > "${TMP_KEY}"
 
@@ -58,11 +49,11 @@ configure_search_container_ssh_access() {
   rm "${TMP_KEY}"
 }
 
-configure_web2_container_ssh_access() {
-  cat "${PUBKEY}" > "${TMP_KEY}"
-
-  docker cp "${TMP_KEY}" "${WEB2_CONTAINER}":"${AUTH_KEY}"
-  docker exec -it "${WEB2_CONTAINER}" ${CHOWN_SSH}
-
-  rm "${TMP_KEY}"
-}
+# configure_web2_container_ssh_access() {
+#   cat "${PUBKEY}" > "${TMP_KEY}"
+#
+#   docker cp "${TMP_KEY}" "${WEB2_CONTAINER}":"${AUTH_KEY}"
+#   docker exec -it "${WEB2_CONTAINER}" ${CHOWN_SSH}
+#
+#   rm "${TMP_KEY}"
+# }

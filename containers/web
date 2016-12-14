@@ -3,17 +3,8 @@
 WEB_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${WEB_IMAGE}")
 WEB_CONTAINER_STARTED=$(docker ps | grep -o "${WEB_CONTAINER}")
 
-local_html_mapping() {
-  if [[ ! ${WEB_CONTAINER_EXISTS} ]]; then
-    read -p "Enter local path to store drucker sites [${DEFAULT_HOST_HTML_PATH}]: " HOST_HTML_PATH
-    HOST_HTML_PATH=${HOST_HTML_PATH:-$DEFAULT_HOST_HTML_PATH}
-  fi
-}
-
 create_web_container_from_base_image() {
   echo -e "${BLUE}Spinning up ${WEB_CONTAINER} container with ID:${COLOR_ENDING}"
-
-  local_html_mapping
 
   docker run --privileged=true --name "${WEB_CONTAINER}" -it \
   -h "${DRUCKER_HOSTNAME}" \
@@ -33,8 +24,6 @@ create_web_container_from_base_image() {
 
 create_web_container_from_web_image() {
   echo -e "${BLUE}Spinning up ${WEB_CONTAINER} container with ID:${COLOR_ENDING}"
-
-  local_html_mapping
 
   docker run --privileged=true --name "${WEB_CONTAINER}" -it \
   -h "${DRUCKER_HOSTNAME}" \
@@ -106,6 +95,5 @@ allow_web_to_db_ssh_access() {
       docker exec -u "${USER}" -it "${DB_CONTAINER}" bash -c "echo '${KEY_CHECK}' >> /home/${USER}/.ssh/authorized_keys"
     fi
   fi
-
 
 }

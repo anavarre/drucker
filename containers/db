@@ -3,17 +3,8 @@
 DB_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${DB_IMAGE}")
 DB_CONTAINER_STARTED=$(docker ps | grep -o "${DB_CONTAINER}")
 
-local_db_mapping() {
-  if [[ ! ${DB_CONTAINER_EXISTS} ]]; then
-    read -p "Enter local path to store drucker databases [${DEFAULT_HOST_DB_PATH}]: " HOST_DB_PATH
-    HOST_DB_PATH=${HOST_DB_PATH:-$DEFAULT_HOST_DB_PATH}
-  fi
-}
-
 create_db_container_from_base_image() {
   echo -e "${BLUE}Spinning up ${DB_CONTAINER} container with ID:${COLOR_ENDING}"
-
-  local_db_mapping
 
   docker run --privileged=true --name "${DB_CONTAINER}" -it \
   -h "${DB_HOSTNAME}" \
@@ -30,8 +21,6 @@ create_db_container_from_base_image() {
 
 create_db_container_from_db_image() {
   echo -e "${BLUE}Spinning up ${DB_CONTAINER} container with ID:${COLOR_ENDING}"
-
-  local_db_mapping
 
   docker run --privileged=true --name "${DB_CONTAINER}" -it \
   -h "${DB_HOSTNAME}" \

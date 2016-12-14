@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+export SSH_PUBKEY="key_path"
+export LOCAL_HTML_PATH="html_path"
+export LOCAL_DB_PATH="db_path"
