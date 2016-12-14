@@ -50,6 +50,8 @@
 
 - name: "TEST: nginx service needs to be started"
   command: service nginx status | grep -o "is running"
+  args:
+    warn: no
   register: nginx_service
   changed_when: nginx_service.stdout == "is running"
   failed_when: nginx_service.stdout == "is running"

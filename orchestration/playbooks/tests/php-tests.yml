@@ -57,6 +57,8 @@
 
 - name: "TEST: php-fpm service needs to be started"
   command: service php7.0-fpm status | grep -o "is running"
+  args:
+    warn: no
   register: php_fpm_service
   changed_when: php_fpm_service.stdout == "is running"
   failed_when: php_fpm_service.stdout == "is running"

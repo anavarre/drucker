@@ -32,6 +32,8 @@
 
 - name: "TEST: apache2 service needs to be started"
   command: service apache2 status | grep -o "is running"
+  args:
+    warn: no
   register: apache2_service
   changed_when: apache2_service.stdout == "is running"
   failed_when: apache2_service.stdout == "is running"
