@@ -39,3 +39,9 @@
   shell: dpkg -l | grep "python-mysqldb"
   register: remote_db_management
   changed_when: remote_db_management == ''
+
+- name: "TEST: Ensure Drupal can talk to the Solr backend"
+  shell: grep -o "{{ search_ip }}" {{ hosts_file }} || echo "absent"
+  register: search_hostname_check
+  changed_when: search_hostname_check == "absent"
+  failed_when: search_hostname_check == "absent"

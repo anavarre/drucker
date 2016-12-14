@@ -287,3 +287,12 @@
   become: yes
   become_user: "{{ user }}"
   when: drucker.stat.exists == false
+
+- name: Check if Solr hostname is configured
+  shell: grep -o "{{ search_ip }}" {{ hosts_file }} || echo "absent"
+  register: search_hostname
+  changed_when: search_hostname == "absent"
+
+- name: Make sure Drupal can talk to the Solr backend
+  shell: echo "{{ search_ip }}    search.{{ tld }}" >> {{ hosts_file }}
+  when: search_hostname == "absent"

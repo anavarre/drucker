@@ -4,6 +4,7 @@ codename: jessie
 name: web
 tld: local
 home: /home/{{ user }}
+hosts_file: /etc/hosts
 sources_list: /etc/apt/sources.list
 sources_list_d: /etc/apt/sources.list.d
 bashrc: "{{ home }}/.bashrc"
