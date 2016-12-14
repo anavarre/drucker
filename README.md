@@ -116,9 +116,26 @@ Simply run `drucker` if you have a bash alias, or invoke the `drucker.sh` script
 
 ```
 $ ./drucker.sh
+Enter path to SSH public key [/home/<username>/.ssh/id_rsa.pub]:
+Where should we store drucker sites locally? [/var/www/html]:
+Where should we store drucker databases locally? [/var/lib/mysql]:
 ```
 
-For more advanced usage, you can pass several CLI parameters:
+On the first run, `drucker` will prompt you with the path to your SSH public key, but also will try to map the `drucker` sites and databases paths to local directories of your choice, so that containers are disposable by still preserving your data. You can totally override the defaults paths and this information will be stored in the `config` file going forward.
+
+To prevent Git from prompting you with changes to the `config` file, you can exclude it from the Git tracking entirely with:
+
+```
+$ git update-index --assume-unchanged config
+```
+
+Should you want to stop doing so, just type:
+
+```
+git update-index --no-assume-unchanged config
+```
+
+For more advanced `drucker` usage, you can pass several CLI parameters:
 
 ```
 $ drucker --help
