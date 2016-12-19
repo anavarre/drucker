@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+check_requirements() {
+  if [[ -z $(docker --version) ]]; then
+    echo -e "${RED}You need to install Docker before running this script.${COLOR_ENDING}"
+    exit 0
+  fi
+
+  if [[ -z $(ansible --version) ]]; then
+    echo -e "${RED}You need to install Ansible before running this script.${COLOR_ENDING}"
+    exit 0
+  fi
+
+  if [[ "$(ansible --version | head -n1 | awk '{print $2}' | cut -c 1)" -lt "3" ]]; then
+    echo -e "${RED}Ansible 2 or later is required to run drucker.${COLOR_ENDING}"
+    exit 0
+  fi
+}

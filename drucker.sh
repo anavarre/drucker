@@ -4,6 +4,10 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # shellcheck source=/dev/null
+source "${DIR}/requirements"
+check_requirements
+
+# shellcheck source=/dev/null
 source "${DIR}/config"
 # shellcheck source=/dev/null
 source "${DIR}/functions"
@@ -20,8 +24,6 @@ load_container_files
 
 # Are we running drucker with a CLI argument?
 drucker_argument
-
-check_requirements
 
 # drucker initialization.
 create_custom_bridge_network
