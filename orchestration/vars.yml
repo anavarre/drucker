@@ -17,7 +17,6 @@ git_completion_source_file: "{{ source_file_dir }}/.git-completion.bash"
 git_prompt_source_file: "{{ source_file_dir }}/.git-prompt.sh"
 git_config_source_file: "{{ source_file_dir }}/.gitconfig"
 apache_template_source_file: "{{ source_file_dir }}/apache-template.conf"
-drucker_aliases_source_file: "{{ source_file_dir }}/{{ user }}.aliases.drushrc.php"
 phpunit_source_file: "{{ source_file_dir }}/phpunit.xml"
 gitignore_source_file: "{{ source_file_dir }}/.gitignore"
 composer_json_source_file: "{{ source_file_dir }}/composer.json"
@@ -261,11 +260,15 @@ import_sitename_path: "{{ import_dir }}/{{ sitename }}"
 imported_docroot: "{{ webroot }}/{{ sitename }}"
 
 # Drush
+drush_aliases_template_file: drush.aliases.drushrc.php
+drush_aliases_source_file: "{{ source_file_dir }}/{{ drush_aliases_template_file }}"
+drush_aliases_path: /etc/drush/site-aliases
+drush_aliases_filepath: "{{ drush_aliases_path }}/{{ drush_aliases_template_file }}"
 drush_unstable_release: 9.0-dev-dev
 drush_download_link: https://s3.amazonaws.com/files.drush.org/drush-unstable.phar
 drush_binary: "{{ user_programs_path }}/drush"
 drush_dir: "{{ home }}/.drush"
-drush_aliases_path: /etc/drush/site-aliases
+
 drucker_aliases: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
 
 # Drupal Console

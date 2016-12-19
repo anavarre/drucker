@@ -21,11 +21,11 @@
     <!-- Do not limit the amount of memory tests take to run. -->
     <ini name="memory_limit" value="-1"/>
     <!-- Example SIMPLETEST_BASE_URL value: http://localhost -->
-    <env name="SIMPLETEST_BASE_URL" value="http://drucker.local"/>
+    <env name="SIMPLETEST_BASE_URL" value="http://SITENAME.local"/>
     <!-- Example SIMPLETEST_DB value: mysql://username:password@localhost/databasename#table_prefix -->
-    <env name="SIMPLETEST_DB" value="mysql://root:root@localhost/drucker"/>
+    <env name="SIMPLETEST_DB" value="mysql://root:root@localhost/SITENAME"/>
     <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/webroot/sites/simpletest/browser_output -->
-    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="/var/www/html/drucker/sites/simpletest"/>
+    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="/var/www/html/SITENAME/sites/simpletest"/>
   </php>
   <testsuites>
     <testsuite name="unit">

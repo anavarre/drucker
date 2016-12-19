@@ -144,11 +144,13 @@ $ drucker --help
 
 --prod                Opinionated setup with all known performance best practices enabled.
 
+--create [sitename]   Creates an arbitrary docroot, vHost and corresponding database.
+
+--import [sitename]   Imports the database, files and codebase from the web container's import directory.
+
 --reinstall           Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
 
 --delete [sitename]   Deletes an arbitrary docroot, vHost and corresponding database.
-
---import [sitename]   Imports the database, files and codebase from the web container's import directory.
 
 --tests               Runs the Ansible test suite.
 ```

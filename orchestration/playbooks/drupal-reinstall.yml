@@ -1,16 +1,5 @@
 ---
-- name: "REINSTALL: Check if Drupal checkout branch is current"
-  shell: cd {{ drupal_git_clone_path }} && git branch -l | grep "* {{ drupal_head }}" || echo "wrong branch"
-  register: drupal_branch_check
-
-- name: "REINSTALL: Switch Drupal checkout to current branch"
-  shell: cd {{ drupal_git_clone_path }} && git checkout {{ drupal_head }}
-  when: drupal_branch_check.stdout == "wrong branch"
-
-- name: "REINSTALL: Check if Drupal checkout can be updated"
-  shell: cd {{ drupal_git_clone_path }} && git pull
-  become: yes
-  become_user: "{{ user }}"
+- include: playbooks/drupal-checkout.yml
 
 - name: "REINSTALL: Check if drucker docroot exists"
   stat:

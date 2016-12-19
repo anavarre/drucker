@@ -159,7 +159,7 @@
   when: drucker_vhost_check.stat.exists == false
 
 - name: Rename default vHost template
-  command: mv {{ vhost_template }} "{{ drucker_available_vhost }}"
+  command: mv {{ vhost_template }} {{ drucker_available_vhost }}
   when: drucker_vhost_check.stat.exists == false
 
 - name: Modify drucker vHost
@@ -192,11 +192,22 @@
 
 - name: Deploy drucker Drush aliases
   copy:
-    src: "{{ drucker_aliases_source_file }}"
+    src: "{{ drush_aliases_source_file }}"
     dest: "{{ drush_aliases_path }}"
     mode: 0644
   when: drucker_aliases.stat.exists == false
   ignore_errors: true
+
+- name: Rename default Drush aliases
+  command: mv {{ drush_aliases_filepath }} {{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php
+  when: drucker_aliases.stat.exists == false
+
+- name: Modify Drush aliases
+  replace:
+    dest: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
+    regexp: '^(.*)SITENAME(.*)$'
+    replace: '\1{{ user }}\2'
+  when: drucker_aliases.stat.exists == false
 
 - name: Create .drush directory
   file:
@@ -244,6 +255,13 @@
     mode: 0644
   become: yes
   become_user: "{{ user }}"
+  when: phpunit.stat.exists == false
+
+- name: Modify phpunit.xml file
+  replace:
+    dest: "{{ phpunit_xml }}"
+    regexp: '^(.*)SITENAME(.*)$'
+    replace: '\1{{ user }}\2'
   when: phpunit.stat.exists == false
 
 - name: Check if import directories exist

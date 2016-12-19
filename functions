@@ -53,7 +53,7 @@ load_container_files() {
 }
 
 drucker_usage() {
-  echo "Usage: drucker {--dev|--prod|--reinstall|--delete [sitename]|--import [sitename]|--tests}"
+  echo "Usage: drucker {--dev|--prod|--create [sitename]|--import [sitename]|--reinstall|--delete [sitename]|--tests}"
   exit 0
 }
 
@@ -61,11 +61,12 @@ drucker_argument() {
   if [[ -n "${OPTION}" ]] && \
        [[ "${OPTION}" != "--dev" ]] && \
        [[ "${OPTION}" != "--prod" ]] && \
+       [[ "${OPTION}" != "--create" ]] && \
+       [[ "${OPTION}" != "--import" ]] && \
        [[ "${OPTION}" != "--reinstall" ]] && \
        [[ "${OPTION}" != "--delete" ]] && \
-       [[ "${OPTION}" != "--import" ]] && \
-       [[ "${OPTION}" != "--help" ]] && \
-       [[ "${OPTION}" != "--tests" ]]; then
+       [[ "${OPTION}" != "--tests" ]] && \
+       [[ "${OPTION}" != "--help" ]]; then
     drucker_usage
   else
     case "$OPTION" in
@@ -76,48 +77,17 @@ cat <<EOF
 
 --prod                Opinionated setup with all known performance best practices enabled.
 
+--create [sitename]   Creates an arbitrary docroot, vHost and corresponding database.
+
+--import [sitename]   Imports the database, files and codebase from the web container's import directory.
+
 --reinstall           Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
 
 --delete [sitename]   Deletes an arbitrary docroot, vHost and corresponding database.
 
---import [sitename]   Imports the database, files and codebase from the web container's import directory.
-
 --tests               Runs the Ansible test suite.
 EOF
       exit 0
-      ;;
-      --tests)
-      if [[ "${OPTION}" == "--tests" ]] && [[ ! -z ${SITENAME} ]]; then
-        drucker_usage
-        exit 0
-      else
-        run_tests
-        exit 0
-      fi
-      ;;
-      --import)
-      if [[ "${OPTION}" == "--import" ]] && [[ -z ${SITENAME} ]]; then
-        drucker_usage
-      else
-        import_site
-        exit 0
-      fi
-      ;;
-      --delete)
-      if [[ "${OPTION}" == "--delete" ]] && [[ -z ${SITENAME} ]]; then
-        drucker_usage
-      else
-        delete_site
-        exit 0
-      fi
-      ;;
-      --reinstall)
-      if [[ "${OPTION}" == "--reinstall" ]] && [[ ! -z ${SITENAME} ]]; then
-        drucker_usage
-      else
-        reinstall_drupal
-        exit 0
-      fi
       ;;
       --dev)
       if [[ "${OPTION}" == "--dev" ]] && [[ ! -z ${SITENAME} ]]; then
@@ -132,6 +102,47 @@ EOF
         drucker_usage
       else
         drupal_prod_mode
+        exit 0
+      fi
+      ;;
+      --create)
+      if [[ "${OPTION}" == "--create" ]] && [[ -z ${SITENAME} ]]; then
+        drucker_usage
+      else
+        create_site
+        exit 0
+      fi
+      ;;
+      --import)
+      if [[ "${OPTION}" == "--import" ]] && [[ -z ${SITENAME} ]]; then
+        drucker_usage
+      else
+        import_site
+        exit 0
+      fi
+      ;;
+      --reinstall)
+      if [[ "${OPTION}" == "--reinstall" ]] && [[ ! -z ${SITENAME} ]]; then
+        drucker_usage
+      else
+        reinstall_drupal
+        exit 0
+      fi
+      ;;
+      --delete)
+      if [[ "${OPTION}" == "--delete" ]] && [[ -z ${SITENAME} ]]; then
+        drucker_usage
+      else
+        delete_site
+        exit 0
+      fi
+      ;;
+      --tests)
+      if [[ "${OPTION}" == "--tests" ]] && [[ ! -z ${SITENAME} ]]; then
+        drucker_usage
+        exit 0
+      else
+        run_tests
         exit 0
       fi
       ;;

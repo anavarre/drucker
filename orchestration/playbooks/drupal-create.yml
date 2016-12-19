@@ -1,0 +1,236 @@
+---
+- include: playbooks/drupal-checkout.yml
+
+- name: "CREATE: Check if new docroot exists"
+  stat:
+    path: "{{ webroot }}/{{ sitename }}"
+  register: new_docroot
+  ignore_errors: True
+
+- name: "CREATE: Copy Drupal directory"
+  command: cp -R {{ drupal_git_clone_path }} {{ webroot }}/{{ sitename }}
+  become: yes
+  become_user: "{{ user }}"
+  when: new_docroot.stat.exists == false
+
+- name: "CREATE: Check if new database exists"
+  stat:
+    path: "{{ mysql_data }}/{{ sitename }}"
+  register: new_db
+
+- name: "CREATE: Create files directory"
+  file:
+    path: "{{ webroot }}/{{ sitename }}/sites/default/files"
+    state: directory
+    mode: 0777
+  become: yes
+  become_user: "{{ user }}"
+  when: new_docroot.stat.exists == false or new_db.stat.exists == false
+
+- name: "CREATE: Create libraries directory"
+  file:
+    path: "{{ webroot }}/{{ sitename }}/libraries"
+    state: directory
+  become: yes
+  become_user: "{{ user }}"
+  when: new_docroot.stat.exists == false or new_db.stat.exists == false
+
+- name: "CREATE: Create simpletest directory"
+  file:
+    path: "{{ webroot }}/{{ sitename }}/sites/simpletest"
+    state: directory
+    mode: 0777
+  become: yes
+  become_user: "{{ user }}"
+  when: new_docroot.stat.exists == false
+
+- name: "CREATE: Create settings.php file"
+  command: cp {{ webroot }}/{{ sitename }}/sites/default/default.settings.php {{ webroot }}/{{ sitename }}/sites/default/settings.php
+  become: yes
+  become_user: "{{ user }}"
+  when: new_docroot.stat.exists == false or new_db.stat.exists == false
+
+- name: "CREATE: Create services.yml file"
+  command: cp {{ webroot }}/{{ sitename }}/sites/default/default.services.yml {{ webroot }}/{{ sitename }}/sites/default/services.yml
+  become: yes
+  become_user: "{{ user }}"
+  when: new_docroot.stat.exists == false or new_db.stat.exists == false
+
+- name: "CREATE: Add trusted_host_patterns in settings.php"
+  blockinfile:
+    dest: "{{ webroot }}/{{ sitename }}/sites/default/settings.php"
+    block: |
+      $settings['trusted_host_patterns'] = array(
+        '^{{ sitename }}\.{{ tld }}$',
+      );
+  when: new_docroot.stat.exists == false or new_db.stat.exists == false
+
+- name: "CREATE: Ensure database is wiped before installing"
+  mysql_db:
+    login_user: "{{ mysql_creds }}"
+    login_password: "{{ mysql_creds }}"
+    login_host: "{{ db_ip }}"
+    login_port: "{{ mysql_port }}"
+    name: "{{ sitename }}"
+    config_file: "{{ my_cnf }}"
+    state: absent
+  when: new_docroot.stat.exists == false
+
+- name: "CREATE: Create new database"
+  mysql_db:
+    login_user: "{{ mysql_creds }}"
+    login_password: "{{ mysql_creds }}"
+    login_host: "{{ db_ip }}"
+    login_port: "{{ mysql_port }}"
+    name: "{{ sitename }}"
+    config_file: "{{ my_cnf }}"
+    state: present
+  when: new_docroot.stat.exists == false or new_db.stat.exists == false
+
+- name: "CREATE: Check if new vHost exists"
+  stat:
+    path: "{{ sites_enabled }}/{{ sitename }}.conf"
+  register: new_vhost_check
+  ignore_errors: True
+
+- name: "CREATE: Deploy default vHost template"
+  copy:
+    src: "{{ apache_template_source_file }}"
+    dest: "{{ sites_available }}"
+    mode: 0644
+  when: new_vhost_check.stat.exists == false
+
+- name: "CREATE: Rename default vHost template"
+  command: mv {{ vhost_template }} {{ sites_available }}/{{ sitename }}.conf
+  when: new_vhost_check.stat.exists == false
+
+- name: "CREATE: Modify new vHost"
+  replace:
+    dest: "{{ sites_available }}/{{ sitename }}.conf"
+    regexp: '^(.*)SITENAME(.*)$'
+    replace: '\1{{ sitename }}\2'
+  when: new_vhost_check.stat.exists == false
+
+- name: "CREATE: Enable new vHost"
+  file:
+    src: ../sites-available/{{ sitename }}.conf
+    dest: "{{ sites_enabled }}/{{ sitename }}.conf"
+    state: link
+    force: yes
+  register: test
+  notify: Reload Apache
+  when: new_vhost_check.stat.exists == false
+
+- name: "CREATE: Check if new Drush aliases exist"
+  stat:
+    path: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
+  register: new_aliases
+
+- name: "CREATE: Deploy new Drush aliases"
+  copy:
+    src: "{{ drush_aliases_source_file }}"
+    dest: "{{ drush_aliases_path }}"
+    mode: 0644
+  when: new_aliases.stat.exists == false
+  ignore_errors: true
+
+- name: "CREATE: Rename default Drush aliases"
+  command: mv {{ drush_aliases_filepath }} {{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php
+  when: new_aliases.stat.exists == false
+
+- name: "CREATE: Modify Drush aliases"
+  replace:
+    dest: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
+    regexp: '^(.*)SITENAME(.*)$'
+    replace: '\1{{ sitename }}\2'
+  when: new_aliases.stat.exists == false
+
+- name: "CREATE: Pull vendor dependencies"
+  composer:
+    command: install
+    working_dir: "{{ webroot }}/{{ sitename }}"
+  become: yes
+  become_user: "{{ user }}"
+  when: new_docroot.stat.exists == false or new_db.stat.exists == false
+
+- name: "CREATE: Install Drupal"
+  command: drush @{{ sitename }}.{{ tld }} site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@{{ db_ip }}:{{ mysql_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}
+  become: yes
+  become_user: "{{ user }}"
+  when: new_docroot.stat.exists == false or new_db.stat.exists == false
+
+- name: "CREATE: Retrieve path to sync directory"
+  shell: drush @{{ sitename }}.{{ tld }} st | grep Sync | awk '{print $NF}'
+  register: new_sync_dir
+  when: new_docroot.stat.exists == false or new_db.stat.exists == false
+
+- name: "CREATE: Make sure the sync directory is writable"
+  file:
+    path: "{{ webroot }}/{{ sitename }}/{{ new_sync_dir.stdout }}"
+    mode: 0777
+  when: new_docroot.stat.exists == false or new_db.stat.exists == false
+
+- name: "CREATE: Check if phpunit.xml file exists"
+  stat:
+    path: "{{ webroot }}/{{ sitename }}/core/phpunit.xml"
+  register: new_phpunit
+
+- name: "CREATE: Deploy phpunit.xml file"
+  copy:
+    src: "{{ phpunit_source_file }}"
+    dest: "{{ webroot }}/{{ sitename }}/core/"
+    mode: 0644
+  become: yes
+  become_user: "{{ user }}"
+  when: new_phpunit.stat.exists == false
+
+- name: "CREATE: Modify phpunit.xml file"
+  replace:
+    dest: "{{ webroot }}/{{ sitename }}/core/phpunit.xml"
+    regexp: '^(.*)SITENAME(.*)$'
+    replace: '\1{{ sitename }}\2'
+  when: new_phpunit.stat.exists == false
+
+- name: "CREATE: Check if .gitignore exists"
+  stat:
+    path: "{{ webroot }}/{{ sitename }}/.gitignore"
+  register: new_gitignore
+  ignore_errors: True
+
+- name: "CREATE: Create .gitignore file"
+  copy:
+    src: "{{ gitignore_source_file }}"
+    dest: "{{ webroot }}/{{ sitename }}"
+    mode: 0644
+  become: yes
+  become_user: "{{ user }}"
+  when: new_gitignore.stat.exists == false
+
+- name: "CREATE: Add all new files under version control"
+  shell: git -C "{{ webroot }}/{{ sitename }}" add . && git -C "{{ webroot }}/{{ sitename }}" commit -m "Initial commit"
+  become: yes
+  become_user: "{{ user }}"
+  when: new_gitignore.stat.exists == false
+
+- name: "CREATE: Set up Drupal Console to work with the new docroot 1/2"
+  composer:
+    command: require
+    arguments: "{{ drupal_console_composer_package }}:{{ drupal_console_composer_package_version }} --prefer-dist --optimize-autoloader"
+    working_dir: "{{ webroot }}/{{ sitename }}"
+  become: yes
+  become_user: "{{ user }}"
+
+- name: "CREATE: Set up Drupal Console to work with the new docroot 2/2"
+  composer:
+    command: update
+    arguments: "{{ drupal_console_composer_package }} --with-dependencies"
+    working_dir: "{{ webroot }}/{{ sitename }}"
+  become: yes
+  become_user: "{{ user }}"
+  when: new_docroot.stat.exists == false
+
+- name: "CREATE: Add new vendor files under version control"
+  shell: git -C "{{ webroot }}/{{ sitename }}" add . && git -C "{{ webroot }}/{{ sitename }}" commit -m "Extra commit for vendor files"
+  become: yes
+  become_user: "{{ user }}"
+  when: new_docroot.stat.exists == false
