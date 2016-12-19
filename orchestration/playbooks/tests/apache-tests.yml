@@ -43,7 +43,6 @@
     url: "{{ item }}"
   with_items:
     - http://{{ user }}.{{ tld }}
-    # To test the below URLs /etc/hosts should be modified.
-    # - http://search.{{ tld }}:{{ solr_port }}/solr/#
-    # - http://phpmyadmin.{{ tld }}
-    # - http://adminer.{{ tld }}
+    - http://search.{{ tld }}:{{ solr_port }}/solr/#
+    - http://phpmyadmin.{{ tld }}
+    - http://adminer.{{ tld }}

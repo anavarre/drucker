@@ -221,12 +221,14 @@ phpmyadmin_root: "{{ webroot }}/phpmyadmin"
 phpmyadmin_config_sample: "{{ phpmyadmin_root }}/config.sample.inc.php"
 phpmyadmin_config: "{{ phpmyadmin_root }}/config.inc.php"
 phpmyadmin_release_date_file: "{{ phpmyadmin_root }}/RELEASE-DATE-{{ phpmyadmin_stable_release }}"
+phpmyadmin_hostname: phpmyadmin
 
 # Adminer
 adminer_stable_release: 4.2.5
 adminer_download_link: https://github.com/vrana/adminer/releases/download/v{{ adminer_stable_release }}/adminer-{{ adminer_stable_release }}-en.php
 adminer_root: "{{ webroot }}/adminer"
 adminer_index: "{{ adminer_root }}/index.php"
+adminer_hostname: adminer
 
 # Drupal
 drupal_creds: admin

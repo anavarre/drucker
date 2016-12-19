@@ -288,6 +288,18 @@
   become_user: "{{ user }}"
   when: drucker.stat.exists == false
 
+- name: Check if all hostnames are configured
+  shell: grep -E '({{ phpmyadmin_hostname }}.{{ tld }}|{{ adminer_hostname }}.{{ tld }})' {{ hosts_file }} || echo "absent"
+  register: additional_hostnames
+  changed_when: additional_hostnames.stdout == "absent"
+
+- name: Make sure the web container can reach all hostnames
+  shell: echo "{{ web_ip }}    {{ item }}.{{ tld }}" >> {{ hosts_file }}
+  with_items:
+  - "{{ phpmyadmin_hostname }}"
+  - "{{ adminer_hostname }}"
+  when: additional_hostnames.stdout == "absent"
+
 - name: Check if Solr hostname is configured
   shell: grep -o "{{ search_ip }}" {{ hosts_file }} || echo "absent"
   register: search_hostname
