@@ -4,23 +4,24 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # shellcheck source=/dev/null
-source "${DIR}/requirements"
-check_requirements
-
-# shellcheck source=/dev/null
-source "${DIR}/config"
-# shellcheck source=/dev/null
 source "${DIR}/functions"
+load_container_files
+
+check_software_requirements
+check_hosts_file
+check_ssh_config_file
+
+exit 0
 
 export OPTION=$1
 export SITENAME=$2
 
+# shellcheck source=/dev/null
+source "${DIR}/config"
 # Custom user configuration.
 set_local_ssh_path
 set_local_html_path
 set_local_db_path
-
-load_container_files
 
 # Are we running drucker with a CLI argument?
 drucker_argument

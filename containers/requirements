@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+check_software_requirements() {
+  if [[ -z $(docker --version) ]]; then
+    echo -e "${RED}You need to install Docker before running this script.${COLOR_ENDING}"
+    exit 0
+  fi
+
+  if [[ -z $(ansible --version) ]]; then
+    echo -e "${RED}You need to install Ansible before running this script.${COLOR_ENDING}"
+    exit 0
+  fi
+
+  if [[ "$(ansible --version | head -n1 | awk '{print $2}' | cut -c 1)" -lt "2" ]]; then
+    echo -e "${RED}Ansible 2 or later is required to run drucker.${COLOR_ENDING}"
+    exit 0
+  fi
+}
+
+check_hosts_file() {
+  if [[ ! $(grep -o ${REVERSE_PROXY_IP} /etc/hosts) ]] || [[ ! $(grep -o ${SEARCH_IP} /etc/hosts) ]]; then
+    echo -e "${RED}Your local /etc/hosts file is not correctly configured.${COLOR_ENDING}"
+cat <<EOF
+
+You should add the below entries:
+
+${REVERSE_PROXY_IP}    drucker.local phpmyadmin.local adminer.local
+${SEARCH_IP}   search.local
+EOF
+  fi
+}
+
+check_ssh_config_file() {
+  if [[ ! $(grep -o ${REVERSE_PROXY_IP} ~/.ssh/config) ]]; then
+    echo -e "${RED}Your local ~/.ssh/config file is not correctly configured.${COLOR_ENDING}"
+cat <<EOF
+
+You should add the below entries:
+
+Host ${BASE_CONTAINER_IP} ${REVERSE_PROXY_IP} ${WEB_IP} ${WEB2_IP} ${DB_IP} ${SEARCH_IP}
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+  LogLevel=error
+EOF
+  fi
+}
