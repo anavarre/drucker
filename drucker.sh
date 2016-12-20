@@ -11,13 +11,12 @@ check_software_requirements
 check_hosts_file
 check_ssh_config_file
 
-exit 0
+# shellcheck source=/dev/null
+source "${DIR}/config"
 
 export OPTION=$1
 export SITENAME=$2
 
-# shellcheck source=/dev/null
-source "${DIR}/config"
 # Custom user configuration.
 set_local_ssh_path
 set_local_html_path
