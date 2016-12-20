@@ -1,6 +1,6 @@
 # drucker: Drupal + Docker
 
-[![demo](https://asciinema.org/a/51lh7ymc9q6dselpyw61ii2hv.png)](https://asciinema.org/a/51lh7ymc9q6dselpyw61ii2hv)
+[![demo](https://asciinema.org/a/cp8rkaa9mcux71hdlpc3sxwkl.png)](https://asciinema.org/a/cp8rkaa9mcux71hdlpc3sxwkl)
 
 _drucker_ is an opinionated [Docker](https://www.docker.com)-based [Drupal](https://www.drupal.org) stack managed by [Ansible](https://www.ansible.com) for orchestration. It automates creating [Debian](https://www.debian.org) containers on which it will deploy a common web stack to run Drupal applications.
 
