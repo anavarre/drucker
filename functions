@@ -53,12 +53,13 @@ load_container_files() {
 }
 
 drucker_usage() {
-  echo "Usage: drucker {--dev|--prod|--create [sitename]|--import [sitename]|--reinstall|--delete [sitename]|--tests}"
+  echo "Usage: drucker {--version|--dev|--prod|--create [sitename]|--import [sitename]|--reinstall|--delete [sitename]|--tests}"
   exit 0
 }
 
 drucker_argument() {
   if [[ -n "${OPTION}" ]] && \
+       [[ "${OPTION}" != "--version" ]] && \
        [[ "${OPTION}" != "--dev" ]] && \
        [[ "${OPTION}" != "--prod" ]] && \
        [[ "${OPTION}" != "--create" ]] && \
@@ -70,24 +71,17 @@ drucker_argument() {
     drucker_usage
   else
     case "$OPTION" in
-      --help)
-cat <<EOF
---dev                 Prepare drucker for development work with no caching and helper modules enabled.
-                      WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
+      --version)
+      drucker_version_check=$(grep "drucker_version" ${DIR}/containers/variables | awk '{print $2}' | grep -oP 'drucker_version="\K[^"]+')
+      latest_commit=$(cd ${DIR} && git rev-parse --short HEAD)
 
---prod                Opinionated setup with all known performance best practices enabled.
-
---create [sitename]   Creates an arbitrary docroot, vHost and corresponding database.
-
---import [sitename]   Imports the database, files and codebase from the web container's import directory.
-
---reinstall           Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
-
---delete [sitename]   Deletes an arbitrary docroot, vHost and corresponding database.
-
---tests               Runs the Ansible test suite.
-EOF
-      exit 0
+      if [[ ${drucker_version_check} == 'dev' ]]; then
+        echo ${drucker_version_check}:${latest_commit}
+        exit 0
+      else
+        echo ${drucker_version_check}
+        exit 0
+     fi
       ;;
       --dev)
       if [[ "${OPTION}" == "--dev" ]] && [[ ! -z ${SITENAME} ]]; then
@@ -145,6 +139,26 @@ EOF
         run_tests
         exit 0
       fi
+      ;;
+      --help)
+cat <<EOF
+--version             Returns the drucker version.
+--dev                 Prepare drucker for development work with no caching and helper modules enabled.
+                      WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
+
+--prod                Opinionated setup with all known performance best practices enabled.
+
+--create [sitename]   Creates an arbitrary docroot, vHost and corresponding database.
+
+--import [sitename]   Imports the database, files and codebase from the web container's import directory.
+
+--reinstall           Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
+
+--delete [sitename]   Deletes an arbitrary docroot, vHost and corresponding database.
+
+--tests               Runs the Ansible test suite.
+EOF
+      exit 0
       ;;
     esac
   fi

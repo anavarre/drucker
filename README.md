@@ -139,6 +139,7 @@ For more advanced `drucker` usage, you can pass several CLI parameters:
 
 ```
 $ drucker --help
+--version             Returns the drucker version.
 --dev                 Prepare drucker for development work with no caching and helper modules enabled.
                       WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
 
