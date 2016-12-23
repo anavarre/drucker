@@ -203,7 +203,7 @@ phpmd_binary: "{{ user_programs_path }}/phpmd"
 # MySQL
 mysql_apt_config_tool: 0.7.3-1
 mysql_apt_repo: http://dev.mysql.com/get/mysql-apt-config_{{ mysql_apt_config_tool }}_all.deb
-my_cnf: /etc/mysql/conf.d/mysql.cnf
+my_cnf: /etc/mysql/my.cnf
 mysqld_cnf: /etc/mysql/mysql.conf.d/mysqld.cnf
 mysql_data: /var/lib/mysql
 mysql_creds: root
