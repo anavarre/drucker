@@ -8,7 +8,7 @@ Currently, _drucker_ runs on 4 containers:
 
 * `drucker_reverse_proxy` (`203.0.113.2`): Varnish listens on port 80 and sends traffic to the Apache backend via nginx on port 8080).
 * `drucker_web` (`203.0.113.10`): Apache listens on port 80 and receives traffic from nginx.
-* `drucker_db` (`203.0.113.12`): MySQL listens on port 3306 and allows the stack to act as a multi-tier environment.
+* `drucker_db` (`203.0.113.12`): MariaDB listens on port 3306 and allows the stack to act as a multi-tier environment.
 * `drucker_search` (`203.0.113.13`): Apache Solr listens on port 8983.
 
 The plan is to make _drucker_ a true service-based suite of containers, by leveraging GlusterFS for distributed network filesystem across N number of web containers. Load-Balancing and HA capabilities will also be enforced to replicate a production environment locally. When we have this, then a 1.0.0 release will be tagged. But for now, the aim is to incrementally make things more stable and more fully-featured.
@@ -40,34 +40,34 @@ You also need to [generate a SSH key](https://help.github.com/articles/generatin
 
 _drucker_ ships with the following software stack:
 
-| Software            | Version         | Source |
-| --------------------|:---------------:|:--------:
-| Debian              | 8 (Jessie)      | [debian:latest](https://hub.docker.com/_/debian/)    |
-| Varnish             | 4.1.2 or later  | Custom build   |
-| nginx               | 1.10.1 or later | Custom build   |
-| Apache              | 2.4.10 or later | Custom build    |
-| Apache Solr         | 6.2.0 or later  | [geerlingguy.solr](https://galaxy.ansible.com/geerlingguy/solr/) (3.2.4) |
-| Java                | 8               | [williamyeh.oracle-java](https://galaxy.ansible.com/williamyeh/oracle-java/) (2.10.0)    |
-| PHP-FPM             | 7.0.13 or later | Custom build   |
-| APCu                | 5.1.7           | APT            |
-| Xdebug              | 2.5.0           | Custom build   |
-| PECL uploadprogress | master          | Custom build   |
-| PECL YAML           | 2.0.0           | Custom build   |
-| LibYAML             | 0.1.7           | Custom build   |
-| Tideways Profiler   | 4.0.7           | Custom build   |
-| Coder               | 8.2.9           | Custom build   |
-| Code Sniffer        | 2.6.1           | Custom build   |
-| PHP-CS-Fixer        | 1.12.2          | Custom build   |
-| phpmd               | 2.5.0           | Custom build   |
-| phantomjs           | 2.1.1           | Custom build   |
-| MySQL               | 5.7.14 or later | Custom build   |
-| Drupal              | 8.3.x           | Custom build   |
-| Drush               | 9.0-dev         | Custom build   |
-| Drupal Console      | 1.0.0-rc12      | Custom build   |
-| Composer            | 1.2.4           | Custom build   |
-| phpMyAdmin          | 4.6.5           | Custom build   |
-| adminer             | 4.2.5           | Custom build   |
-| bash-git-prompt     | 2.6.1           | Custom build   |
+| Software            | Version          | Source |
+| --------------------|:----------------:|:--------:
+| Debian              | 8 (Jessie)       | [debian:latest](https://hub.docker.com/_/debian/)    |
+| Varnish             | 4.1.2 or later   | Custom build   |
+| nginx               | 1.10.1 or later  | Custom build   |
+| Apache              | 2.4.10 or later  | Custom build    |
+| Apache Solr         | 6.2.0 or later   | [geerlingguy.solr](https://galaxy.ansible.com/geerlingguy/solr/) (3.2.4) |
+| Java                | 8                | [williamyeh.oracle-java](https://galaxy.ansible.com/williamyeh/oracle-java/) (2.10.0)    |
+| PHP-FPM             | 7.0.13 or later  | Custom build   |
+| APCu                | 5.1.7            | APT            |
+| Xdebug              | 2.5.0            | Custom build   |
+| PECL uploadprogress | master           | Custom build   |
+| PECL YAML           | 2.0.0            | Custom build   |
+| LibYAML             | 0.1.7            | Custom build   |
+| Tideways Profiler   | 4.0.7            | Custom build   |
+| Coder               | 8.2.9            | Custom build   |
+| Code Sniffer        | 2.6.1            | Custom build   |
+| PHP-CS-Fixer        | 1.12.2           | Custom build   |
+| phpmd               | 2.5.0            | Custom build   |
+| phantomjs           | 2.1.1            | Custom build   |
+| MariaDB             | 10.0.28 or later | Custom build   |
+| Drupal              | 8.3.x            | Custom build   |
+| Drush               | 9.0-dev          | Custom build   |
+| Drupal Console      | 1.0.0-rc12       | Custom build   |
+| Composer            | 1.2.4            | Custom build   |
+| phpMyAdmin          | 4.6.5            | Custom build   |
+| adminer             | 4.2.5            | Custom build   |
+| bash-git-prompt     | 2.6.1            | Custom build   |
 
 ## Installation
 
