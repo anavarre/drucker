@@ -34,4 +34,4 @@
   until: "'OK' in search_api_solr_config_get_url_result.msg"
   retries: 1
   delay: 10
-  when: solr_conf_files.stdout == "missing"
+  when: solr_conf_files is defined and solr_conf_files.stdout == "missing"
