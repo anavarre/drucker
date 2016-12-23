@@ -6,10 +6,10 @@
   changed_when: schemaxml_check.stat.exists == false
 
 - name: Check if Apache Solr has been configured for Search API Solr
-  shell: grep -o "search_api_solr" {{ solr_configuration_path }}/schema.xml | head -n1 || echo "missing"
+  shell: grep -o "search_api_solr" {{ solr_configuration_path }}/synonyms.txt | head -n1 || echo "missing"
   register: solr_conf_files
-  changed_when: solr_conf_files.stdout == "missing"
   when: schemaxml_check.stat.exists == true
+  changed_when: solr_conf_files.stdout != "search_api_solr"
 
 - name: Download Apache Solr configuration from search_api_solr
   get_url:
@@ -34,4 +34,4 @@
   until: "'OK' in search_api_solr_config_get_url_result.msg"
   retries: 1
   delay: 10
-  when: solr_conf_files is defined and solr_conf_files.stdout == "missing"
+  when: schemaxml_check.stat.exists == false or (solr_conf_files is defined and solr_conf_files.stdout != "search_api_solr")
