@@ -5,16 +5,29 @@
   register: my_cnf_check
   changed_when: my_cnf_check.stat.exists == false
 
-# ToDo: back up MySQL databases prior to deleting everything.
+- name: Check if MySQL backup directory exists
+  stat:
+    path: "{{ mysql_backup_dir }}"
+  register: backup_dir
+  changed_when: backup_dir.stat.exists == false
+
+- name: Create MySQL backup directory
+  file:
+    path: "{{ mysql_backup_dir }}"
+    state: directory
+  when: my_cnf_check.stat.exists == true and backup_dir.stat.exists == false
+
+- name: Temporary move the MySQL backup directory
+  command: mv {{ mysql_backup_dir }} {{ download_dir }}
+  when: my_cnf_check.stat.exists == false and backup_dir.stat.exists == true
 
 - name: Clean up MySQL directory
   shell: rm -Rf {{ mysql_data }}/* warn=False
   when: my_cnf_check.stat.exists == false
 
-- name: Install MySQL APT repository config tool
-  apt:
-    deb: "{{ mysql_apt_repo }}"
-  when: mysql.stat.exists == false
+- name: Move back the backup directory
+  command: mv {{ download_dir }}/backup {{ mysql_data }}
+  when: my_cnf_check.stat.exists == false and backup_dir.stat.exists == true
 
 - name: Install MySQL server and utilities
   package:
