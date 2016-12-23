@@ -118,7 +118,15 @@
     mode: 0755
   when: mysql_backup_check.stat.exists == false
 
-- name: Ensure MySQL is restarted
+- name: Schedule periodic MySQL backups
+  cron:
+    name: "Hourly MySQL backup for all databases"
+    job: bash -c '{{ mysql_backup_path }}'
+    user: root
+    hour: "1"
+    state: present
+
+- name: Restart MySQL
   service:
     name: mysql
     enabled: yes
