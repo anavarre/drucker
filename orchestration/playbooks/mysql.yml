@@ -105,6 +105,19 @@
     host: "{{ web_ip }}"
     state: present
 
+- name: Check if MySQL backup script exists
+  stat:
+    path: "{{ mysql_backup_path }}"
+  register: mysql_backup_check
+  changed_when: mysql_backup_check.stat.exists == false
+
+- name: Deploy MySQL backup script
+  copy:
+    src: "{{ mysql_backup_source_file }}"
+    dest: "{{ user_programs_path }}"
+    mode: 0755
+  when: mysql_backup_check.stat.exists == false
+
 - name: Ensure MySQL is restarted
   service:
     name: mysql

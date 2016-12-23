@@ -201,6 +201,8 @@ phpmd_download_link: http://static.phpmd.org/php/{{ phpmd_stable_version }}/phpm
 phpmd_binary: "{{ user_programs_path }}/phpmd"
 
 # MySQL
+mysql_backup_source_file: "{{ source_file_dir }}/mysql-backup.sh"
+mysql_backup_path: "{{ user_programs_path }}/mysql-backup.sh"
 mysql_apt_config_tool: 0.7.3-1
 mysql_apt_repo: http://dev.mysql.com/get/mysql-apt-config_{{ mysql_apt_config_tool }}_all.deb
 my_cnf: /etc/mysql/my.cnf
