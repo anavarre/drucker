@@ -63,7 +63,7 @@ _drucker_ ships with the following software stack:
 | MySQL               | 5.7.14 or later | Custom build   |
 | Drupal              | 8.3.x           | Custom build   |
 | Drush               | 9.0-dev         | Custom build   |
-| Drupal Console      | 1.0.0-rc11      | Custom build   |
+| Drupal Console      | 1.0.0-rc12      | Custom build   |
 | Composer            | 1.2.4           | Custom build   |
 | phpMyAdmin          | 4.6.5           | Custom build   |
 | adminer             | 4.2.5           | Custom build   |

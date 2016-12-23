@@ -32,6 +32,6 @@
     - synonyms.txt
   register: search_api_solr_config_get_url_result
   until: "'OK' in search_api_solr_config_get_url_result.msg"
-  retries: 3
+  retries: 1
   delay: 10
   when: schemaxml_check.stat.exists == false or solr_conf_files.stdout == "missing"
