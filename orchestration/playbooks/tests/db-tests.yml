@@ -24,6 +24,12 @@
   changed_when: innodb_setting.stdout == "missing"
   failed_when: innodb_setting.stdout == "missing"
 
+- name: "TEST: Check if MySQL backup cron job exists"
+  shell: crontab -l | grep -o "{{ mysql_backup_path }}" || echo "missing"
+  register: cronjob
+  changed_when: cronjob.stdout == "missing"
+  failed_when: cronjob.stdout == "missing"
+
 - name: "TEST: Check if MySQL remote access is configured"
   shell: grep -o "0.0.0.0" {{ my_cnf }} || echo "denied"
   register: remote_access

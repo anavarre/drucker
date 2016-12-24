@@ -121,10 +121,16 @@
 - name: Schedule periodic MySQL backups
   cron:
     name: "Hourly MySQL backup for all databases"
-    job: bash -c '{{ mysql_backup_path }}'
+    job: "{{ mysql_backup_path }}"
     user: root
-    hour: "1"
+    minute: "02"
     state: present
+
+- name: Restart cron
+  service:
+    name: cron
+    enabled: yes
+    state: restarted
 
 - name: Restart MySQL
   service:
