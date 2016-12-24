@@ -27,9 +27,15 @@
 
 - name: "TEST: Check if MySQL backup cron job exists"
   shell: crontab -l | grep -o "{{ mysql_backup_path }}" || echo "missing"
-  register: cronjob
-  changed_when: cronjob.stdout == "missing"
-  failed_when: cronjob.stdout == "missing"
+  register: mysql_backup_cron
+  changed_when: mysql_backup_cron.stdout == "missing"
+  failed_when: mysql_backup_cron.stdout == "missing"
+
+- name: "TEST: Check if MySQL backup cleanup cron job exists"
+  shell: crontab -l | grep -o "mmin +180" || echo "missing"
+  register: mysql_cleanup_cron
+  changed_when: mysql_cleanup_cron.stdout == "missing"
+  failed_when: mysql_cleanup_cron.stdout == "missing"
 
 - name: "TEST: Check if MySQL remote access is configured"
   shell: grep -o "0.0.0.0" {{ my_cnf }} || echo "denied"

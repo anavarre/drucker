@@ -126,6 +126,14 @@
     minute: "02"
     state: present
 
+- name: Schedule periodic MySQL backup cleanup
+  cron:
+    name: "Clean up MySQL backups every 3 hours"
+    job: /usr/bin/find {{ mysql_backup_dir }} -mmin +180 -name "*.gz" -exec rm -f {} \;
+    user: root
+    minute: "05"
+    state: present
+
 - name: Restart cron
   service:
     name: cron
