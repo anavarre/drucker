@@ -45,7 +45,7 @@
 - name: Check if innodb_file_per_table has been configured
   shell: grep -o "innodb_file_per_table" {{ my_cnf }} || echo "absent"
   register: innodb_file_per_table
-  changed_when: innodb_file_per_table == "absent"
+  changed_when: innodb_file_per_table.stdout == "absent"
 
 - name: Set innodb_file_per_table
   blockinfile:
@@ -55,7 +55,7 @@
       innodb_file_per_table = 1
     insertafter: EOF
     marker: "# {mark} MANAGED INNODB BLOCK"
-  when: innodb_file_per_table == "absent"
+  when: innodb_file_per_table.stdout == "absent"
 
 - name: Check if MySQL is configured to allow remote access
   shell: grep -o "0.0.0.0" {{ my_cnf }} || echo "denied"
