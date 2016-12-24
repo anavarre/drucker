@@ -119,7 +119,7 @@ uploadprogress_extension_name: uploadprogress.so
 uploadprogress_extension_path: "{{ php_extensions }}/{{ uploadprogress_extension_name }}"
 
 # Composer
-composer_stable_release: 1.2.4
+composer_stable_release: 1.3.0
 composer_download_link: https://getcomposer.org/download/{{ composer_stable_release }}/composer.phar
 composer_binary: "{{ user_programs_path }}/composer"
 composer_dir_path: "{{ home }}/.composer"
