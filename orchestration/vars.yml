@@ -274,7 +274,7 @@ drush_dir: "{{ home }}/.drush"
 drucker_aliases: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
 
 # Drupal Console
-drupal_console_launcher_stable_release: 1.0.0-rc12
+drupal_console_launcher_stable_release: 1.0.0-rc13
 drupal_console_composer_package: drupal/console
 drupal_console_composer_package_version: ~1.0
 drupal_console_launcher_download_link: https://github.com/hechoendrupal/drupal-console-launcher/releases/download/{{ drupal_console_launcher_stable_release }}/drupal.phar
