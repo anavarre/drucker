@@ -29,9 +29,9 @@ set_local_html_path() {
 
 set_local_db_path() {
   if [[ -f config ]] && [[ $(grep 'db_path' ${DIR}/config) ]]; then
-    export DEFAULT_HOST_DB_PATH="/var/lib/mysql"
+    export DEFAULT_HOST_DB_PATH="/var/lib/mysql/backup"
 
-    read -p "Where should we store drucker databases locally? [${DEFAULT_HOST_DB_PATH}]: " HOST_DB_PATH
+    read -p "Where should we store database backups locally? [${DEFAULT_HOST_DB_PATH}]: " HOST_DB_PATH
     HOST_DB_PATH=${HOST_DB_PATH:-$DEFAULT_HOST_DB_PATH}
 
     sed -i "s#db_path#${HOST_DB_PATH}#g" ${DIR}/config

@@ -10,10 +10,11 @@
   register: mysql
   failed_when: mysql.stat.exists == false
 
-- name: "TEST: Check if MySQL packages are installed"
+- name: "TEST: Check if MySQL and utilities packages are installed"
   shell: dpkg -l | grep {{ item }}
   with_items:
-    - mariadb-server
+    - mysql-server
+    - mysql-common
     - python-mysqldb
     - mytop
   register: mysql_packages
@@ -48,5 +49,5 @@
   args:
     warn: no
   register: mysql_service
-  changed_when: mysql_service.stdout == "is running"
-  failed_when: mysql_service.stdout == "is running"
+  changed_when: mysql_service.stdout != "is running"
+  failed_when: mysql_service.stdout != "is running"

@@ -8,7 +8,7 @@ Currently, _drucker_ runs on 4 containers:
 
 * `drucker_reverse_proxy` (`203.0.113.2`): Varnish listens on port 80 and sends traffic to the Apache backend via nginx on port 8080).
 * `drucker_web` (`203.0.113.10`): Apache listens on port 80 and receives traffic from nginx.
-* `drucker_db` (`203.0.113.12`): MariaDB listens on port 3306 and allows the stack to act as a multi-tier environment.
+* `drucker_db` (`203.0.113.12`): MySQL listens on port 3306 and allows the stack to act as a multi-tier environment.
 * `drucker_search` (`203.0.113.13`): Apache Solr listens on port 8983.
 
 The plan is to make _drucker_ a true service-based suite of containers, by leveraging GlusterFS for distributed network filesystem across N number of web containers. Load-Balancing and HA capabilities will also be enforced to replicate a production environment locally. When we have this, then a 1.0.0 release will be tagged. But for now, the aim is to incrementally make things more stable and more fully-featured.
@@ -60,7 +60,7 @@ _drucker_ ships with the following software stack:
 | PHP-CS-Fixer        | 1.12.2           | Custom build   |
 | phpmd               | 2.5.0            | Custom build   |
 | phantomjs           | 2.1.1            | Custom build   |
-| MariaDB             | 10.0.28 or later | Custom build   |
+| MySQL               | 5.5.53 or higher | [geerlingguy.mysql](https://galaxy.ansible.com/geerlingguy/mysql/) (2.5.0)   |
 | Drupal              | 8.3.x            | Custom build   |
 | Drush               | 9.0-dev          | Custom build   |
 | Drupal Console      | 1.0.0-rc14       | Custom build   |

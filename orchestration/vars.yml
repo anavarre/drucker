@@ -203,8 +203,6 @@ phpmd_binary: "{{ user_programs_path }}/phpmd"
 # MySQL
 mysql_backup_source_file: "{{ source_file_dir }}/mysql-backup.sh"
 mysql_backup_path: "{{ user_programs_path }}/mysql-backup.sh"
-mysql_apt_config_tool: 0.7.3-1
-mysql_apt_repo: http://dev.mysql.com/get/mysql-apt-config_{{ mysql_apt_config_tool }}_all.deb
 my_cnf: /etc/mysql/my.cnf
 mysql_data: /var/lib/mysql
 mysql_backup_dir: "{{ mysql_data }}/backup"
@@ -291,7 +289,6 @@ varnish_config: /etc/default/varnish
 varnish_default_path: /etc/varnish
 varnish_default_vcl: "{{ varnish_default_path }}/default.vcl"
 varnish_source_list_path: "{{ sources_list_d }}/repo_varnish_cache_org_debian.list"
-
 
 # nginx
 nginx_port: 8080
