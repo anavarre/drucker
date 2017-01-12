@@ -27,6 +27,8 @@
   - net-tools
   - ntp
   - patchutils
+  # geerlingguy.solr dependency
+  - python-httplib2
   - strace
   - sysstat
   - time

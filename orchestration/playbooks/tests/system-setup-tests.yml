@@ -32,6 +32,7 @@
     - net-tools
     - ntp
     - patchutils
+    - python-httplib2
     - strace
     - sysstat
     - time
