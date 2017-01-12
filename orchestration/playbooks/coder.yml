@@ -14,12 +14,7 @@
   when: coder.stat.exists == false
 
 - name: Check if Coder is up-to-date
-  composer:
-    command: info
-    arguments: "{{ coder_composer_package }}"
-    working_dir: "{{ composer_dir_path }}"
-  become: yes
-  become_user: "{{ user }}"
+  shell: grep -o "{{ coder_stable_release }}"  {{ composer_dir_path }}/composer.json
   register: coder_stable_release_check
   when: coder.stat.exists == true
   changed_when: '"{{ coder_stable_release }}" not in coder_stable_release_check.stdout'
