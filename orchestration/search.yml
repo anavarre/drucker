@@ -8,7 +8,7 @@
   handlers:
     - include: handlers.yml
   roles:
-    - williamyeh.oracle-java
+    - geerlingguy.java
     - geerlingguy.solr
   tasks:
     - include: playbooks/solr-configuration.yml
