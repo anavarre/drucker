@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set_local_ssh_path() {
-  if [[ -f config ]] && [[ $(grep 'key_path' ${DIR}/config) ]]; then
+  if [[ $(grep 'key_path' ${DIR}/config) ]]; then
     export DEFAULT_SSH_PATH="$HOME/.ssh/id_rsa.pub"
     read -p "Enter path to SSH public key [${DEFAULT_SSH_PATH}]: " PUBKEY
     PUBKEY=${PUBKEY:-$DEFAULT_SSH_PATH}
@@ -14,7 +14,7 @@ set_local_ssh_path() {
 }
 
 set_local_html_path() {
-  if [[ -f config ]] && [[ $(grep 'html_path' ${DIR}/config) ]]; then
+  if [[ $(grep 'html_path' ${DIR}/config) ]]; then
     export DEFAULT_HOST_HTML_PATH="/var/www/html"
 
     read -p "Where should we store drucker sites locally? [${DEFAULT_HOST_HTML_PATH}]: " HOST_HTML_PATH
@@ -28,7 +28,7 @@ set_local_html_path() {
 }
 
 set_local_db_path() {
-  if [[ -f config ]] && [[ $(grep 'db_path' ${DIR}/config) ]]; then
+  if [[ $(grep 'db_path' ${DIR}/config) ]]; then
     export DEFAULT_HOST_DB_PATH="/var/lib/mysql/backup"
 
     read -p "Where should we store database backups locally? [${DEFAULT_HOST_DB_PATH}]: " HOST_DB_PATH
