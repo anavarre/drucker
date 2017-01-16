@@ -11,6 +11,15 @@
     mysql -u {{ mysql_creds }} -p{{ mysql_creds }} -NBe
     'GRANT ALL PRIVILEGES ON *.* TO "{{ mysql_creds }}"@"{{ web_ip }}" IDENTIFIED BY "{{ mysql_creds }}";'
 
+- name: "Store debian-sys-maint's password"
+  shell: grep -m 1 "password" /etc/mysql/debian.cnf | awk '{print $3}'
+  register: debian_sys_maint_password
+
+- name: Grant debian-sys-maint access to checking MySQL status
+  shell: >
+    mysql -u {{ mysql_creds }} -p{{ mysql_creds }} -NBe
+    "GRANT ALL PRIVILEGES ON *.* TO 'debian-sys-maint'@'localhost' IDENTIFIED BY '{{ debian_sys_maint_password.stdout }}';"
+
 - name: Restart MySQL
   service:
     name: mysql
