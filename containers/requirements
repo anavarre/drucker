@@ -11,8 +11,8 @@ check_software_requirements() {
     exit 0
   fi
 
-  if [[ "$(ansible --version | head -n1 | awk '{print $2}' | cut -c -3)" < "2.2" ]]; then
-    echo -e "${RED}Ansible 2.2 or later is required to run drucker.${COLOR_ENDING}"
+  if [[ "$(ansible --version | head -n1 | awk '{print $2}' | cut -c -3)" < "2" ]]; then
+    echo -e "${RED}Ansible 2 or later is required to run drucker.${COLOR_ENDING}"
     exit 0
   fi
 }

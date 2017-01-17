@@ -2,6 +2,22 @@
 
 [![demo](https://asciinema.org/a/cp8rkaa9mcux71hdlpc3sxwkl.png)](https://asciinema.org/a/cp8rkaa9mcux71hdlpc3sxwkl)
 
+* [Introduction](#Introduction)
+* [Requirements](#Requirements)
+* * [Software](#Software)
+* * [Disk Space](#Disk Space)
+* * [SSH](#SSH)
+* [Technology](#Technology)
+* [Installation](#Installation)
+* [Usage](#Usage)
+* * [Passwords](#Passwords)
+* [Tips and tricks](#Tips and tricks)
+* * [Delete a container](#Delete a container)
+* * [Delete an image](#Delete an image)
+* [Troubleshooting](#Troubleshooting)
+
+## <a name="Introduction"></a>Introduction
+
 _drucker_ is an opinionated [Docker](https://www.docker.com)-based [Drupal](https://www.drupal.org) stack managed by [Ansible](https://www.ansible.com) for orchestration. It automates creating [Debian](https://www.debian.org) containers on which it will deploy a common web stack to run Drupal applications.
 
 Currently, _drucker_ runs on 4 containers:
@@ -13,9 +29,9 @@ Currently, _drucker_ runs on 4 containers:
 
 The plan is to make _drucker_ a true service-based suite of containers, by leveraging GlusterFS for distributed network filesystem across N number of web containers. Load-Balancing and HA capabilities will also be enforced to replicate a production environment locally. When we have this, then a 1.0.0 release will be tagged. But for now, the aim is to incrementally make things more stable and more fully-featured.
 
-## Requirements
+## <a name="Requirements"></a>Requirements
 
-### Software
+### <a name="Software"></a>Software
 
 You need to have both [Docker](https://www.docker.com/) and [Ansible](https://www.ansible.com/) installed on your machine. Check with the below commands:
 
@@ -28,48 +44,48 @@ ansible 2.2.0.0
 
 **Important**: Ansible 2 or later is required.
 
-### Disk space
+### <a name="Disk space"></a>Disk space
 
 You need to have approximately 4GB available.
 
-### SSH
+### <a name="SSH"></a>SSH
 
 You also need to [generate a SSH key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) if you don't have one already.
 
-## Technology
+## <a name="Technology"></a>Technology
 
 _drucker_ ships with the following software stack:
 
 | Software            | Version          | Source |
 | --------------------|:----------------:|:--------:
-| Debian              | 8 (Jessie)       | [debian:latest](https://hub.docker.com/_/debian/)    |
-| Varnish             | 4.1.2 or later   | Custom build   |
-| nginx               | 1.10.1 or later  | Custom build   |
-| Apache              | 2.4.10 or later  | Custom build    |
+| Debian              | 8 (Jessie)       | [debian:latest](https://hub.docker.com/_/debian/)    |
+| Varnish             | 4.1.2 or later   | Custom build   |
+| nginx               | 1.10.1 or later  | Custom build   |
+| Apache              | 2.4.10 or later  | Custom build    |
 | Apache Solr         | 6.3.0 or later   | [geerlingguy.solr](https://galaxy.ansible.com/geerlingguy/solr/) (3.4.1) |
-| Java                | 8                | [williamyeh.oracle-java](https://galaxy.ansible.com/williamyeh/oracle-java/) (2.10.0)    |
-| PHP-FPM             | 7.0.13 or later  | Custom build   |
-| APCu                | 5.1.7            | APT            |
-| Xdebug              | 2.5.0            | Custom build   |
-| PECL uploadprogress | master           | Custom build   |
-| PECL YAML           | 2.0.0            | Custom build   |
-| LibYAML             | 0.1.7            | Custom build   |
-| Tideways Profiler   | 4.0.7            | Custom build   |
-| Coder               | 8.2.9            | Custom build   |
-| Code Sniffer        | 2.6.1            | Custom build   |
-| PHP-CS-Fixer        | 1.12.2           | Custom build   |
-| phpmd               | 2.5.0            | Custom build   |
+| Java                | 8                | [williamyeh.oracle-java](https://galaxy.ansible.com/williamyeh/oracle-java/) (2.10.0)    |
+| PHP-FPM             | 7.0.13 or later  | Custom build   |
+| APCu                | 5.1.7            | APT            |
+| Xdebug              | 2.5.0            | Custom build   |
+| PECL uploadprogress | master           | Custom build   |
+| PECL YAML           | 2.0.0            | Custom build   |
+| LibYAML             | 0.1.7            | Custom build   |
+| Tideways Profiler   | 4.0.7            | Custom build   |
+| Coder               | 8.2.9            | Custom build   |
+| Code Sniffer        | 2.6.1            | Custom build   |
+| PHP-CS-Fixer        | 1.12.2           | Custom build   |
+| phpmd               | 2.5.0            | Custom build   |
 | phantomjs           | 2.1.1            | Custom build   |
-| MySQL               | 5.7.17 or higher | Custom build   |
-| Drupal              | 8.3.x            | Custom build   |
-| Drush               | 9.0-dev          | Custom build   |
-| Drupal Console      | 1.0.0-rc14       | Custom build   |
-| Composer            | 1.3.1            | Custom build   |
-| phpMyAdmin          | 4.6.5            | Custom build   |
-| adminer             | 4.2.5            | Custom build   |
-| bash-git-prompt     | 2.6.1            | Custom build   |
+| MySQL               | 5.7.17 or higher | Custom build   |
+| Drupal              | 8.3.x            | Custom build   |
+| Drush               | 9.0-dev          | Custom build   |
+| Drupal Console      | 1.0.0-rc14       | Custom build   |
+| Composer            | 1.3.1            | Custom build   |
+| phpMyAdmin          | 4.6.5            | Custom build   |
+| adminer             | 4.2.5            | Custom build   |
+| bash-git-prompt     | 2.6.1            | Custom build   |
 
-## Installation
+## <a name="Installation"></a>Installation
 
 Add the below host entries in your hosts file:
 
@@ -110,7 +126,7 @@ Host 203.0.113.99 203.0.113.2 203.0.113.10 203.0.113.11 203.0.113.12 203.0.113.1
 
 This will prevent SSH strict host key checking from getting in the way, since _drucker_ is for development purposes only.
 
-## Usage
+## <a name="Usage"></a>Usage
 
 Simply run `drucker` if you have a bash alias, or invoke the `drucker.sh` script directly.
 
@@ -180,15 +196,15 @@ As _root_, if you wish to log in as the _drucker_ username again (which is recom
 $ su drucker
 ```
 
-## Passwords:
+### <a name="Passwords"></a>Passwords:
 
 * _drucker_ user on the container: `drucker`
 * MySQL credentials: `root`/`root`
 * Drupal credentials: `admin`/`admin`
 
-## Tips and tricks
+## <a name="Tips and tricks"></a>Tips and tricks
 
-### Delete a container
+### <a name="Delete a container"></a>Delete a container
 
 Run:
 
@@ -196,7 +212,7 @@ Run:
 $ docker rm -f <container_name>
 ```
 
-### Delete an image
+### <a name="Delete an image"></a>Delete an image
 
 Run:
 
@@ -206,6 +222,6 @@ $ docker rmi <drucker:image>
 
 If you run `drucker` again it will spin up containers (and optionally will build images). Orchestration will then be run as expected.
 
-## Troubleshooting
+## <a name="Troubleshooting"></a>Troubleshooting
 
 See [Troubleshooting drucker](https://github.com/anavarre/drucker/wiki/Troubleshooting-drucker)
