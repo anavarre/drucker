@@ -3,7 +3,6 @@
 # Invoke the script from anywhere (e.g .bashrc alias)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# shellcheck source=/dev/null
 source "${DIR}/functions"
 load_container_files
 
@@ -11,7 +10,6 @@ check_software_requirements
 check_hosts_file
 check_ssh_config_file
 
-# shellcheck source=/dev/null
 source "${DIR}/config"
 
 export OPTION=$1

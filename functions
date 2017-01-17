@@ -47,7 +47,6 @@ load_container_files() {
   # web2 has been excluded for now
 
   for FILES in ${CONTAINER_FILES} ; do
-    # shellcheck source=/dev/null
     source "${DIR}/${CONTAINER_DIR}/${FILES}"
   done
 }

@@ -72,7 +72,7 @@ offer. Type drucker --help"
 
 wait
 
-$HOME/Sites/git/github/drucker/drucker.sh --help
+"$HOME/Sites/git/github/drucker/drucker.sh" --help
 
 separator
 
@@ -87,7 +87,7 @@ echo "Let's go ahead and run drucker!"
 
 wait
 
-$HOME/Sites/git/github/drucker/drucker.sh
+"$HOME/Sites/git/github/drucker/drucker.sh"
 
 separator
 echo "That was pretty fast, right? This is because
