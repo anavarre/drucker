@@ -95,5 +95,4 @@ allow_web_to_db_ssh_access() {
       docker exec -u "${USER}" -it "${DB_CONTAINER}" bash -c "echo '${KEY_CHECK}' >> /home/${USER}/.ssh/authorized_keys"
     fi
   fi
-
 }

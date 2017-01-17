@@ -13,8 +13,11 @@
 - name: "TEST: Check if MySQL and utilities packages are installed"
   shell: dpkg -l | grep {{ item }}
   with_items:
-    - mysql-server
+    - mysql-client
+    - mysql-community-client
+    - mysql-community-server
     - mysql-common
+    - mysql-apt-config
     - python-mysqldb
     - mytop
   register: mysql_packages
@@ -39,7 +42,7 @@
   failed_when: mysql_cleanup_cron.stdout == "missing"
 
 - name: "TEST: Check if MySQL remote access is configured"
-  shell: grep -o "0.0.0.0" {{ my_cnf }} || echo "denied"
+  shell: grep -o "0.0.0.0" {{ mysqld_cnf }} || echo "denied"
   register: remote_access
   changed_when: remote_access.stdout == "denied"
   failed_when: remote_access.stdout == "denied"

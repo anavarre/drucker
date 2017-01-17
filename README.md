@@ -26,7 +26,7 @@ $ ansible --version
 ansible 2.2.0.0
 ```
 
-**Important**: Ansible 2.2 or later is required.
+**Important**: Ansible 2 or later is required.
 
 ### Disk space
 
@@ -60,7 +60,7 @@ _drucker_ ships with the following software stack:
 | PHP-CS-Fixer        | 1.12.2           | Custom build   |
 | phpmd               | 2.5.0            | Custom build   |
 | phantomjs           | 2.1.1            | Custom build   |
-| MySQL               | 5.5.53 or higher | [geerlingguy.mysql](https://galaxy.ansible.com/geerlingguy/mysql/) (2.5.0)   |
+| MySQL               | 5.7.17 or higher | Custom build   |
 | Drupal              | 8.3.x            | Custom build   |
 | Drush               | 9.0-dev          | Custom build   |
 | Drupal Console      | 1.0.0-rc14       | Custom build   |

@@ -1,0 +1,106 @@
+---
+- name: Check if MySQL is installed
+  stat:
+    path: "{{ my_cnf }}"
+  register: mysql
+  ignore_errors: True
+
+- name: Clean up MySQL data directory
+  shell: rm -Rf {{ mysql_data }}/* warn=False
+  when: mysql.stat.exists == false
+
+- name: Install MySQL APT repository config tool
+  apt:
+    deb: "{{ mysql_apt_repo }}"
+  when: mysql.stat.exists == false
+
+- name: Install MySQL and utilities
+  package:
+    name: "{{ item }}"
+    state: installed
+    force: yes
+    update_cache: yes
+  with_items:
+    - mysql-community-server
+    - python-mysqldb
+    - mytop
+    # memcached not available on PHP 7.
+  when: mysql.stat.exists == false
+
+- name: Set innodb_file_per_table
+  blockinfile:
+    dest: "{{ my_cnf }}"
+    block: |
+      [mysqld]
+      innodb_file_per_table = 1
+    insertafter: EOF
+    marker: "# {mark} MANAGED INNODB BLOCK"
+  when: mysql.stat.exists == false
+
+- name: Check if MySQL is configured to allow remote access
+  shell: grep -o "0.0.0.0" {{ mysqld_cnf }} || echo "denied"
+  register: mysqld_remote_access
+  changed_when: mysqld_remote_access == "denied"
+
+- name: Configure MySQL to allow remote access
+  replace:
+    dest: "{{ mysqld_cnf }}"
+    regexp: '^(.*)127.0.0.1(.*)$'
+    replace: '\1 0.0.0.0\2'
+  when: mysqld_remote_access.stdout == "denied"
+
+- name: Start MySQL
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items:
+    - mysql
+  when: mysql.stat.exists == false
+
+- name: Set MySQL root user password
+  mysql_user:
+    login_user: "{{ mysql_creds }}"
+    login_password: "{{ mysql_creds }}"
+    name: "{{ mysql_creds }}"
+    password: "{{ mysql_creds }}"
+    check_implicit_admin: yes
+    state: present
+  when: mysql.stat.exists == false
+
+- name: Ensure MySQL is started
+  service:
+    name: mysql
+    enabled: yes
+    state: started
+
+- name: Grant remote user access to all databases
+  mysql_user:
+    login_user: "{{ mysql_creds }}"
+    login_password: "{{ mysql_creds }}"
+    login_host: localhost
+    name: "{{ mysql_creds }}"
+    password: "{{ mysql_creds }}"
+    priv: "*.*:ALL"
+    host: "{{ web_ip }}"
+    state: present
+
+- name: Ensure MySQL is restarted
+  service:
+    name: mysql
+    enabled: yes
+    state: restarted
+
+# - name: Grant MySQL access to remote web node
+#   shell: >
+#     mysql -u {{ mysql_creds }} -p{{ mysql_creds }} -NBe
+#     'GRANT ALL PRIVILEGES ON *.* TO "{{ mysql_creds }}"@"{{ web_ip }}" IDENTIFIED BY "{{ mysql_creds }}";'
+#
+# - name: "Store debian-sys-maint's password"
+#   shell: grep -m 1 "password" /etc/mysql/debian.cnf | awk '{print $3}'
+#   register: debian_sys_maint_password
+#
+# - name: Grant debian-sys-maint access to checking MySQL status
+#   shell: >
+#     mysql -u {{ mysql_creds }} -p{{ mysql_creds }} -NBe
+#     "GRANT ALL PRIVILEGES ON *.* TO 'debian-sys-maint'@'localhost' IDENTIFIED BY '{{ debian_sys_maint_password.stdout }}';"

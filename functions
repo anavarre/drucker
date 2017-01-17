@@ -29,7 +29,7 @@ set_local_html_path() {
 
 set_local_db_path() {
   if [[ $(grep 'db_path' ${DIR}/config) ]]; then
-    export DEFAULT_HOST_DB_PATH="/var/lib/mysql/backup"
+    export DEFAULT_HOST_DB_PATH="/var/lib/mysql"
 
     read -p "Where should we store database backups locally? [${DEFAULT_HOST_DB_PATH}]: " HOST_DB_PATH
     HOST_DB_PATH=${HOST_DB_PATH:-$DEFAULT_HOST_DB_PATH}

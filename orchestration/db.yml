@@ -7,8 +7,6 @@
     - vars.yml
   handlers:
     - include: handlers.yml
-  roles:
-    - geerlingguy.mysql
   tasks:
-    - include: playbooks/mysql.yml
-    - include: playbooks/mysql-backup.yml
+    - include: playbooks/mysql/mysql.yml
+    - include: playbooks/mysql/mysql-backup.yml

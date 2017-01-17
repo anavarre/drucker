@@ -201,14 +201,17 @@ phpmd_download_link: http://static.phpmd.org/php/{{ phpmd_stable_version }}/phpm
 phpmd_binary: "{{ user_programs_path }}/phpmd"
 
 # MySQL
-mysql_backup_source_file: "{{ source_file_dir }}/mysql-backup.sh"
-mysql_backup_path: "{{ user_programs_path }}/mysql-backup.sh"
 my_cnf: /etc/mysql/my.cnf
+mysqld_cnf: /etc/mysql/mysql.conf.d/mysqld.cnf
 mysql_data: /var/lib/mysql
 mysql_backup_dir: "{{ mysql_data }}/backup"
 mysql_creds: root
 mysql_port: 3306
 mysql_stable_release: 5.5
+mysql_apt_config_tool: 0.7.3-1
+mysql_apt_repo: http://dev.mysql.com/get/mysql-apt-config_{{ mysql_apt_config_tool }}_all.deb
+mysql_backup_source_file: "{{ source_file_dir }}/mysql-backup.sh"
+mysql_backup_path: "{{ user_programs_path }}/mysql-backup.sh"
 
 # phpMyAdmin
 phpmyadmin_stable_release: 4.6.5
