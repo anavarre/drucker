@@ -30,6 +30,7 @@ fastcgi_source_file: "{{ source_file_dir }}/fastcgi.conf"
 # Source directories
 ssl_source_dir: "{{ source_file_dir }}/ssl"
 vim_source_dir: "{{ source_file_dir }}/.vim"
+solr_conf: "{{ source_file_dir }}/solr-conf-6.x/"
 
 # Git
 git_repo_directory: "{{ www_dir }}/repo"
@@ -315,11 +316,8 @@ gluster_pub_key: http://download.gluster.org/pub/gluster/glusterfs/LATEST/rsa.pu
 gluster_deb: deb http://download.gluster.org/pub/gluster/glusterfs/LATEST/Debian/{{ codename }}/apt {{ codename }} main
 gluster_gv0: /var/lib/glusterd/vols/gv0
 
-# Java (williamyeh.oracle-java)
-java_version: 8
-
 # Apache Solr
 solr_port: 8983
-solr_core: collection1
-solr_configuration_path: /var/solr/data/{{ solr_core }}/conf
+solr_core: "{{ user }}"
+solr_configuration_path: /opt/solr/server/solr/{{ solr_core }}/conf
 solr_binary: /opt/solr/bin/solr

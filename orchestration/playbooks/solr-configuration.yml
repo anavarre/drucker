@@ -1,4 +1,22 @@
 ---
+- name: Check if Solr core exists
+  stat:
+    path: "{{ solr_configuration_path }}"
+  register: solr_core_check
+  changed_when: solr_core_check.stat.exists == false
+
+- name: Start Solr
+  shell: "{{ solr_binary }} start"
+  become: yes
+  become_user: solr
+  when: solr_core_check.stat.exists == false
+
+- name: Create Solr core
+  shell: "{{ solr_binary }} create_core -c {{ solr_core }}"
+  become: yes
+  become_user: solr
+  when: solr_core_check.stat.exists == false
+
 - name: Check if the Apache Solr schema.xml file exists
   stat:
     path: "{{ solr_configuration_path }}/schema.xml"
@@ -6,32 +24,21 @@
   changed_when: schemaxml_check.stat.exists == false
 
 - name: Check if Apache Solr has been configured for Search API Solr
-  shell: grep -o "search_api_solr" {{ solr_configuration_path }}/synonyms.txt | head -n1 || echo "missing"
+  shell: grep -o "search_api" {{ solr_configuration_path }}/schema.xml | head -n1 || echo "missing"
   register: solr_conf_files
   when: schemaxml_check.stat.exists == true
-  changed_when: solr_conf_files.stdout != "search_api_solr"
+  changed_when: solr_conf_files.stdout != "search_api"
 
-- name: Download Apache Solr configuration from search_api_solr
-  get_url:
-    url: http://cgit.drupalcode.org/search_api_solr/tree/solr-conf/6.x/{{ item }}?h=8.x-1.x
+- name: Deploy Solr conf files
+  copy:
+    src: "{{ solr_conf }}"
     dest: "{{ solr_configuration_path }}"
-    validate_certs: no
-  with_items:
-    - elevate.xml
-    - mapping-ISOLatin1Accent.txt
-    - protwords.txt
-    - schema.xml
-    - schema_extra_fields.xml
-    - schema_extra_types.xml
-    - schema_legacy_fields.xml
-    - schema_legacy_types.xml
-    - solrconfig.xml
-    - solrconfig_spellcheck.xml
-    - solrcore.properties
-    - stopwords.txt
-    - synonyms.txt
-  register: search_api_solr_config_get_url_result
-  until: "'OK' in search_api_solr_config_get_url_result.msg"
-  retries: 1
-  delay: 10
-  when: schemaxml_check.stat.exists == false or (solr_conf_files is defined and solr_conf_files.stdout != "search_api_solr")
+    mode: 0644
+  become: yes
+  become_user: solr
+  when: schemaxml_check.stat.exists == false or (solr_conf_files is defined and solr_conf_files.stdout != "search_api")
+
+- name: Restart Solr
+  shell: "{{ solr_binary }} restart"
+  become: yes
+  become_user: solr

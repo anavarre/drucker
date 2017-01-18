@@ -2,6 +2,7 @@
 
 INIT_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${INIT_IMAGE}")
 DISTRO_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${DISTRO_IMAGE}")
+SEARCH_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${SEARCH_IMAGE}")
 BASE_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${BASE_IMAGE}")
 
 # Prepare for static IP addresses.

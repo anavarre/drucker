@@ -14,6 +14,10 @@ export TLD="local"
 export RSA_DRUCKER_WEB="/tmp/id_rsa_drucker_web"
 export RSA_KEY_DEPLOYED="/tmp/rsa_key_deployed"
 
+# Search
+export SEARCH_USER="solr"
+export SEARCH_CORE="${USER}"
+
 # Volume mappings
 export CONTAINER_DB_PATH="/var/lib/mysql"
 export CONTAINER_HTML_PATH="/var/www/html"
@@ -66,12 +70,13 @@ export WEB2_HOSTNAME="web2.${TLD}"
 
 # Images
 export DISTRO_IMAGE="debian:latest"
+export SEARCH_IMAGE="solr:latest"
 export INIT_IMAGE="drucker:init"
 export BASE_IMAGE="drucker:base"
 export REVERSE_PROXY_IMAGE="drucker:reverse_proxy"
 export WEB_IMAGE="drucker:web"
 export DB_IMAGE="drucker:db"
-export SEARCH_IMAGE="drucker:search"
+#export SEARCH_IMAGE="drucker:search"
 export WEB2_IMAGE="drucker:web2"
 
 # Containers

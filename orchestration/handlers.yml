@@ -43,6 +43,11 @@
     name: nginx
     state: reloaded
 
+- name: Restart Solr
+  shell: "{{ solr_binary }} restart"
+  become: yes
+  become_user: solr
+
 - name: Restart GlusterFS
   service:
     name: glusterfs-server

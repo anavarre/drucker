@@ -62,8 +62,8 @@ _drucker_ ships with the following software stack:
 | Varnish             | 4.1.2 or later   | Custom build   |
 | nginx               | 1.10.1 or later  | Custom build   |
 | Apache              | 2.4.10 or later  | Custom build    |
-| Apache Solr         | 6.3.0 or later   | [geerlingguy.solr](https://galaxy.ansible.com/geerlingguy/solr/) (3.4.1) |
-| Java                | 8                | [williamyeh.oracle-java](https://galaxy.ansible.com/williamyeh/oracle-java/) (2.10.0)    |
+| Apache Solr         | 6.3.0 or later   | [solr:latest](https://hub.docker.com/_/solr/) |
+| Java                | 8                | [solr:latest](https://hub.docker.com/_/solr/) |
 | PHP-FPM             | 7.0.13 or later  | Custom build   |
 | APCu                | 5.1.7            | APT            |
 | Xdebug              | 2.5.0            | Custom build   |
