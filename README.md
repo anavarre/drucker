@@ -4,16 +4,16 @@
 
 * [Introduction](#Introduction)
 * [Requirements](#Requirements)
-* * [Software](#Software)
-* * [Disk Space](#Disk Space)
-* * [SSH](#SSH)
+  * [Software](#Software)
+  * [Disk Space](#Disk Space)
+  * [SSH](#SSH)
 * [Technology](#Technology)
 * [Installation](#Installation)
 * [Usage](#Usage)
-* * [Passwords](#Passwords)
+  * [Passwords](#Passwords)
 * [Tips and tricks](#Tips and tricks)
-* * [Delete a container](#Delete a container)
-* * [Delete an image](#Delete an image)
+  * [Delete a container](#Delete a container)
+  * [Delete an image](#Delete an image)
 * [Troubleshooting](#Troubleshooting)
 
 ## <a name="Introduction"></a>Introduction
