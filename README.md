@@ -56,34 +56,34 @@ You also need to [generate a SSH key](https://help.github.com/articles/generatin
 
 _drucker_ ships with the following software stack:
 
-| Software            | Version          | Source |
-| --------------------|:----------------:|:--------:
-| Debian              | 8 (Jessie)       | [debian:latest](https://hub.docker.com/_/debian/)    |
-| Varnish             | 4.1.2 or later   | Custom build   |
-| nginx               | 1.10.1 or later  | Custom build   |
-| Apache              | 2.4.10 or later  | Custom build    |
-| Apache Solr         | 6.3.0 or later   | [solr:latest](https://hub.docker.com/_/solr/) |
-| Java                | 8                | [solr:latest](https://hub.docker.com/_/solr/) |
-| PHP-FPM             | 7.0.13 or later  | Custom build   |
-| APCu                | 5.1.7            | APT            |
-| Xdebug              | 2.5.0            | Custom build   |
-| PECL uploadprogress | master           | Custom build   |
-| PECL YAML           | 2.0.0            | Custom build   |
-| LibYAML             | 0.1.7            | Custom build   |
-| Tideways Profiler   | 4.0.7            | Custom build   |
-| Coder               | 8.2.9            | Custom build   |
-| Code Sniffer        | 2.6.1            | Custom build   |
-| PHP-CS-Fixer        | 1.12.2           | Custom build   |
-| phpmd               | 2.5.0            | Custom build   |
-| phantomjs           | 2.1.1            | Custom build   |
-| MySQL               | 5.7.17 or higher | Custom build   |
-| Drupal              | 8.3.x            | Custom build   |
-| Drush               | 9.0-dev          | Custom build   |
-| Drupal Console      | 1.0.0-rc14       | Custom build   |
-| Composer            | 1.3.1            | Custom build   |
-| phpMyAdmin          | 4.6.5            | Custom build   |
-| adminer             | 4.2.5            | Custom build   |
-| bash-git-prompt     | 2.6.1            | Custom build   |
+| Software            | Version            | Source |
+| --------------------|:----------------:  |:--------:
+| Debian              | 8 (Jessie)         | [debian:latest](https://hub.docker.com/_/debian/) |
+| Varnish             | 4.1.2 or later     | Custom build |
+| nginx               | 1.10.1 or later    | Custom build |
+| Apache              | 2.4.10 or later    | Custom build |
+| Apache Solr         | 6.3.0 or later     | [solr:latest](https://hub.docker.com/_/solr/) |
+| OpenJDK             | 1.8.0_111 or later | [solr:latest](https://hub.docker.com/_/solr/) |
+| PHP-FPM             | 7.0.13 or later    | Custom build |
+| APCu                | 5.1.7              | APT          |
+| Xdebug              | 2.5.0              | Custom build |
+| PECL uploadprogress | master             | Custom build |
+| PECL YAML           | 2.0.0              | Custom build |
+| LibYAML             | 0.1.7              | Custom build |
+| Tideways Profiler   | 4.0.7              | Custom build |
+| Coder               | 8.2.9              | Custom build |
+| Code Sniffer        | 2.6.1              | Custom build |
+| PHP-CS-Fixer        | 1.12.2             | Custom build |
+| phpmd               | 2.5.0              | Custom build |
+| phantomjs           | 2.1.1              | Custom build |
+| MySQL               | 5.7.17 or higher   | Custom build |
+| Drupal              | 8.3.x              | Custom build |
+| Drush               | 9.0-dev            | Custom build |
+| Drupal Console      | 1.0.0-rc14         | Custom build |
+| Composer            | 1.3.1              | Custom build |
+| phpMyAdmin          | 4.6.5              | Custom build |
+| adminer             | 4.2.5              | Custom build |
+| bash-git-prompt     | 2.6.1              | Custom build |
 
 ## <a name="Installation"></a>Installation
 
