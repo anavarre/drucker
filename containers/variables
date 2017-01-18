@@ -70,13 +70,14 @@ export WEB2_HOSTNAME="web2.${TLD}"
 
 # Images
 export DISTRO_IMAGE="debian:latest"
-export SEARCH_IMAGE="solr:latest"
+export SOLR_IMAGE="solr:latest"
+export CUSTOM_SOLR_IMAGE="drucker:solr"
+export SEARCH_IMAGE="drucker:search"
 export INIT_IMAGE="drucker:init"
 export BASE_IMAGE="drucker:base"
 export REVERSE_PROXY_IMAGE="drucker:reverse_proxy"
 export WEB_IMAGE="drucker:web"
 export DB_IMAGE="drucker:db"
-#export SEARCH_IMAGE="drucker:search"
 export WEB2_IMAGE="drucker:web2"
 
 # Containers

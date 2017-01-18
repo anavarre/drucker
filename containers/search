@@ -1,19 +1,40 @@
 #!/usr/bin/env bash
 
+SOLR_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${SOLR_IMAGE}")
+CUSTOM_SOLR_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${CUSTOM_SOLR_IMAGE}")
 SEARCH_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${SEARCH_IMAGE}")
 SEARCH_CONTAINER_STARTED=$(docker ps | grep -o "${SEARCH_CONTAINER}")
 
-build_search_image() {
-  if [[ ${SEARCH_IMAGE_EXISTS} ]]; then
-    echo -e "${GREEN}${SEARCH_IMAGE} image already exists.${COLOR_ENDING}"
+pull_solr_image_from_docker_hub() {
+  if [[ ${SOLR_IMAGE_EXISTS} ]]; then
+    echo -e "${GREEN}${SOLR_IMAGE} image already exists.${COLOR_ENDING}"
   else
-    if [[ ! ${SEARCH_IMAGE_EXISTS} ]]; then
-      echo -e "${BLUE}Building ${SEARCH_IMAGE} image from Dockerfile...${COLOR_ENDING}"
-      # Make sure the Docker build context doesn't get in the way.
-      cd "$( dirname "${BASH_SOURCE[0]}" )" && cd solr
-      docker build -t "${SEARCH_IMAGE}" .
-    fi
+    echo -e "${BLUE}Pulling ${SOLR_IMAGE} image from Docker Hub...${COLOR_ENDING}"
+    docker pull "${SOLR_IMAGE}"
   fi
+}
+
+build_custom_solr_image() {
+  if [[ ! ${CUSTOM_SOLR_IMAGE_EXISTS} ]]; then
+    echo -e "${BLUE}Building ${CUSTOM_SOLR_IMAGE} image from Dockerfile...${COLOR_ENDING}"
+    # Make sure the Docker build context doesn't get in the way.
+    cd "$( dirname "${BASH_SOURCE[0]}" )" && cd solr
+    docker build -t "${CUSTOM_SOLR_IMAGE}" .
+  fi
+}
+
+create_search_container_from_custom_solr_image() {
+  echo -e "${BLUE}Spinning up ${SEARCH_CONTAINER} container with ID:${COLOR_ENDING}"
+
+  docker run --privileged=true --name "${SEARCH_CONTAINER}" -it \
+  -h "${SEARCH_HOSTNAME}" \
+  --net "${NETWORK}" \
+  --ip "${SEARCH_IP}" \
+  -d -p "${HOST_SEARCH_PORT}":"${SEARCH_PORT}" \
+  "${CUSTOM_SOLR_IMAGE}" bash
+
+  configure_search_container_ssh_access
+  run_search_container_orchestration
 }
 
 create_search_container_from_search_image() {
@@ -30,6 +51,15 @@ create_search_container_from_search_image() {
   run_search_container_orchestration
 }
 
+create_search_image_from_search_container() {
+  echo -e "${BLUE}Committing ${SEARCH_IMAGE} image from ${SEARCH_CONTAINER} container...${COLOR_ENDING}"
+
+  docker commit -m "${SEARCH_CONTAINER} on $(date +"%Y-%m-%d")" "${SEARCH_CONTAINER}" "${SEARCH_IMAGE}"
+
+  echo -e "${BLUE}Deleting initial container...${COLOR_ENDING}"
+  docker rm -f "${SEARCH_CONTAINER}"
+  create_search_container_from_search_image
+}
 
 start_search_container() {
   docker start "${SEARCH_CONTAINER}" > /dev/null 2>&1
@@ -48,9 +78,11 @@ provision_search_container() {
     fi
   else
     if [[ ${SEARCH_IMAGE_EXISTS} ]]; then
+      echo -e "${GREEN}${SEARCH_IMAGE} custom image already exists.${COLOR_ENDING}"
       create_search_container_from_search_image
-    # else
-    #   create_search_image_from_search_container
+    else
+      create_search_container_from_custom_solr_image
+      create_search_image_from_search_container
     fi
   fi
 }
