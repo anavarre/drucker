@@ -6,7 +6,7 @@ export RED="\033[0;31m"
 export BLUE="\033[94m"
 export COLOR_ENDING="\033[0m"
 
-export drucker_version="0.3.6"
+export drucker_version="dev"
 export USER="drucker"
 export TLD="local"
 
