@@ -8,5 +8,5 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - include: playbooks/mysql/mysql.yml
-    - include: playbooks/mysql/mysql-backup.yml
+    - include: playbooks/db/mysql.yml
+    - include: playbooks/db/mysql-backup.yml

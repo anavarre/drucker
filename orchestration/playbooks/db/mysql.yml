@@ -24,7 +24,7 @@
     - mysql-community-server
     - python-mysqldb
     - mytop
-    # memcached not available on PHP 7.
+    - memcached
   when: mysql.stat.exists == false
 
 - name: Set innodb_file_per_table
