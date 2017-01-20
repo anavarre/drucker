@@ -1,6 +1,6 @@
 FROM solr:latest
 
-ENV DEBIAN_FRONTEND noninteractive
+ARG DEBIAN_FRONTEND=noninteractive
 USER root
 
 VOLUME ["/data"]

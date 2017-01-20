@@ -1,8 +1,8 @@
 FROM debian:latest
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV USER drucker
-ENV SSH /home/"$USER"/.ssh
+ARG DEBIAN_FRONTEND=noninteractive
+ARG USER=drucker
+ARG SSH=/home/"$USER"/.ssh
 
 VOLUME ["/data"]
 
