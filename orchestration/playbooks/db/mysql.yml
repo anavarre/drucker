@@ -24,7 +24,6 @@
     - mysql-community-server
     - python-mysqldb
     - mytop
-    - memcached
   when: mysql.stat.exists == false
 
 - name: Set innodb_file_per_table
