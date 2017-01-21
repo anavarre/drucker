@@ -233,6 +233,14 @@ adminer_root: "{{ webroot }}/adminer"
 adminer_index: "{{ adminer_root }}/index.php"
 adminer_hostname: adminer
 
+# mcstat
+mcstat_binary: "{{ user_programs_path }}/mcstat"
+mcstat_stable_release: 1.1.0
+mcstat_download_link: https://github.com/webbj74/mcstat/archive/{{ mcstat_stable_release }}.tar.gz
+mcstat_archive_file: mcstat-{{ mcstat_stable_release }}.tar.gz
+mcstat_unarchived_directory: mcstat-{{ mcstat_stable_release }}
+mcstat_archive_path: "{{ download_dir }}/{{ mcstat_archive_file }}"
+
 # Drupal
 drupal_creds: admin
 default_site: sites/default

@@ -16,4 +16,5 @@
 - include: playbooks/php-cs-fixer.yml
 - include: playbooks/coder.yml
 - include: playbooks/phpmd.yml
+- include: playbooks/mcstat.yml
 - include: playbooks/drupal.yml

@@ -1,0 +1,9 @@
+---
+- name: "TEST: mcstat needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ mcstat_binary }}"
+    - "{{ user_programs_path }}/{{ mcstat_unarchived_directory }}"
+  register: mcstat_check
+  failed_when: mcstat.stat.exists == false

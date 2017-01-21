@@ -5,7 +5,7 @@
 * [Introduction](#Introduction)
 * [Requirements](#Requirements)
   * [Software](#Software)
-  * [Disk Space](#Disk Space)
+  * [Disk Space](#Disk space)
   * [SSH](#SSH)
 * [Technology](#Technology)
 * [Installation](#Installation)
@@ -56,14 +56,15 @@ You also need to [generate a SSH key](https://help.github.com/articles/generatin
 
 _drucker_ ships with the following software stack:
 
-| Software            | Version             | Source |
-| --------------------|:-------------------:|:--------:
+| Software            | Version             | Source       |
+| --------------------|:-------------------:|:-------------:
 | Debian              | 8 (Jessie)          | [debian:latest](https://hub.docker.com/_/debian/) |
 | Varnish             | 4.1.2 or higher     | Custom build |
 | nginx               | 1.10.1 or higher    | Custom build |
 | Apache              | 2.4.10 or higher    | Custom build |
 | MySQL               | 5.7.17 or higher    | Custom build |
 | memcached           | 3.0.0b1 or higher   | Custom build |
+| mcstat              | 1.1.0               | Custom build |
 | phpMyAdmin          | 4.6.5               | Custom build |
 | adminer             | 4.2.5               | Custom build |
 | PHP-FPM             | 7.0.13 or higher    | Custom build |
