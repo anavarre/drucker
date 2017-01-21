@@ -6,4 +6,4 @@
     - "{{ mcstat_binary }}"
     - "{{ user_programs_path }}/{{ mcstat_unarchived_directory }}"
   register: mcstat_check
-  failed_when: mcstat.stat.exists == false
+  failed_when: mcstat_check.stat.exists == false
