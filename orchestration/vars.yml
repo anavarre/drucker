@@ -197,7 +197,7 @@ phantomjs_temp_path: "{{ download_dir }}/phantomjs-{{ phantomjs_stable_version }
 phantomjs_archive_path: "{{ phantomjs_temp_path }}.tar.bz2"
 
 # PHPmd
-phpmd_stable_version: 2.5.0
+phpmd_stable_version: 2.6.0
 phpmd_download_link: http://static.phpmd.org/php/{{ phpmd_stable_version }}/phpmd.phar
 phpmd_binary: "{{ user_programs_path }}/phpmd"
 

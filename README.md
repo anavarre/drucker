@@ -71,7 +71,7 @@ _drucker_ ships with the following software stack:
 | Coder               | 8.2.9               | Custom build |
 | Code Sniffer        | 2.6.1               | Custom build |
 | PHP-CS-Fixer        | 1.12.2              | Custom build |
-| phpmd               | 2.5.0               | Custom build |
+| phpmd               | 2.6.0               | Custom build |
 | PECL uploadprogress | master              | Custom build |
 | PECL YAML           | 2.0.0               | Custom build |
 | LibYAML             | 0.1.7               | Custom build |

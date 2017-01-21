@@ -4,7 +4,7 @@
     path: "{{ phpmd_binary }}"
   register: phpmd
 
-- name: Check phpmd version
+- name: Check if phpmd needs to be updated
   shell: phpmd --version | awk '{print $NF}'
   register: phpmd_stable_release_check
   when: phpmd.stat.exists == true
