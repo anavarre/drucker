@@ -14,4 +14,5 @@
 - include: playbooks/tests/php-cs-fixer-tests.yml
 - include: playbooks/tests/coder-tests.yml
 - include: playbooks/tests/phpmd-tests.yml
+- include: playbooks/tests/mcstat-tests.yml
 - include: playbooks/tests/drupal-tests.yml
