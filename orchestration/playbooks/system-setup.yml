@@ -29,6 +29,7 @@
   - patchutils
   - strace
   - sysstat
+  - tcpdump
   - time
   - vim
   - wget
