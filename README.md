@@ -68,7 +68,7 @@ _drucker_ ships with the following software stack:
 | phpMyAdmin          | 4.6.5               | Custom build |
 | adminer             | 4.2.5               | Custom build |
 | PHP-FPM             | 7.0.13 or higher    | Custom build |
-| APCu                | 5.1.7               | APT          |
+| APCu                | 5.1.8 or later      | APT          |
 | Coder               | 8.2.9               | Custom build |
 | Code Sniffer        | 2.6.1               | Custom build |
 | PHP-CS-Fixer        | 1.12.2              | Custom build |
