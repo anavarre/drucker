@@ -81,7 +81,7 @@ _drucker_ ships with the following software stack:
 | phantomjs           | 2.1.1               | Custom build |
 | Drupal              | 8.3.x               | Custom build |
 | Drush               | 9.0-dev             | Custom build |
-| Drupal Console      | 1.0.0-rc14          | Custom build |
+| Drupal Console      | 1.0.0-rc15          | Custom build |
 | Composer            | 1.3.1               | Custom build |
 | Apache Solr         | 6.3.0 or higher     | [solr:latest](https://hub.docker.com/_/solr/) |
 | OpenJDK             | 1.8.0_111 or higher | [solr:latest](https://hub.docker.com/_/solr/) |
