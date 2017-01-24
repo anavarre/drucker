@@ -65,7 +65,7 @@ _drucker_ ships with the following software stack:
 | MySQL               | 5.7.17 or higher    | Custom build |
 | memcached           | 3.0.0b1 or higher   | Custom build |
 | mcstat              | 1.1.0               | Custom build |
-| phpMyAdmin          | 4.6.5               | Custom build |
+| phpMyAdmin          | 4.6.6               | Custom build |
 | adminer             | 4.2.5               | Custom build |
 | PHP-FPM             | 7.0.13 or higher    | Custom build |
 | APCu                | 5.1.8 or later      | APT          |
