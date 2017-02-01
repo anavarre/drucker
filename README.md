@@ -77,7 +77,7 @@ _drucker_ ships with the following software stack:
 | PECL YAML           | 2.0.0               | Custom build |
 | LibYAML             | 0.1.7               | Custom build |
 | Xdebug              | 2.5.0               | Custom build |
-| Tideways Profiler   | 4.0.7               | Custom build |
+| Tideways Profiler   | 4.1.1               | Custom build |
 | phantomjs           | 2.1.1               | Custom build |
 | Drupal              | 8.3.x               | Custom build |
 | Drush               | 9.0-dev             | Custom build |

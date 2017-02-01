@@ -151,7 +151,7 @@ pecl_yaml_temp_path: "{{ download_dir }}/pecl-file_formats-yaml-{{ pecl_yaml_sta
 pecl_yaml_archive: "{{ pecl_yaml_temp_path }}.tar.gz"
 
 # Tideways
-tideways_stable_release: 4.0.7
+tideways_stable_release: 4.1.1
 tideways_download_link: https://github.com/tideways/php-profiler-extension/archive/v{{ tideways_stable_release }}.tar.gz
 tideways_archive: "{{ download_dir }}/php-profiler-extension-{{ tideways_stable_release }}.tar.gz"
 tideways_extension_name: tideways.so
