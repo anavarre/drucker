@@ -13,19 +13,21 @@
 - name: "TEST: Check if PHP packages are installed"
   shell: dpkg -l | grep {{ item }}
   with_items:
-    - php7.0-fpm
-    - php7.0-cli
-    - php7.0-common
-    - php7.0-dev
-    - php7.0-mbstring
+    - php{{ php_version }}-fpm
+    - php{{ php_version }}-cli
+    - php{{ php_version }}-common
+    - php{{ php_version }}-dev
     - libapache2-mod-fastcgi
-    - php7.0-apcu
-    - php7.0-curl
-    - php7.0-gd
-    - php7.0-memcached
-    - php7.0-mysql
-    - php7.0-xsl
-    - php7.0-bz2
+    - php{{ php_version }}-apcu
+    - php{{ php_version }}-curl
+    - php{{ php_version }}-gd
+    - php{{ php_version }}-imagick
+    - php{{ php_version }}-mbstring
+    - php{{ php_version }}-memcached
+    - php{{ php_version }}-mysql
+    - php{{ php_version }}-xmlrpc
+    - php{{ php_version }}-xsl
+    - php{{ php_version }}-bz2
   register: php_packages
   changed_when: php_packages == ''
 
@@ -50,13 +52,13 @@
   failed_when: php_ini_cli_conf.stdout == "absent"
 
 - name: "TEST: APCu is expected to run the latest stable version"
-  shell: dpkg -l | grep php7.0-apcu | grep -o "{{ apcu_stable_release }}" || echo "different"
+  shell: dpkg -l | grep php{{ php_version }}-apcu | grep -o "{{ apcu_stable_release }}" || echo "different"
   register: apcu_version
   changed_when: apcu_version.stdout == "different"
   failed_when: apcu_version.stdout == "different"
 
 - name: "TEST: php-fpm service needs to be started"
-  command: service php7.0-fpm status | grep -o "is running"
+  command: service php{{ php_version }}-fpm status | grep -o "is running"
   args:
     warn: no
   register: php_fpm_service

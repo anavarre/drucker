@@ -25,7 +25,7 @@
 
 - name: Restart PHP-FPM
   service:
-    name: php7.0-fpm
+    name: php{{ php_version }}-fpm
     state: restarted
 
 - name: Restart MySQL

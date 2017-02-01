@@ -76,6 +76,6 @@
 
 - name: Ensure PHP-FPM is restarted
   service:
-    name: php7.0-fpm
+    name: php{{ php_version }}-fpm
     enabled: yes
     state: restarted

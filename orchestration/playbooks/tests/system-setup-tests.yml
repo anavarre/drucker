@@ -19,6 +19,7 @@
   shell: dpkg -l | grep {{ item }}
   with_items:
     - ack-grep
+    - apt-transport-https
     - curl
     - dstat
     - git

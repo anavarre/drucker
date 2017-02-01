@@ -75,7 +75,7 @@ apache_ssl_mod: "{{ mods_available }}/ssl.conf"
 apache_actions_mod: "{{ mods_enabled }}/actions.load"
 apache_rewrite_mod: "{{ mods_enabled }}/rewrite.load"
 apache_proxy_http_mod: "{{ mods_enabled }}/proxy_http.load"
-apache_php_mod: "{{ mods_available }}/php7.0.conf"
+apache_php_mod: "{{ mods_available }}/php{{ php_version }}.conf"
 apache_fastcgi_conf: "{{ mods_available }}/fastcgi.conf"
 apache_fastcgi_mod: "{{ mods_enabled }}/fastcgi.load"
 
@@ -94,16 +94,16 @@ imported_site_vhost: "{{ sites_enabled }}/{{ sitename }}.conf"
 imported_site_available_vhost: "{{ sites_available }}/{{ sitename }}.conf"
 
 # PHP
-php_extensions: /usr/lib/php/7.0/20131226
+php_version: 7.1
+php_extensions: /usr/lib/php/{{ php_version }}/20131226
 user_programs_path: /usr/local/bin
-php_deb: deb http://packages.dotdeb.org {{ codename }} all
-php_deb_src: deb-src http://packages.dotdeb.org {{ codename }} all
-dotdeb_gpg: https://www.dotdeb.org/dotdeb.gpg
+sury_gpg: https://packages.sury.org/php/apt.gpg
+sury_deb: deb https://packages.sury.org/php/ {{ codename }} main
 apcu_stable_release: 5.1.8
 
 # php.ini
-php_ini: /etc/php/7.0/fpm/php.ini
-php_ini_cli: /etc/php/7.0/cli/php.ini
+php_ini: /etc/php/{{ php_version }}/fpm/php.ini
+php_ini_cli: /etc/php/{{ php_version }}/cli/php.ini
 max_input_time: 300
 max_execution_time: 300
 memory_limit: 256M

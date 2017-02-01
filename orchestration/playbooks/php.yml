@@ -12,18 +12,15 @@
     line: "deb http://httpredir.debian.org/debian {{ codename }} main contrib non-free"
   when: fpm.stat.exists == false
 
-- name: Add DOTDEB repositories
-  apt_repository:
-    repo: "{{ item }}"
+- name: Add deb.sury.org GPG signature
+  apt_key:
+    url: "{{ sury_gpg }}"
     state: present
-  with_items:
-    - "{{ php_deb }}"
-    - "{{ php_deb_src }}"
   when: fpm.stat.exists == false
 
-- name: Add DOTDEB GPG signature
-  apt_key:
-    url: "{{ dotdeb_gpg }}"
+- name: Add deb.sury.org repository
+  apt_repository:
+    repo: "{{ sury_deb }}"
     state: present
   when: fpm.stat.exists == false
 
@@ -33,26 +30,31 @@
     state: installed
     update_cache: yes
   with_items:
-    - php7.0-fpm
-    - php7.0-cli
-    - php7.0-common
-    - php7.0-dev
-    - php7.0-mbstring
+    - php{{ php_version }}-fpm
+    - php{{ php_version }}-cli
+    - php{{ php_version }}-common
+    - php{{ php_version }}-dev
     - libapache2-mod-fastcgi
   when: fpm.stat.exists == false
+
+#  php7.1-intl mcrypt
 
 - name: Install PHP extensions
   package:
     name: "{{ item }}"
     state: installed
   with_items:
-    - php7.0-apcu
-    - php7.0-curl
-    - php7.0-gd
-    - php7.0-memcached
-    - php7.0-mysql
-    - php7.0-xsl
-    - php7.0-bz2
+    - php{{ php_version }}-apcu
+    - php{{ php_version }}-curl
+    - php{{ php_version }}-gd
+    - php{{ php_version }}-imagick
+    - php{{ php_version }}-mbstring
+    - php{{ php_version }}-mcrypt
+    - php{{ php_version }}-memcached
+    - php{{ php_version }}-mysql
+    - php{{ php_version }}-xmlrpc
+    - php{{ php_version }}-xsl
+    - php{{ php_version }}-bz2
   when: fpm.stat.exists == false
 
 - name: Deploy fastcgi.conf template
@@ -62,12 +64,12 @@
     mode: 0644
   when: fpm.stat.exists == false
 
-- name: Check if php7.0 module is enabled
+- name: Check if php 7 module is enabled
   stat:
     path: "{{ apache_php_mod }}"
   register: php7_module
 
-- name: Disable php7.0 module
+- name: Disable php 7 module
   apache2_module:
     state: absent
     name: php7

@@ -10,10 +10,9 @@
   register: varnish
   failed_when: varnish.stat.exists == false
 
-- name: "TEST: Check if Varnish packages are installed"
+- name: "TEST: Check if Varnish package is installed"
   shell: dpkg -l | grep {{ item }}
   with_items:
-    - apt-transport-https
     - varnish
   register: varnish_packages
   changed_when: varnish_packages == ''
