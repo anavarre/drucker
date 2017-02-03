@@ -20,6 +20,7 @@
     - mysql-apt-config
     - python-mysqldb
     - mytop
+    - memcached
   register: mysql_packages
   changed_when: mysql_packages == ''
 

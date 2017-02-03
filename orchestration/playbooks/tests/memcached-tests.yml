@@ -2,7 +2,7 @@
 - name: "TEST: Check if memcached is installed"
   shell: dpkg -l | grep {{ item }}
   with_items:
-    - memcached
+    - php-memcached
   register: memcached_package
   changed_when: memcached_package == ''
 

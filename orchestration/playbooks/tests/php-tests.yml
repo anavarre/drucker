@@ -13,17 +13,17 @@
 - name: "TEST: Check if PHP packages are installed"
   shell: dpkg -l | grep {{ item }}
   with_items:
+    - libapache2-mod-fastcgi
+    - php-apcu
+    - php-imagick
+    - php-memcached
     - php{{ php_version }}-fpm
     - php{{ php_version }}-cli
     - php{{ php_version }}-common
     - php{{ php_version }}-dev
-    - libapache2-mod-fastcgi
-    - php{{ php_version }}-apcu
     - php{{ php_version }}-curl
     - php{{ php_version }}-gd
-    - php{{ php_version }}-imagick
     - php{{ php_version }}-mbstring
-    - php{{ php_version }}-memcached
     - php{{ php_version }}-mysql
     - php{{ php_version }}-xmlrpc
     - php{{ php_version }}-xsl
@@ -52,10 +52,10 @@
   failed_when: php_ini_cli_conf.stdout == "absent"
 
 - name: "TEST: APCu is expected to run the latest stable version"
-  shell: dpkg -l | grep php{{ php_version }}-apcu | grep -o "{{ apcu_stable_release }}" || echo "different"
+  shell: php -r '$version = phpversion("apcu"); echo $version;'
   register: apcu_version
-  changed_when: apcu_version.stdout == "different"
-  failed_when: apcu_version.stdout == "different"
+  changed_when: apcu_version.stdout != "{{ apcu_stable_release }}"
+  failed_when: apcu_version.stdout != "{{ apcu_stable_release }}"
 
 - name: "TEST: php-fpm service needs to be started"
   command: service php{{ php_version }}-fpm status | grep -o "is running"

@@ -32,25 +32,26 @@
   with_items:
     - php{{ php_version }}-fpm
     - php{{ php_version }}-cli
+    # Provides php-apcu which itself provides php7.1-apcu
     - php{{ php_version }}-common
     - php{{ php_version }}-dev
     - libapache2-mod-fastcgi
   when: fpm.stat.exists == false
-
-#  php7.1-intl mcrypt
 
 - name: Install PHP extensions
   package:
     name: "{{ item }}"
     state: installed
   with_items:
+    # Provides php7.1-imagick
+    - php-imagick
+    # Provides php7.1-memcached
+    - php-memcached
     - php{{ php_version }}-apcu
     - php{{ php_version }}-curl
     - php{{ php_version }}-gd
-    - php{{ php_version }}-imagick
     - php{{ php_version }}-mbstring
     - php{{ php_version }}-mcrypt
-    - php{{ php_version }}-memcached
     - php{{ php_version }}-mysql
     - php{{ php_version }}-xmlrpc
     - php{{ php_version }}-xsl
