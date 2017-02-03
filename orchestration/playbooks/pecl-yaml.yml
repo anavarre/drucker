@@ -36,6 +36,12 @@
   command: cp {{ pecl_yaml_temp_path }}/modules/{{ pecl_yaml_extension_name }} {{ php_extensions }}
   when: pecl_yaml.stat.exists == false
 
+- name: Make sure permissions are correct
+  file:
+    path: "{{ pecl_yaml_extension_path }}"
+    mode: 0644
+  when: pecl_yaml.stat.exists == false
+
 - name: Delete PECL YAML temporary directory
   file:
     path: "{{ pecl_yaml_temp_path }}"

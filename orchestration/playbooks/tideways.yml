@@ -7,7 +7,9 @@
 - name: Check if Tideways can be updated
   shell: php -c {{ php_ini }} -i | grep 'tideways' | grep -o '{{ tideways_stable_release }}' || echo 'update'
   register: tideways_version_check
-  changed_when: tideways_version_check == "update"
+  changed_when: tideways_version_check.stdout == "update"
+
+- debug: msg={{ tideways_version_check }}
 
 - name: Download latest Tideways release
   get_url:
@@ -39,6 +41,12 @@
 
 - name: Copy compiled Tideways extension
   command: cp {{ tideways_temp_dir }}/modules/{{ tideways_extension_name }} {{ php_extensions }}
+  when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
+
+- name: Make sure permissions are correct
+  file:
+    path: "{{ tideways_extension_path }}"
+    mode: 0644
   when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
 
 - name: Delete Tideways temporary directory

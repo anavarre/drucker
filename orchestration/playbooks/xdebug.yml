@@ -41,6 +41,12 @@
   command: cp {{ xdebug_unarchived_path }}/modules/{{ xdebug_extension_name }} {{ php_extensions }}
   when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
 
+- name: Make sure permissions are correct
+  file:
+    path: "{{ xdebug_extension_path }}"
+    mode: 0644
+  when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
+
 - name: Delete Xdebug temporary directory
   file:
     path: "{{ xdebug_unarchived_path }}"
