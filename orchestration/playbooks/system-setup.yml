@@ -30,6 +30,7 @@
   - patchutils
   - strace
   - sysstat
+  - telnet
   - tcpdump
   - time
   - vim

@@ -9,8 +9,6 @@
   register: tideways_version_check
   changed_when: tideways_version_check.stdout == "update"
 
-- debug: msg={{ tideways_version_check }}
-
 - name: Download latest Tideways release
   get_url:
     url: "{{ tideways_download_link }}"
