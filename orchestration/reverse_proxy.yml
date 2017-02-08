@@ -8,5 +8,5 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - include: playbooks/varnish.yml
-    - include: playbooks/nginx.yml
+    - include: playbooks/proxy/varnish.yml
+    - include: playbooks/proxy/nginx.yml

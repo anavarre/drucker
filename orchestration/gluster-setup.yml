@@ -8,7 +8,7 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - include: playbooks/gluster-setup.yml
+    - include: playbooks/gluster/gluster-setup.yml
 
 - hosts: drucker_web
   become: yes
@@ -19,4 +19,4 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - include: playbooks/gluster-setup.yml
+    - include: playbooks/gluster/gluster-setup.yml

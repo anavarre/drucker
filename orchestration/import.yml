@@ -8,4 +8,4 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - include: playbooks/drupal-import.yml
+    - include: playbooks/drupal/drupal-import.yml

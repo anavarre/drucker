@@ -8,6 +8,6 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - include: playbooks/ssh.yml
-    - include: playbooks/system-setup.yml
-    - include: playbooks/git.yml
+    - include: playbooks/system/ssh.yml
+    - include: playbooks/system/system-setup.yml
+    - include: playbooks/system/git.yml

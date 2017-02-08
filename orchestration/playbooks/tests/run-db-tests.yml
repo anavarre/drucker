@@ -1,2 +1,0 @@
-- include: playbooks/tests/db-tests.yml
-- include: playbooks/tests/memcached-tests.yml

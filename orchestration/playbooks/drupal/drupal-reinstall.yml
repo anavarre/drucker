@@ -1,5 +1,5 @@
 ---
-- include: playbooks/drupal-checkout.yml
+- include: playbooks/drupal/drupal-checkout.yml
 
 - name: "REINSTALL: Check if drucker docroot exists"
   stat:
@@ -13,7 +13,7 @@
     state: absent
   when: drucker_docroot.stat.exists == true
 
-- include: playbooks/drupal.yml
+- include: playbooks/drupal/drupal.yml
 
 - name: Set up Drupal Console to work with the new docroot 1/2
   composer:

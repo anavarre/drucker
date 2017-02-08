@@ -1,3 +1,0 @@
-- include: playbooks/tests/system-setup-tests.yml
-- include: playbooks/tests/git-tests.yml
-- include: playbooks/tests/ssh-keys-tests.yml

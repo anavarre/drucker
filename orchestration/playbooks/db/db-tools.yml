@@ -5,5 +5,5 @@
     name: libmemcached-tools
     state: present
 
-- include: playbooks/phpmyadmin.yml
-- include: playbooks/adminer.yml
+- include: playbooks/db/phpmyadmin.yml
+- include: playbooks/db/adminer.yml

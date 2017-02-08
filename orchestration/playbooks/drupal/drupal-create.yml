@@ -1,5 +1,5 @@
 ---
-- include: playbooks/drupal-checkout.yml
+- include: playbooks/drupal/drupal-checkout.yml
 
 - name: "CREATE: Check if new docroot exists"
   stat:

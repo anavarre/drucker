@@ -8,4 +8,4 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - include: playbooks/drupal-reinstall.yml
+    - include: playbooks/drupal/drupal-reinstall.yml

@@ -8,4 +8,4 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - include: playbooks/drupal-dev.yml
+    - include: playbooks/drupal/drupal-dev.yml
