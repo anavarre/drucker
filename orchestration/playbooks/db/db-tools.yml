@@ -1,0 +1,9 @@
+---
+- name: Install libmemcached-tools package
+  package:
+    # Provides memcstat.
+    name: libmemcached-tools
+    state: present
+
+- include: playbooks/phpmyadmin.yml
+- include: playbooks/adminer.yml
