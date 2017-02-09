@@ -14,6 +14,7 @@ source "${DIR}/config"
 
 export OPTION=$1
 export SITENAME=$2
+export GIT_TAG=$3
 
 # Custom user configuration.
 set_local_ssh_path

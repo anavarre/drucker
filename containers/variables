@@ -99,3 +99,7 @@ export WEB2_CONTAINER="drucker_web2"
 # Services
 export WEB_SERVICES="apache2 mysql glusterfs-server"
 export REVERSE_PROXY_SERVICES="nginx varnish"
+
+# Git
+export GIT_EXECUTABLE="/usr/bin/git"
+export DRUPAL_REPO="/var/www/repo/drupal"

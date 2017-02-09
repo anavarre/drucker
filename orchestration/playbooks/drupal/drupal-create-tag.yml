@@ -1,0 +1,5 @@
+---
+- name: Switch Drupal checkout to preferred tag
+  shell: cd {{ drupal_git_clone_path }} && git checkout tags/{{ git_tag }}
+
+- include: playbooks/drupal/drupal-create.yml

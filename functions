@@ -52,7 +52,7 @@ load_container_files() {
 }
 
 drucker_usage() {
-  echo "Usage: drucker {--version|--dev|--prod|--create [sitename]|--import [sitename]|--reinstall|--delete [sitename]|--tests}"
+  echo "Usage: drucker {--version|--dev|--prod|--create [sitename] [git_tag]|--import [sitename]|--reinstall|--delete [sitename]|--tests}"
   exit 0
 }
 

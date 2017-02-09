@@ -1,5 +1,6 @@
 ---
 - include: playbooks/drupal/drupal-checkout.yml
+  when: git_tag is undefined
 
 - name: "CREATE: Check if new docroot exists"
   stat:
