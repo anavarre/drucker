@@ -67,7 +67,7 @@ _drucker_ ships with the following software stack:
 | mcstat              | 1.1.0               | Custom build      |
 | phpMyAdmin          | 4.6.6               | Custom build      |
 | adminer             | 4.2.5               | Custom build      |
-| PHP-FPM             | 7.0.13 or higher    | Custom build      |
+| PHP-FPM             | 7.1.1 or higher     | Custom build      |
 | APCu                | 5.1.8 or later      | APT, via php-apcu |
 | Coder               | 8.2.9               | Custom build      |
 | Code Sniffer        | 2.6.1               | Custom build      |
@@ -79,7 +79,7 @@ _drucker_ ships with the following software stack:
 | Xdebug              | 2.5.0               | Custom build      |
 | Tideways Profiler   | 4.1.1               | Custom build      |
 | phantomjs           | 2.1.1               | Custom build      |
-| Drupal              | 8.3.x               | Custom build      |
+| Drupal              | 8.4.x               | Custom build      |
 | Drush               | 9.0-dev             | Custom build      |
 | Drupal Console      | 1.0.0-rc16          | Custom build      |
 | Composer            | 1.3.2               | Custom build      |
