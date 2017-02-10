@@ -161,7 +161,7 @@
   when: new_docroot.stat.exists == false or new_db.stat.exists == false
 
 - name: "CREATE: Retrieve path to sync directory"
-  shell: drush @{{ sitename }}.{{ tld }} st | grep Sync | awk '{print $NF}'
+  shell: drush @{{ sitename }}.{{ tld }} st | grep "Drupal" | awk '{print $NF}' | tail -1
   register: new_sync_dir
   when: new_docroot.stat.exists == false or new_db.stat.exists == false
 
