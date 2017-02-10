@@ -81,7 +81,7 @@ _drucker_ ships with the following software stack:
 | phantomjs           | 2.1.1               | Custom build      |
 | Drupal              | 8.3.x               | Custom build      |
 | Drush               | 9.0-dev             | Custom build      |
-| Drupal Console      | 1.0.0-rc15          | Custom build      |
+| Drupal Console      | 1.0.0-rc16          | Custom build      |
 | Composer            | 1.3.2               | Custom build      |
 | Apache Solr         | 6.3.0 or higher     | [solr:latest](https://hub.docker.com/_/solr/) |
 | OpenJDK             | 1.8.0_111 or higher | [solr:latest](https://hub.docker.com/_/solr/) |
@@ -157,21 +157,21 @@ For more advanced `drucker` usage, you can pass several CLI parameters:
 
 ```
 $ drucker --help
---version             Returns the drucker version.
---dev                 Prepare drucker for development work with no caching and helper modules enabled.
-                      WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
+--version                      Returns the current drucker version.
+--dev                          Prepare drucker for development work with no caching and helper modules enabled.
+                               WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
 
---prod                Opinionated setup with all known performance best practices enabled.
+--prod                         Opinionated setup with all known performance best practices enabled.
 
---create [sitename]   Creates an arbitrary docroot, vHost and corresponding database.
+--create [sitename] [git_tag]  Creates an arbitrary docroot, vHost and corresponding database.
 
---import [sitename]   Imports the database, files and codebase from the web container's import directory.
+--import [sitename]            Imports the database, files and codebase from the web container's import directory.
 
---reinstall           Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
+--reinstall                    Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
 
---delete [sitename]   Deletes an arbitrary docroot, vHost and corresponding database.
+--delete [sitename]            Deletes an arbitrary docroot, vHost and corresponding database.
 
---tests               Runs the Ansible test suite.
+--tests                        Runs the Ansible test suite.
 ```
 
 The `--import [sitename]` parameter is a special beast. Please [read more about it in the wiki](https://github.com/anavarre/drucker/wiki/Importing-an-existing-site-to-drucker).
