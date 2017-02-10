@@ -316,6 +316,7 @@ nginx_default_conf: "{{ nginx_conf_d }}/default.conf"
 nginx_default_site: "{{ nginx_conf_dir }}/sites-enabled/default"
 nginx_conf: "{{ nginx_conf_dir }}/nginx.conf"
 drucker_nginx_vhost: "{{ nginx_conf_d }}/{{ user }}.conf"
+client_max_body_size: 100m
 
 # GlusterFS
 brick: /data/brick1/gv0

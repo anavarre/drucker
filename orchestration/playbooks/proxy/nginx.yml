@@ -77,12 +77,18 @@
     replace: '\1proxy_pass http://{{ web_ip }}:{{ reverse_proxy_port }};\2'
   when: nginx_drucker_host.stat.exists == false
 
+- name: Increase client_max_body_size
+  lineinfile:
+    dest: "{{ nginx_conf }}"
+    insertafter: '^(.*)sendfile        on;(.*)$'
+    line: "    client_max_body_size  {{ client_max_body_size }};"
+
 - name: Support fake SSL
   copy:
     src: "{{ ssl_source_dir }}"
     dest: "{{ nginx_conf_dir }}"
     mode: 0755
-  #when: nginx_drucker_host.stat.exists == false
+  when: nginx_drucker_host.stat.exists == false
 
 - name: Ensure nginx is started
   service:
