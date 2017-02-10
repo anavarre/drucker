@@ -109,6 +109,7 @@ max_execution_time: 300
 memory_limit: 256M
 upload_max_filesize: 100M
 max_file_uploads: 100
+post_max_size: 100M
 timezone: UTC
 
 # PECL Upload Progress
