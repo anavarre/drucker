@@ -71,14 +71,14 @@ drucker_argument() {
   else
     case "$OPTION" in
       --version)
-      drucker_version_check=$(grep "drucker_version" ${DIR}/containers/variables | awk '{print $2}' | grep -oP 'drucker_version="\K[^"]+')
+      DRUCKER_VERSION_CHECK=$(grep "DRUCKER_VERSION" ${DIR}/containers/variables | awk '{print $2}' | grep -oP 'DRUCKER_VERSION="\K[^"]+')
       latest_commit=$(cd ${DIR} && git rev-parse --short HEAD)
 
-      if [[ ${drucker_version_check} == 'dev' ]]; then
-        echo ${drucker_version_check}:${latest_commit}
+      if [[ ${DRUCKER_VERSION_CHECK} == 'dev' ]]; then
+        echo ${DRUCKER_VERSION_CHECK}:${latest_commit}
         exit 0
       else
-        echo ${drucker_version_check}
+        echo ${DRUCKER_VERSION_CHECK}
         exit 0
      fi
       ;;
