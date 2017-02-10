@@ -229,7 +229,7 @@
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Retrieve path to sync directory
-  shell: drush @{{ user }}.{{ tld }} st | grep Sync | awk '{print $NF}'
+  shell: drush @{{ user }}.{{ tld }} st | grep "Drupal" | awk '{print $NF}' | tail -1
   register: sync_dir
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 

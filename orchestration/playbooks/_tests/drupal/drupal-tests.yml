@@ -22,13 +22,27 @@
   failed_when: drupal.stat.exists == false
 
 - name: "TEST: settings.php should hold the correct trusted_host_patterns setting"
-  shell: grep -o "{{ user }}.{{ tld }}" {{ settings_php }} || echo "missing"
+  shell: grep -F "{{ user }}\.{{ tld }}" {{ settings_php }} || echo "missing"
   register: trusted_host_patterns
-  changed_when: trusted_host_patterns == "missing"
-  failed_when: trusted_host_patterns == "missing"
+  changed_when: trusted_host_patterns.stdout == "missing"
+  failed_when: trusted_host_patterns.stdout == "missing"
+
+- name: Retrieve path to sync directory
+  shell: drush @{{ user }}.{{ tld }} st | grep "Drupal" | awk '{print $NF}' | tail -1
+  register: sync_dir_test
+  changed_when: sync_dir_test is undefined
+  failed_when: sync_dir_test is undefined
+
+- name: "TEST: The sync directory should be writable"
+  stat:
+    path: "{{ docroot }}/{{ sync_dir_test.stdout }}"
+  register: writable_sync
+  changed_when: writable_sync.stat.mode != "2777"
+  failed_when: writable_sync.stat.mode != "2777"
+  ignore_errors: true
 
 - name: "TEST: Make sure the codebase was added under version control"
-  shell: git log --oneline | grep -o "Initial commit" || echo 'no commit'
+  shell: git -C {{ docroot }} log --oneline | grep -o "Initial commit" || echo 'no commit'
   args:
     warn: no
   register: initial_commit
