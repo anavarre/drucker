@@ -6,8 +6,8 @@
 - include: playbooks/tools/drush.yml
 - include: playbooks/tools/drupal-console.yml
 - include: playbooks/drupal/uploadprogress.yml
-- include: playbooks/drupal/libyaml.yml
-- include: playbooks/drupal/pecl-yaml.yml
+- include: playbooks/php/libyaml.yml
+- include: playbooks/php/pecl-yaml.yml
 - include: playbooks/tools/xdebug.yml
 - include: playbooks/tools/tideways.yml
 - include: playbooks/tools/phantomjs.yml
