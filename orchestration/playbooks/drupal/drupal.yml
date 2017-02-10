@@ -229,13 +229,13 @@
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Retrieve path to sync directory
-  shell: drush @{{ user }}.{{ tld }} st | grep "Drupal" | awk '{print $NF}' | tail -1
+  shell: stat -c %n {{ files_dir }}/config_*/sync
   register: sync_dir
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Make sure the sync directory is writable
   file:
-    path: "{{ docroot }}/{{ sync_dir.stdout }}"
+    path: "{{ sync_dir.stdout }}"
     mode: 0777
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 

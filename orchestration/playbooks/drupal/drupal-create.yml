@@ -161,13 +161,13 @@
   when: new_docroot.stat.exists == false or new_db.stat.exists == false
 
 - name: "CREATE: Retrieve path to sync directory"
-  shell: drush @{{ sitename }}.{{ tld }} st | grep "Drupal" | awk '{print $NF}' | tail -1
+  shell: stat -c %n {{ webroot }}/{{ sitename }}/{{ default_site }}/files/config_*/sync
   register: new_sync_dir
   when: new_docroot.stat.exists == false or new_db.stat.exists == false
 
 - name: "CREATE: Make sure the sync directory is writable"
   file:
-    path: "{{ webroot }}/{{ sitename }}/{{ new_sync_dir.stdout }}"
+    path: "{{ new_sync_dir.stdout }}"
     mode: 0777
   when: new_docroot.stat.exists == false or new_db.stat.exists == false
 
