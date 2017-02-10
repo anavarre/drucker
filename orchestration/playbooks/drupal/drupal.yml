@@ -85,9 +85,11 @@
   blockinfile:
     dest: "{{ settings_php }}"
     block: |
-      $settings['trusted_host_patterns'] = array(
+      $settings['trusted_host_patterns'] = [
         '^{{ user }}\.{{ tld }}$',
-      );
+      ];
+    insertafter: EOF
+    marker: "# {mark} MANAGED TRUSTED_HOST_PATTERNS BLOCK"
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Prepare settings.php for memcached support
@@ -101,6 +103,8 @@
        * $settings['cache']['default'] = 'cache.backend.memcache';
        * $settings['memcache']['servers'] = ['{{ db_ip }}:11211' => 'default'];
        */
+    insertafter: EOF
+    marker: "# {mark} MANAGED MEMCACHED BLOCK"
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Ensure drucker database is wiped before installing

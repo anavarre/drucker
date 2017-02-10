@@ -1,6 +1,6 @@
 ---
 - name: Check if Drupal checkout branch is current
-  shell: cd {{ drupal_git_clone_path }} && git branch -l | grep "* {{ drupal_head }}" || echo "wrong branch"
+  shell: cd {{ drupal_git_clone_path }} && git -C "{{ drupal_git_clone_path }}" branch -l | grep "* {{ drupal_head }}" || echo "wrong branch"
   register: drupal_branch_check
   become: yes
   become_user: "{{ user }}"

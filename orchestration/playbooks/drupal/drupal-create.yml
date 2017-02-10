@@ -61,9 +61,9 @@
   blockinfile:
     dest: "{{ webroot }}/{{ sitename }}/sites/default/settings.php"
     block: |
-      $settings['trusted_host_patterns'] = array(
+      $settings['trusted_host_patterns'] = [
         '^{{ sitename }}\.{{ tld }}$',
-      );
+      ];
   when: new_docroot.stat.exists == false or new_db.stat.exists == false
 
 - name: "CREATE: Ensure database is wiped before installing"
