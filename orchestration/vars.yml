@@ -161,7 +161,7 @@ tideways_output_dir: "{{ download_dir }}/tideways/"
 tideways_temp_dir: "{{ download_dir }}/php-profiler-extension-{{ tideways_stable_release }}"
 
 # Coder
-coder_stable_release: 8.2.9
+coder_stable_release: 8.2.10
 coder_composer_package: drupal/coder
 coder_binary: "{{ composer_dir_path }}/vendor/drupal/coder"
 
