@@ -27,18 +27,30 @@
   changed_when: trusted_host_patterns.stdout == "missing"
   failed_when: trusted_host_patterns.stdout == "missing"
 
-- name: Retrieve path to sync directory
-  shell: stat -c %n {{ files_dir }}/config_*/sync
-  register: sync_dir_test
-  changed_when: sync_dir_test is undefined
-  failed_when: sync_dir_test is undefined
+- name: Retrieve path to config directory
+  shell: stat -c %n {{ files_dir }}/config_*
+  register: config_dir_test
+  changed_when: config_dir_test is undefined
+  failed_when: config_dir_test is undefined
+
+- name: "TEST: The config directory should have correct ownership"
+  shell: stat -c %U:%G {{ files_dir }}/config_*
+  register: config_dir_ownership
+  changed_when: config_dir_ownership.stdout != "{{ user }}:{{ apache_user }}"
+  failed_when: config_dir_ownership.stdout != "{{ user }}:{{ apache_user }}"
 
 - name: "TEST: The sync directory should be writable"
   stat:
-    path: "{{ sync_dir_test.stdout }}"
+    path: "{{ config_dir_test.stdout }}/sync"
   register: writable_sync
   changed_when: writable_sync.stat.mode != "0777"
   failed_when: writable_sync.stat.mode != "0777"
+
+- name: "TEST: The styles directory should have correct ownership"
+  shell: stat -c %U:%G {{ files_dir }}/styles
+  register: styles_dir_ownership
+  changed_when: styles_dir_ownership.stdout != "{{ user }}:{{ apache_user }}"
+  failed_when: styles_dir_ownership.stdout != "{{ user }}:{{ apache_user }}"
 
 - name: "TEST: Make sure the codebase was added under version control"
   shell: git -C {{ docroot }} log --oneline | grep -o "Initial commit" || echo 'no commit'

@@ -228,14 +228,14 @@
   become_user: "{{ user }}"
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
-- name: Retrieve path to sync directory
-  shell: stat -c %n {{ files_dir }}/config_*/sync
-  register: sync_dir
+- name: Retrieve path to config directory
+  shell: stat -c %n {{ files_dir }}/config_*
+  register: config_dir
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Make sure the sync directory is writable
   file:
-    path: "{{ sync_dir.stdout }}"
+    path: "{{ config_dir.stdout }}/sync"
     mode: 0777
   when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
@@ -301,6 +301,14 @@
   become: yes
   become_user: "{{ user }}"
   when: drucker.stat.exists == false
+
+- name: Make sure files dir ownership is correct
+  file:
+    path: "{{ files_dir }}"
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+    recurse: yes
+  when: drucker.stat.exists == false or drucker_db.stat.exists == false
 
 - name: Check if all hostnames are configured
   shell: grep -E '({{ phpmyadmin_hostname }}.{{ tld }}|{{ adminer_hostname }}.{{ tld }})' {{ hosts_file }} || echo "absent"

@@ -57,7 +57,7 @@ You also need to [generate a SSH key](https://help.github.com/articles/generatin
 _drucker_ ships with the following software stack:
 
 | Software            | Version             | Source            |
-| --------------------|:-------------------:|:------------------:
+| --------------------|---------------------|-------------------|
 | Debian              | 8 (Jessie)          | [debian:latest](https://hub.docker.com/_/debian/) (Docker Hub) |
 | Varnish             | 4.1.2 or higher     | APT, via [Varnish APT repo](https://varnish-cache.org/releases/install_debian.html)      |
 | nginx               | 1.10.1 or higher    | APT, via [nginx APT repo](https://nginx.org/en/linux_packages.html)      |
