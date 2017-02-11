@@ -49,7 +49,7 @@
     working_dir: "{{ composer_dir_path }}"
   become: yes
   become_user: "{{ user }}"
-  when: drupal_console_composer_package_version_check.stdout != "{{ drupal_console_composer_package_version }}"
+  when: drupal_console_composer_package_version_check.stdout != "{{ drupal_console_composer_package_version }}" or drupal_console_launcher_check.stdout != "{{ drupal_console_launcher_stable_release }}"
 
 - name: Initialize Drupal Console
   command: drupal init --override --no-interaction
