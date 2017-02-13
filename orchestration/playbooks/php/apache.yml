@@ -13,13 +13,14 @@
   register: apache
   ignore_errors: True
 
-- name: Install Apache packages
+- name: Install Apache and web tools
   package:
     name: "{{ item }}"
     state: present
   with_items:
     - apache2
     - apache2-utils
+    - goaccess
   when: apache.stat.exists == false
 
 - name: Enable required Apache modules

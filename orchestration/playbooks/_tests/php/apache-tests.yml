@@ -10,11 +10,12 @@
   register: apache
   failed_when: apache.stat.exists == false
 
-- name: "TEST: Check if Apache packages are installed"
+- name: "TEST: Check if Apache and web tools are installed"
   shell: dpkg -l | grep {{ item }}
   with_items:
     - apache2
     - apache2-utils
+    - goaccess
   register: apache_packages
   changed_when: apache_packages == ''
 
