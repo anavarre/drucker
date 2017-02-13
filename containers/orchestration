@@ -13,24 +13,6 @@ drupal_prod_mode() {
   ${PLAYBOOK}/prod.yml --extra-vars "ansible_sudo_pass=${USER} prod=Y"
 }
 
-create_site() {
-  if [[ -z "${GIT_TAG}" ]]; then
-    echo -e "${BLUE}Creating site into new docroot ${SITENAME}...${COLOR_ENDING}"
-    ${PLAYBOOK}/create.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITENAME}"
-    echo -e "${RED}Remember to add the ${SITENAME}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
-  else
-    export GIT_TAGS=($(docker exec ${WEB_CONTAINER} ${GIT_EXECUTABLE} -C ${DRUPAL_REPO} tag -l))
-
-    if [[ " ${GIT_TAGS[*]} " == *" ${GIT_TAG} "* ]]; then
-      echo -e "${BLUE}Creating Drupal ${GIT_TAG} site into new docroot ${SITENAME}...${COLOR_ENDING}"
-      ${PLAYBOOK}/create-tag.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITENAME} git_tag=${GIT_TAG}"
-      echo -e "${RED}Remember to add the ${SITENAME}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
-    else
-      drucker_usage
-    fi
-  fi
-}
-
 import_site() {
   echo -e "${BLUE}Importing site into new docroot ${SITENAME}...${COLOR_ENDING}"
   ${PLAYBOOK}/import.yml --extra-vars "ansible_sudo_pass=${USER} import=Y sitename=${SITENAME}"
@@ -45,6 +27,38 @@ delete_site() {
   echo -e "${BLUE}Deleting docroot ${SITENAME}...${COLOR_ENDING}"
   ${PLAYBOOK}/delete.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y sitename=${SITENAME}"
   echo -e "${RED}Remember to remove the ${SITENAME}.local entry from your local /etc/hosts file!${COLOR_ENDING}"
+}
+
+create_site() {
+  if [[ -d ${LOCAL_HTML_PATH}/${SITENAME} ]]; then
+    read -p "The ${SITENAME} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
+    if [[ ${REPLY} =~ ^[Nn]$ ]]; then
+      echo -e "${GREEN}Back to the comfort zone. Aborting.${COLOR_ENDING}"
+      exit 0
+    elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
+      echo "Sorry, the only accepted input characters are [Yy/Nn]. Aborting..."
+      exit 0
+    else
+      delete_site
+      create_site
+    fi
+  else
+    if [[ -z "${GIT_TAG}" ]]; then
+      echo -e "${BLUE}Creating site into new ${SITENAME} docroot...${COLOR_ENDING}"
+      ${PLAYBOOK}/create.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITENAME}"
+      echo -e "${RED}Remember to add the ${SITENAME}.local entry to your local /etc/hosts   file!${COLOR_ENDING}"
+    else
+      export GIT_TAGS=($(docker exec ${WEB_CONTAINER} ${GIT_EXECUTABLE} -C ${DRUPAL_REPO} tag -l))
+
+      if [[ " ${GIT_TAGS[*]} " == *" ${GIT_TAG} "* ]]; then
+        echo -e "${BLUE}Creating Drupal ${GIT_TAG} site into new ${SITENAME} docroot...${COLOR_ENDING}"
+        ${PLAYBOOK}/create-tag.yml --extra-vars "ansible_sudo_pass=${USER} create=Y   sitename=${SITENAME} git_tag=${GIT_TAG}"
+        echo -e "${RED}Remember to add the ${SITENAME}.local entry to your local /etc/hosts   file!${COLOR_ENDING}"
+      else
+        drucker_usage
+      fi
+    fi
+  fi
 }
 
 run_tests() {
