@@ -46,14 +46,14 @@ create_site() {
     if [[ -z "${GIT_TAG}" ]]; then
       echo -e "${BLUE}Creating site into new ${SITENAME} docroot...${COLOR_ENDING}"
       ${PLAYBOOK}/create.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITENAME}"
-      echo -e "${RED}Remember to add the ${SITENAME}.local entry to your local /etc/hosts   file!${COLOR_ENDING}"
+      echo -e "${RED}Remember to add the ${SITENAME}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
     else
       export GIT_TAGS=($(docker exec ${WEB_CONTAINER} ${GIT_EXECUTABLE} -C ${DRUPAL_REPO} tag -l))
 
       if [[ " ${GIT_TAGS[*]} " == *" ${GIT_TAG} "* ]]; then
         echo -e "${BLUE}Creating Drupal ${GIT_TAG} site into new ${SITENAME} docroot...${COLOR_ENDING}"
         ${PLAYBOOK}/create-tag.yml --extra-vars "ansible_sudo_pass=${USER} create=Y   sitename=${SITENAME} git_tag=${GIT_TAG}"
-        echo -e "${RED}Remember to add the ${SITENAME}.local entry to your local /etc/hosts   file!${COLOR_ENDING}"
+        echo -e "${RED}Remember to add the ${SITENAME}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
       else
         drucker_usage
       fi
