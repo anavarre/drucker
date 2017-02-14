@@ -1,13 +1,12 @@
 - include: playbooks/system/ssh-keys.yml
 - include: playbooks/php/apache.yml
 - include: playbooks/php/php.yml
-- include: playbooks/tools/composer.yml
-- include: playbooks/db/db-tools.yml
-- include: playbooks/tools/drush.yml
-- include: playbooks/tools/drupal-console.yml
-- include: playbooks/drupal/uploadprogress.yml
+- include: playbooks/php/pecl-uploadprogress.yml
 - include: playbooks/php/libyaml.yml
 - include: playbooks/php/pecl-yaml.yml
+- include: playbooks/tools/composer.yml
+- include: playbooks/tools/drush.yml
+- include: playbooks/tools/drupal-console.yml
 - include: playbooks/tools/xdebug.yml
 - include: playbooks/tools/tideways.yml
 - include: playbooks/tools/phantomjs.yml
@@ -17,3 +16,4 @@
 - include: playbooks/tools/phpmd.yml
 - include: playbooks/tools/mcstat.yml
 - include: playbooks/drupal/drupal.yml
+- include: playbooks/db/db-tools.yml

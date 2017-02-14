@@ -1,5 +1,5 @@
 ---
-- name: "TEST: uploadprogress needs to be correctly installed"
+- name: "TEST: PECL uploadprogress needs to be correctly installed"
   stat:
     path: "{{ item }}"
   with_items:
@@ -8,7 +8,7 @@
   register: uploadprogress
   failed_when: uploadprogress.stat.exists == false
 
-- name: "TEST: pecl-php-uploadprogress should be configured in php.ini"
+- name: "TEST: PECL uploadprogress should be configured in php.ini"
   shell: grep -o "uploadprogress.so" {{ php_ini }} || echo "absent"
   register: uploadprogress_phpini
   changed_when: uploadprogress_phpini == "absent"

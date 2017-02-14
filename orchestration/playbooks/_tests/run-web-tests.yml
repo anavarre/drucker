@@ -5,7 +5,7 @@
 - include: playbooks/_tests/db/adminer-tests.yml
 - include: playbooks/_tests/tools/drush-tests.yml
 - include: playbooks/_tests/tools/drupal-console-tests.yml
-- include: playbooks/_tests/php/uploadprogress-tests.yml
+- include: playbooks/_tests/php/pecl-uploadprogress-tests.yml
 - include: playbooks/_tests/php/pecl-yaml-tests.yml
 - include: playbooks/_tests/tools/xdebug-tests.yml
 - include: playbooks/_tests/tools/tideways-tests.yml
