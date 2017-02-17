@@ -56,7 +56,6 @@ id_rsa_pub: "{{ home }}/.ssh/id_rsa.pub"
 gateway_ip: 203.0.113.254
 web_ip: 203.0.113.10
 db_ip: 203.0.113.12
-web2_ip: 203.0.113.11
 search_ip: 203.0.113.13
 
 # Apache
@@ -317,14 +316,6 @@ nginx_default_site: "{{ nginx_conf_dir }}/sites-enabled/default"
 nginx_conf: "{{ nginx_conf_dir }}/nginx.conf"
 drucker_nginx_vhost: "{{ nginx_conf_d }}/{{ user }}.conf"
 client_max_body_size: 100m
-
-# GlusterFS
-brick: /data/brick1/gv0
-gluster_mount_dir: /mnt/gfs
-gluster_vol_path: /etc/glusterfs/glusterd.vol
-gluster_pub_key: http://download.gluster.org/pub/gluster/glusterfs/LATEST/rsa.pub
-gluster_deb: deb http://download.gluster.org/pub/gluster/glusterfs/LATEST/Debian/{{ codename }}/apt {{ codename }} main
-gluster_gv0: /var/lib/glusterd/vols/gv0
 
 # Apache Solr
 solr_port: 8983

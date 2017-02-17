@@ -47,8 +47,3 @@
   shell: "{{ solr_binary }} restart"
   become: yes
   become_user: solr
-
-- name: Restart GlusterFS
-  service:
-    name: glusterfs-server
-    state: restarted

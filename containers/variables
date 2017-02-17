@@ -33,7 +33,6 @@ export REVERSE_PROXY_IP="203.0.113.2"
 export WEB_IP="203.0.113.10"
 export DB_IP="203.0.113.12"
 export SEARCH_IP="203.0.113.13"
-export WEB2_IP="203.0.113.11"
 
 # Ports
 export HOST_REVERSE_PROXY_PORT="81"
@@ -44,29 +43,16 @@ export HOST_SEARCH_PORT="8984"
 export WEB_PORT="8080"
 export DB_PORT="3306"
 export SEARCH_PORT="8983"
-export HOST_WEB2_PORT="8181"
-export WEB2_PORT="8080"
-export HOST_TCP_GLUSTER_DAEMON_WEB="24005"
-export TCP_GLUSTER_DAEMON_WEB="24007"
-export HOST_TCP_GLUSTER_DAEMON_WEB2="24006"
-export TCP_GLUSTER_DAEMON_WEB2="24008"
-export HOST_TCP_GLUSTER_BRICK_WEB="49150"
-export TCP_GLUSTER_BRICK_WEB="49152"
-export HOST_TCP_GLUSTER_BRICK_WEB2="49151"
-export TCP_GLUSTER_BRICK_WEB2="49153"
 export HOST_TCP_PORT_MAPPER_WEB="2047"
 export TCP_PORT_MAPPER_WEB="2049"
 export HOST_TCP_PORT_MAPPER_DB="2051"
 export TCP_PORT_MAPPER_DB="2052"
-export HOST_TCP_PORT_MAPPER_WEB2="2048"
-export TCP_PORT_MAPPER_WEB2="2050"
 
 # Hostnames
 export REVERSE_PROXY_HOSTNAME="proxy.${TLD}"
 export DRUCKER_HOSTNAME="drucker.${TLD}"
 export DB_HOSTNAME="db.${TLD}"
 export SEARCH_HOSTNAME="search.${TLD}"
-export WEB2_HOSTNAME="web2.${TLD}"
 
 # Images
 export DISTRO_IMAGE="debian:latest"
@@ -78,7 +64,6 @@ export BASE_IMAGE="drucker:base"
 export REVERSE_PROXY_IMAGE="drucker:reverse_proxy"
 export WEB_IMAGE="drucker:web"
 export DB_IMAGE="drucker:db"
-export WEB2_IMAGE="drucker:web2"
 
 # Containers
 export BASE_CONTAINER="drucker_base"
@@ -94,10 +79,9 @@ REVERSE_PROXY_CONTAINER_EXISTS=$(docker ps -a | grep -o "${REVERSE_PROXY_CONTAIN
 export SEARCH_CONTAINER="drucker_search"
 SEARCH_CONTAINER_EXISTS=$(docker ps -a | grep -o "${SEARCH_CONTAINER}")
 export SEARCH_CONTAINER_EXISTS
-export WEB2_CONTAINER="drucker_web2"
 
 # Services
-export WEB_SERVICES="apache2 mysql glusterfs-server"
+export WEB_SERVICES="apache2 mysql"
 export REVERSE_PROXY_SERVICES="nginx varnish"
 
 # Git

@@ -37,7 +37,7 @@ cat <<EOF
 
 You should add the below entries:
 
-Host ${BASE_CONTAINER_IP} ${REVERSE_PROXY_IP} ${WEB_IP} ${WEB2_IP} ${DB_IP} ${SEARCH_IP}
+Host ${BASE_CONTAINER_IP} ${REVERSE_PROXY_IP} ${WEB_IP} ${DB_IP} ${SEARCH_IP}
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
   LogLevel=error

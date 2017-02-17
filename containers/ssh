@@ -48,12 +48,3 @@ configure_search_container_ssh_access() {
 
   rm "${TMP_KEY}"
 }
-
-# configure_web2_container_ssh_access() {
-#   cat "${PUBKEY}" > "${TMP_KEY}"
-#
-#   docker cp "${TMP_KEY}" "${WEB2_CONTAINER}":"${AUTH_KEY}"
-#   docker exec -it "${WEB2_CONTAINER}" ${CHOWN_SSH}
-#
-#   rm "${TMP_KEY}"
-# }

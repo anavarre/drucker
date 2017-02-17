@@ -44,7 +44,6 @@ set_local_db_path() {
 load_container_files() {
   CONTAINER_DIR="containers"
   CONTAINER_FILES="variables requirements init ssh orchestration base reverse_proxy web db search"
-  # web2 has been excluded for now
 
   for FILES in ${CONTAINER_FILES} ; do
     source "${DIR}/${CONTAINER_DIR}/${FILES}"

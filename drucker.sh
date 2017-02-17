@@ -37,4 +37,3 @@ allow_web_to_db_ssh_access
 pull_solr_image_from_docker_hub
 build_custom_solr_image
 provision_search_container
-# provision_web2_container has been excluded for now
