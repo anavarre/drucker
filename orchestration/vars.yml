@@ -109,6 +109,7 @@ memory_limit: 256M
 upload_max_filesize: 100M
 max_file_uploads: 100
 post_max_size: 100M
+opcache_max_accelerated_files: 4000
 timezone: UTC
 
 # PECL Upload Progress

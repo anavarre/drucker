@@ -119,6 +119,13 @@
     line: "post_max_size = {{ post_max_size }}"
   when: fpm.stat.exists == false
 
+- name: Increase opcache.max_accelerated_files
+  lineinfile:
+    dest: "{{ php_ini }}"
+    regexp: ";opcache.max_accelerated_files=2000"
+    line: "opcache.max_accelerated_files={{ opcache_max_accelerated_files }}"
+  when: fpm.stat.exists == false
+
 - name: Add default timezone
   lineinfile:
     dest: "{{ php_ini_cli }}"
