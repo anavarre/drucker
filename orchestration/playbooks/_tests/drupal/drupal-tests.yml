@@ -43,8 +43,8 @@
   stat:
     path: "{{ config_dir_test.stdout }}/sync"
   register: writable_sync
-  changed_when: writable_sync.stat.mode != "2777" or writable_sync.stat.mode != "0777"
-  failed_when: writable_sync.stat.mode != "2777" or writable_sync.stat.mode != "0777"
+  changed_when: writable_sync.stat.mode != "2777" and writable_sync.stat.mode != "0777"
+  failed_when: writable_sync.stat.mode != "2777" and writable_sync.stat.mode != "0777"
 
 - name: "TEST: The styles directory should have correct ownership"
   shell: stat -c %U:%G {{ files_dir }}/styles
