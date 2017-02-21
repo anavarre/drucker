@@ -23,7 +23,7 @@ export CONTAINER_DB_PATH="/var/lib/mysql"
 export CONTAINER_HTML_PATH="/var/www/html"
 
 # Networking
-export NETWORK="drucker"
+export NETWORK="${USER}"
 export SUBNET="203.0.113.0/24"
 export GATEWAY="203.0.113.254"
 
@@ -50,33 +50,33 @@ export TCP_PORT_MAPPER_DB="2052"
 
 # Hostnames
 export REVERSE_PROXY_HOSTNAME="proxy.${TLD}"
-export DRUCKER_HOSTNAME="drucker.${TLD}"
+export DRUCKER_HOSTNAME="${USER}.${TLD}"
 export DB_HOSTNAME="db.${TLD}"
 export SEARCH_HOSTNAME="search.${TLD}"
 
 # Images
 export DISTRO_IMAGE="debian:latest"
 export SOLR_IMAGE="solr:latest"
-export CUSTOM_SOLR_IMAGE="drucker:solr"
-export SEARCH_IMAGE="drucker:search"
-export INIT_IMAGE="drucker:init"
-export BASE_IMAGE="drucker:base"
-export REVERSE_PROXY_IMAGE="drucker:reverse_proxy"
-export WEB_IMAGE="drucker:web"
-export DB_IMAGE="drucker:db"
+export CUSTOM_SOLR_IMAGE="${USER}:solr"
+export SEARCH_IMAGE="${USER}:search"
+export INIT_IMAGE="${USER}:init"
+export BASE_IMAGE="${USER}:base"
+export REVERSE_PROXY_IMAGE="${USER}:reverse_proxy"
+export WEB_IMAGE="${USER}:web"
+export DB_IMAGE="${USER}:db"
 
 # Containers
-export BASE_CONTAINER="drucker_base"
-export WEB_CONTAINER="drucker_web"
+export BASE_CONTAINER="${USER}_base"
+export WEB_CONTAINER="${USER}_web"
 WEB_CONTAINER_EXISTS=$(docker ps -a | grep -o "${WEB_CONTAINER}")
 export WEB_CONTAINER_EXISTS
-export DB_CONTAINER="drucker_db"
+export DB_CONTAINER="${USER}_db"
 DB_CONTAINER_EXISTS=$(docker ps -a | grep -o "${DB_CONTAINER}")
 export DB_CONTAINER_EXISTS
-export REVERSE_PROXY_CONTAINER="drucker_reverse_proxy"
+export REVERSE_PROXY_CONTAINER="${USER}_reverse_proxy"
 export REVERSE_PROXY_CONTAINER_EXISTS
 REVERSE_PROXY_CONTAINER_EXISTS=$(docker ps -a | grep -o "${REVERSE_PROXY_CONTAINER}")
-export SEARCH_CONTAINER="drucker_search"
+export SEARCH_CONTAINER="${USER}_search"
 SEARCH_CONTAINER_EXISTS=$(docker ps -a | grep -o "${SEARCH_CONTAINER}")
 export SEARCH_CONTAINER_EXISTS
 

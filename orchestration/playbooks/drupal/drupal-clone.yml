@@ -23,7 +23,7 @@
   git:
     repo: "{{ drupal_git_clone_url }}"
     dest: "{{ drupal_git_clone_path }}"
-    version: 8.3.x
+    version: "{{ drupal_head }}"
   become: yes
   become_user: "{{ user }}"
   when: git_clone_dir.stat.exists == false
