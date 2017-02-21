@@ -58,6 +58,12 @@
   changed_when: apcu_version.stdout != "{{ apcu_stable_release }}"
   failed_when: apcu_version.stdout != "{{ apcu_stable_release }}"
 
+- name: "TEST: php-memcached is expected to run the latest stable version"
+  shell: dpkg -l | grep php-memcached | awk '{print $3}' | cut -c1-5
+  register: memcached_version_check
+  changed_when: memcached_version_check.stdout != "{{ php_memcached_stable_release }}"
+  failed_when: memcached_version_check.stdout != "{{ php_memcached_stable_release }}"
+
 - name: "TEST: php-fpm service needs to be started"
   command: service php{{ php_version }}-fpm status | grep -o "is running"
   args:

@@ -61,7 +61,7 @@ _drucker_ ships with the following software stack:
 | nginx               | 1.10.1 or higher    | APT, via [nginx APT repo](https://nginx.org/en/linux_packages.html)      |
 | Apache              | 2.4.10 or higher    | APT      |
 | MySQL               | 5.7.17 or higher    | APT, via [MySQL APT repo](https://dev.mysql.com/downloads/repo/apt/)      |
-| memcached           | 3.0.0 or higher     | APT, via [ppa:ondrej/php](https://deb.sury.org/)       |
+| memcached           | 3.0.3               | APT, via [ppa:ondrej/php](https://deb.sury.org/)       |
 | mcstat              | 1.1.0               | [webbj74/mcstat](https://github.com/webbj74/mcstat) (Github)      |
 | phpMyAdmin          | 4.6.6               | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
 | adminer             | 4.2.5               | [vrana/adminer](https://github.com/vrana/adminer) (Github)      |
