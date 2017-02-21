@@ -65,6 +65,12 @@
   register: remote_db_management
   changed_when: remote_db_management == ''
 
+- name: "TEST: Ensure drucker Drush aliases are correctly configured"
+  shell: grep -o "{{ user }}" {{ drucker_aliases }} || echo "absent"
+  register: drucker_aliases_check
+  changed_when: drucker_aliases_check == "absent"
+  failed_when: drucker_aliases_check == "absent"
+
 - name: "TEST: Ensure Drupal can talk to the Solr backend"
   shell: grep -o "{{ search_ip }}" {{ hosts_file }} || echo "absent"
   register: search_hostname_check
