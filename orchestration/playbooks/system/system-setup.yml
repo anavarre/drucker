@@ -87,3 +87,9 @@
   become: yes
   become_user: "{{ user }}"
   when: vim_dir.stat.exists == false
+
+- name: Add www-data group to drucker account
+  user:
+    name: "{{ user }}"
+    groups: "{{ apache_user}}"
+    append: yes
