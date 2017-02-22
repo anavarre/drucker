@@ -38,6 +38,7 @@ set backspace=indent,eol,start
 set laststatus=2
 set number " Show line number
 set ruler "Always show current position
+set pastetoggle=<F3> " Allows to switch to paste mode
 
 " Re-mapping
 map <C-n> :NERDTreeToggle<CR>
