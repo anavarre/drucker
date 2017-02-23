@@ -83,6 +83,9 @@ set incsearch " Makes search act like search in modern browsers
 set showmatch " Show matching brackets when text indicator is over them
 set gdefault " Apply substitutions globally on lines
 
+" Autosave files on every keystroke.
+autocmd TextChanged,TextChangedI <buffer> silent write
+
 " Drupal files must be highlighted as PHP files
 if has("autocmd")
   augroup module
