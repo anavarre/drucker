@@ -129,7 +129,7 @@ composer_dir_path: "{{ home }}/.composer"
 composer_json_path: "{{ home }}/.composer/composer.json"
 
 # XDebug
-xdebug_stable_release: 2.5.0
+xdebug_stable_release: 2.5.1
 xdebug_download_link: http://xdebug.org/files/xdebug-{{ xdebug_stable_release }}.tgz
 xdebug_extension_name: xdebug.so
 xdebug_extension_path: "{{ php_extensions }}/{{ xdebug_extension_name }}"
