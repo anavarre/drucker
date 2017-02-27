@@ -51,7 +51,7 @@ load_container_files() {
 }
 
 drucker_usage() {
-  echo "Usage: drucker {--version|--dev|--prod|--create [sitename] [git_tag]|--import [sitename]|--reinstall|--delete [sitename]|--tests}"
+  echo "Usage: drucker {--version|--dev|--prod|--create [sitename] [git_tag]|--import [sitename]|--reinstall|--composer [sitename]|--delete [sitename]|--tests}"
   exit 0
 }
 
@@ -63,6 +63,7 @@ drucker_argument() {
        [[ "${OPTION}" != "--create" ]] && \
        [[ "${OPTION}" != "--import" ]] && \
        [[ "${OPTION}" != "--reinstall" ]] && \
+       [[ "${OPTION}" != "--composer" ]] && \
        [[ "${OPTION}" != "--delete" ]] && \
        [[ "${OPTION}" != "--tests" ]] && \
        [[ "${OPTION}" != "--help" ]]; then
@@ -121,6 +122,14 @@ drucker_argument() {
         exit 0
       fi
       ;;
+      --composer)
+      if [[ "${OPTION}" == "--composer" ]] && [[ -z ${SITENAME} ]]; then
+        drucker_usage
+      else
+        drupal_composer
+        exit 0
+      fi
+      ;;
       --delete)
       if [[ "${OPTION}" == "--delete" ]] && [[ -z ${SITENAME} ]]; then
         drucker_usage
@@ -151,6 +160,8 @@ cat <<EOF
 --import [sitename]   Imports the database, files and codebase from the web container's import directory.
 
 --reinstall           Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
+
+--composer [sitename] Installs Drupal from a composer.json file
 
 --delete [sitename]   Deletes an arbitrary docroot, vHost and corresponding database.
 

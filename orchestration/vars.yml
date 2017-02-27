@@ -20,6 +20,7 @@ apache_template_source_file: "{{ source_file_dir }}/apache-template.conf"
 phpunit_source_file: "{{ source_file_dir }}/phpunit.xml"
 gitignore_source_file: "{{ source_file_dir }}/.gitignore"
 composer_json_source_file: "{{ source_file_dir }}/composer.json"
+composer_json_template_file: "{{ source_file_dir }}/composer-template.json"
 nginx_template_source_file: "{{ source_file_dir }}/nginx-template.conf"
 varnish_conf_source_file: "{{ source_file_dir }}/varnish"
 varnish_default_vcl_source_file: "{{ source_file_dir }}/default.vcl"
@@ -127,6 +128,8 @@ composer_download_link: https://getcomposer.org/download/{{ composer_stable_rele
 composer_binary: "{{ user_programs_path }}/composer"
 composer_dir_path: "{{ home }}/.composer"
 composer_json_path: "{{ home }}/.composer/composer.json"
+composer_json_template_temp_filename: "{{ webroot }}/composer-template.json"
+composer_json_expected_filename: "{{ webroot }}/composer.json"
 
 # XDebug
 xdebug_stable_release: 2.5.1

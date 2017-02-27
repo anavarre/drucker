@@ -23,6 +23,11 @@ reinstall_drupal() {
   ${PLAYBOOK}/reinstall.yml --extra-vars "ansible_sudo_pass=${USER} reinstall=Y"
 }
 
+drupal_composer() {
+  echo -e "${BLUE}Installing Drupal from composer.json file...${COLOR_ENDING}"
+  ${PLAYBOOK}/drupal-composer.yml --extra-vars "ansible_sudo_pass=${USER} composer=Y  sitename=${SITENAME}"
+}
+
 delete_site() {
   echo -e "${BLUE}Deleting docroot ${SITENAME}...${COLOR_ENDING}"
   ${PLAYBOOK}/delete.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y sitename=${SITENAME}"
