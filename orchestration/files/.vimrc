@@ -40,6 +40,12 @@ set number " Show line number
 set ruler "Always show current position
 set pastetoggle=<F3> " Allows to switch to paste mode
 
+" Developer experience improvements, with auto-closing elements.
+inoremap ( ()<Esc>i
+inoremap { {}<Esc>i
+inoremap " ""<Esc>i
+inoremap ' ''<Esc>i
+
 " Re-mapping
 map <C-n> :NERDTreeToggle<CR>
 map <F6> :tabp<CR>
