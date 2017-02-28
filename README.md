@@ -178,6 +178,8 @@ At the beginning of the build process, _drucker_ will prompt you to enter the pa
 
 When spinning up the web container, drucker will try to map its web directory to a local path (`/var/www/html`) on your computer. Feel free to change this default path to one that is more convenient.
 
+The `--composer [sitename]` parameter allows to install Drupal from an arbitrary `composer.json` file. Simply put your file in the webroot (`/var/www/html`) and `drucker` will pick it up. If it can't find any, it'll copy the default `composer-template.json` file from within the `orchestration/files` directory.
+
 To connect to a container as the privileged _drucker_ user, simply type:
 
 ```
