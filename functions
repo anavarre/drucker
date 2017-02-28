@@ -161,7 +161,7 @@ cat <<EOF
 
 --reinstall           Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
 
---composer [sitename] Installs Drupal from a composer.json file
+--composer [sitename] Installs Drupal from a composer.json file.
 
 --delete [sitename]   Deletes an arbitrary docroot, vHost and corresponding database.
 

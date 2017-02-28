@@ -279,7 +279,7 @@
   become_user: "{{ user }}"
   when: composer_gitignore.stat.exists == false
 
-- name: Make sure files dir ownership is correct
+- name: "COMPOSER: Make sure files dir ownership is correct"
   file:
     path: "{{ webroot }}/{{ sitename }}/docroot/sites/default/files"
     owner: "{{ user }}"
