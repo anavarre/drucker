@@ -10,6 +10,8 @@
     src: "{{ composer_json_template_file }}"
     dest: "{{ webroot }}"
     mode: 0644
+  become: yes
+  become_user: "{{ user }}"
   when: composer_webroot.stat.exists == false
 
 - name: "COMPOSER: Rename composer-template.json filename"
