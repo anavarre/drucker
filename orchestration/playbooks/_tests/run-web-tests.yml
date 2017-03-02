@@ -12,7 +12,6 @@
 - include: playbooks/_tests/tools/phantomjs-tests.yml
 - include: playbooks/_tests/tools/codesniffer-tests.yml
 - include: playbooks/_tests/tools/php-cs-fixer-tests.yml
-- include: playbooks/_tests/tools/coder-tests.yml
 - include: playbooks/_tests/tools/phpmd-tests.yml
 - include: playbooks/_tests/tools/mcstat-tests.yml
 - include: playbooks/_tests/drupal/drupal-tests.yml

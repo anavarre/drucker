@@ -10,10 +10,10 @@
 - include: playbooks/tools/xdebug.yml
 - include: playbooks/tools/tideways.yml
 - include: playbooks/tools/phantomjs.yml
-- include: playbooks/tools/codesniffer.yml
 - include: playbooks/tools/php-cs-fixer.yml
-- include: playbooks/tools/coder.yml
 - include: playbooks/tools/phpmd.yml
 - include: playbooks/tools/mcstat.yml
 - include: playbooks/drupal/drupal.yml
+# CodeSniffer needs the drucker docroot to be deployed.
+- include: playbooks/tools/codesniffer.yml
 - include: playbooks/db/db-tools.yml

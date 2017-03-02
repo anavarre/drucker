@@ -1,58 +1,45 @@
 ---
-- name: Check if Code Sniffer phpcs is installed
+- name: Check if CodeSniffer phpcs is globally installed
   stat:
     path: "{{ phpcs_binary }}"
   register: phpcs
 
-- name: Check if Code Sniffer phpcbf is installed
+- name: Install phpcs globally
+  file:
+    src: "{{ drupal_phpcs }}"
+    dest: "{{ user_programs_path }}/phpcs"
+    state: link
+  register: a
+  when: phpcs.stat.exists == false
+
+- name: Check if CodeSniffer phpcbf is globally installed
   stat:
     path: "{{ phpcbf_binary }}"
   register: phpcbf
 
-- name: Check phpcs version
-  shell: phpcs --version | awk '{print $3}'
-  register: phpcs_version
-  when: phpcs.stat.exists == true
-  changed_when: phpcs_version.stdout != "{{ phpcs_stable_release }}"
-
-- name: Check phpcbf version
-  shell: phpcbf --version | awk '{print $3}'
-  register: phpcbf_version
-  when: phpcbf.stat.exists == true
-  changed_when: phpcbf_version.stdout != "{{ phpcbf_stable_release }}"
-
-- name: Download phpcs PHAR file
-  get_url:
-    url: "{{ phpcs_download_link }}"
-    dest: "{{ download_dir }}"
-    mode: 0755
-    validate_certs: no
-  register: codesniffer_get_url_result
-  until: "'OK' in codesniffer_get_url_result.msg"
-  retries: 3
-  delay: 10
-  when: phpcs.stat.exists == false or phpcs_version.stdout != "{{ phpcs_stable_release }}"
-
-- name: Rename phpcs PHAR file
-  command: mv {{ phpcs_temp_phar }} {{ phpcs_temp_path }}
-  when: phpcs.stat.exists == false or phpcs_version.stdout != "{{ phpcs_stable_release }}"
-
-- name: Install phpcs globally
-  command: mv {{ phpcs_temp_path }} {{ user_programs_path }}
-  when: phpcs.stat.exists == false or phpcs_version.stdout != "{{ phpcs_stable_release }}"
-
-- name: Download phpcbf PHAR file
-  get_url:
-    url: "{{ phpcbf_download_link }}"
-    dest: "{{ download_dir }}"
-    mode: 0755
-    validate_certs: no
-  when: phpcbf.stat.exists == false or phpcbf_version.stdout != "{{ phpcbf_stable_release }}"
-
-- name: Rename phpcbf PHAR file
-  command: mv {{ phpcbf_temp_phar }} {{ phpcbf_temp_path }}
-  when: phpcbf.stat.exists == false or phpcbf_version.stdout != "{{ phpcbf_stable_release }}"
-
 - name: Install phpcbf globally
-  command: mv {{ phpcbf_temp_path }} {{ user_programs_path }}
-  when: phpcbf.stat.exists == false or phpcbf_version.stdout != "{{ phpcbf_stable_release }}"
+  file:
+    src: "{{ drupal_phpcbf }}"
+    dest: "{{ user_programs_path }}/phpcbf"
+    state: link
+  when: phpcbf.stat.exists == false
+
+- name: Check if CodeSniffer bash aliases exist
+  shell: grep -o 'MANAGED CODE SNIFFER BLOCK' {{ bashrc }} || echo "absent"
+  register: codesniffer_aliases
+  changed_when: codesniffer_aliases == "absent"
+
+- name: Add CodeSniffer bash aliases
+  blockinfile:
+    dest: "{{ bashrc }}"
+    block: |
+      alias drupalcs="phpcs --standard=Drupal --extensions={{ codesniffer_extensions }}"
+      alias drupalpractice="phpcs --standard=DrupalPractice --extensions={{ codesniffer_extensions }}"
+      alias drupalfix="phpcbf --standard=Drupal --extensions={{ codesniffer_extensions }}"
+    insertafter: EOF
+    marker: "# {mark} MANAGED CODE SNIFFER BLOCK"
+  when: codesniffer_aliases.stdout == 'absent'
+
+- name: Register Drupal and DrupalPractice with PHPCS
+  command: phpcs --config-set installed_paths {{ codesniffer_sniffs }}
+  when: phpcs.stat.exists == false

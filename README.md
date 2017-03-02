@@ -67,8 +67,8 @@ _drucker_ ships with the following software stack:
 | adminer             | 4.2.5               | [vrana/adminer](https://github.com/vrana/adminer) (Github)      |
 | PHP-FPM             | 7.1.1 or higher     | APT, via [ppa:ondrej/php](https://deb.sury.org/)      |
 | APCu                | 5.1.8 or later      | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
-| Coder               | 8.2.10               | [drupal/coder](https://packagist.org/packages/drupal/coder) (Packagist)      |
-| Code Sniffer        | 2.6.1               | [squizlabs/PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) (Github)      |
+| Coder               | See `composer.json` | Managed by Drupal      |
+| Code Sniffer        | See `composer.json` | Managed by Drupal      |
 | PHP-CS-Fixer        | 1.12.2              | [FriendsOfPHP/PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (Github)      |
 | phpmd               | 2.6.0               | [PHPMD](https://phpmd.org/) (official site)      |
 | PECL uploadprogress | master              | [ php/pecl-php-uploadprogress](https://github.com/php/pecl-php-uploadprogress)  (Github)     |
