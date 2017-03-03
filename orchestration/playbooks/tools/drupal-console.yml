@@ -3,12 +3,13 @@
 - name: Check if Drupal Console Launcher is installed
   stat:
     path: "{{ drupal_console_binary }}"
-  register: drupal_console
+  register: drupal_console_launcher
+  changed_when: drupal_console_launcher.stat.exists == false
 
 - name: Check Drupal Console Launcher version
   shell: drupal --version | awk '{print $NF}' | head -n1
   register: drupal_console_launcher_check
-  when: drupal_console.stat.exists == true
+  when: drupal_console_launcher.stat.exists == true
   changed_when: drupal_console_launcher_check.stdout != "{{ drupal_console_launcher_stable_release }}"
 
 - name: Install Drupal Console launcher
@@ -21,11 +22,11 @@
   until: "'OK' in console_get_url_result.msg"
   retries: 3
   delay: 10
-  when: drupal_console.stat.exists == false
+  when: drupal_console_launcher.stat.exists == false
 
 - name: Update Drupal Console Launcher
   command: drupal self-update
-  when: drupal_console.stat.exists == true and drupal_console_launcher_check.stdout != "{{ drupal_console_launcher_stable_release }}"
+  when: drupal_console_launcher.stat.exists == true and drupal_console_launcher_check.stdout != "{{ drupal_console_launcher_stable_release }}"
 
 # Drupal Console Composer package
 - name: Check Drupal Console version in composer.json file
@@ -49,13 +50,13 @@
     working_dir: "{{ composer_dir_path }}"
   become: yes
   become_user: "{{ user }}"
-  when: drupal_console_composer_package_version_check.stdout != "{{ drupal_console_composer_package_version }}" or drupal_console_launcher_check.stdout != "{{ drupal_console_launcher_stable_release }}"
+  when: drupal_console_composer_package_version_check.stdout != "{{ drupal_console_composer_package_version }}" or (drupal_console_launcher_check is defined and drupal_console_launcher_check.stdout != "{{ drupal_console_launcher_stable_release }}")
 
 - name: Initialize Drupal Console
   command: drupal init --override --no-interaction
   become: yes
   become_user: "{{ user }}"
-  when: drupal_console.stat.exists == false or drupal_console_composer_package_version_check.stdout != "{{ drupal_console_composer_package_version }}"
+  when: drupal_console_launcher.stat.exists == false or drupal_console_composer_package_version_check.stdout != "{{ drupal_console_composer_package_version }}"
 
 - name: Check if Drupal Console has been configured in .bashrc
   shell: grep -o "source \"\$HOME/.console/console.rc\" 2>/dev/null" {{ bashrc }} || echo "absent"
