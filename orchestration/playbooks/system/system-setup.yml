@@ -7,10 +7,23 @@
   with_items:
   - vim-tiny
 
+- name: Deploy sources.list template with contrib and non-free repositories
+  copy:
+    src: "{{ sources_list_source_file }}"
+    dest: "{{ sources_list }}"
+    mode: 0644
+
+- name: Add Debian codename to sources.list template
+  replace:
+    dest: "{{ sources_list }}"
+    regexp: '^(.*)CODENAME(.*)$'
+    replace: '\1{{ codename }}\2'
+
 - name: Install system packages
   package:
     name: "{{ item }}"
     state: present
+    update_cache: yes
   with_items:
   - ack-grep
   - apt-transport-https

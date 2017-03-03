@@ -6,7 +6,7 @@ tld: local
 home: /home/{{ user }}
 hosts_file: /etc/hosts
 sources_list: /etc/apt/sources.list
-sources_list_d: /etc/apt/sources.list.d
+sources_list_d: "{{ sources_list }}.d"
 bashrc: "{{ home }}/.bashrc"
 bash_aliases: "{{ home }}/.bash_aliases"
 download_dir: /tmp
@@ -27,6 +27,8 @@ varnish_default_vcl_source_file: "{{ source_file_dir }}/default.vcl"
 bash_aliases_source_file: "{{ source_file_dir }}/.bash_aliases"
 vimrc_source_file: "{{ source_file_dir }}/.vimrc"
 fastcgi_source_file: "{{ source_file_dir }}/fastcgi.conf"
+sources_list_source_file: "{{ source_file_dir }}/sources.list"
+
 
 # Source directories
 ssl_source_dir: "{{ source_file_dir }}/ssl"

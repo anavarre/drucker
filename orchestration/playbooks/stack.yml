@@ -14,6 +14,6 @@
 - include: playbooks/tools/phpmd.yml
 - include: playbooks/tools/mcstat.yml
 - include: playbooks/drupal/drupal.yml
-# CodeSniffer needs the drucker docroot to be deployed.
+# CodeSniffer needs the drucker docroot to be deployed first.
 - include: playbooks/tools/codesniffer.yml
 - include: playbooks/db/db-tools.yml
