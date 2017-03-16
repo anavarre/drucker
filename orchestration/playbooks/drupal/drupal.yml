@@ -19,6 +19,7 @@
     state: present
   with_items:
     - python-mysqldb
+    - mysql-client
 
 - name: Check if drucker database exists
   stat:
