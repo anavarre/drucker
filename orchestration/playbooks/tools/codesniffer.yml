@@ -7,9 +7,8 @@
 - name: Install phpcs globally
   file:
     src: "{{ drupal_phpcs }}"
-    dest: "{{ user_programs_path }}/phpcs"
+    dest: "{{ phpcs_binary }}"
     state: link
-  register: a
   when: phpcs.stat.exists == false
 
 - name: Check if CodeSniffer phpcbf is globally installed
