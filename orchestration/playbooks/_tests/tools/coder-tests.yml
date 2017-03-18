@@ -1,0 +1,18 @@
+---
+- name: "TEST: Coder needs to be correctly installed"
+  stat:
+    path: "{{ coder_binary }}"
+  register: coder
+  failed_when: coder.stat.exists == false
+
+- name: "TEST: Coder should use the latest stable release"
+  shell: grep -o "{{ coder_stable_release }}" {{ composer_json_path }} || echo "absent"
+  register: coder_stable
+  changed_when: coder_stable.stdout == "absent"
+  failed_when: coder_stable.stdout == "absent"
+
+- name: "TEST: Check if Coder has been configured in .bashrc"
+  shell: grep -o 'MANAGED CODE SNIFFER BLOCK' {{ bashrc }} || echo "absent"
+  register: coder_bashrc
+  changed_when: coder_bashrc.stdout == "absent"
+  failed_when: coder_bashrc.stdout == "absent"

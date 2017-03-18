@@ -166,13 +166,28 @@ tideways_extension_path: "{{ php_extensions }}/{{ tideways_extension_name }}"
 tideways_output_dir: "{{ download_dir }}/tideways/"
 tideways_temp_dir: "{{ download_dir }}/php-profiler-extension-{{ tideways_stable_release }}"
 
-# CodeSniffer
-drupal_phpcs: "{{ docroot }}/vendor/squizlabs/php_codesniffer/scripts/phpcs"
-drupal_phpcbf: "{{ docroot }}/vendor/squizlabs/php_codesniffer/scripts/phpcbf"
+# Coder
+coder_stable_release: 8.2.12
+coder_composer_package: drupal/coder
+coder_binary: "{{ composer_dir_path }}/vendor/drupal/coder"
+
+# PHPcs
+phpcs_stable_release: 2.6.1
+phpcs_download_link: https://github.com/squizlabs/PHP_CodeSniffer/releases/download/{{ phpcs_stable_release }}/phpcs.phar
 phpcs_binary: "{{ user_programs_path }}/phpcs"
+phpcs_temp_phar: "{{ download_dir }}/phpcs.phar"
+phpcs_temp_path: "{{ download_dir }}/phpcs"
+
+# PHPcbf
+phpcbf_stable_release: 2.6.1
+phpcbf_download_link: https://github.com/squizlabs/PHP_CodeSniffer/releases/download/{{ phpcbf_stable_release }}/phpcbf.phar
 phpcbf_binary: "{{ user_programs_path }}/phpcbf"
+phpcbf_temp_phar: "{{ download_dir }}/phpcbf.phar"
+phpcbf_temp_path: "{{ download_dir }}/phpcbf"
+
+# CodeSniffer
 codesniffer_extensions: php,module,inc,install,test,profile,theme
-codesniffer_sniffs: "{{ docroot }}/vendor/drupal/coder/coder_sniffer"
+codesniffer_binary: "{{ composer_dir_path }}/vendor/drupal/coder/coder_sniffer"
 
 # PHP-CS-Fixer
 php_cs_fixer_stable_release: 1.12.2
