@@ -35,24 +35,17 @@ set ruler "Always show current position
 set clipboard=unnamed " Use the system clipboard
 
 " Developer experience improvements, with auto-closing elements.
-"inoremap ( ()<Esc>i
-"inoremap [ []<Esc>i
-"inoremap { {}<Esc>i
-"inoremap " ""<Esc>i
-"inoremap ' ''<Esc>i
-
-" NERDTree-like browser
-let g:netrw_banner = 0
-let g:netrw_liststyle = 3
-let g:netrw_browse_split = 4
-let g:netrw_altv = 1
-let g:netrw_winsize = 25
+inoremap ( ()<Esc>i
+inoremap [ []<Esc>i
+inoremap { {}<Esc>i
+inoremap " ""<Esc>i
+inoremap ' ''<Esc>i
 
 " vim-gitgutter
 set updatetime=250 " reduce gutter update time to 250ms
 
 " Re-mapping
-map <C-\> :Vex<CR>
+map <C-\> :NERDTreeToggle<CR>
 map <F3>  :set paste<CR><Esc>i
 map <F6>  :tabp<CR>
 map <F8>  :tabn<CR>
