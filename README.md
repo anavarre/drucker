@@ -5,15 +5,15 @@
 * [Introduction](#Introduction)
 * [Requirements](#Requirements)
   * [Software](#Software)
-  * [Disk Space](#Disk space)
+  * [Disk Space](#Disk_space)
   * [SSH](#SSH)
 * [Technology](#Technology)
 * [Installation](#Installation)
 * [Usage](#Usage)
   * [Passwords](#Passwords)
-* [Tips and tricks](#Tips and tricks)
-  * [Delete a container](#Delete a container)
-  * [Delete an image](#Delete an image)
+* [Tips and tricks](#Tips_and_tricks)
+  * [Delete a container](#Delete_a_container)
+  * [Delete an image](#Delete_an_image)
 * [Troubleshooting](#Troubleshooting)
 
 ## <a name="Introduction"></a>Introduction
@@ -42,7 +42,7 @@ ansible 2.2.0.0
 
 **Important**: Ansible 2 or later is required.
 
-### <a name="Disk space"></a>Disk space
+### <a name="Disk_space"></a>Disk space
 
 You need to have approximately 4GB available.
 
@@ -204,9 +204,9 @@ $ su drucker
 * MySQL credentials: `root`/`root`
 * Drupal credentials: `admin`/`admin`
 
-## <a name="Tips and tricks"></a>Tips and tricks
+## <a name="Tips_and_tricks"></a>Tips and tricks
 
-### <a name="Delete a container"></a>Delete a container
+### <a name="Delete_a_container"></a>Delete a container
 
 Run:
 
@@ -214,7 +214,7 @@ Run:
 $ docker rm -f <container_name>
 ```
 
-### <a name="Delete an image"></a>Delete an image
+### <a name="Delete_an_image"></a>Delete an image
 
 Run:
 
