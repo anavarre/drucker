@@ -81,6 +81,10 @@ colorscheme Tomorrow
 " Autosave files on every keystroke.
 autocmd TextChanged,TextChangedI <buffer> silent write
 
+" ctags
+set autochdir
+set tags+=./tags;
+
 " Drupal files must be highlighted as PHP files
 if has("autocmd")
   augroup module

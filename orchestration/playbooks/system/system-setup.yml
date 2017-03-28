@@ -29,6 +29,7 @@
   - apt-transport-https
   - curl
   - dstat
+  - exuberant-ctags
   - git
   - htop
   - iputils-ping

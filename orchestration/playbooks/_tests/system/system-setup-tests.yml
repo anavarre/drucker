@@ -28,6 +28,7 @@
     - apt-transport-https
     - curl
     - dstat
+    - exuberant-ctags
     - git
     - htop
     - iputils-ping
@@ -44,7 +45,7 @@
     - telnet
     - tcpdump
     - time
-    - vim
+    - vim-gtk
     - wget
   register: system_packages
   changed_when: system_packages == ''
