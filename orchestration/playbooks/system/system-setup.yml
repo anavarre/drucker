@@ -46,7 +46,7 @@
   - telnet
   - tcpdump
   - time
-  - vim
+  - vim-gtk
   - wget
 
 - name: Ensure NTP is running
