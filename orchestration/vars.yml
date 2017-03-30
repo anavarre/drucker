@@ -222,7 +222,7 @@ mysql_backup_source_file: "{{ source_file_dir }}/mysql-backup.sh"
 mysql_backup_path: "{{ user_programs_path }}/mysql-backup.sh"
 
 # phpMyAdmin
-phpmyadmin_stable_release: 4.6.6
+phpmyadmin_stable_release: 4.7.0
 phpmyadmin_archive_filename: phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
 phpmyadmin_download_link: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_stable_release }}/{{ phpmyadmin_archive_filename }}
 phpmyadmin_archive_path: "{{ download_dir }}/phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz"
