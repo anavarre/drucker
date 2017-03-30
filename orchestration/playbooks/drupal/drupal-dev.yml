@@ -61,6 +61,9 @@
     regexp: '^(.*)    cache: true(.*)$'
     replace: '\1    cache: false\2'
 
+- name: "DEV: Enable the Testing module"
+  command: drush @{{ user }}.{{ tld }} pm-enable simpletest
+
 - name: "DEV: Rebuild Drupal cache"
   command: drush @{{ user }}.{{ tld }} cache-rebuild
   when: turn_on_twig_debugging.changed
