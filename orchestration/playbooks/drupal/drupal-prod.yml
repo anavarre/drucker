@@ -38,6 +38,14 @@
     replace: '\1    cache: true\2'
   when: services_yml_prod.stat.exists == true
 
+- name: "PROD: Check if the Testing module is installed"
+  shell: drush @{{ user }}.{{ tld }} pm-list --type=module --status=enabled | grep simpletest | awk '{print $4}'
+  register: testing_module_check
+
+- name: "PROD: Uninstall the Testing module"
+  command: drush @{{ user }}.{{ tld }} pm-uninstall -y simpletest
+  when: testing_module_check.stdout == "Enabled"
+
 - name: "PROD: Rebuild Drupal cache"
   command: drush @{{ user }}.{{ tld }} cache-rebuild
   when: turn_off_twig_debugging.changed
