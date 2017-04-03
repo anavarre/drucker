@@ -64,7 +64,7 @@ _drucker_ ships with the following software stack:
 | memcached           | 3.0.3               | APT, via [ppa:ondrej/php](https://deb.sury.org/)       |
 | mcstat              | 1.1.0               | [webbj74/mcstat](https://github.com/webbj74/mcstat) (Github)      |
 | phpMyAdmin          | 4.7.0               | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
-| adminer             | 4.2.5               | [vrana/adminer](https://github.com/vrana/adminer) (Github)      |
+| adminer             | 4.3.0               | [vrana/adminer](https://github.com/vrana/adminer) (Github)      |
 | PHP-FPM             | 7.1.1 or higher     | APT, via [ppa:ondrej/php](https://deb.sury.org/)      |
 | APCu                | 5.1.8 or later      | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
 | Coder               | 8.2.11              | [drupal/coder](https://packagist.org/packages/drupal/coder) (Packagist)      |
