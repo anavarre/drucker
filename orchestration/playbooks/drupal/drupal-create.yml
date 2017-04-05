@@ -19,6 +19,15 @@
     path: "{{ mysql_data }}/{{ sitename }}"
   register: new_db
 
+- name: Make sure default site has correct permissions
+  file:
+    path: "{{ webroot }}/{{ sitename }}/sites/default"
+    state: directory
+    mode: 02755
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  when: new_docroot.stat.exists == false
+
 - name: "CREATE: Create files directory"
   file:
     path: "{{ webroot }}/{{ sitename }}/sites/default/files"

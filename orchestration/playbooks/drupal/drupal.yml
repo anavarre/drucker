@@ -26,16 +26,18 @@
     path: "{{ mysql_data }}/{{ user }}"
   register: drucker_db
 
+- name: Make sure default site has correct permissions
+  file:
+    path: "{{ docroot }}/{{default_site}}"
+    state: directory
+    mode: 02755
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+
 - name: Delete files directory when reinstalling
   file:
     path: "{{ files_dir }}"
     state: absent
-  when: drucker_db.stat.exists == false
-
-- name: Make sure default site has correct permissions
-  file:
-    path: "{{ docroot }}/{{default_site}}"
-    mode: 0755
   when: drucker_db.stat.exists == false
 
 - name: Create files directory

@@ -31,7 +31,7 @@ drupal_composer() {
 delete_site() {
   echo -e "${BLUE}Deleting docroot ${SITENAME}...${COLOR_ENDING}"
   ${PLAYBOOK}/delete.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y sitename=${SITENAME}"
-  echo -e "${RED}Remember to remove the ${SITENAME}.local entry from your local /etc/hosts file!${COLOR_ENDING}"
+  echo -e "${GREEN}Remember to remove the ${SITENAME}.local entry from your local /etc/hosts file!${COLOR_ENDING}"
 }
 
 create_site() {

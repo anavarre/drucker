@@ -1,4 +1,12 @@
 ---
+- name: "DEV: Make sure default site has correct permissions"
+  file:
+    path: "{{ docroot }}/{{default_site}}"
+    state: directory
+    mode: 02755
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+
 - name: "DEV: Check if settings.local.php file exists"
   stat:
     path: "{{ settings_local_php }}"
@@ -7,6 +15,8 @@
 
 - name: "DEV: Create settings.local.php file"
   command: cp {{ example_settings_local_php }} {{ settings_local_php }}
+  become: yes
+  become_user: "{{ user }}"
   when: settings_local.stat.exists == false
 
 - name: "DEV: Check if cache bins have been disabled"
