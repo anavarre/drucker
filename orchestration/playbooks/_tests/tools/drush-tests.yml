@@ -25,3 +25,9 @@
   fail:
     msg: "The Drush binary isn't executable"
   when: executable_drush.stat.mode != "0755"
+
+- name: "TEST: Check if Drush can connect to the drucker database"
+  shell: drush @{{ user }}.{{ tld }} sql-connect | grep -o "{{ user }}" || echo "Cannot connect to the database"
+  register: drush_db_connection
+  changed_when: drush_db_connection.stdout == "Cannot connect to the database"
+  failed_when: drush_db_connection.stdout == "Cannot connect to the database"
