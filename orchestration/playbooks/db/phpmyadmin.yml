@@ -26,6 +26,8 @@
     src: "{{ phpmyadmin_archive_path }}"
     dest: "{{ webroot }}"
     copy: no
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
   when: phpmyadmin_version.stat.exists == false or phpmyadmin_update.stdout != "{{ phpmyadmin_stable_release }}"
 
 - name: Delete outdated phpMyAdmin version

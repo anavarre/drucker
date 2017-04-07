@@ -64,7 +64,6 @@
     dest: "{{ adminer_available_vhost }}"
     regexp: '^(.*)SITENAME\/docroot(.*)$'
     replace: '\1adminer\2'
-  register: a
   when: adminer_conf.stat.exists == false
 
 - name: Modify adminer vHost 2/2

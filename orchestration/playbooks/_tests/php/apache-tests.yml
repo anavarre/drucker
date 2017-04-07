@@ -45,6 +45,17 @@
   changed_when: apache2_service.stdout == "is running"
   failed_when: apache2_service.stdout == "is running"
 
+- name: "TEST: Permissions should be correct in the webroot"
+  shell: stat -c %U:%G "{{ item }}" | grep "{{ user }}:{{ apache_user }}" || echo "Wrong permissions"
+  with_items:
+    - "{{ drucker_site }}"
+    - "{{ adminer_root }}"
+    - "{{ phpmyadmin_root }}"
+    - "{{ import_dir }}"
+  register: webroot_permissions
+  changed_when: webroot_permissions.stdout == "Wrong permissions"
+  failed_when: webroot_permissions.stdout == "Wrong permissions"
+
 - name: "TEST: All URLs should be accessible"
   uri:
     url: "{{ item }}"
