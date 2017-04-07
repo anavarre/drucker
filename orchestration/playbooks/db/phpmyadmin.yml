@@ -96,7 +96,14 @@
   command: mv {{ vhost_template }} {{ phpmyadmin_available_vhost }}
   when: phpmyadmin_conf.stat.exists == false
 
-- name: Modify phpMyAdmin vHost
+- name: Modify phpMyAdmin vHost 1/2
+  replace:
+    dest: "{{ phpmyadmin_available_vhost }}"
+    regexp: '^(.*)SITENAME\/docroot(.*)$'
+    replace: '\1phpmyadmin\2'
+  when: phpmyadmin_conf.stat.exists == false
+
+- name: Modify phpMyAdmin vHost 2/2
   replace:
     dest: "{{ phpmyadmin_available_vhost }}"
     regexp: '^(.*)SITENAME(.*)$'
