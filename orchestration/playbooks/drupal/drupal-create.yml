@@ -267,6 +267,7 @@
     working_dir: "{{ webroot }}/{{ sitename }}/docroot"
   become: yes
   become_user: "{{ user }}"
+  when: new_site.stat.exists == false
 
 - name: "CREATE: Set up Drupal Console to work with the new docroot 2/2"
   composer:

@@ -1,16 +1,34 @@
 ---
 - include: playbooks/drupal/drupal-clone.yml
 
-- name: Check if drucker docroot exists
+- name: Check if drucker site exists
   stat:
-    path: "{{ docroot }}"
+    path: "{{ drucker_site }}"
   register: drucker
   ignore_errors: True
 
-- name: Create drucker docroot
-  command: cp -R {{ drupal_git_clone_path }} {{ docroot }}
+- name: Create new site structure
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 02755
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  with_items:
+    - "{{ drucker_site }}"
+    - "{{ drucker_site }}/config"
+  when: drucker.stat.exists == false
+
+- name: Copy Drupal checkout into new site stucture
+  command: cp -R {{ drupal_git_clone_path }} {{ drucker_docroot }}
   become: yes
   become_user: "{{ user }}"
+  when: drucker.stat.exists == false
+
+- name: Remove default .git directory
+  file:
+    path: "{{ drucker_docroot }}/.git"
+    state: absent
   when: drucker.stat.exists == false
 
 - name: Ensure we can manage remote MySQL databases
@@ -28,7 +46,7 @@
 
 - name: Make sure default site has correct permissions
   file:
-    path: "{{ docroot }}/{{default_site}}"
+    path: "{{ drucker_site }}/{{default_site}}"
     state: directory
     mode: 02755
     owner: "{{ user }}"
@@ -220,7 +238,7 @@
 - name: Pull vendor dependencies
   composer:
     command: install
-    working_dir: "{{ docroot }}"
+    working_dir: "{{ drucker_docroot }}"
   become: yes
   become_user: "{{ user }}"
   when: drucker.stat.exists == false
@@ -250,7 +268,7 @@
 - name: Deploy phpunit.xml file
   copy:
     src: "{{ phpunit_source_file }}"
-    dest: "{{ docroot }}/core/"
+    dest: "{{ drucker_docroot }}/core/"
     mode: 0644
   become: yes
   become_user: "{{ user }}"
@@ -284,6 +302,12 @@
     - "{{ archives_dir }}"
   when: import_directories.results[0]['item'] or import_directories.results[1]['item']
 
+- name: Add new site under version control
+  shell: git -C "{{ drucker_site }}" init
+  become: yes
+  become_user: "{{ user }}"
+  when: drucker.stat.exists == false
+
 - name: Check if .gitignore exists
   stat:
     path: "{{ drupal_gitignore }}"
@@ -293,14 +317,14 @@
 - name: Create .gitignore file
   copy:
     src: "{{ gitignore_source_file }}"
-    dest: "{{ docroot }}"
+    dest: "{{ drucker_site }}"
     mode: 0644
   become: yes
   become_user: "{{ user }}"
   when: gitignore.stat.exists == false
 
 - name: Add all new files under version control
-  shell: git -C {{ docroot }} add . && git -C {{ docroot }} commit -m "Initial drucker commit"
+  shell: git -C {{ drucker_site }} add --all . && git -C {{ drucker_site }} commit -m "Initial drucker commit"
   become: yes
   become_user: "{{ user }}"
   when: drucker.stat.exists == false

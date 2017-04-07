@@ -1,17 +1,17 @@
 ---
 - include: playbooks/drupal/drupal-checkout.yml
 
-- name: "REINSTALL: Check if drucker docroot exists"
+- name: "REINSTALL: Check if drucker site exists"
   stat:
-    path: "{{ docroot }}"
-  register: drucker_docroot
+    path: "{{ drucker_site }}"
+  register: drucker_site
   ignore_errors: True
 
-- name: "REINSTALL: Deletes drucker docroot"
+- name: "REINSTALL: Deletes drucker site"
   file:
-    path: "{{ docroot }}"
+    path: "{{ drucker_site }}"
     state: absent
-  when: drucker_docroot.stat.exists == true
+  when: drucker_site.stat.exists == true
 
 - include: playbooks/drupal/drupal.yml
 
@@ -19,7 +19,7 @@
   composer:
     command: require
     arguments: "{{ drupal_console_composer_package }}:{{ drupal_console_composer_package_version }} --prefer-dist --optimize-autoloader"
-    working_dir: "{{ docroot }}"
+    working_dir: "{{ drucker_docroot }}"
   become: yes
   become_user: "{{ user }}"
 
@@ -27,11 +27,11 @@
   composer:
     command: update
     arguments: "{{ drupal_console_composer_package }} --with-dependencies"
-    working_dir: "{{ docroot }}"
+    working_dir: "{{ drucker_docroot }}"
   become: yes
   become_user: "{{ user }}"
 
 - name: Add new vendor files under version control
-  shell: git -C {{ docroot }} add . && git -C {{ docroot }} commit -m "Extra commit for vendor files"
+  shell: git -C {{ drucker_site }} add -all . && git -C {{ drucker_site }} commit -m "Extra commit for vendor files"
   become: yes
   become_user: "{{ user }}"

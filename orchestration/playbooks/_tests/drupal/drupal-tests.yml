@@ -3,7 +3,8 @@
   stat:
     path: "{{ item }}"
   with_items:
-    - "{{ docroot }}"
+    - "{{ drucker_site }}"
+    - "{{ drucker_docroot }}"
     - "{{ files_dir }}"
     - "{{ libraries_dir }}"
     - "{{ settings_php }}"
@@ -53,7 +54,7 @@
   failed_when: styles_dir_ownership.stdout != "{{ user }}:{{ apache_user }}"
 
 - name: "TEST: Make sure the codebase was added under version control"
-  shell: git -C {{ docroot }} log --oneline | grep -o "Initial commit" || echo 'no commit'
+  shell: git -C {{ drucker_site }} log --oneline | grep -o "Initial commit" || echo 'no commit'
   args:
     warn: no
   register: initial_commit
