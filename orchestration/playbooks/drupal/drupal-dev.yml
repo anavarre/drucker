@@ -1,7 +1,7 @@
 ---
 - name: "DEV: Make sure default site has correct permissions"
   file:
-    path: "{{ docroot }}/{{default_site}}"
+    path: "{{ drucker_site }}/{{default_site}}"
     state: directory
     mode: 02755
     owner: "{{ user }}"
