@@ -16,6 +16,8 @@
     path: "{{ adminer_root }}"
     state: directory
     mode: 0755
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
   when: adminer.stat.exists == false
 
 - name: Download latest adminer release
@@ -31,6 +33,13 @@
 
 - name: Rename adminer file
   command: mv {{ adminer_root }}/adminer-{{ adminer_stable_release }}-en.php {{ adminer_index }}
+  when: adminer.stat.exists == false or adminer_release.stdout == "update"
+
+- name: Ensure adminer permissions are correct
+  file:
+    path: "{{ adminer_index }}"
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
   when: adminer.stat.exists == false or adminer_release.stdout == "update"
 
 - name: Check if adminer vHost exists
@@ -50,7 +59,15 @@
   command: mv {{ vhost_template }} {{ adminer_available_vhost }}
   when: adminer_conf.stat.exists == false
 
-- name: Modify adminer vHost
+- name: Modify adminer vHost 1/2
+  replace:
+    dest: "{{ adminer_available_vhost }}"
+    regexp: '^(.*)SITENAME\/docroot(.*)$'
+    replace: '\1adminer\2'
+  register: a
+  when: adminer_conf.stat.exists == false
+
+- name: Modify adminer vHost 2/2
   replace:
     dest: "{{ adminer_available_vhost }}"
     regexp: '^(.*)SITENAME(.*)$'
