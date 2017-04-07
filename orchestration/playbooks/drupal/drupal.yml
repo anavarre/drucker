@@ -348,7 +348,7 @@
   when: drucker.stat.exists == false
 
 - name: Add new vendor files under version control
-  shell: git -C "{{ drucker_site }}" add --all . && git -C "{{ webroot }}/{{ site }}" commit -m "Extra commit for vendor files"
+  shell: git -C "{{ drucker_site }}" add --all . && git -C "{{ drucker_site }}" commit -m "Extra commit for vendor files"
   become: yes
   become_user: "{{ user }}"
   when: drucker.stat.exists == false
