@@ -250,8 +250,8 @@ mcstat_archive_path: "{{ download_dir }}/{{ mcstat_archive_file }}"
 
 # Drupal
 drupal_creds: admin
-default_site: sites/default
 docroot: "{{ webroot }}/{{ user }}"
+default_site: docroot/sites/default
 drupal_git: "{{ docroot }}/.git"
 drupal_gitignore: "{{ docroot }}/.gitignore"
 default_settings_php: "{{ docroot }}/{{default_site}}/default.settings.php"

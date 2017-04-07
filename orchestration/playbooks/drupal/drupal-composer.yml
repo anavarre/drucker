@@ -18,10 +18,10 @@
   command: mv {{ composer_json_template_temp_filename }} {{ composer_json_expected_filename }}
   when: composer_webroot.stat.exists == false
 
-- name: "COMPOSER: Check if new docroot exists"
+- name: "COMPOSER: Check if new site exists"
   stat:
     path: "{{ webroot }}/{{ sitename }}"
-  register: composer_new_docroot
+  register: composer_new_site
   ignore_errors: True
 
 - name: "COMPOSER: Check if new database exists"
@@ -29,17 +29,17 @@
     path: "{{ mysql_data }}/{{ sitename }}"
   register: composer_new_db
 
-- name: "COMPOSER: Create new docroot"
+- name: "COMPOSER: Create new site architecture"
   file:
     path: "{{ webroot }}/{{ sitename }}"
     state: directory
   become: yes
   become_user: "{{ user }}"
-  when: composer_new_docroot.stat.exists == false
+  when: composer_new_site.stat.exists == false
 
 - name: "COMPOSER: Move composer.json file into new docroot"
   command: mv {{ composer_json_expected_filename }} {{ webroot }}/{{ sitename }}
-  when: composer_new_docroot.stat.exists == false
+  when: composer_new_site.stat.exists == false
 
 - name: "COMPOSER: Install vendor dependencies from composer.json file (this can take a while)"
   composer:
@@ -50,12 +50,12 @@
 
 - name: "COMPOSER: Create files directory"
   file:
-    path: "{{ webroot }}/{{ sitename }}/docroot/sites/default/files"
+    path: "{{ webroot }}/{{ sitename }}/{{ default_site }}/files"
     state: directory
     mode: 0777
   become: yes
   become_user: "{{ user }}"
-  when: composer_new_docroot.stat.exists == false or composer_new_db.stat.exists == false
+  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
 
 - name: "COMPOSER: Create libraries directory"
   file:
@@ -63,7 +63,7 @@
     state: directory
   become: yes
   become_user: "{{ user }}"
-  when: composer_new_docroot.stat.exists == false or composer_new_db.stat.exists == false
+  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
 
 - name: "COMPOSER: Create simpletest directory"
   file:
@@ -72,34 +72,34 @@
     mode: 0777
   become: yes
   become_user: "{{ user }}"
-  when: composer_new_docroot.stat.exists == false or composer_new_db.stat.exists == false
+  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
 
 - name: "COMPOSER: Create settings.php file"
-  command: cp {{ webroot }}/{{ sitename }}/docroot/sites/default/default.settings.php {{ webroot }}/{{sitename }}/docroot/sites/default/settings.php
+  command: cp {{ webroot }}/{{ sitename }}/{{ default_site }}/default.settings.php {{ webroot }}/{{sitename }}/{{ default_site }}/settings.php
   become: yes
   become_user: "{{ user }}"
-  when: composer_new_docroot.stat.exists == false or composer_new_db.stat.exists == false
+  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
 
 - name: "COMPOSER: Create services.yml file"
-  command: cp {{ webroot }}/{{ sitename }}/docroot/sites/default/default.services.yml {{ webroot }}/{{sitename }}/docroot/sites/default/services.yml
+  command: cp {{ webroot }}/{{ sitename }}/{{ default_site }}/default.services.yml {{ webroot }}/{{sitename }}/{{ default_site }}/services.yml
   become: yes
   become_user: "{{ user }}"
-  when: composer_new_docroot.stat.exists == false or composer_new_db.stat.exists == false
+  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
 
 - name: "COMPOSER: Add trusted_host_patterns in settings.php"
   blockinfile:
-    dest: "{{ webroot }}/{{ sitename }}/docroot/sites/default/settings.php"
+    dest: "{{ webroot }}/{{ sitename }}/{{ default_site }}/settings.php"
     block: |
       $settings['trusted_host_patterns'] = [
         '^{{ sitename }}\.{{ tld }}$',
       ];
     insertafter: EOF
     marker: "# {mark} MANAGED TRUSTED_HOST_PATTERNS BLOCK"
-  when: composer_new_docroot.stat.exists == false or composer_new_db.stat.exists == false
+  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
 
 - name: "COMPOSER: Prepare settings.php for memcached support"
   blockinfile:
-    dest: "{{ webroot }}/{{ sitename }}/docroot/sites/default/settings.php"
+    dest: "{{ webroot }}/{{ sitename }}/{{ default_site }}/settings.php"
     block: |
       /**
        * drucker comes with memcached pre-configured. You simply need to install the
@@ -110,7 +110,7 @@
        */
     insertafter: EOF
     marker: "# {mark} MANAGED MEMCACHED BLOCK"
-  when: composer_new_docroot.stat.exists == false or composer_new_db.stat.exists == false
+  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
 
 - name: "COMPOSER: Ensure database is wiped before installing"
   mysql_db:
@@ -121,7 +121,7 @@
     name: "{{ sitename }}"
     config_file: "{{ my_cnf }}"
     state: absent
-  when: composer_new_docroot.stat.exists == false
+  when: composer_new_site.stat.exists == false
 
 - name: "COMPOSER: Create new database"
   mysql_db:
@@ -132,7 +132,7 @@
     name: "{{ sitename }}"
     config_file: "{{ my_cnf }}"
     state: present
-  when: composer_new_docroot.stat.exists == false or composer_new_db.stat.exists == false
+  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
 
 - name: "COMPOSER: Check if new vHost exists"
   stat:
@@ -156,13 +156,6 @@
     dest: "{{ sites_available }}/{{ sitename }}.conf"
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1{{ sitename }}\2'
-  when: composer_new_vhost_check.stat.exists == false
-
-- name: "COMPOSER: Make sure we're down one level for the new vHost"
-  replace:
-    dest: "{{ sites_available }}/{{ sitename }}.conf"
-    regexp: '^(.*){{ webroot }}/{{ sitename }}(.*)$'
-    replace: '\1{{ webroot }}/{{ sitename }}/docroot\2'
   when: composer_new_vhost_check.stat.exists == false
 
 - name: "COMPOSER: Enable new vHost"
@@ -199,13 +192,6 @@
     replace: '\1{{ sitename }}\2'
   when: composer_new_aliases.stat.exists == false
 
-- name: "COMPOSER: Make sure we're down one level for the new aliases"
-  replace:
-    dest: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
-    regexp: '^(.*){{ webroot }}/{{ sitename }}(.*)$'
-    replace: '\1{{ webroot }}/{{ sitename }}/docroot\2'
-  when: composer_new_aliases.stat.exists == false
-
 - name: "COMPOSER: Install Drupal"
   command: drush @{{ sitename }}.{{ tld }} site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@{{ db_ip }}:{{ mysql_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}
   become: yes
@@ -213,15 +199,15 @@
   when: composer_new_aliases.stat.exists == false
 
 - name: "COMPOSER: Retrieve path to config directory"
-  shell: stat -c %n {{ webroot }}/{{ sitename }}/docroot/sites/default/files/config_*
+  shell: stat -c %n {{ webroot }}/{{ sitename }}/{{ default_site }}/files/config_*
   register: composer_config_dir
-  when: composer_new_docroot.stat.exists == false or composer_new_db.stat.exists == false
+  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
 
 - name: "COMPOSER: Make sure the sync directory is writable"
   file:
     path: "{{ composer_config_dir.stdout }}/sync"
     mode: 0777
-  when: composer_new_docroot.stat.exists == false or composer_new_db.stat.exists == false
+  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
 
 - name: "COMPOSER: Check if phpunit.xml file exists"
   stat:
@@ -276,15 +262,15 @@
   when: composer_gitignore.stat.exists == false
 
 - name: "COMPOSER: Add all new files under version control"
-  shell: git -C {{ webroot }}/{{ sitename }} add --all . && git -C {{ webroot }}/{{ sitename }} commit -m "Initial drucker commit"
+  shell: git -C {{ webroot }}/{{ sitename }} add --all . && git -C {{ webroot }}/{{ sitename }} commit -m "Initial commit"
   become: yes
   become_user: "{{ user }}"
   when: composer_gitignore.stat.exists == false
 
 - name: "COMPOSER: Make sure files dir ownership is correct"
   file:
-    path: "{{ webroot }}/{{ sitename }}/docroot/sites/default/files"
+    path: "{{ webroot }}/{{ sitename }}/{{ default_site }}/files"
     owner: "{{ user }}"
     group: "{{ apache_user }}"
     recurse: yes
-  when: composer_new_docroot.stat.exists == false or composer_new_db.stat.exists == false
+  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
