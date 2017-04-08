@@ -1,3 +1,5 @@
+![drucker Logo](drucker-logo.png)
+
 # drucker: Drupal + Docker
 
 [![demo](https://asciinema.org/a/cp8rkaa9mcux71hdlpc3sxwkl.png)](https://asciinema.org/a/cp8rkaa9mcux71hdlpc3sxwkl)
