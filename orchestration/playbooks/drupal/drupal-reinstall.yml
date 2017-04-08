@@ -4,14 +4,14 @@
 - name: "REINSTALL: Check if drucker site exists"
   stat:
     path: "{{ drucker_site }}"
-  register: drucker_site
+  register: drucker_site_reinstall_check
   ignore_errors: True
 
 - name: "REINSTALL: Deletes drucker site"
   file:
     path: "{{ drucker_site }}"
     state: absent
-  when: drucker_site.stat.exists == true
+  when: drucker_site_reinstall_check.stat.exists == true
 
 - include: playbooks/drupal/drupal.yml
 
@@ -32,6 +32,6 @@
   become_user: "{{ user }}"
 
 - name: Add new vendor files under version control
-  shell: git -C {{ drucker_site }} add -all . && git -C {{ drucker_site }} commit -m "Extra commit for vendor files"
+  shell: git -C {{ drucker_site }} add --all . && git -C {{ drucker_site }} commit -m "Extra commit for vendor files"
   become: yes
   become_user: "{{ user }}"

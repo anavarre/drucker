@@ -5,6 +5,7 @@
   with_items:
     - "{{ drucker_site }}"
     - "{{ drucker_docroot }}"
+    - "{{ default_configuration_dir }}"
     - "{{ files_dir }}"
     - "{{ libraries_dir }}"
     - "{{ settings_php }}"
