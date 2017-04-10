@@ -99,7 +99,7 @@ drucker_argument() {
       fi
       ;;
       --create)
-      if [[ "${OPTION}" == "--create" ]] && [[ -z ${SITENAME} ]]; then
+      if [[ "${OPTION}" == "--create" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         drucker_usage
       else
         create_site
@@ -107,7 +107,7 @@ drucker_argument() {
       fi
       ;;
       --import)
-      if [[ "${OPTION}" == "--import" ]] && [[ -z ${SITENAME} ]]; then
+      if [[ "${OPTION}" == "--import" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         drucker_usage
       else
         import_site
@@ -123,7 +123,7 @@ drucker_argument() {
       fi
       ;;
       --composer)
-      if [[ "${OPTION}" == "--composer" ]] && [[ -z ${SITENAME} ]]; then
+      if [[ "${OPTION}" == "--composer" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         drucker_usage
       else
         drupal_composer
