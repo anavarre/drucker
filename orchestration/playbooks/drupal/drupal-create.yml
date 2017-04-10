@@ -107,6 +107,17 @@
       ];
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
+- name: Override default Configuration Management directory
+  blockinfile:
+    dest: "{{ webroot }}/{{ sitename }}/{{ default_site }}/settings.php"
+    block: |
+      $config_directories = [
+        CONFIG_SYNC_DIRECTORY => '{{ webroot }}/{{ sitename }}/{{ default_configuration_dir }}',
+      ];
+    insertafter: EOF
+    marker: "# {mark} MANAGED CONFIGURATION MANAGEMENT OVERRIDE BLOCK"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
 - name: "CREATE: Ensure database is wiped before installing"
   mysql_db:
     login_user: "{{ mysql_creds }}"
@@ -199,17 +210,6 @@
   command: drush @{{ sitename }}.{{ tld }} site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@{{ db_ip }}:{{ mysql_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}
   become: yes
   become_user: "{{ user }}"
-  when: new_site.stat.exists == false or new_db.stat.exists == false
-
-- name: "CREATE: Retrieve path to sync directory"
-  shell: stat -c %n {{ webroot }}/{{ sitename }}/{{ default_site }}/files/config_*/sync
-  register: new_sync_dir
-  when: new_site.stat.exists == false or new_db.stat.exists == false
-
-- name: "CREATE: Make sure the sync directory is writable"
-  file:
-    path: "{{ new_sync_dir.stdout }}"
-    mode: 0777
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
 - name: "CREATE: Check if phpunit.xml file exists"
