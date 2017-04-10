@@ -20,7 +20,7 @@
 
 - name: "COMPOSER: Check if new site exists"
   stat:
-    path: "{{ webroot }}/{{ sitename }}"
+    path: "{{ drupal_root }}"
   register: composer_new_site
   ignore_errors: True
 
@@ -31,26 +31,26 @@
 
 - name: "COMPOSER: Create new site architecture"
   file:
-    path: "{{ webroot }}/{{ sitename }}"
+    path: "{{ drupal_root }}"
     state: directory
   become: yes
   become_user: "{{ user }}"
   when: composer_new_site.stat.exists == false
 
 - name: "COMPOSER: Move composer.json file into new docroot"
-  command: mv {{ composer_json_expected_filename }} {{ webroot }}/{{ sitename }}
+  command: mv {{ composer_json_expected_filename }} {{ drupal_root }}
   when: composer_new_site.stat.exists == false
 
 - name: "COMPOSER: Install vendor dependencies from composer.json file (this can take a while)"
   composer:
     command: install
-    working_dir: "{{ webroot }}/{{ sitename }}"
+    working_dir: "{{ drupal_root }}"
   become: yes
   become_user: "{{ user }}"
 
 - name: "COMPOSER: Create files directory"
   file:
-    path: "{{ webroot }}/{{ sitename }}/{{ default_site }}/files"
+    path: "{{ drupal_root }}/{{ default_site }}/files"
     state: directory
     mode: 0777
   become: yes
@@ -59,7 +59,7 @@
 
 - name: "COMPOSER: Create libraries directory"
   file:
-    path: "{{ webroot }}/{{ sitename }}/docroot/libraries"
+    path: "{{ drupal_root }}/docroot/libraries"
     state: directory
   become: yes
   become_user: "{{ user }}"
@@ -67,7 +67,7 @@
 
 - name: "COMPOSER: Create simpletest directory"
   file:
-    path: "{{ webroot }}/{{ sitename }}/docroot/sites/simpletest"
+    path: "{{ drupal_root }}/docroot/sites/simpletest"
     state: directory
     mode: 0777
   become: yes
@@ -75,20 +75,20 @@
   when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
 
 - name: "COMPOSER: Create settings.php file"
-  command: cp {{ webroot }}/{{ sitename }}/{{ default_site }}/default.settings.php {{ webroot }}/{{sitename }}/{{ default_site }}/settings.php
+  command: cp {{ drupal_root }}/{{ default_site }}/default.settings.php {{ drupal_root }}/{{ default_site }}/settings.php
   become: yes
   become_user: "{{ user }}"
   when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
 
 - name: "COMPOSER: Create services.yml file"
-  command: cp {{ webroot }}/{{ sitename }}/{{ default_site }}/default.services.yml {{ webroot }}/{{sitename }}/{{ default_site }}/services.yml
+  command: cp {{ drupal_root }}/{{ default_site }}/default.services.yml {{ drupal_root }}/{{ default_site }}/services.yml
   become: yes
   become_user: "{{ user }}"
   when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
 
 - name: "COMPOSER: Add trusted_host_patterns in settings.php"
   blockinfile:
-    dest: "{{ webroot }}/{{ sitename }}/{{ default_site }}/settings.php"
+    dest: "{{ drupal_root }}/{{ default_site }}/settings.php"
     block: |
       $settings['trusted_host_patterns'] = [
         '^{{ sitename }}\.{{ tld }}$',
@@ -99,7 +99,7 @@
 
 - name: "COMPOSER: Prepare settings.php for memcached support"
   blockinfile:
-    dest: "{{ webroot }}/{{ sitename }}/{{ default_site }}/settings.php"
+    dest: "{{ drupal_root }}/{{ default_site }}/settings.php"
     block: |
       /**
        * drucker comes with memcached pre-configured. You simply need to install the
@@ -199,7 +199,7 @@
   when: composer_new_aliases.stat.exists == false
 
 - name: "COMPOSER: Retrieve path to config directory"
-  shell: stat -c %n {{ webroot }}/{{ sitename }}/{{ default_site }}/files/config_*
+  shell: stat -c %n {{ drupal_root }}/{{ default_site }}/files/config_*
   register: composer_config_dir
   when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
 
@@ -211,13 +211,13 @@
 
 - name: "COMPOSER: Check if phpunit.xml file exists"
   stat:
-    path: "{{ webroot }}/{{ sitename }}/docroot/core/phpunit.xml"
+    path: "{{ drupal_root }}/docroot/core/phpunit.xml"
   register: composer_phpunit
 
 - name: "COMPOSER: Deploy phpunit.xml file"
   copy:
     src: "{{ phpunit_source_file }}"
-    dest: "{{ webroot }}/{{ sitename }}/docroot/core/"
+    dest: "{{ drupal_root }}/docroot/core/"
     mode: 0644
   become: yes
   become_user: "{{ user }}"
@@ -225,35 +225,35 @@
 
 - name: "COMPOSER: Modify phpunit.xml file"
   replace:
-    dest: "{{ webroot }}/{{ sitename }}/docroot/core/phpunit.xml"
+    dest: "{{ drupal_root }}/docroot/core/phpunit.xml"
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1{{ sitename }}\2'
   when: composer_phpunit.stat.exists == false
 
 - name: "COMPOSER: Make sure we're down one level for the PHPUnit path"
   replace:
-    dest: "{{ webroot }}/{{ sitename }}/docroot/core/phpunit.xml"
-    regexp: '^(.*){{ webroot }}/{{ sitename }}(.*)$'
-    replace: '\1{{ webroot }}/{{ sitename }}/docroot\2'
+    dest: "{{ drupal_root }}/docroot/core/phpunit.xml"
+    regexp: '^(.*){{ drupal_root }}(.*)$'
+    replace: '\1{{ drupal_root }}/docroot\2'
   when: composer_phpunit.stat.exists == false
 
 - name: "COMPOSER: Check if .gitignore exists"
   stat:
-    path: "{{ webroot }}/{{ sitename }}/.gitignore"
+    path: "{{ drupal_root }}/.gitignore"
   register: composer_gitignore
   ignore_errors: True
 
 - name: "COMPOSER: Create .gitignore file"
   copy:
     src: "{{ gitignore_source_file }}"
-    dest: "{{ webroot }}/{{ sitename }}"
+    dest: "{{ drupal_root }}"
     mode: 0644
   become: yes
   become_user: "{{ user }}"
   when: composer_gitignore.stat.exists == false
 
 - name: "COMPOSER: Initialize Git repository"
-  shell: git -C {{ webroot }}/{{ sitename }} init
+  shell: git -C {{ drupal_root }} init
   args:
     warn: no
   register: initial_commit
@@ -262,14 +262,14 @@
   when: composer_gitignore.stat.exists == false
 
 - name: "COMPOSER: Add all new files under version control"
-  shell: git -C {{ webroot }}/{{ sitename }} add --all . && git -C {{ webroot }}/{{ sitename }} commit -m "Initial commit"
+  shell: git -C {{ drupal_root }} add --all . && git -C {{ drupal_root }} commit -m "Initial commit"
   become: yes
   become_user: "{{ user }}"
   when: composer_gitignore.stat.exists == false
 
 - name: "COMPOSER: Make sure files dir ownership is correct"
   file:
-    path: "{{ webroot }}/{{ sitename }}/{{ default_site }}/files"
+    path: "{{ drupal_root }}/{{ default_site }}/files"
     owner: "{{ user }}"
     group: "{{ apache_user }}"
     recurse: yes

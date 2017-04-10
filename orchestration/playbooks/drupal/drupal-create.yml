@@ -4,7 +4,7 @@
 
 - name: "CREATE: Check if new site exists"
   stat:
-    path: "{{ webroot }}/{{ sitename }}"
+    path: "{{ drupal_root }}"
   register: new_site
   ignore_errors: True
 
@@ -16,25 +16,25 @@
     owner: "{{ user }}"
     group: "{{ apache_user }}"
   with_items:
-    - "{{ webroot }}/{{ sitename }}"
-    - "{{ webroot }}/{{ sitename }}/config"
+    - "{{ drupal_root }}"
+    - "{{ drupal_root }}/config"
   when: new_site.stat.exists == false
 
 - name: "CREATE: Copy Drupal checkout into new site stucture"
-  command: cp -R {{ drupal_git_clone_path }} {{ webroot }}/{{ sitename }}
+  command: cp -R {{ drupal_git_clone_path }} {{ drupal_root }}
   become: yes
   become_user: "{{ user }}"
   when: new_site.stat.exists == false
 
 - name: "CREATE: Rename copied Drupal checkout with expected sitename"
-  command: mv {{ webroot }}/{{ sitename }}/drupal {{ webroot }}/{{ sitename }}/docroot
+  command: mv {{ drupal_root }}/drupal {{ drupal_root }}/docroot
   become: yes
   become_user: "{{ user }}"
   when: new_site.stat.exists == false
 
 - name: "CREATE: Remove default .git directory"
   file:
-    path: "{{ webroot }}/{{ sitename }}/docroot/.git"
+    path: "{{ drupal_root }}/docroot/.git"
     state: absent
   when: new_site.stat.exists == false
 
@@ -45,7 +45,7 @@
 
 - name: Make sure default site has correct permissions
   file:
-    path: "{{ webroot }}/{{ sitename }}/{{ default_site }}"
+    path: "{{ drupal_root }}/{{ default_site }}"
     state: directory
     mode: 02755
     owner: "{{ user }}"
@@ -54,16 +54,16 @@
 
 - name: "CREATE: Create files directory"
   file:
-    path: "{{ webroot }}/{{ sitename }}/{{ default_site }}"
+    path: "{{ drupal_root }}/{{ default_site }}"
     state: directory
-    mode: 0777
+    mode: 02777
     owner: "{{ user }}"
     group: "{{ apache_user }}"
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
 - name: "CREATE: Create libraries directory"
   file:
-    path: "{{ webroot }}/{{ sitename }}/docroot/libraries"
+    path: "{{ drupal_root }}/docroot/libraries"
     state: directory
   become: yes
   become_user: "{{ user }}"
@@ -71,7 +71,7 @@
 
 - name: "CREATE: Create simpletest directory"
   file:
-    path: "{{ webroot }}/{{ sitename }}/docroot/sites/simpletest"
+    path: "{{ drupal_root }}/docroot/sites/simpletest"
     state: directory
     mode: 0777
   become: yes
@@ -79,13 +79,13 @@
   when: new_site.stat.exists == false
 
 - name: "CREATE: Create settings.php file"
-  command: cp {{ webroot }}/{{ sitename }}/{{ default_site }}/default.settings.php {{ webroot }}/{{ sitename }}/{{ default_site }}/settings.php
+  command: cp {{ drupal_root }}/{{ default_site }}/default.settings.php {{ drupal_root }}/{{ default_site }}/settings.php
   become: yes
   become_user: "{{ user }}"
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
 - name: "CREATE: Create services.yml file"
-  command: cp {{ webroot }}/{{ sitename }}/{{ default_site }}/default.services.yml {{ webroot }}/{{ sitename }}/{{ default_site }}/services.yml
+  command: cp {{ drupal_root }}/{{ default_site }}/default.services.yml {{ drupal_root }}/{{ default_site }}/services.yml
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
 - name: "CREATE: Ensure settings.php and services.yml have correct ownership"
@@ -94,13 +94,13 @@
     owner: "{{ user }}"
     group: "{{ apache_user }}"
   with_items:
-    - "{{ webroot }}/{{ sitename }}/{{ default_site }}/settings.php"
-    - "{{ webroot }}/{{ sitename }}/{{ default_site }}/services.yml"
+    - "{{ drupal_root }}/{{ default_site }}/settings.php"
+    - "{{ drupal_root }}/{{ default_site }}/services.yml"
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
 - name: "CREATE: Add trusted_host_patterns in settings.php"
   blockinfile:
-    dest: "{{ webroot }}/{{ sitename }}/{{ default_site }}/settings.php"
+    dest: "{{ drupal_root }}/{{ default_site }}/settings.php"
     block: |
       $settings['trusted_host_patterns'] = [
         '^{{ sitename }}\.{{ tld }}$',
@@ -109,10 +109,10 @@
 
 - name: Override default Configuration Management directory
   blockinfile:
-    dest: "{{ webroot }}/{{ sitename }}/{{ default_site }}/settings.php"
+    dest: "{{ drupal_root }}/{{ default_site }}/settings.php"
     block: |
       $config_directories = [
-        CONFIG_SYNC_DIRECTORY => '{{ webroot }}/{{ sitename }}/{{ default_configuration_dir }}',
+        CONFIG_SYNC_DIRECTORY => '{{ drupal_root }}/{{ default_configuration_dir }}',
       ];
     insertafter: EOF
     marker: "# {mark} MANAGED CONFIGURATION MANAGEMENT OVERRIDE BLOCK"
@@ -201,7 +201,7 @@
 - name: "CREATE: Pull vendor dependencies"
   composer:
     command: install
-    working_dir: "{{ webroot }}/{{ sitename }}/docroot"
+    working_dir: "{{ drupal_root }}/docroot"
   become: yes
   become_user: "{{ user }}"
   when: new_site.stat.exists == false or new_db.stat.exists == false
@@ -214,13 +214,13 @@
 
 - name: "CREATE: Check if phpunit.xml file exists"
   stat:
-    path: "{{ webroot }}/{{ sitename }}/docroot/core/phpunit.xml"
+    path: "{{ drupal_root }}/docroot/core/phpunit.xml"
   register: new_phpunit
 
 - name: "CREATE: Deploy phpunit.xml file"
   copy:
     src: "{{ phpunit_source_file }}"
-    dest: "{{ webroot }}/{{ sitename }}/docroot/core/"
+    dest: "{{ drupal_root }}/docroot/core/"
     mode: 0644
   become: yes
   become_user: "{{ user }}"
@@ -228,33 +228,33 @@
 
 - name: "CREATE: Modify phpunit.xml file"
   replace:
-    dest: "{{ webroot }}/{{ sitename }}/docroot/core/phpunit.xml"
+    dest: "{{ drupal_root }}/docroot/core/phpunit.xml"
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1{{ sitename }}\2'
   when: new_phpunit.stat.exists == false
 
 - name: "CREATE: Add new site under version control"
-  shell: git -C "{{ webroot }}/{{ sitename }}" init
+  shell: git -C "{{ drupal_root }}" init
   become: yes
   become_user: "{{ user }}"
   when: new_site.stat.exists == false
 
 - name: "CREATE: Add all new files under version control"
-  shell: git -C "{{ webroot }}/{{ sitename }}" add --all . && git -C "{{ webroot }}/{{ sitename }}" commit -m "Initial commit"
+  shell: git -C "{{ drupal_root }}" add --all . && git -C "{{ drupal_root }}" commit -m "Initial commit"
   become: yes
   become_user: "{{ user }}"
   when: new_site.stat.exists == false
 
 - name: "CREATE: Check if .gitignore exists"
   stat:
-    path: "{{ webroot }}/{{ sitename }}/.gitignore"
+    path: "{{ drupal_root }}/.gitignore"
   register: new_gitignore
   ignore_errors: True
 
 - name: "CREATE: Create .gitignore file"
   copy:
     src: "{{ gitignore_source_file }}"
-    dest: "{{ webroot }}/{{ sitename }}"
+    dest: "{{ drupal_root }}"
     mode: 0644
     owner: "{{ user }}"
     group: "{{ apache_user }}"
@@ -264,7 +264,7 @@
   composer:
     command: require
     arguments: "{{ drupal_console_composer_package }}:{{ drupal_console_composer_package_version }} --prefer-dist --optimize-autoloader"
-    working_dir: "{{ webroot }}/{{ sitename }}/docroot"
+    working_dir: "{{ drupal_root }}/docroot"
   become: yes
   become_user: "{{ user }}"
   when: new_site.stat.exists == false
@@ -273,13 +273,13 @@
   composer:
     command: update
     arguments: "{{ drupal_console_composer_package }} --with-dependencies"
-    working_dir: "{{ webroot }}/{{ sitename }}/docroot"
+    working_dir: "{{ drupal_root }}/docroot"
   become: yes
   become_user: "{{ user }}"
   when: new_site.stat.exists == false
 
 - name: "CREATE: Add new vendor files under version control"
-  shell: git -C "{{ webroot }}/{{ sitename }}" add --all . && git -C "{{ webroot }}/{{ sitename }}" commit -m "Extra commit for vendor files"
+  shell: git -C "{{ drupal_root }}" add --all . && git -C "{{ drupal_root }}" commit -m "Extra commit for vendor files"
   become: yes
   become_user: "{{ user }}"
   when: new_site.stat.exists == false

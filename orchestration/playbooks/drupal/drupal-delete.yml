@@ -11,13 +11,13 @@
 
 - name: "DELETE: Check if docroot exists"
   stat:
-    path: "{{ webroot }}/{{ sitename }}"
+    path: "{{ drupal_root }}"
   register: docroot_check
   ignore_errors: True
 
 - name: "DELETE: Delete docroot"
   file:
-    path: "{{ webroot }}/{{ sitename }}"
+    path: "{{ drupal_root }}"
     state: absent
   when: docroot_check.stat.exists == true and "{{ sitename }}" != 'import'
 

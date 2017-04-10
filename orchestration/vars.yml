@@ -251,9 +251,15 @@ mcstat_archive_path: "{{ download_dir }}/{{ mcstat_archive_file }}"
 # Drupal
 drupal_creds: admin
 drucker_site: "{{ webroot }}/{{ user }}"
-drucker_docroot: "{{ drucker_site }}/docroot"
 default_site: docroot/sites/default
 default_configuration_dir: config/default
+drupal_head: 8.4.x
+drupal_git_clone_url: https://git.drupal.org/project/drupal.git
+drupal_git_clone_path: "{{ git_repo_directory }}/drupal"
+drupal_root: "{{ webroot }}/{{ sitename }}"
+
+# drucker Drupal
+drucker_docroot: "{{ drucker_site }}/docroot"
 drupal_git: "{{ drucker_site }}/.git"
 drupal_gitignore: "{{ drucker_site }}/.gitignore"
 default_settings_php: "{{ drucker_site }}/{{default_site}}/default.settings.php"
@@ -266,9 +272,6 @@ files_dir: "{{ drucker_site }}/{{default_site}}/files"
 libraries_dir: "{{ drucker_docroot }}/libraries"
 simpletest_dir: "{{ drucker_docroot }}/sites/simpletest"
 phpunit_xml: "{{ drucker_docroot }}/core/phpunit.xml"
-drupal_head: 8.4.x
-drupal_git_clone_url: https://git.drupal.org/project/drupal.git
-drupal_git_clone_path: "{{ git_repo_directory }}/drupal"
 
 # Import
 import_dir: "{{ webroot }}/import"
