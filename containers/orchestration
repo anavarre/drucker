@@ -29,14 +29,18 @@ drupal_composer() {
 }
 
 delete_site() {
-  echo -e "${BLUE}Deleting docroot ${SITENAME}...${COLOR_ENDING}"
-  ${PLAYBOOK}/delete.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y sitename=${SITENAME}"
-  echo -e "${GREEN}Remember to remove the ${SITENAME}.local entry from your local /etc/hosts file!${COLOR_ENDING}"
+  # SITE is the result of SITENAME supporting a comma-separated list of sites
+  # to delete. See --delete definition.
+  echo -e "${BLUE}Deleting docroot ${SITE}...${COLOR_ENDING}"
+  ${PLAYBOOK}/delete.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y sitename=${SITE}"
+  echo -e "${GREEN}Remember to remove the ${SITE}.local entry from your local /etc/hosts file!${COLOR_ENDING}"
 }
 
 create_site() {
-  if [[ -d ${LOCAL_HTML_PATH}/${SITENAME} ]]; then
-    read -p "The ${SITENAME} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
+  # SITE is the result of SITENAME supporting a comma-separated list of sites
+  # to create. See --create definition.
+  if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
+    read -p "The ${SITE} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
     if [[ ${REPLY} =~ ^[Nn]$ ]]; then
       echo -e "${GREEN}Back to the comfort zone. Aborting.${COLOR_ENDING}"
       exit 0
@@ -49,16 +53,18 @@ create_site() {
     fi
   else
     if [[ -z "${GIT_TAG}" ]]; then
-      echo -e "${BLUE}Creating site into new ${SITENAME} docroot...${COLOR_ENDING}"
-      ${PLAYBOOK}/create.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITENAME}"
-      echo -e "${GREEN}Remember to add the ${SITENAME}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
+      echo -e "${BLUE}Creating site into new ${SITE} docroot...${COLOR_ENDING}"
+      # SITE is the result of SITENAME supporting a comma-separated list of sites
+      # to create.
+      ${PLAYBOOK}/create.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE}"
+      echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
     else
       export GIT_TAGS=($(docker exec ${WEB_CONTAINER} ${GIT_EXECUTABLE} -C ${DRUPAL_REPO} tag -l))
 
       if [[ " ${GIT_TAGS[*]} " == *" ${GIT_TAG} "* ]]; then
-        echo -e "${BLUE}Creating Drupal ${GIT_TAG} site into new ${SITENAME} docroot...${COLOR_ENDING}"
-        ${PLAYBOOK}/create-tag.yml --extra-vars "ansible_sudo_pass=${USER} create=Y   sitename=${SITENAME} git_tag=${GIT_TAG}"
-        echo -e "${GREEN}Remember to add the ${SITENAME}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
+        echo -e "${BLUE}Creating Drupal ${GIT_TAG} site into new ${SITE} docroot...${COLOR_ENDING}"
+        ${PLAYBOOK}/create-tag.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_tag=${GIT_TAG}"
+        echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
       else
         drucker_usage
       fi

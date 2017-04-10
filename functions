@@ -102,7 +102,11 @@ drucker_argument() {
       if [[ "${OPTION}" == "--create" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         drucker_usage
       else
-        create_site
+        # Comma-separated sitenames are split into single values for drucker to
+        # get a list of sites to create.
+        for SITE in ${SITENAME//,/ }; do
+          create_site
+        done
         exit 0
       fi
       ;;
@@ -134,7 +138,11 @@ drucker_argument() {
       if [[ "${OPTION}" == "--delete" ]] && [[ -z ${SITENAME} ]]; then
         drucker_usage
       else
-        delete_site
+        # Comma-separated sitenames are split into single values for drucker to
+        # get a list of sites to delete.
+        for SITE in ${SITENAME//,/ }; do
+          delete_site
+        done
         exit 0
       fi
       ;;
