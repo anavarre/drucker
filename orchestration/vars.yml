@@ -250,23 +250,28 @@ mcstat_archive_path: "{{ download_dir }}/{{ mcstat_archive_file }}"
 
 # Drupal
 drupal_creds: admin
-drucker_site: "{{ webroot }}/{{ user }}"
 default_site: docroot/sites/default
 default_configuration_dir: config/default
 drupal_head: 8.4.x
 drupal_git_clone_url: https://git.drupal.org/project/drupal.git
 drupal_git_clone_path: "{{ git_repo_directory }}/drupal"
 drupal_root: "{{ webroot }}/{{ sitename }}"
+deployed_settings_php: "{{ drupal_root }}/{{default_site}}/settings.php"
+services_yml_template: "{{ drupal_root }}/{{default_site}}/default.services.yml"
+deployed_services_yml: "{{ drupal_root }}/{{default_site}}/services.yml"
+settings_local_php_template: "{{ drucker_docroot }}/sites/example.settings.local.php"
+deployed_settings_local_php: "{{ drupal_root }}/{{default_site}}/settings.local.php"
 
 # drucker Drupal
+drucker_site: "{{ webroot }}/{{ user }}"
 drucker_docroot: "{{ drucker_site }}/docroot"
 drupal_git: "{{ drucker_site }}/.git"
 drupal_gitignore: "{{ drucker_site }}/.gitignore"
 default_settings_php: "{{ drucker_site }}/{{default_site}}/default.settings.php"
 settings_php: "{{ drucker_site }}/{{default_site}}/settings.php"
+default_services_yml: "{{ drucker_site }}/{{default_site}}/default.services.yml"
 example_settings_local_php: "{{ drucker_docroot }}/sites/example.settings.local.php"
 settings_local_php: "{{ drucker_site }}/{{default_site}}/settings.local.php"
-default_services_yml: "{{ drucker_site }}/{{default_site}}/default.services.yml"
 services_yml: "{{ drucker_site }}/{{default_site}}/services.yml"
 files_dir: "{{ drucker_site }}/{{default_site}}/files"
 libraries_dir: "{{ drucker_docroot }}/libraries"

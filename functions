@@ -51,7 +51,7 @@ load_container_files() {
 }
 
 drucker_usage() {
-  echo "Usage: drucker {--version|--dev|--prod|--create [sitename] [git_tag]|--import [sitename]|--reinstall|--composer [sitename]|--delete [sitename]|--tests}"
+  echo "Usage: drucker {--version|--dev [sitename]|--prod [sitename]|--create [site1,site2] [git_tag]|--import [sitename]|--reinstall|--composer [sitename]|--delete [site1,site2]|--tests}"
   exit 0
 }
 
@@ -83,7 +83,7 @@ drucker_argument() {
      fi
       ;;
       --dev)
-      if [[ "${OPTION}" == "--dev" ]] && [[ ! -z ${SITENAME} ]]; then
+      if [[ "${OPTION}" == "--dev" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         drucker_usage
       else
         drupal_dev_mode
@@ -91,7 +91,7 @@ drucker_argument() {
       fi
       ;;
       --prod)
-      if [[ "${OPTION}" == "--prod" ]] && [[ ! -z ${SITENAME} ]]; then
+      if [[ "${OPTION}" == "--prod" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         drucker_usage
       else
         drupal_prod_mode
@@ -158,10 +158,10 @@ drucker_argument() {
       --help)
 cat <<EOF
 --version                        Returns the drucker version.
---dev                            Prepare drucker for development work with no caching and helper modules enabled.
+--dev [sitename]                 Prepare drucker for development work with no caching and helper modules enabled.
                                  WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
 
---prod                           Opinionated setup with all known performance best practices enabled.
+--prod [sitename]                Opinionated setup with all known performance best practices enabled.
 
 --create [site1,site2] [git_tag] Creates an arbitrary docroot, vHost and corresponding database.
 

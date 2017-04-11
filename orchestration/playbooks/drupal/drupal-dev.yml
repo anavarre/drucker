@@ -1,7 +1,7 @@
 ---
 - name: "DEV: Make sure default site has correct permissions"
   file:
-    path: "{{ drucker_site }}/{{default_site}}"
+    path: "{{ drupal_root }}/{{default_site}}"
     state: directory
     mode: 02755
     owner: "{{ user }}"
@@ -9,31 +9,31 @@
 
 - name: "DEV: Check if settings.local.php file exists"
   stat:
-    path: "{{ settings_local_php }}"
+    path: "{{ deployed_settings_local_php }}"
   register: settings_local
   ignore_errors: True
 
 - name: "DEV: Create settings.local.php file"
-  command: cp {{ example_settings_local_php }} {{ settings_local_php }}
+  command: cp {{ settings_local_php_template }} {{ deployed_settings_local_php }}
   become: yes
   become_user: "{{ user }}"
   when: settings_local.stat.exists == false
 
 - name: "DEV: Check if cache bins have been disabled"
-  shell: grep -o "\$settings\['cache'\]\['bins'\]" settings.local.php || echo "absent"
+  shell: grep -o "\$settings\['cache'\]\['bins'\]" {{ deployed_settings_local_php }} || echo "absent"
   register: cache_bins
   changed_when: cache_bins.stdout == "absent"
 
 - name: "DEV: Disable cache bins"
   replace:
-    dest: "{{ settings_local_php }}"
+    dest: "{{ deployed_settings_local_php }}"
     regexp: '^(.*)# \$settings\[''cache''\]\[''bins''\](.*)$'
     replace: '\1$settings[''cache''][''bins'']\2'
   when: settings_local.stat.exists == false or cache_bins.stdout == 'absent'
 
 - name: "DEV: Enable settings.local.php"
   blockinfile:
-    dest: "{{ settings_php }}"
+    dest: "{{ deployed_settings_php }}"
     block: |
       if (file_exists(__DIR__ . '/settings.local.php')) {
         include __DIR__ . '/settings.local.php';
@@ -44,38 +44,38 @@
 
 - name: "DEV: Check if services.yml exists"
   stat:
-    path: "{{ services_yml }}"
-  register: services_yml_dev
+    path: "{{ deployed_services_yml }}"
+  register: deployed_services_yml_dev
   ignore_errors: True
 
 - name: "DEV: Create services.yml file"
-  command: cp {{ default_services_yml }} {{ services_yml }}
-  when: services_yml_dev.stat.exists == false
+  command: cp {{ services_yml_template }} {{ deployed_services_yml }}
+  when: deployed_services_yml_dev.stat.exists == false
 
 - name: "DEV: Turn on Twig debugging"
   replace:
-    dest: "{{ services_yml }}"
+    dest: "{{ deployed_services_yml }}"
     regexp: '^(.*)    debug: false(.*)$'
     replace: '\1    debug: true\2'
   register: turn_on_twig_debugging
 
 - name: "DEV: Turn on Twig auto_reload"
   replace:
-    dest: "{{ services_yml }}"
+    dest: "{{ deployed_services_yml }}"
     regexp: '^(.*)    auto_reload: null(.*)$'
     replace: '\1    auto_reload: true\2'
 
 - name: "DEV: Turn off Twig caching"
   replace:
-    dest: "{{ services_yml }}"
+    dest: "{{ deployed_services_yml }}"
     regexp: '^(.*)    cache: true(.*)$'
     replace: '\1    cache: false\2'
 
 - name: "DEV: Enable the Testing module"
-  command: drush @{{ user }}.{{ tld }} pm-enable simpletest
+  command: drush @{{ sitename }}.{{ tld }} pm-enable simpletest
 
 - name: "DEV: Rebuild Drupal cache"
-  command: drush @{{ user }}.{{ tld }} cache-rebuild
+  command: drush @{{ sitename }}.{{ tld }} cache-rebuild
   when: turn_on_twig_debugging.changed
 
 - name: "DEV: Check the Zend assertions status"

@@ -1,7 +1,7 @@
 ---
 - name: "PROD: Disable settings.local.php"
   blockinfile:
-    dest: "{{ settings_php }}"
+    dest: "{{ deployed_settings_php }}"
     block: |
       if (file_exists(__DIR__ . '/settings.local.php')) {
         include __DIR__ . '/settings.local.php';
@@ -12,42 +12,42 @@
 
 - name: "PROD: Check if services.yml exists"
   stat:
-    path: "{{ services_yml }}"
-  register: services_yml_prod
+    path: "{{ deployed_services_yml }}"
+  register: deployed_services_yml_prod
   ignore_errors: True
 
 - name: "PROD: Turn off Twig debugging"
   replace:
-    dest: "{{ services_yml }}"
+    dest: "{{ deployed_services_yml }}"
     regexp: '^(.*)    debug: true(.*)$'
     replace: '\1    debug: false\2'
   register: turn_off_twig_debugging
-  when: services_yml_prod.stat.exists == true
+  when: deployed_services_yml_prod.stat.exists == true
 
 - name: "PROD: Turn off Twig auto_reload"
   replace:
-    dest: "{{ services_yml }}"
+    dest: "{{ deployed_services_yml }}"
     regexp: '^(.*)    auto_reload: true(.*)$'
     replace: '\1    auto_reload: null\2'
-  when: services_yml_prod.stat.exists == true
+  when: deployed_services_yml_prod.stat.exists == true
 
 - name: "PROD: Turn on Twig caching"
   replace:
-    dest: "{{ services_yml }}"
+    dest: "{{ deployed_services_yml }}"
     regexp: '^(.*)    cache: false(.*)$'
     replace: '\1    cache: true\2'
-  when: services_yml_prod.stat.exists == true
+  when: deployed_services_yml_prod.stat.exists == true
 
 - name: "PROD: Check if the Testing module is installed"
-  shell: drush @{{ user }}.{{ tld }} pm-list --type=module --status=enabled | grep simpletest | awk '{print $4}'
+  shell: drush @{{ sitename }}.{{ tld }} pm-list --type=module --status=enabled | grep simpletest | awk '{print $4}'
   register: testing_module_check
 
 - name: "PROD: Uninstall the Testing module"
-  command: drush @{{ user }}.{{ tld }} pm-uninstall -y simpletest
+  command: drush @{{ sitename }}.{{ tld }} pm-uninstall -y simpletest
   when: testing_module_check.stdout == "Enabled"
 
 - name: "PROD: Rebuild Drupal cache"
-  command: drush @{{ user }}.{{ tld }} cache-rebuild
+  command: drush @{{ sitename }}.{{ tld }} cache-rebuild
   when: turn_off_twig_debugging.changed
 
 - name: "PROD: Check the Zend assertions status"

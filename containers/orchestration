@@ -4,13 +4,13 @@ export PLAYBOOK="ansible-playbook -i ${DIR}/orchestration/hosts --user=${USER} $
 export EXTRA_VARS="--extra-vars ansible_sudo_pass=${USER}"
 
 drupal_dev_mode() {
-  echo -e "${BLUE}Configuring Drupal for development...${COLOR_ENDING}"
-  ${PLAYBOOK}/dev.yml --extra-vars "ansible_sudo_pass=${USER} dev=Y"
+  echo -e "${BLUE}Configuring ${SITENAME} docroot for development...${COLOR_ENDING}"
+  ${PLAYBOOK}/dev.yml --extra-vars "ansible_sudo_pass=${USER} dev=Y sitename=${SITENAME}"
 }
 
 drupal_prod_mode() {
-  echo -e "${BLUE}Configuring Drupal for production...${COLOR_ENDING}"
-  ${PLAYBOOK}/prod.yml --extra-vars "ansible_sudo_pass=${USER} prod=Y"
+  echo -e "${BLUE}Configuring ${SITENAME} docroot for production...${COLOR_ENDING}"
+  ${PLAYBOOK}/prod.yml --extra-vars "ansible_sudo_pass=${USER} prod=Y sitename=${SITENAME}"
 }
 
 import_site() {
