@@ -47,5 +47,6 @@
     - time
     - vim-gtk
     - wget
+    - xterm
   register: system_packages
   changed_when: system_packages == ''

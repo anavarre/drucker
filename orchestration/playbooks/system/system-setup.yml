@@ -49,6 +49,9 @@
   - time
   - vim-gtk
   - wget
+  # Allows to resize (/usr/bin/resize) the prompt if $COLUMNS and $LINES are
+  # suddenly messed up, e.g. in a tmux session.
+  - xterm
 
 - name: Ensure NTP is running
   service:
