@@ -73,9 +73,9 @@
   file:
     path: "{{ drupal_root }}/docroot/sites/simpletest"
     state: directory
-    mode: 0777
-  become: yes
-  become_user: "{{ user }}"
+    mode: 02777
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
   when: new_site.stat.exists == false
 
 - name: "CREATE: Create settings.php file"
