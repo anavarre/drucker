@@ -1,6 +1,6 @@
 ---
-#- include: playbooks/drupal/drupal-checkout.yml
-#  when: git_tag is undefined
+- include: playbooks/drupal/drupal-checkout.yml
+  when: git_tag is undefined
 
 - name: "CREATE: Check if new site exists"
   stat:
@@ -43,7 +43,7 @@
     path: "{{ mysql_data }}/{{ sitename }}"
   register: new_db
 
-- name: Make sure default site has correct permissions
+- name: "CREATE: Make sure default site has correct permissions"
   file:
     path: "{{ drupal_root }}/{{ default_site }}"
     state: directory
@@ -107,7 +107,7 @@
       ];
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
-- name: Override default Configuration Management directory
+- name: "CREATE: Override default Configuration Management directory"
   blockinfile:
     dest: "{{ drupal_root }}/{{ default_site }}/settings.php"
     block: |
