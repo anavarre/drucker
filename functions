@@ -169,23 +169,24 @@ drucker_argument() {
       ;;
       --help)
 cat <<EOF
---version                         Returns the drucker version.
---dev [sitename,...]              Prepare site(s) for development work with no caching and helper modules enabled.
+${GREEN_HELP}--version${COLOR_ENDING_HELP}                         Returns the drucker version.
+
+${GREEN_HELP}--dev [sitename,...]${COLOR_ENDING_HELP}              Prepare site(s) for development work with no caching and helper modules enabled.
                                   WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
 
---prod [sitename,...]             Opinionated setup with all known performance best practices enabled.
+${GREEN_HELP}--prod [sitename,...]${COLOR_ENDING_HELP}             Opinionated setup with all known performance best practices enabled.
 
---create [sitename,...] [git_tag] Creates arbitrary docroots, vHosts and corresponding databases.
+${GREEN_HELP}--create [sitename,...] [git_tag]${COLOR_ENDING_HELP} Creates arbitrary docroots, vHosts and corresponding databases.
 
---import [sitename,...]           Imports the database, files and codebase from the web container's import directory.
+${GREEN_HELP}--import [sitename,...]${COLOR_ENDING_HELP}           Imports the database, files and codebase from the web container's import directory.
 
---reinstall                       Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
+${GREEN_HELP}--reinstall${COLOR_ENDING_HELP}                       Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
 
---composer [sitename]             Installs Drupal from a composer.json file.
+${GREEN_HELP}--composer [sitename]${COLOR_ENDING_HELP}             Installs Drupal from a composer.json file.
 
---delete [sitename,...]           Deletes arbitrary docroots, vHosts and corresponding databases.
+${GREEN_HELP}--delete [sitename,...]${COLOR_ENDING_HELP}           Deletes arbitrary docroots, vHosts and corresponding databases.
 
---tests                           Runs the Ansible test suite.
+${GREEN_HELP}--tests${COLOR_ENDING_HELP}                           Runs the Ansible test suite.
 EOF
       exit 0
       ;;
