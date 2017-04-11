@@ -348,12 +348,6 @@
   become_user: "{{ user }}"
   when: drucker_site_check.stat.exists == false
 
-- name: Add new vendor files under version control
-  shell: git -C "{{ drucker_site }}" add --all . && git -C "{{ drucker_site }}" commit -m "Extra commit for vendor files"
-  become: yes
-  become_user: "{{ user }}"
-  when: drucker_site_check.stat.exists == false
-
 - name: Make sure files dir ownership is correct
   file:
     path: "{{ files_dir }}"
@@ -361,6 +355,12 @@
     group: "{{ apache_user }}"
     recurse: yes
   when: drucker_site_check.stat.exists == false or drucker_db.stat.exists == false
+
+- name: Add new vendor files under version control
+  shell: git -C "{{ drucker_site }}" add --all . && git -C "{{ drucker_site }}" commit -m "Extra commit for vendor files"
+  become: yes
+  become_user: "{{ user }}"
+  when: drucker_site_check.stat.exists == false
 
 - name: Check if all hostnames are configured
   shell: grep -E '({{ phpmyadmin_hostname }}.{{ tld }}|{{ adminer_hostname }}.{{ tld }})' {{ hosts_file }} || echo "absent"
