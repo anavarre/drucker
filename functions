@@ -51,7 +51,7 @@ load_container_files() {
 }
 
 drucker_usage() {
-  echo "Usage: drucker {--version|--dev [sitename]|--prod [sitename]|--create [site1,site2] [git_tag]|--import [sitename]|--reinstall|--composer [sitename]|--delete [site1,site2]|--tests}"
+  echo "Usage: drucker {--version|--dev [sitename,...]|--prod [sitename,...]|--create [sitename,...] [git_tag]|--import [sitename,...]|--reinstall|--composer [sitename]|--delete [sitename,...]|--tests}"
   exit 0
 }
 
@@ -86,7 +86,11 @@ drucker_argument() {
       if [[ "${OPTION}" == "--dev" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         drucker_usage
       else
-        drupal_dev_mode
+        # Comma-separated sitenames are split into single values for drucker to
+        # get a list of sites to switch to development mode.
+        for SITE in ${SITENAME//,/ }; do
+          drupal_dev_mode
+        done
         exit 0
       fi
       ;;
@@ -94,7 +98,11 @@ drucker_argument() {
       if [[ "${OPTION}" == "--prod" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         drucker_usage
       else
-        drupal_prod_mode
+        # Comma-separated sitenames are split into single values for drucker to
+        # get a list of sites to switch to production mode.
+        for SITE in ${SITENAME//,/ }; do
+          drupal_prod_mode
+        done
         exit 0
       fi
       ;;
@@ -114,7 +122,11 @@ drucker_argument() {
       if [[ "${OPTION}" == "--import" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         drucker_usage
       else
-        import_site
+        # Comma-separated sitenames are split into single values for drucker to
+        # get a list of sites to import.
+        for SITE in ${SITENAME//,/ }; do
+          import_site
+        done
         exit 0
       fi
       ;;
@@ -157,23 +169,23 @@ drucker_argument() {
       ;;
       --help)
 cat <<EOF
---version                        Returns the drucker version.
---dev [sitename]                 Prepare drucker for development work with no caching and helper modules enabled.
-                                 WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
+--version                         Returns the drucker version.
+--dev [sitename,...]              Prepare site(s) for development work with no caching and helper modules enabled.
+                                  WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
 
---prod [sitename]                Opinionated setup with all known performance best practices enabled.
+--prod [sitename,...]             Opinionated setup with all known performance best practices enabled.
 
---create [site1,site2] [git_tag] Creates an arbitrary docroot, vHost and corresponding database.
+--create [sitename,...] [git_tag] Creates arbitrary docroots, vHosts and corresponding databases.
 
---import [site1,site2]           Imports the database, files and codebase from the web container's import directory.
+--import [sitename,...]           Imports the database, files and codebase from the web container's import directory.
 
---reinstall                      Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
+--reinstall                       Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
 
---composer [sitename]            Installs Drupal from a composer.json file.
+--composer [sitename]             Installs Drupal from a composer.json file.
 
---delete [sitename]              Deletes an arbitrary docroot, vHost and corresponding database.
+--delete [sitename,...]           Deletes arbitrary docroots, vHosts and corresponding databases.
 
---tests                          Runs the Ansible test suite.
+--tests                           Runs the Ansible test suite.
 EOF
       exit 0
       ;;

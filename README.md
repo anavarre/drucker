@@ -157,21 +157,21 @@ For more advanced `drucker` usage, you can pass several CLI parameters:
 
 ```
 $ drucker --help
---version                         Returns the current drucker version.
---dev                             Prepare drucker for development work with no caching and helper modules enabled.
-                                  WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
+--version                          Returns the current drucker version.
+--dev [sitename,...]               Prepare site(s) for development work with no caching and helper modules enabled.
+                                   WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
 
---prod                            Opinionated setup with all known performance best practices enabled.
+--prod [sitename,...]              Opinionated setup with all known performance best practices enabled.
 
---create [site1,site2] [git_tag]  Creates an arbitrary docroot, vHost and corresponding database.
+--create [sitename,...] [git_tag]  Creates arbitrary docroots, vHosts and corresponding databases.
 
---import [sitename]               Imports the database, files and codebase from the web container's import directory.
+--import [sitename,...]            Imports the database, files and codebase from the web container's import directory.
 
---reinstall                       Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
+--reinstall                        Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
 
---delete [site1,site2]            Deletes an arbitrary docroot, vHost and corresponding database.
+--delete [sitename,...]            Deletes arbitrary docroots, vHosts and corresponding databases.
 
---tests                           Runs the Ansible test suite.
+--tests                            Runs the Ansible test suite.
 ```
 
 The `--import [sitename]` parameter is a special beast. Please [read more about it in the wiki](https://github.com/anavarre/drucker/wiki/Importing-an-existing-site-to-drucker).
