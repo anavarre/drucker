@@ -5,7 +5,7 @@
   with_items:
     - "{{ drucker_site }}"
     - "{{ drucker_docroot }}"
-    - "{{ default_configuration_dir }}"
+    - "{{ drucker_site }}/{{ default_configuration_dir }}"
     - "{{ files_dir }}"
     - "{{ libraries_dir }}"
     - "{{ settings_php }}"
@@ -28,25 +28,6 @@
   register: trusted_host_patterns
   changed_when: trusted_host_patterns.stdout == "missing"
   failed_when: trusted_host_patterns.stdout == "missing"
-
-- name: Retrieve path to config directory
-  shell: stat -c %n {{ files_dir }}/config_*
-  register: config_dir_test
-  changed_when: config_dir_test is undefined
-  failed_when: config_dir_test is undefined
-
-- name: "TEST: The config directory should have correct ownership"
-  shell: stat -c %U:%G {{ files_dir }}/config_*
-  register: config_dir_ownership
-  changed_when: config_dir_ownership.stdout != "{{ user }}:{{ apache_user }}"
-  failed_when: config_dir_ownership.stdout != "{{ user }}:{{ apache_user }}"
-
-- name: "TEST: The sync directory should be writable"
-  stat:
-    path: "{{ config_dir_test.stdout }}/sync"
-  register: writable_sync
-  changed_when: writable_sync.stat.mode != "2777" and writable_sync.stat.mode != "0777"
-  failed_when: writable_sync.stat.mode != "2777" and writable_sync.stat.mode != "0777"
 
 - name: "TEST: The styles directory should have correct ownership"
   shell: stat -c %U:%G {{ files_dir }}/styles
