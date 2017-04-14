@@ -47,22 +47,38 @@
   command: mv {{ dump }} {{ archives_dir }}
   when: dump_detection.skipped is not defined and db_archive.stat.exists == false
 
-- name: "IMPORT: Check if docroot has already been deployed"
+- name: "IMPORT: Check if site structure exists"
   stat:
-    path: "{{ imported_docroot }}"
-  register: docroot_check
+    path: "{{ drupal_root }}"
+  register: import_site_structure
   ignore_errors: True
+
+- name: "IMPORT: Create new site structure"
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 02755
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  with_items:
+    - "{{ drupal_root }}/config"
+    - "{{ drupal_root }}/{{ default_configuration_dir }}"
+  when: import_site_structure.stat.exists == false
 
 - name: "IMPORT: Check if docroot exists"
   stat:
-    path: "{{ import_sitename_path }}"
+    path: "{{ importable_sitename_path }}"
   register: docroot_import
   ignore_errors: True
 
 - name: "IMPORT: Import docroot"
-  command: cp -R {{ import_sitename_path }} {{ webroot }}
+  command: cp -R {{ importable_sitename_path }} {{ drupal_root }}
   register: import_docroot
-  when: docroot_check.stat.exists == false and docroot_import.stat.exists == true
+  when: import_site_structure.stat.exists == false and docroot_import.stat.exists == true
+
+- name: "IMPORT: Rename imported docroot"
+  command: mv {{ drupal_root }}/{{ sitename }} {{ drupal_root}}/docroot
+  when: import_site_structure.stat.exists == false and docroot_import.stat.exists == true
 
 - name: "IMPORT: Check if archived docroot exists"
   stat:
@@ -71,16 +87,16 @@
   ignore_errors: True
 
 - name: "IMPORT: Archive imported docroot"
-  command: mv {{ import_sitename_path }} {{ archives_dir }}
+  command: mv {{ importable_sitename_path }} {{ archives_dir }}
   when: docroot_archive.stat.exists == false
 
 - name: "IMPORT: Make sure permissions are correct"
   file:
-    path: "{{ imported_docroot }}"
+    path: "{{ drupal_root }}"
     owner: "{{ user }}"
     group: "{{ apache_user }}"
     recurse: yes
-  when: docroot_check.stat.exists == false and docroot_import.stat.exists == true
+  when: import_site_structure.stat.exists == false and docroot_import.stat.exists == true
 
 - name: "IMPORT: Check if vHost exists"
   stat:
@@ -135,12 +151,12 @@
 
 - name: "IMPORT: Check if default settings.php exists"
   stat:
-    path: "{{ imported_docroot }}/{{ default_site }}/settings.php"
+    path: "{{ drupal_root }}/{{ default_site }}/settings.php"
   register: default_settings
 
 - name: "IMPORT: Allow new site to connect to remote MySQL"
   blockinfile:
-    dest: "{{ imported_docroot }}/{{ default_site }}/settings.php"
+    dest: "{{ drupal_root }}/{{ default_site }}/settings.php"
     block: |
       $databases['default']['default'] = [
         'database' => '{{ sitename }}',

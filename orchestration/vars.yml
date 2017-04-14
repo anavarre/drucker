@@ -285,8 +285,7 @@ archives_dir: "{{ webroot }}/import/archives"
 import_archive_path: "{{ archives_dir }}/{{ sitename }}"
 import_sqlgz: "{{ import_dir }}/{{ sitename }}.sql.gz"
 import_sql: "{{ import_dir }}/{{ sitename }}.sql"
-import_sitename_path: "{{ import_dir }}/{{ sitename }}"
-imported_docroot: "{{ webroot }}/{{ sitename }}"
+importable_sitename_path: "{{ import_dir }}/{{ sitename }}"
 
 # Drush
 drush_aliases_template_file: drush.aliases.drushrc.php
