@@ -8,7 +8,7 @@ export BLUE="\033[94m"
 export COLOR_ENDING="\033[0m"
 export COLOR_ENDING_HELP=$(printf '\033[0m')
 
-export DRUCKER_VERSION="0.4.7"
+export DRUCKER_VERSION="dev"
 export USER="drucker"
 export TLD="local"
 
