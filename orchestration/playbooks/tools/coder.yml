@@ -16,7 +16,7 @@
 - name: Check if Coder is up-to-date
   shell: grep -o "{{ coder_stable_release }}" {{ composer_dir_path }}/composer.json || echo "outdated"
   register: coder_stable_release_check
-  changed_when: coder_stable_release_check.stdout != "{{ coder_stable_release }}"
+  changed_when: coder_stable_release_check.stdout != coder_stable_release
 
 - name: Update Coder
   composer:
@@ -25,7 +25,7 @@
     working_dir: "{{ composer_dir_path }}"
   become: yes
   become_user: "{{ user }}"
-  when: coder.stat.exists == true and coder_stable_release_check.stdout != "{{ coder_stable_release }}"
+  when: coder.stat.exists == true and coder_stable_release_check.stdout != coder_stable_release
 
 - name: Check if Coder bash aliases exist
   shell: grep -o 'MANAGED CODE SNIFFER BLOCK' {{ bashrc }} || echo "absent"

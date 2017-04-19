@@ -13,13 +13,13 @@
   shell: phpcs --version | awk '{print $3}'
   register: phpcs_version
   when: phpcs.stat.exists == true
-  changed_when: phpcs_version.stdout != "{{ phpcs_stable_release }}"
+  changed_when: phpcs_version.stdout != phpcs_stable_release
 
 - name: Check phpcbf version
   shell: phpcbf --version | awk '{print $3}'
   register: phpcbf_version
   when: phpcbf.stat.exists == true
-  changed_when: phpcbf_version.stdout != "{{ phpcbf_stable_release }}"
+  changed_when: phpcbf_version.stdout != phpcbf_stable_release
 
 - name: Download phpcs PHAR file
   get_url:
@@ -31,15 +31,15 @@
   until: "'OK' in codesniffer_get_url_result.msg"
   retries: 3
   delay: 10
-  when: phpcs.stat.exists == false or phpcs_version.stdout != "{{ phpcs_stable_release }}"
+  when: phpcs.stat.exists == false or phpcs_version.stdout != phpcs_stable_release
 
 - name: Rename phpcs PHAR file
   command: mv {{ phpcs_temp_phar }} {{ phpcs_temp_path }}
-  when: phpcs.stat.exists == false or phpcs_version.stdout != "{{ phpcs_stable_release }}"
+  when: phpcs.stat.exists == false or phpcs_version.stdout != phpcs_stable_release
 
 - name: Install phpcs globally
   command: mv {{ phpcs_temp_path }} {{ user_programs_path }}
-  when: phpcs.stat.exists == false or phpcs_version.stdout != "{{ phpcs_stable_release }}"
+  when: phpcs.stat.exists == false or phpcs_version.stdout != phpcs_stable_release
 
 - name: Download phpcbf PHAR file
   get_url:
@@ -47,13 +47,13 @@
     dest: "{{ download_dir }}"
     mode: 0755
     validate_certs: no
-  when: phpcbf.stat.exists == false or phpcbf_version.stdout != "{{ phpcbf_stable_release }}"
+  when: phpcbf.stat.exists == false or phpcbf_version.stdout != phpcbf_stable_release
 
 - name: Rename phpcbf PHAR file
   command: mv {{ phpcbf_temp_phar }} {{ phpcbf_temp_path }}
-  when: phpcbf.stat.exists == false or phpcbf_version.stdout != "{{ phpcbf_stable_release }}"
+  when: phpcbf.stat.exists == false or phpcbf_version.stdout != phpcbf_stable_release
 
 - name: Install phpcbf globally
   command: mv {{ phpcbf_temp_path }} {{ user_programs_path }}
-  when: phpcbf.stat.exists == false or phpcbf_version.stdout != "{{ phpcbf_stable_release }}"
+  when: phpcbf.stat.exists == false or phpcbf_version.stdout != phpcbf_stable_release
 

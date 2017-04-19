@@ -8,7 +8,7 @@
   shell: php-cs-fixer --version | awk '{print $5}'
   register: php_cs_fixer_version
   when: php_cs_fixer.stat.exists == true
-  changed_when: php_cs_fixer_version.stdout != "{{ php_cs_fixer_stable_release }}"
+  changed_when: php_cs_fixer_version.stdout != php_cs_fixer_stable_release
 
 - name: Download PHP-CS-Fixer PHAR file
   get_url:
@@ -20,12 +20,12 @@
   until: "'OK' in php_cs_fixer_get_url_result.msg"
   retries: 3
   delay: 10
-  when: php_cs_fixer.stat.exists == false or php_cs_fixer_version.stdout != "{{ php_cs_fixer_stable_release }}"
+  when: php_cs_fixer.stat.exists == false or php_cs_fixer_version.stdout != php_cs_fixer_stable_release
 
 - name: Rename PHP-CS-Fixer PHAR file
   command: mv {{ php_cs_fixer_temp_phar }} {{ php_cs_fixer_temp_path }}
-  when: php_cs_fixer.stat.exists == false or php_cs_fixer_version.stdout != "{{ php_cs_fixer_stable_release }}"
+  when: php_cs_fixer.stat.exists == false or php_cs_fixer_version.stdout != php_cs_fixer_stable_release
 
 - name: Install PHP-CS-Fixer globally
   command: mv {{ php_cs_fixer_temp_path }} {{ user_programs_path }}
-  when: php_cs_fixer.stat.exists == false or php_cs_fixer_version.stdout != "{{ php_cs_fixer_stable_release }}"
+  when: php_cs_fixer.stat.exists == false or php_cs_fixer_version.stdout != php_cs_fixer_stable_release

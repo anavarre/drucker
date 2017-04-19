@@ -18,14 +18,14 @@
   until: "'OK' in tideways_get_url_result.msg"
   retries: 3
   delay: 10
-  when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
+  when: tideways.stat.exists == false or tideways_version_check.stdout != tideways_stable_release
 
 - name: Extract Tideways files
   unarchive:
     src: "{{ tideways_archive }}"
     dest: "{{ download_dir }}"
     copy: no
-  when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
+  when: tideways.stat.exists == false or tideways_version_check.stdout != tideways_stable_release
 
 - name: Compile Tideways
   command: "{{ item }} chdir={{ tideways_temp_dir }}"
@@ -35,23 +35,23 @@
     - /usr/bin/make
     - /usr/bin/make install
   register: compile_tideways
-  when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
+  when: tideways.stat.exists == false or tideways_version_check.stdout != tideways_stable_release
 
 - name: Copy compiled Tideways extension
   command: cp {{ tideways_temp_dir }}/modules/{{ tideways_extension_name }} {{ php_extensions }}
-  when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
+  when: tideways.stat.exists == false or tideways_version_check.stdout != tideways_stable_release
 
 - name: Make sure permissions are correct
   file:
     path: "{{ tideways_extension_path }}"
     mode: 0644
-  when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
+  when: tideways.stat.exists == false or tideways_version_check.stdout != tideways_stable_release
 
 - name: Delete Tideways temporary directory
   file:
     path: "{{ tideways_temp_dir }}"
     state: absent
-  when: tideways.stat.exists == false or tideways_version_check.stdout != "{{ tideways_stable_release }}"
+  when: tideways.stat.exists == false or tideways_version_check.stdout != tideways_stable_release
 
 - name: Check Tideways config in php.ini
   shell: grep -o "{{ tideways_extension_name }}" {{ php_ini }} || echo "absent"

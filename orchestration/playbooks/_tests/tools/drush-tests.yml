@@ -12,8 +12,8 @@
 - name: "TEST: Drush should use the latest unstable release"
   shell: drush --version | awk '{print $4}' | head -n1
   register: drush_version_check
-  changed_when: drush_version_check.stdout != "{{ drush_unstable_release }}"
-  failed_when: drush_version_check.stdout != "{{ drush_unstable_release }}"
+  changed_when: drush_version_check.stdout != drush_unstable_release
+  failed_when: drush_version_check.stdout != drush_unstable_release
   ignore_errors: true
 
 - name: "TEST: The Drush binary should be executable"

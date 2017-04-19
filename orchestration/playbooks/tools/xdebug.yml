@@ -19,14 +19,14 @@
   until: "'OK' in xdebug_get_url_result.msg"
   retries: 3
   delay: 10
-  when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
+  when: xdebug.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
 
 - name: Extract Xdebug files
   unarchive:
     src: "{{ xdebug_archive_path }}"
     dest: "{{ download_dir }}"
     copy: no
-  when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
+  when: xdebug.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
 
 - name: Compile Xdebug
   command: "{{ item }} chdir={{ xdebug_unarchived_path }}"
@@ -35,23 +35,23 @@
     - ./configure
     - /usr/bin/make
   register: compile_xdebug
-  when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
+  when: xdebug.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
 
 - name: Copy compiled Xdebug extension
   command: cp {{ xdebug_unarchived_path }}/modules/{{ xdebug_extension_name }} {{ php_extensions }}
-  when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
+  when: xdebug.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
 
 - name: Make sure permissions are correct
   file:
     path: "{{ xdebug_extension_path }}"
     mode: 0644
-  when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
+  when: xdebug.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
 
 - name: Delete Xdebug temporary directory
   file:
     path: "{{ xdebug_unarchived_path }}"
     state: absent
-  when: xdebug.stat.exists == false or xdebug_update.stdout != "{{ xdebug_stable_release }}"
+  when: xdebug.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
 
 - name: Check Xdebug config in php.ini
   shell: grep -o "{{ xdebug_extension_name }}" {{ php_ini }} || echo "absent"

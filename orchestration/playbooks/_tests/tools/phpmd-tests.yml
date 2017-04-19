@@ -10,8 +10,8 @@
 - name: "TEST: phpmd should use the latest stable release"
   shell: phpmd --version | awk '{print $NF}'
   register: phpmd_version_check
-  changed_when: phpmd_version_check.stdout != "{{ phpmd_stable_version }}"
-  failed_when: phpmd_version_check.stdout != "{{ phpmd_stable_version }}"
+  changed_when: phpmd_version_check.stdout != phpmd_stable_version
+  failed_when: phpmd_version_check.stdout != phpmd_stable_version
   ignore_errors: true
 
 - name: "TEST: The phpmd binary should be executable"

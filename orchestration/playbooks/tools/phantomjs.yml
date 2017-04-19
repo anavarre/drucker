@@ -8,7 +8,7 @@
   command: phantomjs --version
   register: phantomjs_update
   when: phantomjs.stat.exists == true
-  changed_when: phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
+  changed_when: phantomjs_update.stdout != phantomjs_stable_version
 
 - name: Check if phantomjs archive exists
   stat:
@@ -24,30 +24,30 @@
   until: "'OK' in phantomjs_get_url_result.msg"
   retries: 3
   delay: 10
-  when: phantomjs.stat.exists == false or phantomjs_update.stdout != "{{ phantomjs_stable_version }}" and phantomjs_archive.stat.exists == false
+  when: phantomjs.stat.exists == false or phantomjs_update.stdout != phantomjs_stable_version and phantomjs_archive.stat.exists == false
 
 - name: Extract phantomjs files
   unarchive:
     src: "{{ phantomjs_archive_path }}"
     dest: "{{ download_dir }}"
     copy: no
-  when: phantomjs.stat.exists == false or phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
+  when: phantomjs.stat.exists == false or phantomjs_update.stdout != phantomjs_stable_version
 
 - name: Delete outdated phantomjs executable
   file:
     path: "{{ phantomjs_binary }}"
     state: absent
-  when: phantomjs.stat.exists == true and phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
+  when: phantomjs.stat.exists == true and phantomjs_update.stdout != phantomjs_stable_version
 
 - name: Install phantomjs globally
   command: mv {{ phantomjs_temp_path }}/bin/phantomjs {{ user_programs_path }}
-  when: phantomjs.stat.exists == false or phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
+  when: phantomjs.stat.exists == false or phantomjs_update.stdout != phantomjs_stable_version
 
 - name: Make phantomjs executable
   file:
     path: "{{ phantomjs_binary }}"
     mode: 0755
-  when: phantomjs.stat.exists == false or phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
+  when: phantomjs.stat.exists == false or phantomjs_update.stdout != phantomjs_stable_version
 
 - name: Delete phantomjs temporary directory
   file:
@@ -56,4 +56,4 @@
   with_items:
     - "{{ phantomjs_temp_path }}"
     - "{{ phantomjs_archive_path }}"
-  when: phantomjs.stat.exists == false or phantomjs_update.stdout != "{{ phantomjs_stable_version }}"
+  when: phantomjs.stat.exists == false or phantomjs_update.stdout != phantomjs_stable_version

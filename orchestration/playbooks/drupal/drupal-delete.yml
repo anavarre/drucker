@@ -19,7 +19,7 @@
   file:
     path: "{{ drupal_root }}"
     state: absent
-  when: docroot_check.stat.exists == true and "{{ sitename }}" != 'import'
+  when: docroot_check.stat.exists == true and sitename != 'import'
 
 - name: "DELETE: Check if vHost exists"
   stat:

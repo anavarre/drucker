@@ -18,14 +18,14 @@
 - name: "TEST: Drupal Console packages should be up-to-date"
   shell: cd {{ composer_dir_path }} && composer info {{ drupal_console_composer_package }} | grep versions | awk '{print $NF}'
   register: drupal_console_packages
-  changed_when: drupal_console_packages.stdout != "{{ drupal_console_launcher_stable_release }}"
-  failed_when: drupal_console_packages.stdout != "{{ drupal_console_launcher_stable_release }}"
+  changed_when: drupal_console_packages.stdout != drupal_console_launcher_stable_release
+  failed_when: drupal_console_packages.stdout != drupal_console_launcher_stable_release
 
 - name: "TEST: Drupal Console Launcher should use the latest stable release"
   shell: drupal --version | awk '{print $NF}' | head -n1
   register: drupal_console_launcher_version
-  changed_when: drupal_console_launcher_version.stdout != "{{ drupal_console_launcher_stable_release }}"
-  failed_when: drupal_console_launcher_version.stdout != "{{ drupal_console_launcher_stable_release }}"
+  changed_when: drupal_console_launcher_version.stdout != drupal_console_launcher_stable_release
+  failed_when: drupal_console_launcher_version.stdout != drupal_console_launcher_stable_release
   ignore_errors: true
 
 - name: "TEST: Check if Drupal Console has been configured in .bashrc"

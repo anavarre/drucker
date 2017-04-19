@@ -25,8 +25,8 @@
   register: composer_version
   become: yes
   become_user: "{{ user }}"
-  changed_when: composer_version.stdout != "{{ composer_stable_release }}"
-  failed_when: composer_version.stdout != "{{ composer_stable_release }}"
+  changed_when: composer_version.stdout != composer_stable_release
+  failed_when: composer_version.stdout != composer_stable_release
 
 - name: "TEST: Composer should be in the $PATH"
   shell: grep -o "export PATH=\"\$PATH:\$HOME/.composer/vendor/bin\"" {{ bashrc }} || echo "absent"

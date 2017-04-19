@@ -11,15 +11,15 @@
 - name: "TEST: CodeSniffer phpcs should use the latest stable release"
   shell: phpcs --version | awk '{print $3}'
   register: phpcs_version_check
-  changed_when: phpcs_version_check.stdout != "{{ phpcs_stable_release }}"
-  failed_when: phpcs_version_check.stdout != "{{ phpcs_stable_release }}"
+  changed_when: phpcs_version_check.stdout != phpcs_stable_release
+  failed_when: phpcs_version_check.stdout != phpcs_stable_release
   ignore_errors: true
 
 - name: "TEST: CodeSniffer phpcbf should use the latest stable release"
   shell: phpcbf --version | awk '{print $3}'
   register: phpcbf_version_check
-  changed_when: phpcbf_version_check.stdout != "{{ phpcbf_stable_release }}"
-  failed_when: phpcbf_version_check.stdout != "{{ phpcbf_stable_release }}"
+  changed_when: phpcbf_version_check.stdout != phpcbf_stable_release
+  failed_when: phpcbf_version_check.stdout != phpcbf_stable_release
   ignore_errors: true
 
 - name: "TEST: The CodeSniffer phpcs binary should be executable"
