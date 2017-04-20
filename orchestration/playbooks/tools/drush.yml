@@ -8,6 +8,7 @@
   command: date -r "{{ drush_binary }}" +%F
   register: outdated_drush
   when: drush_check.stat.exists == true
+  changed_when: false
 
 - set_fact:
     ansible_date: "{{ ansible_date_time.date }}"

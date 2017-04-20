@@ -7,23 +7,44 @@
   with_items:
   - vim-tiny
 
+- name: Check if sources.list exists
+  stat:
+    path: "{{ sources_list }}"
+  register: sources_list_check
+
 - name: Deploy sources.list template with contrib and non-free repositories
   copy:
     src: "{{ sources_list_source_file }}"
     dest: "{{ sources_list }}"
     mode: 0644
+  when: sources_list_check.stat.exists == false
+
+- name: Check if codename exists in sources.list
+  shell: grep -o "{{ codename }}" {{ sources_list }} | head -1 || echo "missing"
+  register: sources_list_codename
+  changed_when: sources_list_codename.stdout == "missing"
 
 - name: Add Debian codename to sources.list template
   replace:
     dest: "{{ sources_list }}"
     regexp: '^(.*)CODENAME(.*)$'
     replace: '\1{{ codename }}\2'
+  when: sources_list_codename.stdout == "missing"
+
+- name: Check if APT needs to be refreshed
+  shell: dpkg -l | awk '{print $2}' | grep -o git | head -1
+  register: refresh_apt
+  changed_when: refresh_apt == ''
+
+- name: Refresh APT
+  apt:
+    update_cache: yes
+  when: refresh_apt == ''
 
 - name: Install system packages
   package:
     name: "{{ item }}"
     state: present
-    update_cache: yes
   with_items:
   - ack-grep
   - apt-transport-https
@@ -52,6 +73,7 @@
   # Allows to resize (/usr/bin/resize) the prompt if $COLUMNS and $LINES are
   # suddenly messed up, e.g. in a tmux session.
   - xterm
+  when: refresh_apt == ''
 
 - name: Ensure NTP is running
   service:
@@ -63,6 +85,7 @@
   stat:
     path: "{{ bash_aliases }}"
   register: bash_aliases
+  changed_when: bash_aliases.stat.exists == false
 
 - name: Deploy .bash_aliases
   copy:
@@ -79,6 +102,7 @@
   stat:
     path: "{{ vimrc }}"
   register: vimrc
+  changed_when: vimrc.stat.exists == false
   ignore_errors: True
 
 - name: Deploy .vimrc file
@@ -94,6 +118,7 @@
   stat:
     path: "{{ vim_dir }}"
   register: vim_dir
+  changed_when: vim_dir.stat.exists == false
   ignore_errors: True
 
 - name: Deploy .vim directory
