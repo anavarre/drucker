@@ -36,6 +36,15 @@
     - "{{ sites_enabled }}/{{ sitename }}.conf"
   when: apache_conf.stat.exists == true
 
+- name: "DELETE: Delete Apache log files"
+  file:
+    path: "{{ log_dir }}/{{ item }}"
+    state: absent
+  with_items:
+    - "{{ sitename }}-access.log"
+    - "{{ sitename }}-error.log"
+  when: apache_conf.stat.exists == true
+
 - name: "DELETE: Check if Drush aliases exist"
   stat:
     path: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"

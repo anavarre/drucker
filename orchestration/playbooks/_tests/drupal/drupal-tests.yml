@@ -20,6 +20,8 @@
     - "{{ import_dir }}"
     - "{{ archives_dir }}"
     - "{{ drupal_git_clone_path }}"
+    - "{{ log_dir }}/{{ user }}-access.log"
+    - "{{ log_dir }}/{{ user }}-error.log"
   register: drupal
   failed_when: drupal.stat.exists == false
 

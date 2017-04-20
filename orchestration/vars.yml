@@ -64,6 +64,7 @@ search_ip: 203.0.113.13
 apache_user: www-data
 apache2_dir: /etc/apache2
 www_dir: /var/www
+log_dir: /var/log/apache2
 webroot: "{{ www_dir }}/html"
 sites_available: "{{ apache2_dir }}/sites-available"
 sites_enabled: "{{ apache2_dir }}/sites-enabled"
