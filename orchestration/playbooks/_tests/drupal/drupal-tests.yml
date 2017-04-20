@@ -31,11 +31,14 @@
   changed_when: trusted_host_patterns.stdout == "missing"
   failed_when: trusted_host_patterns.stdout == "missing"
 
+- set_fact:
+    expected_ownership: "{{ user }}:{{ apache_user }}"
+
 - name: "TEST: The styles directory should have correct ownership"
   shell: stat -c %U:%G {{ files_dir }}/styles
   register: styles_dir_ownership
-  changed_when: styles_dir_ownership.stdout != "{{ user }}:{{ apache_user }}"
-  failed_when: styles_dir_ownership.stdout != "{{ user }}:{{ apache_user }}"
+  changed_when: styles_dir_ownership.stdout != expected_ownership
+  failed_when: styles_dir_ownership.stdout != expected_ownership
 
 - name: "TEST: Make sure the codebase was added under version control"
   shell: git -C {{ drucker_site }} log --oneline | grep -o "Initial commit" || echo 'no commit'
