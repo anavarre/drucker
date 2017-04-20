@@ -1,7 +1,6 @@
 # System
 user: drucker
 codename: jessie
-name: web
 tld: local
 home: /home/{{ user }}
 hosts_file: /etc/hosts

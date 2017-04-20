@@ -2,12 +2,15 @@
 - name: Check if Drush is installed
   stat:
     path: "{{ drush_binary }}"
-  register: drush
+  register: drush_check
 
 - name: Check if Drush can be updated
   command: date -r "{{ drush_binary }}" +%F
   register: outdated_drush
-  when: drush.stat.exists == true
+  when: drush_check.stat.exists == true
+
+- set_fact:
+    ansible_date: "{{ ansible_date_time.date }}"
 
 - name: Install Drush globally
   get_url:
@@ -20,4 +23,4 @@
   until: "'OK' in drush_get_url_result.msg"
   retries: 3
   delay: 10
-  when: drush.stat.exists == false or outdated_drush.stdout != "{{ ansible_date_time.date }}"
+  when: drush_check.stat.exists == false or outdated_drush.stdout != ansible_date

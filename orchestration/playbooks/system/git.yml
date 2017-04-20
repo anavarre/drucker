@@ -55,7 +55,7 @@
 - name: Check if bash-git-prompt can be updated
   shell: ls {{ bash_git_prompt_archive_path }} | grep -o "{{ bash_git_prompt_stable_version }}" || echo "outdated"
   register: bash_git_prompt_update
-  changed_when: bash_git_prompt_update.stdout != "{{ bash_git_prompt_stable_version }}"
+  changed_when: bash_git_prompt_update.stdout != bash_git_prompt_stable_version
 
 - name: Download .bash-git-prompt archive
   get_url:
@@ -66,7 +66,7 @@
   until: "'OK' in prompt_get_url_result.msg"
   retries: 3
   delay: 10
-  when: bash_git_prompt_archive.stat.exists == false or bash_git_prompt_update.stdout != "{{ bash_git_prompt_stable_version }}"
+  when: bash_git_prompt_archive.stat.exists == false or bash_git_prompt_update.stdout != bash_git_prompt_stable_version
 
 - name: Extract bash-git-prompt files
   unarchive:
@@ -75,17 +75,17 @@
     copy: no
   become: yes
   become_user: "{{ user }}"
-  when: bash_git_prompt_archive.stat.exists == false or bash_git_prompt_update.stdout != "{{ bash_git_prompt_stable_version }}"
+  when: bash_git_prompt_archive.stat.exists == false or bash_git_prompt_update.stdout != bash_git_prompt_stable_version
 
 - name: Delete outdated .bash-git-prompt directory
   file:
     path: "{{ bash_git_prompt }}"
     state: absent
-  when: bash_git_prompt_update.stdout != "{{ bash_git_prompt_stable_version }}"
+  when: bash_git_prompt_update.stdout != bash_git_prompt_stable_version
 
 - name: Rename and move bash-git-prompt directory
   command: mv {{ bash_git_prompt_temp_path }} {{ bash_git_prompt }}
-  when: bash_git_prompt_archive.stat.exists == false or bash_git_prompt_update.stdout != "{{ bash_git_prompt_stable_version }}"
+  when: bash_git_prompt_archive.stat.exists == false or bash_git_prompt_update.stdout != bash_git_prompt_stable_version
 
 - name: Check if .bashrc needs to be customized
   shell: grep -o "MANAGED GIT BLOCK" {{ bashrc }} || echo "absent"
