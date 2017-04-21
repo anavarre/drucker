@@ -21,13 +21,13 @@
 - name: "COMPOSER: Check if new site exists"
   stat:
     path: "{{ drupal_root }}"
-  register: composer_new_site
+  register: new_site
   ignore_errors: True
 
 - name: "COMPOSER: Check if new database exists"
   stat:
     path: "{{ mysql_data }}/{{ sitename }}"
-  register: composer_new_db
+  register: new_db
 
 - name: "COMPOSER: Create new site architecture"
   file:
@@ -35,11 +35,11 @@
     state: directory
   become: yes
   become_user: "{{ user }}"
-  when: composer_new_site.stat.exists == false
+  when: new_site.stat.exists == false
 
 - name: "COMPOSER: Move composer.json file into new docroot"
   command: mv {{ composer_json_expected_filename }} {{ drupal_root }}
-  when: composer_new_site.stat.exists == false
+  when: new_site.stat.exists == false
 
 - name: "COMPOSER: Install vendor dependencies from composer.json file (this can take a while)"
   composer:
@@ -55,7 +55,7 @@
     mode: 0777
   become: yes
   become_user: "{{ user }}"
-  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
+  when: new_site.stat.exists == false or new_db.stat.exists == false
 
 - name: "COMPOSER: Create libraries directory"
   file:
@@ -63,7 +63,7 @@
     state: directory
   become: yes
   become_user: "{{ user }}"
-  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
+  when: new_site.stat.exists == false or new_db.stat.exists == false
 
 - name: "COMPOSER: Create simpletest directory"
   file:
@@ -72,142 +72,27 @@
     mode: 0777
   become: yes
   become_user: "{{ user }}"
-  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
+  when: new_site.stat.exists == false or new_db.stat.exists == false
 
 - name: "COMPOSER: Create settings.php file"
   command: cp {{ drupal_root }}/{{ default_site }}/default.settings.php {{ drupal_root }}/{{ default_site }}/settings.php
   become: yes
   become_user: "{{ user }}"
-  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
+  when: new_site.stat.exists == false or new_db.stat.exists == false
 
 - name: "COMPOSER: Create services.yml file"
   command: cp {{ drupal_root }}/{{ default_site }}/default.services.yml {{ drupal_root }}/{{ default_site }}/services.yml
   become: yes
   become_user: "{{ user }}"
-  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
+  when: new_site.stat.exists == false or new_db.stat.exists == false
 
-- name: "COMPOSER: Add trusted_host_patterns in settings.php"
-  blockinfile:
-    dest: "{{ drupal_root }}/{{ default_site }}/settings.php"
-    block: |
-      $settings['trusted_host_patterns'] = [
-        '^{{ sitename }}\.{{ tld }}$',
-      ];
-    insertafter: EOF
-    marker: "# {mark} MANAGED TRUSTED_HOST_PATTERNS BLOCK"
-  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
-
-- name: "COMPOSER: Prepare settings.php for memcached support"
-  blockinfile:
-    dest: "{{ drupal_root }}/{{ default_site }}/settings.php"
-    block: |
-      /**
-       * drucker comes with memcached pre-configured. You simply need to install the
-       * memcache module and add the below lines to enable memcache support.
-       * DO NOT uncomment this block as it's managed by Ansible.
-       * $settings['cache']['default'] = 'cache.backend.memcache';
-       * $settings['memcache']['servers'] = ['{{ db_ip }}:11211' => 'default'];
-       */
-    insertafter: EOF
-    marker: "# {mark} MANAGED MEMCACHED BLOCK"
-  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
-
-- name: "COMPOSER: Ensure database is wiped before installing"
-  mysql_db:
-    login_user: "{{ mysql_creds }}"
-    login_password: "{{ mysql_creds }}"
-    login_host: "{{ db_ip }}"
-    login_port: "{{ mysql_port }}"
-    name: "{{ sitename }}"
-    config_file: "{{ my_cnf }}"
-    state: absent
-  when: composer_new_site.stat.exists == false
-
-- name: "COMPOSER: Create new database"
-  mysql_db:
-    login_user: "{{ mysql_creds }}"
-    login_password: "{{ mysql_creds }}"
-    login_host: "{{ db_ip }}"
-    login_port: "{{ mysql_port }}"
-    name: "{{ sitename }}"
-    config_file: "{{ my_cnf }}"
-    state: present
-  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
-
-- name: "COMPOSER: Check if new vHost exists"
-  stat:
-    path: "{{ sites_enabled }}/{{ sitename }}.conf"
-  register: composer_new_vhost_check
-  ignore_errors: True
-
-- name: "COMPOSER: Deploy default vHost template"
-  copy:
-    src: "{{ apache_template_source_file }}"
-    dest: "{{ sites_available }}"
-    mode: 0644
-  when: composer_new_vhost_check.stat.exists == false
-
-- name: "COMPOSER: Rename default vHost template"
-  command: mv {{ vhost_template }} {{ sites_available }}/{{ sitename }}.conf
-  when: composer_new_vhost_check.stat.exists == false
-
-- name: "COMPOSER: Modify new vHost"
-  replace:
-    dest: "{{ sites_available }}/{{ sitename }}.conf"
-    regexp: '^(.*)SITENAME(.*)$'
-    replace: '\1{{ sitename }}\2'
-  when: composer_new_vhost_check.stat.exists == false
-
-- name: "COMPOSER: Enable new vHost"
-  file:
-    src: ../sites-available/{{ sitename }}.conf
-    dest: "{{ sites_enabled }}/{{ sitename }}.conf"
-    state: link
-    force: yes
-  register: test
-  notify: Reload Apache
-  when: composer_new_vhost_check.stat.exists == false
-
-- name: "COMPOSER: Check if new Drush aliases exist"
-  stat:
-    path: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
-  register: composer_new_aliases
-
-- name: "COMPOSER: Deploy new Drush aliases"
-  copy:
-    src: "{{ drush_aliases_source_file }}"
-    dest: "{{ drush_aliases_path }}"
-    mode: 0644
-  when: composer_new_aliases.stat.exists == false
-  ignore_errors: true
-
-- name: "COMPOSER: Rename default Drush aliases"
-  command: mv {{ drush_aliases_filepath }} {{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php
-  when: composer_new_aliases.stat.exists == false
-
-- name: "COMPOSER: Modify Drush aliases"
-  replace:
-    dest: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
-    regexp: '^(.*)SITENAME(.*)$'
-    replace: '\1{{ sitename }}\2'
-  when: composer_new_aliases.stat.exists == false
+- include: ../common/drupal-common.yml
 
 - name: "COMPOSER: Install Drupal"
   command: drush @{{ sitename }}.{{ tld }} site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@{{ db_ip }}:{{ mysql_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}
   become: yes
   become_user: "{{ user }}"
-  when: composer_new_aliases.stat.exists == false
-
-- name: "COMPOSER: Retrieve path to config directory"
-  shell: stat -c %n {{ drupal_root }}/{{ default_site }}/files/config_*
-  register: composer_config_dir
-  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
-
-- name: "COMPOSER: Make sure the sync directory is writable"
-  file:
-    path: "{{ composer_config_dir.stdout }}/sync"
-    mode: 0777
-  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
+  when: new_aliases.stat.exists == false
 
 - name: "COMPOSER: Check if phpunit.xml file exists"
   stat:
@@ -273,4 +158,4 @@
     owner: "{{ user }}"
     group: "{{ apache_user }}"
     recurse: yes
-  when: composer_new_site.stat.exists == false or composer_new_db.stat.exists == false
+  when: new_site.stat.exists == false or new_db.stat.exists == false

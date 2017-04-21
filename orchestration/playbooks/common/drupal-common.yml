@@ -1,0 +1,116 @@
+---
+- name: "COMMON: Add trusted_host_patterns in settings.php"
+  blockinfile:
+    dest: "{{ drupal_root }}/{{ default_site }}/settings.php"
+    block: |
+      $settings['trusted_host_patterns'] = [
+        '^{{ sitename }}\.{{ tld }}$',
+      ];
+    insertafter: EOF
+    marker: "# {mark} MANAGED TRUSTED_HOST_PATTERNS BLOCK"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+- name: "COMMON: Override default Configuration Management directory"
+  blockinfile:
+    dest: "{{ drupal_root }}/{{ default_site }}/settings.php"
+    block: |
+      $config_directories = [
+        CONFIG_SYNC_DIRECTORY => '{{ drupal_root }}/{{ default_configuration_dir }}',
+      ];
+    insertafter: EOF
+    marker: "# {mark} MANAGED CONFIGURATION MANAGEMENT OVERRIDE BLOCK"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Prepare settings.php for memcached support"
+  blockinfile:
+    dest: "{{ drupal_root }}/{{ default_site }}/settings.php"
+    block: |
+      /**
+       * drucker comes with memcached pre-configured. You simply need to install the
+       * memcache module and add the below lines to enable memcache support.
+       * DO NOT uncomment this block as it's managed by Ansible.
+       * $settings['cache']['default'] = 'cache.backend.memcache';
+       * $settings['memcache']['servers'] = ['{{ db_ip }}:11211' => 'default'];
+       */
+    insertafter: EOF
+    marker: "# {mark} MANAGED MEMCACHED BLOCK"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Ensure database is wiped before installing"
+  mysql_db:
+    login_user: "{{ mysql_creds }}"
+    login_password: "{{ mysql_creds }}"
+    login_host: "{{ db_ip }}"
+    login_port: "{{ mysql_port }}"
+    name: "{{ sitename }}"
+    config_file: "{{ my_cnf }}"
+    state: absent
+  when: new_site.stat.exists == false
+
+- name: "COMMON: Create new database"
+  mysql_db:
+    login_user: "{{ mysql_creds }}"
+    login_password: "{{ mysql_creds }}"
+    login_host: "{{ db_ip }}"
+    login_port: "{{ mysql_port }}"
+    name: "{{ sitename }}"
+    config_file: "{{ my_cnf }}"
+    state: present
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Check if new vHost exists"
+  stat:
+    path: "{{ sites_enabled }}/{{ sitename }}.conf"
+  register: new_vhost_check
+  ignore_errors: True
+
+- name: "COMMON: Deploy default vHost template"
+  copy:
+    src: "{{ apache_template_source_file }}"
+    dest: "{{ sites_available }}"
+    mode: 0644
+  when: new_vhost_check.stat.exists == false
+
+- name: "COMMON: Rename default vHost template"
+  command: mv {{ vhost_template }} {{ sites_available }}/{{ sitename }}.conf
+  when: new_vhost_check.stat.exists == false
+
+- name: "COMMON: Modify new vHost"
+  replace:
+    dest: "{{ sites_available }}/{{ sitename }}.conf"
+    regexp: '^(.*)SITENAME(.*)$'
+    replace: '\1{{ sitename }}\2'
+  when: new_vhost_check.stat.exists == false
+
+- name: "COMMON: Enable new vHost"
+  file:
+    src: ../sites-available/{{ sitename }}.conf
+    dest: "{{ sites_enabled }}/{{ sitename }}.conf"
+    state: link
+    force: yes
+  register: test
+  notify: Reload Apache
+  when: new_vhost_check.stat.exists == false
+
+- name: "COMMON: Check if new Drush aliases exist"
+  stat:
+    path: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
+  register: new_aliases
+
+- name: "COMMON: Deploy new Drush aliases"
+  copy:
+    src: "{{ drush_aliases_source_file }}"
+    dest: "{{ drush_aliases_path }}"
+    mode: 0644
+  when: new_aliases.stat.exists == false
+  ignore_errors: true
+
+- name: "COMMON: Rename default Drush aliases"
+  command: mv {{ drush_aliases_filepath }} {{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php
+  when: new_aliases.stat.exists == false
+
+- name: "COMMON: Modify Drush aliases"
+  replace:
+    dest: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
+    regexp: '^(.*)SITENAME(.*)$'
+    replace: '\1{{ sitename }}\2'
+  when: new_aliases.stat.exists == false
