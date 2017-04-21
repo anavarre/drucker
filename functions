@@ -50,6 +50,16 @@ load_container_files() {
   done
 }
 
+validation() {
+  if [[ -z ${SITENAME} ]]; then
+    echo -e "\n${RED}You need to pass a sitename.${COLOR_ENDING}\n"
+  elif [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+    echo -e "\n${RED}You cannot use only digits.${COLOR_ENDING}\n"
+  elif [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+    echo -e "\n${RED}You cannot use any special character.${COLOR_ENDING}\n"
+  fi
+}
+
 drucker_usage() {
 cat <<EOF
 ${GREEN_HELP}--version${COLOR_ENDING_HELP}                         Returns the drucker version.
@@ -129,7 +139,8 @@ drucker_argument() {
       fi
       ;;
       --create)
-      if [[ "${OPTION}" == "--create" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+      if [[ "${OPTION}" == "--create" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+        validation
         drucker_usage
       else
         # Comma-separated sitenames are split into single values for drucker to
@@ -141,7 +152,8 @@ drucker_argument() {
       fi
       ;;
       --import)
-      if [[ "${OPTION}" == "--import" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+      if [[ "${OPTION}" == "--import" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+        validation
         drucker_usage
       else
         # Comma-separated sitenames are split into single values for drucker to
@@ -161,7 +173,8 @@ drucker_argument() {
       fi
       ;;
       --composer)
-      if [[ "${OPTION}" == "--composer" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+      if [[ "${OPTION}" == "--composer" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+,-]* ]]; then
+        validation
         drucker_usage
       else
         drupal_composer
@@ -169,7 +182,8 @@ drucker_argument() {
       fi
       ;;
       --lightning)
-      if [[ "${OPTION}" == "--lightning" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+      if [[ "${OPTION}" == "--lightning" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+        validation
         drucker_usage
       else
         # Comma-separated sitenames are split into single values for drucker to
