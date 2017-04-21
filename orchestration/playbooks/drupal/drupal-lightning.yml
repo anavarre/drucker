@@ -1,0 +1,246 @@
+---
+- name: "LIGHTNING: Check if new site exists"
+  stat:
+    path: "{{ drupal_root }}"
+  register: lightning_new_site
+  ignore_errors: True
+
+- name: "LIGHTNING: Check if new database exists"
+  stat:
+    path: "{{ mysql_data }}/{{ sitename }}"
+  register: lightning_new_db
+
+- name: "LIGHTNING: Install vendor dependencies (this can take a while)"
+  composer:
+    command: create-project
+    arguments: acquia/lightning-project {{ sitename }}
+    working_dir: "{{ webroot }}"
+  become: yes
+  become_user: "{{ user }}"
+
+- name: "LIGHTNING: Create files directory"
+  file:
+    path: "{{ drupal_root }}/{{ default_site }}/files"
+    state: directory
+    mode: 0777
+  become: yes
+  become_user: "{{ user }}"
+  when: lightning_new_site.stat.exists == false or lightning_new_db.stat.exists == false
+
+- name: "LIGHTNING: Create libraries directory"
+  file:
+    path: "{{ drupal_root }}/docroot/libraries"
+    state: directory
+  become: yes
+  become_user: "{{ user }}"
+  when: lightning_new_site.stat.exists == false or lightning_new_db.stat.exists == false
+
+- name: "LIGHTNING: Create simpletest directory"
+  file:
+    path: "{{ drupal_root }}/docroot/sites/simpletest"
+    state: directory
+    mode: 0777
+  become: yes
+  become_user: "{{ user }}"
+  when: lightning_new_site.stat.exists == false or lightning_new_db.stat.exists == false
+
+- name: "LIGHTNING: Create settings.php file"
+  command: cp {{ drupal_root }}/{{ default_site }}/default.settings.php {{ drupal_root }}/{{ default_site }}/settings.php
+  become: yes
+  become_user: "{{ user }}"
+  when: lightning_new_site.stat.exists == false or lightning_new_db.stat.exists == false
+
+- name: "LIGHTNING: Create services.yml file"
+  command: cp {{ drupal_root }}/{{ default_site }}/default.services.yml {{ drupal_root }}/{{ default_site }}/services.yml
+  become: yes
+  become_user: "{{ user }}"
+  when: lightning_new_site.stat.exists == false or lightning_new_db.stat.exists == false
+
+- name: "LIGHTNING: Add trusted_host_patterns in settings.php"
+  blockinfile:
+    dest: "{{ drupal_root }}/{{ default_site }}/settings.php"
+    block: |
+      $settings['trusted_host_patterns'] = [
+        '^{{ sitename }}\.{{ tld }}$',
+      ];
+    insertafter: EOF
+    marker: "# {mark} MANAGED TRUSTED_HOST_PATTERNS BLOCK"
+  when: lightning_new_site.stat.exists == false or lightning_new_db.stat.exists == false
+
+- name: "LIGHTNING: Prepare settings.php for memcached support"
+  blockinfile:
+    dest: "{{ drupal_root }}/{{ default_site }}/settings.php"
+    block: |
+      /**
+       * drucker comes with memcached pre-configured. You simply need to install the
+       * memcache module and add the below lines to enable memcache support.
+       * DO NOT uncomment this block as it's managed by Ansible.
+       * $settings['cache']['default'] = 'cache.backend.memcache';
+       * $settings['memcache']['servers'] = ['{{ db_ip }}:11211' => 'default'];
+       */
+    insertafter: EOF
+    marker: "# {mark} MANAGED MEMCACHED BLOCK"
+  when: lightning_new_site.stat.exists == false or lightning_new_db.stat.exists == false
+
+- name: "LIGHTNING: Ensure database is wiped before installing"
+  mysql_db:
+    login_user: "{{ mysql_creds }}"
+    login_password: "{{ mysql_creds }}"
+    login_host: "{{ db_ip }}"
+    login_port: "{{ mysql_port }}"
+    name: "{{ sitename }}"
+    config_file: "{{ my_cnf }}"
+    state: absent
+  when: lightning_new_site.stat.exists == false
+
+- name: "LIGHTNING: Create new database"
+  mysql_db:
+    login_user: "{{ mysql_creds }}"
+    login_password: "{{ mysql_creds }}"
+    login_host: "{{ db_ip }}"
+    login_port: "{{ mysql_port }}"
+    name: "{{ sitename }}"
+    config_file: "{{ my_cnf }}"
+    state: present
+  when: lightning_new_site.stat.exists == false or lightning_new_db.stat.exists == false
+
+- name: "LIGHTNING: Check if new vHost exists"
+  stat:
+    path: "{{ sites_enabled }}/{{ sitename }}.conf"
+  register: lightning_new_vhost_check
+  ignore_errors: True
+
+- name: "LIGHTNING: Deploy default vHost template"
+  copy:
+    src: "{{ apache_template_source_file }}"
+    dest: "{{ sites_available }}"
+    mode: 0644
+  when: lightning_new_vhost_check.stat.exists == false
+
+- name: "LIGHTNING: Rename default vHost template"
+  command: mv {{ vhost_template }} {{ sites_available }}/{{ sitename }}.conf
+  when: lightning_new_vhost_check.stat.exists == false
+
+- name: "LIGHTNING: Modify new vHost"
+  replace:
+    dest: "{{ sites_available }}/{{ sitename }}.conf"
+    regexp: '^(.*)SITENAME(.*)$'
+    replace: '\1{{ sitename }}\2'
+  when: lightning_new_vhost_check.stat.exists == false
+
+- name: "LIGHTNING: Enable new vHost"
+  file:
+    src: ../sites-available/{{ sitename }}.conf
+    dest: "{{ sites_enabled }}/{{ sitename }}.conf"
+    state: link
+    force: yes
+  register: test
+  notify: Reload Apache
+  when: lightning_new_vhost_check.stat.exists == false
+
+- name: "LIGHTNING: Check if new Drush aliases exist"
+  stat:
+    path: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
+  register: lightning_new_aliases
+
+- name: "LIGHTNING: Deploy new Drush aliases"
+  copy:
+    src: "{{ drush_aliases_source_file }}"
+    dest: "{{ drush_aliases_path }}"
+    mode: 0644
+  when: lightning_new_aliases.stat.exists == false
+  ignore_errors: true
+
+- name: "LIGHTNING: Rename default Drush aliases"
+  command: mv {{ drush_aliases_filepath }} {{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php
+  when: lightning_new_aliases.stat.exists == false
+
+- name: "LIGHTNING: Modify Drush aliases"
+  replace:
+    dest: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
+    regexp: '^(.*)SITENAME(.*)$'
+    replace: '\1{{ sitename }}\2'
+  when: lightning_new_aliases.stat.exists == false
+
+- name: "LIGHTNING: Install Drupal"
+  command: drush @{{ sitename }}.{{ tld }} site-install lightning install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@{{ db_ip }}:{{ mysql_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}
+  become: yes
+  become_user: "{{ user }}"
+  when: lightning_new_aliases.stat.exists == false
+
+- name: "LIGHTNING: Retrieve path to config directory"
+  shell: stat -c %n {{ drupal_root }}/{{ default_site }}/files/config_*
+  register: lightning_config_dir
+  when: lightning_new_site.stat.exists == false or lightning_new_db.stat.exists == false
+
+- name: "LIGHTNING: Make sure the sync directory is writable"
+  file:
+    path: "{{ lightning_config_dir.stdout }}/sync"
+    mode: 0777
+  when: lightning_new_site.stat.exists == false or lightning_new_db.stat.exists == false
+
+- name: "LIGHTNING: Check if phpunit.xml file exists"
+  stat:
+    path: "{{ drupal_root }}/docroot/core/phpunit.xml"
+  register: lightning_phpunit
+
+- name: "LIGHTNING: Deploy phpunit.xml file"
+  copy:
+    src: "{{ phpunit_source_file }}"
+    dest: "{{ drupal_root }}/docroot/core/"
+    mode: 0644
+  become: yes
+  become_user: "{{ user }}"
+  when: lightning_phpunit.stat.exists == false
+
+- name: "LIGHTNING: Modify phpunit.xml file"
+  replace:
+    dest: "{{ drupal_root }}/docroot/core/phpunit.xml"
+    regexp: '^(.*)SITENAME(.*)$'
+    replace: '\1{{ sitename }}\2'
+  when: lightning_phpunit.stat.exists == false
+
+- name: "LIGHTNING: Make sure we're down one level for the PHPUnit path"
+  replace:
+    dest: "{{ drupal_root }}/docroot/core/phpunit.xml"
+    regexp: '^(.*){{ drupal_root }}(.*)$'
+    replace: '\1{{ drupal_root }}/docroot\2'
+  when: lightning_phpunit.stat.exists == false
+
+- name: "LIGHTNING: Check if .gitignore exists"
+  stat:
+    path: "{{ drupal_root }}/.gitignore"
+  register: lightning_gitignore
+  ignore_errors: True
+
+- name: "LIGHTNING: Create .gitignore file"
+  copy:
+    src: "{{ gitignore_source_file }}"
+    dest: "{{ drupal_root }}"
+    mode: 0644
+  become: yes
+  become_user: "{{ user }}"
+  when: lightning_gitignore.stat.exists == false
+
+- name: "LIGHTNING: Initialize Git repository"
+  shell: git -C {{ drupal_root }} init
+  args:
+    warn: no
+  register: initial_commit
+  become: yes
+  become_user: "{{ user }}"
+  when: lightning_gitignore.stat.exists == false
+
+- name: "LIGHTNING: Add all new files under version control"
+  shell: git -C {{ drupal_root }} add --all . && git -C {{ drupal_root }} commit -m "Initial commit"
+  become: yes
+  become_user: "{{ user }}"
+  when: lightning_gitignore.stat.exists == false
+
+- name: "LIGHTNING: Make sure files dir ownership is correct"
+  file:
+    path: "{{ drupal_root }}/{{ default_site }}/files"
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+    recurse: yes
+  when: lightning_new_site.stat.exists == false or lightning_new_db.stat.exists == false

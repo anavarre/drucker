@@ -51,8 +51,29 @@ load_container_files() {
 }
 
 drucker_usage() {
-  echo "Usage: drucker {--version|--dev [sitename,...]|--prod [sitename,...]|--create [sitename,...] [git_tag]|--import [sitename,...]|--reinstall|--composer [sitename]|--delete [sitename,...]|--tests}"
-  exit 0
+cat <<EOF
+${GREEN_HELP}--version${COLOR_ENDING_HELP}                         Returns the drucker version.
+
+${GREEN_HELP}--dev [sitename,...]${COLOR_ENDING_HELP}              Prepare site(s) for development work with no caching and helper modules enabled.
+                                  WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
+
+${GREEN_HELP}--prod [sitename,...]${COLOR_ENDING_HELP}             Opinionated setup with all known performance best practices enabled.
+
+${GREEN_HELP}--create [sitename,...] [git_tag]${COLOR_ENDING_HELP} Creates arbitrary docroots, vHosts and corresponding databases.
+
+${GREEN_HELP}--import [sitename,...]${COLOR_ENDING_HELP}           Imports the database, files and codebase from the web container's import directory.
+
+${GREEN_HELP}--reinstall${COLOR_ENDING_HELP}                       Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
+
+${GREEN_HELP}--composer [sitename]${COLOR_ENDING_HELP}             Installs Drupal from a composer.json file.
+
+${GREEN_HELP}--lightning [sitename,...] ${COLOR_ENDING_HELP}       Creates arbitrary Lightning docroots, vHosts and corresponding databases.
+
+${GREEN_HELP}--delete [sitename,...]${COLOR_ENDING_HELP}           Deletes arbitrary docroots, vHosts and corresponding databases.
+
+${GREEN_HELP}--tests${COLOR_ENDING_HELP}                           Runs the Ansible test suite.
+EOF
+exit 0
 }
 
 drucker_argument() {
@@ -64,6 +85,7 @@ drucker_argument() {
        [[ "${OPTION}" != "--import" ]] && \
        [[ "${OPTION}" != "--reinstall" ]] && \
        [[ "${OPTION}" != "--composer" ]] && \
+       [[ "${OPTION}" != "--lightning" ]] && \
        [[ "${OPTION}" != "--delete" ]] && \
        [[ "${OPTION}" != "--tests" ]] && \
        [[ "${OPTION}" != "--help" ]]; then
@@ -146,6 +168,18 @@ drucker_argument() {
         exit 0
       fi
       ;;
+      --lightning)
+      if [[ "${OPTION}" == "--lightning" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+        drucker_usage
+      else
+        # Comma-separated sitenames are split into single values for drucker to
+        # get a list of Lightning sites to create.
+        for SITE in ${SITENAME//,/ }; do
+          drupal_lightning
+        done
+        exit 0
+      fi
+      ;;
       --delete)
       if [[ "${OPTION}" == "--delete" ]] && [[ -z ${SITENAME} ]]; then
         drucker_usage
@@ -168,26 +202,7 @@ drucker_argument() {
       fi
       ;;
       --help)
-cat <<EOF
-${GREEN_HELP}--version${COLOR_ENDING_HELP}                         Returns the drucker version.
-
-${GREEN_HELP}--dev [sitename,...]${COLOR_ENDING_HELP}              Prepare site(s) for development work with no caching and helper modules enabled.
-                                  WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
-
-${GREEN_HELP}--prod [sitename,...]${COLOR_ENDING_HELP}             Opinionated setup with all known performance best practices enabled.
-
-${GREEN_HELP}--create [sitename,...] [git_tag]${COLOR_ENDING_HELP} Creates arbitrary docroots, vHosts and corresponding databases.
-
-${GREEN_HELP}--import [sitename,...]${COLOR_ENDING_HELP}           Imports the database, files and codebase from the web container's import directory.
-
-${GREEN_HELP}--reinstall${COLOR_ENDING_HELP}                       Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
-
-${GREEN_HELP}--composer [sitename]${COLOR_ENDING_HELP}             Installs Drupal from a composer.json file.
-
-${GREEN_HELP}--delete [sitename,...]${COLOR_ENDING_HELP}           Deletes arbitrary docroots, vHosts and corresponding databases.
-
-${GREEN_HELP}--tests${COLOR_ENDING_HELP}                           Runs the Ansible test suite.
-EOF
+        drucker_usage
       exit 0
       ;;
     esac

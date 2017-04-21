@@ -157,21 +157,26 @@ For more advanced `drucker` usage, you can pass several CLI parameters:
 
 ```
 $ drucker --help
---version                          Returns the current drucker version.
---dev [sitename,...]               Prepare site(s) for development work with no caching and helper modules enabled.
-                                   WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
+--version                         Returns the drucker version.
 
---prod [sitename,...]              Opinionated setup with all known performance best practices enabled.
+--dev [sitename,...]              Prepare site(s) for development work with no caching and helper modules enabled.
+                                  WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
 
---create [sitename,...] [git_tag]  Creates arbitrary docroots, vHosts and corresponding databases.
+--prod [sitename,...]             Opinionated setup with all known performance best practices enabled.
 
---import [sitename,...]            Imports the database, files and codebase from the web container's import directory.
+--create [sitename,...] [git_tag] Creates arbitrary docroots, vHosts and corresponding databases.
 
---reinstall                        Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
+--import [sitename,...]           Imports the database, files and codebase from the web container's import directory.
 
---delete [sitename,...]            Deletes arbitrary docroots, vHosts and corresponding databases.
+--reinstall                       Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
 
---tests                            Runs the Ansible test suite.
+--composer [sitename]             Installs Drupal from a composer.json file.
+
+--lightning [sitename,...]        Creates arbitrary Lightning docroots, vHosts and corresponding databases.
+
+--delete [sitename,...]           Deletes arbitrary docroots, vHosts and corresponding databases.
+
+--tests                           Runs the Ansible test suite.
 ```
 
 The `--import [sitename]` parameter is a special beast. Please [read more about it in the wiki](https://github.com/anavarre/drucker/wiki/Importing-an-existing-site-to-drucker).
