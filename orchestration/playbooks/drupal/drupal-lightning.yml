@@ -67,6 +67,7 @@
   become: yes
   become_user: "{{ user }}"
   when: new_site.stat.exists == false or new_db.stat.exists == false
+
 - include: ../common/drupal-common.yml
 
 - name: "LIGHTNING: Install Drupal"
