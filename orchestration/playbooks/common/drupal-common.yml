@@ -1,4 +1,52 @@
 ---
+- name: "COMMON: Create files directory"
+  file:
+    path: "{{ drupal_root }}/{{ default_site }}/files"
+    state: directory
+    mode: 02777
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Create libraries directory"
+  file:
+    path: "{{ drupal_root }}/docroot/libraries"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Create simpletest directory"
+  file:
+    path: "{{ drupal_root }}/docroot/sites/simpletest"
+    state: directory
+    mode: 02777
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  when: new_site.stat.exists == false
+
+- name: "COMMON: Create settings.php file"
+  command: cp {{ drupal_root }}/{{ default_site }}/default.settings.php {{ drupal_root }}/{{ default_site }}/settings.php
+  become: yes
+  become_user: "{{ user }}"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Create services.yml file"
+  command: cp {{ drupal_root }}/{{ default_site }}/default.services.yml {{ drupal_root }}/{{ default_site }}/services.yml
+  become: yes
+  become_user: "{{ user }}"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Ensure settings.php and services.yml have correct ownership"
+  file:
+    path: "{{ item }}"
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  with_items:
+    - "{{ drupal_root }}/{{ default_site }}/settings.php"
+    - "{{ drupal_root }}/{{ default_site }}/services.yml"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
 - name: "COMMON: Add trusted_host_patterns in settings.php"
   blockinfile:
     dest: "{{ drupal_root }}/{{ default_site }}/settings.php"

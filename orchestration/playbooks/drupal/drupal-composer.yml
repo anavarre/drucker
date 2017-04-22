@@ -48,44 +48,6 @@
   become: yes
   become_user: "{{ user }}"
 
-- name: "COMPOSER: Create files directory"
-  file:
-    path: "{{ drupal_root }}/{{ default_site }}/files"
-    state: directory
-    mode: 0777
-  become: yes
-  become_user: "{{ user }}"
-  when: new_site.stat.exists == false or new_db.stat.exists == false
-
-- name: "COMPOSER: Create libraries directory"
-  file:
-    path: "{{ drupal_root }}/docroot/libraries"
-    state: directory
-  become: yes
-  become_user: "{{ user }}"
-  when: new_site.stat.exists == false or new_db.stat.exists == false
-
-- name: "COMPOSER: Create simpletest directory"
-  file:
-    path: "{{ drupal_root }}/docroot/sites/simpletest"
-    state: directory
-    mode: 0777
-  become: yes
-  become_user: "{{ user }}"
-  when: new_site.stat.exists == false or new_db.stat.exists == false
-
-- name: "COMPOSER: Create settings.php file"
-  command: cp {{ drupal_root }}/{{ default_site }}/default.settings.php {{ drupal_root }}/{{ default_site }}/settings.php
-  become: yes
-  become_user: "{{ user }}"
-  when: new_site.stat.exists == false or new_db.stat.exists == false
-
-- name: "COMPOSER: Create services.yml file"
-  command: cp {{ drupal_root }}/{{ default_site }}/default.services.yml {{ drupal_root }}/{{ default_site }}/services.yml
-  become: yes
-  become_user: "{{ user }}"
-  when: new_site.stat.exists == false or new_db.stat.exists == false
-
 - include: ../common/drupal-common.yml
 
 - name: "COMPOSER: Install Drupal"
