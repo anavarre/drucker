@@ -16,11 +16,15 @@
     state: present
   when: fpm.stat.exists == false
 
+- name: Update APT cache
+  apt:
+    update_cache: yes
+  when: fpm.stat.exists == false
+
 - name: Install PHP core packages
   package:
     name: "{{ item }}"
     state: installed
-    update_cache: yes
   with_items:
     - php{{ php_version }}-fpm
     - php{{ php_version }}-cli

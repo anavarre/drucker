@@ -14,12 +14,16 @@
     deb: "{{ mysql_apt_repo }}"
   when: mysql.stat.exists == false
 
+- name: Update APT cache
+  apt:
+    update_cache: yes
+  when: mysql.stat.exists == false
+
 - name: Install MySQL and utilities
   package:
     name: "{{ item }}"
     state: installed
     force: yes
-    update_cache: yes
   with_items:
     - mysql-community-server
     - python-mysqldb

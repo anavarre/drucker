@@ -1,8 +1,4 @@
 ---
-- name: Refresh APT
-  apt:
-    update_cache: yes
-
 - name: Restart SSH
   service:
     name: ssh
