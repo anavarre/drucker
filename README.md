@@ -81,7 +81,7 @@ _drucker_ ships with the following software stack:
 | phantomjs           | 2.1.1               | [ariya/phantomjs](https://bitbucket.org/ariya/phantomjs/) (Bitbucket)     |
 | Drupal              | 8.4.x               | [Drupal](https://www.drupal.org/project/drupal) (official site)     |
 | Drush               | 9.0-dev             | [Drush](http://docs.drush.org/en/master/install/) (Amazon S3 bucket)      |
-| Drupal Console      | 1.0.0-rc16          | [hechoendrupal/drupal-console-launcher](https://github.com/hechoendrupal/drupal-console-launcher) (Github)      |
+| Drupal Console      | 1.0.0-rc17          | [hechoendrupal/drupal-console-launcher](https://github.com/hechoendrupal/drupal-console-launcher) (Github)      |
 | Composer            | 1.3.3               | [Composer](https://getcomposer.org) (official site)     |
 | Apache Solr         | 6.3.0 or higher     | [solr:latest](https://hub.docker.com/_/solr/) (Docker Hub) |
 | OpenJDK             | 1.8.0_111 or higher | [solr:latest](https://hub.docker.com/_/solr/) (Docker Hub) |
