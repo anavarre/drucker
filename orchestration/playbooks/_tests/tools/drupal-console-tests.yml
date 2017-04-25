@@ -28,8 +28,6 @@
   failed_when: drupal_console_launcher_version.stdout != drupal_console_launcher_stable_release
   ignore_errors: true
 
-- debug: msg={{ drupal_console_launcher_version }}
-
 - name: "TEST: Check if Drupal Console has been configured in .bashrc"
   shell: grep -o "source \"\$HOME/.console/console.rc\" 2>/dev/null" {{ bashrc }} || echo "absent"
   register: drupal_console_bashrc
