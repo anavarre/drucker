@@ -22,11 +22,13 @@
   failed_when: drupal_console_packages.stdout != drupal_console_launcher_stable_release
 
 - name: "TEST: Drupal Console Launcher should use the latest stable release"
-  shell: drupal --version | awk '{print $NF}' | head -n1
+  shell: cd {{ drucker_docroot }} && drupal --version | awk '{print $NF}' | head -n1
   register: drupal_console_launcher_version
   changed_when: drupal_console_launcher_version.stdout != drupal_console_launcher_stable_release
   failed_when: drupal_console_launcher_version.stdout != drupal_console_launcher_stable_release
   ignore_errors: true
+
+- debug: msg={{ drupal_console_launcher_version }}
 
 - name: "TEST: Check if Drupal Console has been configured in .bashrc"
   shell: grep -o "source \"\$HOME/.console/console.rc\" 2>/dev/null" {{ bashrc }} || echo "absent"
