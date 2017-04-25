@@ -9,22 +9,20 @@
   register: drush
   failed_when: drush.stat.exists == false
 
-- name: "TEST: Drush should use the latest unstable release"
-  shell: drush --version | awk '{print $4}' | head -n1
+- name: "TEST: Drush should use the latest stable release"
+  shell: drush version | awk '{print $NF}'
   register: drush_version_check
-  changed_when: drush_version_check.stdout != drush_unstable_release
-  failed_when: drush_version_check.stdout != drush_unstable_release
-  ignore_errors: true
+  changed_when: drush_version_check.stdout != drush_composer_package_version
+  failed_when: drush_version_check.stdout != drush_composer_package_version
 
-- name: "TEST: The Drush binary should be executable"
+- name: "TEST: The Drush binary should be a symlink"
   stat:
     path: "{{ drush_binary }}"
-  register: executable_drush
+  register: drush_symlink
 
-- name: "TEST: The Drush binary isn't executable"
-  fail:
-    msg: "The Drush binary isn't executable"
-  when: executable_drush.stat.mode != "0755"
+- assert:
+   that:
+     - drush_symlink.stat.islnk
 
 - name: "TEST: Check if Drush can connect to the drucker database"
   shell: drush @{{ user }}.{{ tld }} sql-connect | grep -o "{{ user }}" || echo "Cannot connect to the database"

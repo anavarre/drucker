@@ -292,11 +292,12 @@ drush_aliases_template_file: drush.aliases.drushrc.php
 drush_aliases_source_file: "{{ source_file_dir }}/{{ drush_aliases_template_file }}"
 drush_aliases_path: /etc/drush/site-aliases
 drush_aliases_filepath: "{{ drush_aliases_path }}/{{ drush_aliases_template_file }}"
-drush_unstable_release: 9.0-dev-dev
-drush_download_link: https://s3.amazonaws.com/files.drush.org/drush-unstable.phar
 drush_binary: "{{ user_programs_path }}/drush"
+var_dumper_package_version: ~2.7
+drush_composer_package: drush/drush
+drush_composer_package_version: 9.0.0-beta1
+drush_composer_executable: "{{ composer_dir_path }}/vendor/drush/drush/drush"
 drush_dir: "{{ home }}/.drush"
-
 drucker_aliases: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
 
 # Drupal Console

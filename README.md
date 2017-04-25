@@ -56,36 +56,36 @@ You also need to [generate a SSH key](https://help.github.com/articles/generatin
 
 _drucker_ ships with the following software stack:
 
-| Software            | Version             | Source            |
-| --------------------|---------------------|-------------------|
-| Debian              | 8 (Jessie)          | [debian:latest](https://hub.docker.com/_/debian/) (Docker Hub) |
-| Varnish             | 4.1.2 or higher     | APT, via [Varnish APT repo](https://varnish-cache.org/releases/install_debian.html)      |
-| nginx               | 1.10.1 or higher    | APT, via [nginx APT repo](https://nginx.org/en/linux_packages.html)      |
-| Apache              | 2.4.10 or higher    | APT      |
-| MySQL               | 5.7.17 or higher    | APT, via [MySQL APT repo](https://dev.mysql.com/downloads/repo/apt/)      |
-| memcached           | 3.0.3               | APT, via [ppa:ondrej/php](https://deb.sury.org/)       |
-| mcstat              | 1.1.0               | [webbj74/mcstat](https://github.com/webbj74/mcstat) (Github)      |
-| phpMyAdmin          | 4.7.0               | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
-| adminer             | 4.3.0               | [vrana/adminer](https://github.com/vrana/adminer) (Github)      |
-| PHP-FPM             | 7.1.1 or higher     | APT, via [ppa:ondrej/php](https://deb.sury.org/)      |
-| APCu                | 5.1.8 or later      | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
-| Coder               | 8.2.11              | [drupal/coder](https://packagist.org/packages/drupal/coder) (Packagist)      |
-| Code Sniffer        | 2.6.1               | [squizlabs/PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) (Github)      |
-| PHP-CS-Fixer        | 1.12.2              | [FriendsOfPHP/PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (Github)      |
-| phpmd               | 2.6.0               | [PHPMD](https://phpmd.org/) (official site)      |
-| PECL uploadprogress | master              | [ php/pecl-php-uploadprogress](https://github.com/php/pecl-php-uploadprogress)  (Github)     |
-| PECL YAML           | 2.0.0               | [php/pecl-file_formats-yaml](https://github.com/php/pecl-file_formats-yaml) (Github)      |
-| LibYAML             | 0.1.7               | [PyYAML](http://pyyaml.org/) (official site)     |
-| Xdebug              | 2.5.1               | [Xdebug](https://xdebug.org/) (official site)     |
-| Tideways Profiler   | 4.1.2               | [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension)  (Github)     |
-| phantomjs           | 2.1.1               | [ariya/phantomjs](https://bitbucket.org/ariya/phantomjs/) (Bitbucket)     |
-| Drupal              | 8.4.x               | [Drupal](https://www.drupal.org/project/drupal) (official site)     |
-| Drush               | 9.0-dev             | [Drush](http://docs.drush.org/en/master/install/) (Amazon S3 bucket)      |
-| Drupal Console      | 1.0.0-rc17          | [hechoendrupal/drupal-console-launcher](https://github.com/hechoendrupal/drupal-console-launcher) (Github)      |
-| Composer            | 1.3.3               | [Composer](https://getcomposer.org) (official site)     |
-| Apache Solr         | 6.3.0 or higher     | [solr:latest](https://hub.docker.com/_/solr/) (Docker Hub) |
-| OpenJDK             | 1.8.0_111 or higher | [solr:latest](https://hub.docker.com/_/solr/) (Docker Hub) |
-| bash-git-prompt     | 2.6.1               | [magicmonty/bash-git-prompt](https://github.com/magicmonty/bash-git-prompt) (Github)      |
+| Software            | Version               | Source            |
+| --------------------|-----------------------|-------------------|
+| Debian              | 8 (Jessie)            | [debian:latest](https://hub.docker.com/_/debian/) (Docker Hub) |
+| Varnish             | 4.1.2 or higher       | APT, via [Varnish APT repo](https://varnish-cache.org/releases/install_debian.html)      |
+| nginx               | 1.10.1 or higher      | APT, via [nginx APT repo](https://nginx.org/en/linux_packages.html)      |
+| Apache              | 2.4.10 or higher      | APT      |
+| MySQL               | 5.7.17 or higher      | APT, via [MySQL APT repo](https://dev.mysql.com/downloads/repo/apt/)      |
+| memcached           | 3.0.3                 | APT, via [ppa:ondrej/php](https://deb.sury.org/)       |
+| mcstat              | 1.1.0                 | [webbj74/mcstat](https://github.com/webbj74/mcstat) (Github)      |
+| phpMyAdmin          | 4.7.0                 | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
+| adminer             | 4.3.0                 | [vrana/adminer](https://github.com/vrana/adminer) (Github)      |
+| PHP-FPM             | 7.1.1 or higher       | APT, via [ppa:ondrej/php](https://deb.sury.org/)      |
+| APCu                | 5.1.8 or higher       | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
+| Coder               | 8.2.11                | [drupal/coder](https://packagist.org/packages/drupal/coder) (Packagist)      |
+| Code Sniffer        | 2.6.1                 | [squizlabs/PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) (Github)      |
+| PHP-CS-Fixer        | 1.12.2                | [FriendsOfPHP/PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (Github)      |
+| phpmd               | 2.6.0                 | [PHPMD](https://phpmd.org/) (official site)      |
+| PECL uploadprogress | master                | [ php/pecl-php-uploadprogress](https://github.com/php/pecl-php-uploadprogress)  (Github)     |
+| PECL YAML           | 2.0.0                 | [php/pecl-file_formats-yaml](https://github.com/php/pecl-file_formats-yaml) (Github)      |
+| LibYAML             | 0.1.7                 | [PyYAML](http://pyyaml.org/) (official site)     |
+| Xdebug              | 2.5.1                 | [Xdebug](https://xdebug.org/) (official site)     |
+| Tideways Profiler   | 4.1.2                 | [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension)  (Github)     |
+| phantomjs           | 2.1.1                 | [ariya/phantomjs](https://bitbucket.org/ariya/phantomjs/) (Bitbucket)     |
+| Drupal              | 8.4.x                 | [Drupal](https://www.drupal.org/project/drupal) (official site)     |
+| Drush               | 9.0.0-beta1 or higher | [Drush](https://packagist.org/packages/drush/drush) (Packagist)      |
+| Drupal Console      | 1.0.0-rc17            | [hechoendrupal/drupal-console-launcher](https://github.com/hechoendrupal/drupal-console-launcher) (Github)      |
+| Composer            | 1.3.3                 | [Composer](https://getcomposer.org) (official site)     |
+| Apache Solr         | 6.3.0 or higher       | [solr:latest](https://hub.docker.com/_/solr/) (Docker Hub) |
+| OpenJDK             | 1.8.0_111 or higher   | [solr:latest](https://hub.docker.com/_/solr/) (Docker Hub) |
+| bash-git-prompt     | 2.6.1                 | [magicmonty/bash-git-prompt](https://github.com/magicmonty/bash-git-prompt) (Github)      |
 
 ## <a name="Installation"></a>Installation
 

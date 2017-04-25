@@ -1,27 +1,42 @@
 ---
-- name: Check if Drush is installed
+- name: Check if Drush binary is in the $PATH
   stat:
     path: "{{ drush_binary }}"
   register: drush_check
+  changed_when: drush_check.stat.exists == false
 
-- name: Check if Drush can be updated
-  command: date -r "{{ drush_binary }}" +%F
-  register: outdated_drush
-  when: drush_check.stat.exists == true
-  changed_when: false
+- name: Check if Drush binary exists
+  stat:
+    path: "{{ drush_composer_executable }}"
+  register: drush_executable_check
+  changed_when: drush_executable_check.stat.exists == false
 
-- set_fact:
-    ansible_date: "{{ ansible_date_time.date }}"
-
-- name: Install Drush globally
-  get_url:
-    url: "{{ drush_download_link }}"
+- name: Add Drush to $PATH
+  file:
+    src: "{{ drush_composer_executable }}"
     dest: "{{ drush_binary }}"
-    force: yes
-    mode: 0755
-    validate_certs: no
-  register: drush_get_url_result
-  until: "'OK' in drush_get_url_result.msg"
-  retries: 3
-  delay: 10
-  when: drush_check.stat.exists == false or outdated_drush.stdout != ansible_date
+    state: link
+  #when: drush_check.stat.exists == false and drush_executable_check.stat.exists == true
+
+- name: Check Drush version in composer.json file
+  shell: grep -E "\"{{ drush_composer_package }}*.*" {{ composer_json_path }} | awk '{print $NF}' | tr -d '",'
+  register: drush_composer_package_version_check
+  changed_when: drush_composer_package_version_check.stdout != drush_composer_package_version
+
+- name: Install Drush via composer.json
+  composer:
+    command: require
+    arguments: "{{ drush_composer_package }}:{{ drush_composer_package_version }} --prefer-dist --optimize-autoloader"
+    working_dir: "{{ composer_dir_path }}"
+  become: yes
+  become_user: "{{ user }}"
+  when: drush_composer_package_version_check.stdout != drush_composer_package_version
+
+- name: Update Drush Composer package
+  composer:
+    command: update
+    arguments: "{{ drush_composer_package }} --with-dependencies"
+    working_dir: "{{ composer_dir_path }}"
+  become: yes
+  become_user: "{{ user }}"
+  when: drush_composer_package_version_check.stdout != drush_composer_package_version
