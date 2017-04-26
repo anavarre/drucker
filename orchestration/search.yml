@@ -8,5 +8,5 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - include: playbooks/system/system-setup.yml
-    - include: playbooks/solr/solr-configuration.yml
+    - include: playbooks/solr/java.yml
+    - include: playbooks/solr/solr.yml

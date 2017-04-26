@@ -32,7 +32,6 @@ sources_list_source_file: "{{ source_file_dir }}/sources.list"
 # Source directories
 ssl_source_dir: "{{ source_file_dir }}/ssl"
 vim_source_dir: "{{ source_file_dir }}/.vim"
-solr_conf: "{{ source_file_dir }}/solr-conf-6.x/"
 
 # Git
 git_repo_directory: "{{ www_dir }}/repo"
@@ -336,6 +335,14 @@ drucker_nginx_vhost: "{{ nginx_conf_d }}/{{ user }}.conf"
 client_max_body_size: 100m
 
 # Apache Solr
+solr_conf: "{{ source_file_dir }}/solr-conf-6.x/"
+solr_version: 6.5.0
+solr_unarchived_directory: solr-{{ solr_version }}
+solr_temp_unarchived_path: /opt/{{ solr_unarchived_directory }}
+solr_installation_path: /opt/solr
+solr_archive_file: "{{ solr_unarchived_directory }}.zip"
+solr_archive_path: "{{ download_dir }}/{{ solr_archive_file }}"
+solr_download_link: https://www-us.apache.org/dist/lucene/solr/{{ solr_version }}/{{ solr_archive_file }}
 solr_port: 8983
 solr_core: "{{ user }}"
 solr_configuration_path: /opt/solr/server/solr/{{ solr_core }}/conf
