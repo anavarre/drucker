@@ -1,0 +1,7 @@
+---
+- name: Install Open JDK
+  apt:
+    name: openjdk-8-jre-headless
+    state: present
+    default_release: "{{ codename }}-backports"
+    install_recommends: no

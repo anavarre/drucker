@@ -5,25 +5,7 @@ CUSTOM_SOLR_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${CUSTO
 SEARCH_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${SEARCH_IMAGE}")
 SEARCH_CONTAINER_STARTED=$(docker ps | grep -o "${SEARCH_CONTAINER}")
 
-pull_solr_image_from_docker_hub() {
-  if [[ ${SOLR_IMAGE_EXISTS} ]]; then
-    echo -e "${GREEN}${SOLR_IMAGE} image already exists.${COLOR_ENDING}"
-  else
-    echo -e "${BLUE}Pulling ${SOLR_IMAGE} image from Docker Hub...${COLOR_ENDING}"
-    docker pull "${SOLR_IMAGE}"
-  fi
-}
-
-build_custom_solr_image() {
-  if [[ ! ${CUSTOM_SOLR_IMAGE_EXISTS} ]] && [[ ! ${SEARCH_IMAGE_EXISTS} ]]; then
-    echo -e "${BLUE}Building ${CUSTOM_SOLR_IMAGE} image from Dockerfile...${COLOR_ENDING}"
-    # Make sure the Docker build context doesn't get in the way.
-    cd "$( dirname "${BASH_SOURCE[0]}" )" && cd solr
-    docker build -t "${CUSTOM_SOLR_IMAGE}" .
-  fi
-}
-
-create_search_container_from_custom_solr_image() {
+create_search_container_from_base_image() {
   echo -e "${BLUE}Spinning up ${SEARCH_CONTAINER} container with ID:${COLOR_ENDING}"
 
   docker run --privileged=true --name "${SEARCH_CONTAINER}" -it \
@@ -31,7 +13,7 @@ create_search_container_from_custom_solr_image() {
   --net "${NETWORK}" \
   --ip "${SEARCH_IP}" \
   -d -p "${HOST_SEARCH_PORT}":"${SEARCH_PORT}" \
-  "${CUSTOM_SOLR_IMAGE}" bash
+  "${BASE_IMAGE}" bash
 
   configure_search_container_ssh_access
   run_search_container_orchestration
@@ -59,9 +41,6 @@ create_search_image_from_search_container() {
   echo -e "${BLUE}Deleting initial container...${COLOR_ENDING}"
   docker rm -f "${SEARCH_CONTAINER}"
   create_search_container_from_search_image
-
-  echo -e "${BLUE}Deleting temporary Solr image...${COLOR_ENDING}"
-  docker rmi "${CUSTOM_SOLR_IMAGE}"
 }
 
 start_search_container() {
@@ -84,7 +63,7 @@ provision_search_container() {
       echo -e "${GREEN}${SEARCH_IMAGE} custom image already exists.${COLOR_ENDING}"
       create_search_container_from_search_image
     else
-      create_search_container_from_custom_solr_image
+      create_search_container_from_base_image
       create_search_image_from_search_container
     fi
   fi

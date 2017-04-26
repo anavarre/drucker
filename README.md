@@ -83,8 +83,8 @@ _drucker_ ships with the following software stack:
 | Drush               | 9.0.0-beta1 or higher | [Drush](https://packagist.org/packages/drush/drush) (Packagist)      |
 | Drupal Console      | 1.0.0-rc17            | [hechoendrupal/drupal-console-launcher](https://github.com/hechoendrupal/drupal-console-launcher) (Github)      |
 | Composer            | 1.3.3                 | [Composer](https://getcomposer.org) (official site)     |
-| Apache Solr         | 6.3.0 or higher       | [solr:latest](https://hub.docker.com/_/solr/) (Docker Hub) |
-| OpenJDK             | 1.8.0_111 or higher   | [solr:latest](https://hub.docker.com/_/solr/) (Docker Hub) |
+| Apache Solr         | 6.5.0 or higher       | [Solr](https://lucene.apache.org/solr/) (official site) |
+| OpenJDK             | 1.8.0_121 or higher   | APT, via debian-backports |
 | bash-git-prompt     | 2.6.1                 | [magicmonty/bash-git-prompt](https://github.com/magicmonty/bash-git-prompt) (Github)      |
 
 ## <a name="Installation"></a>Installation

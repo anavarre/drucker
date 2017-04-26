@@ -1,0 +1,107 @@
+---
+- name: Create solr group
+  group:
+    name: solr
+    gid: 8983
+    state: present
+
+- name: Create solr user
+  user:
+    name: solr
+    uid: 8983
+    home: /home/solr
+    shell: /bin/bash
+    groups: solr
+
+- name: Check if Solr core exists
+  stat:
+    path: "{{ solr_configuration_path }}"
+  register: solr_core_check
+  changed_when: solr_core_check.stat.exists == false
+
+- name: Check if Apache Solr archive exists
+  stat:
+    path: "{{ solr_archive_path }}"
+  register: solr_archive_path_check
+  changed_when: solr_archive_path_check.stat.exists == false
+
+- name: Download latest Apache Solr archive (this can take a while...)
+  get_url:
+    url: "{{ solr_download_link }}"
+    dest: "{{ download_dir }}"
+    validate_certs: no
+  register: solr_get_url_result
+  until: "'OK' in solr_get_url_result.msg"
+  retries: 3
+  delay: 10
+  when: solr_archive_path_check.stat.exists == false
+
+- name: Extract Apache Solr files
+  unarchive:
+    src: "{{ solr_archive_path }}"
+    dest: /opt
+    copy: no
+  when: solr_archive_path_check.stat.exists == false
+
+- name: Check if Apache Solr directory exists
+  stat:
+    path: "{{ solr_installation_path }}"
+  register: solr_installation_path_check
+  changed_when: solr_installation_path_check.stat.exists == false
+
+- name: Rename unarchived Apache Solr directory
+  command: mv {{ solr_temp_unarchived_path }} {{ solr_installation_path }}
+  when: solr_installation_path_check.stat.exists == false
+
+- name: Make sure Apache Solr install has correct permissions
+  file:
+    path: "{{ solr_installation_path }}"
+    state: directory
+    owner: solr
+    group: solr
+    recurse: yes
+  when: solr_installation_path_check.stat.exists == false
+
+- name: Check if Apache Solr is started
+  stat:
+    path: "{{ solr_installation_path }}/bin/solr-8983.pid"
+  register: solr_pid
+  changed_when: solr_pid.stat.exists == false
+
+- name: Start Solr
+  shell: "{{ solr_binary }} start"
+  become: yes
+  become_user: solr
+  when: solr_pid.stat.exists == false
+
+- name: Create Solr core
+  shell: "{{ solr_binary }} create_core -c {{ solr_core }}"
+  become: yes
+  become_user: solr
+  when: solr_core_check.stat.exists == false
+
+- name: Check if the Apache Solr schema.xml file exists
+  stat:
+    path: "{{ solr_configuration_path }}/schema.xml"
+  register: schemaxml_check
+  changed_when: schemaxml_check.stat.exists == false
+
+- name: Check if Apache Solr has been configured for Search API Solr
+  shell: grep -o "search_api" {{ solr_configuration_path }}/schema.xml | head -n1 || echo "missing"
+  register: solr_conf_files
+  when: schemaxml_check.stat.exists == true
+  changed_when: solr_conf_files.stdout != "search_api"
+
+- name: Deploy Solr conf files
+  copy:
+    src: "{{ solr_conf }}"
+    dest: "{{ solr_configuration_path }}"
+    mode: 0644
+  become: yes
+  become_user: solr
+  when: schemaxml_check.stat.exists == false or (solr_conf_files is defined and solr_conf_files.stdout != "search_api")
+
+- name: Restart Solr
+  shell: "{{ solr_binary }} restart"
+  become: yes
+  become_user: solr
