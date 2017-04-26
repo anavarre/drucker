@@ -330,6 +330,24 @@
   become_user: "{{ user }}"
   when: drucker_site_check.stat.exists == false
 
+- name: Initialize Drupal Console
+  command: drupal init --root={{ drucker_docroot }} --override --no-interaction
+  become: yes
+  become_user: "{{ user }}"
+  when: drupal_console_launcher.stat.exists == false or drupal_console_composer_package_version_check.stdout != drupal_console_composer_package_version
+
+- name: Check if Drupal Console has been configured in .bashrc
+  shell: grep -o "source \"\$HOME/.console/console.rc\" 2>/dev/null" {{ bashrc }} || echo "absent"
+  register: drupal_console_bashrc
+  changed_when: drupal_console_bashrc == "absent"
+
+- name: Configure Drupal Console in .bashrc
+  lineinfile:
+    dest: "{{ bashrc }}"
+    line: "source \"$HOME/.console/console.rc\" 2>/dev/null"
+    insertafter: EOF
+  when: drupal_console_bashrc.stdout == 'absent'
+
 - name: Set up Drupal Console to work with the new docroot 1/2
   composer:
     command: require

@@ -101,6 +101,7 @@
 - name: Install Composer packages
   composer:
     command: install
+    arguments: --prefer-dist
     working_dir: "{{ composer_dir_path }}"
   become: yes
   become_user: "{{ user }}"

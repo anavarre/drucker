@@ -32,6 +32,6 @@ build_init_image
 provision_base_container
 provision_reverse_proxy_container
 provision_db_container
+provision_search_container
 provision_web_container
 allow_web_to_db_ssh_access
-provision_search_container
