@@ -8,4 +8,5 @@
   handlers:
     - include: handlers.yml
   tasks:
+    - include: playbooks/common/mirror-deploy.yml
     - include: playbooks/stack.yml

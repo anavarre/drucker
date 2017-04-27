@@ -8,5 +8,6 @@
   handlers:
     - include: handlers.yml
   tasks:
+    - include: playbooks/common/mirror-deploy.yml
     - include: playbooks/solr/java.yml
     - include: playbooks/solr/solr.yml

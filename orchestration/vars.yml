@@ -27,11 +27,21 @@ bash_aliases_source_file: "{{ source_file_dir }}/.bash_aliases"
 vimrc_source_file: "{{ source_file_dir }}/.vimrc"
 fastcgi_source_file: "{{ source_file_dir }}/fastcgi.conf"
 sources_list_source_file: "{{ source_file_dir }}/sources.list"
-
+mirror_source_file: "{{ source_file_dir }}/apt.conf"
 
 # Source directories
 ssl_source_dir: "{{ source_file_dir }}/ssl"
 vim_source_dir: "{{ source_file_dir }}/.vim"
+
+# APT mirror
+mirror_apt_conf_file: /etc/apt/apt.conf
+mirror_host: mirror.{{ tld }}
+mirror_port: 3142
+mirror_config: /etc/apt-cacher-ng/acng.conf
+mirror_cache_dir: /var/cache/apt-cacher-ng
+mirror_archives_dir: /var/cache/archives
+mirror_log_dir: /var/log/apt-cacher-ng
+mirror_conf: mirror.conf
 
 # Git
 git_repo_directory: "{{ www_dir }}/repo"
@@ -55,6 +65,7 @@ id_rsa_pub: "{{ home }}/.ssh/id_rsa.pub"
 
 # Networking
 gateway_ip: 203.0.113.254
+mirror_ip: 203.0.113.50
 web_ip: 203.0.113.10
 db_ip: 203.0.113.12
 search_ip: 203.0.113.13
@@ -215,7 +226,10 @@ mysql_backup_dir: "{{ mysql_data }}/backup"
 mysql_creds: root
 mysql_port: 3306
 mysql_stable_release: 5.5
+mysql_apt_file: "{{ sources_list_d }}/mysql.list"
 mysql_apt_config_tool: 0.7.3-1
+# See https://dev.mysql.com/doc/mysql-apt-repo-quick-guide/en/#apt-repo-fresh-install
+mysql_gpg_key: 5072E1F5
 mysql_apt_repo: http://dev.mysql.com/get/mysql-apt-config_{{ mysql_apt_config_tool }}_all.deb
 mysql_backup_source_file: "{{ source_file_dir }}/mysql-backup.sh"
 mysql_backup_path: "{{ user_programs_path }}/mysql-backup.sh"
@@ -336,12 +350,15 @@ client_max_body_size: 100m
 
 # Apache Solr
 solr_conf: "{{ source_file_dir }}/solr-conf-6.x/"
-solr_version: 6.5.0
+solr_version: 6.5.1
 solr_unarchived_directory: solr-{{ solr_version }}
 solr_temp_unarchived_path: /opt/{{ solr_unarchived_directory }}
 solr_installation_path: /opt/solr
+solr_mirror_archive_file: "{{ solr_unarchived_directory }}.zip"
+solr_mirror_download_link: http://{{ mirror_host }}/{{ solr_mirror_archive_file }}
 solr_archive_file: "{{ solr_unarchived_directory }}.zip"
 solr_archive_path: "{{ download_dir }}/{{ solr_archive_file }}"
+solr_mirror_archive_path: "{{ mirror_archives_dir }}/{{ solr_archive_file }}"
 solr_download_link: https://www-us.apache.org/dist/lucene/solr/{{ solr_version }}/{{ solr_archive_file }}
 solr_port: 8983
 solr_core: "{{ user }}"

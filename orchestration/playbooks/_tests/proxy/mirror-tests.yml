@@ -1,0 +1,14 @@
+---
+- name: "TEST: APT mirror needs to be correctly installed"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ mirror_cache_dir }}"
+    - "{{ mirror_log_dir }}"
+  register: mirror_installation
+  failed_when: mirror_installation.stat.exists == false
+
+- name: "TEST: APT mirror web interface should be accessible"
+  uri:
+    url: "http://mirror.{{ tld }}:3142"
+    status_code: 406
