@@ -1,0 +1,50 @@
+---
+- name: Check if new vHost exists
+  stat:
+    path: "{{ sites_enabled }}/{{ mirror_conf }}"
+  register: mirror_vhost_check
+  ignore_errors: True
+
+- name: Delete default vHost
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ default_vhost }}"
+    - "{{ default_available_vhost }}"
+  when: mirror_vhost_check.stat.exists == false
+
+- name: Deploy default vHost template
+  copy:
+    src: "{{ apache_template_source_file }}"
+    dest: "{{ sites_available }}"
+    mode: 0644
+  when: mirror_vhost_check.stat.exists == false
+
+- name: Rename default vHost template
+  command: mv {{ vhost_template }} {{ sites_available }}/{{ mirror_conf }}
+  when: mirror_vhost_check.stat.exists == false
+
+- name: Modify new vHost 1/2
+  replace:
+    dest: "{{ sites_available }}/{{ mirror_conf }}"
+    regexp: '^(.*)/var/www/html/SITENAME/docroot(.*)$'
+    replace: '\1{{ mirror_archives_dir }}\2'
+  when: mirror_vhost_check.stat.exists == false
+
+- name: Modify new vHost 2/2
+  replace:
+    dest: "{{ sites_available }}/{{ mirror_conf }}"
+    regexp: '^(.*)SITENAME(.*)$'
+    replace: '\1mirror\2'
+  when: mirror_vhost_check.stat.exists == false
+
+- name: Enable new vHost
+  file:
+    src: ../sites-available/{{ mirror_conf }}
+    dest: "{{ sites_enabled }}/{{ mirror_conf }}"
+    state: link
+    force: yes
+  register: test
+  notify: Reload Apache
+  when: mirror_vhost_check.stat.exists == false

@@ -1,5 +1,6 @@
 - include: playbooks/system/ssh-keys.yml
 - include: playbooks/php/apache.yml
+- include: playbooks/common/apache-installation.yml
 - include: playbooks/php/php.yml
 - include: playbooks/php/pecl-uploadprogress.yml
 - include: playbooks/php/libyaml.yml

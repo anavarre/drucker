@@ -8,5 +8,8 @@
   handlers:
     - include: handlers.yml
   tasks:
+    - include: playbooks/common/apache-installation.yml
+    - include: playbooks/mirror/mirror-vhost.yml
     - include: playbooks/common/apt-repos.yml
+    - include: playbooks/common/mirror-downloads.yml
     - include: playbooks/mirror-setup.yml

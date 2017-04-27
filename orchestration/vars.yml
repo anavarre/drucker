@@ -39,7 +39,9 @@ mirror_host: mirror.{{ tld }}
 mirror_port: 3142
 mirror_config: /etc/apt-cacher-ng/acng.conf
 mirror_cache_dir: /var/cache/apt-cacher-ng
+mirror_archives_dir: /var/cache/archives
 mirror_log_dir: /var/log/apt-cacher-ng
+mirror_conf: mirror.conf
 
 # Git
 git_repo_directory: "{{ www_dir }}/repo"
@@ -348,12 +350,15 @@ client_max_body_size: 100m
 
 # Apache Solr
 solr_conf: "{{ source_file_dir }}/solr-conf-6.x/"
-solr_version: 6.5.0
+solr_version: 6.5.1
 solr_unarchived_directory: solr-{{ solr_version }}
 solr_temp_unarchived_path: /opt/{{ solr_unarchived_directory }}
 solr_installation_path: /opt/solr
+solr_mirror_archive_file: "{{ solr_unarchived_directory }}.zip"
+solr_mirror_download_link: http://{{ mirror_host }}/{{ solr_mirror_archive_file }}
 solr_archive_file: "{{ solr_unarchived_directory }}.zip"
 solr_archive_path: "{{ download_dir }}/{{ solr_archive_file }}"
+solr_mirror_archive_path: "{{ mirror_archives_dir }}/{{ solr_archive_file }}"
 solr_download_link: https://www-us.apache.org/dist/lucene/solr/{{ solr_version }}/{{ solr_archive_file }}
 solr_port: 8983
 solr_core: "{{ user }}"

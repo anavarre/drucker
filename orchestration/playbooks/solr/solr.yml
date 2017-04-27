@@ -27,7 +27,7 @@
 
 - name: Download latest Apache Solr archive (this can take a while...)
   get_url:
-    url: "{{ solr_download_link }}"
+    url: "{{ solr_mirror_download_link }}"
     dest: "{{ download_dir }}"
     validate_certs: no
   register: solr_get_url_result
