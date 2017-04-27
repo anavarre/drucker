@@ -39,7 +39,7 @@ You need to have both [Docker](https://www.docker.com/) and [Ansible](https://ww
 $ docker --version
 Docker version 1.10.3, build 20f81dd
 $ ansible --version
-ansible 2.2.0.0
+ansible 2.3.0.0
 ```
 
 **Important**: Ansible 2 or later is required.
