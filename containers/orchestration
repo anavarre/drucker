@@ -105,6 +105,9 @@ run_tests() {
   echo -e "${BLUE}Running the system test suite...${COLOR_ENDING}"
   ${PLAYBOOK}/system-tests.yml ${EXTRA_VARS}
 
+  echo -e "${BLUE}Running the mirror test suite...${COLOR_ENDING}"
+  ${PLAYBOOK}/mirror-tests.yml ${EXTRA_VARS}
+
   echo -e "${BLUE}Running the reverse proxy test suite...${COLOR_ENDING}"
   ${PLAYBOOK}/reverse-proxy-tests.yml ${EXTRA_VARS}
 
@@ -122,6 +125,12 @@ run_base_container_orchestration() {
   echo -e "${BLUE}Running ${BASE_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
   ${PLAYBOOK}/base.yml ${EXTRA_VARS}
+}
+
+run_mirror_container_orchestration() {
+  echo -e "${BLUE}Running ${MIRROR_CONTAINER} orchestration on the container...${COLOR_ENDING}"
+
+  ${PLAYBOOK}/mirror.yml ${EXTRA_VARS}
 }
 
 run_reverse_proxy_container_orchestration() {

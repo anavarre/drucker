@@ -8,5 +8,6 @@
   handlers:
     - include: handlers.yml
   tasks:
+    - include: playbooks/common/mirror-deploy.yml
     - include: playbooks/proxy/varnish.yml
     - include: playbooks/proxy/nginx.yml

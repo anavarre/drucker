@@ -1,0 +1,1 @@
+- include: playbooks/_tests/proxy/mirror-tests.yml

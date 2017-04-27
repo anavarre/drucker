@@ -1,6 +1,9 @@
 [drucker_base]
 203.0.113.99
 
+[drucker_mirror]
+203.0.113.50
+
 [drucker_reverse_proxy]
 203.0.113.2
 

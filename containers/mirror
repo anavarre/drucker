@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+MIRROR_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${MIRROR_IMAGE}")
+MIRROR_CONTAINER_STARTED=$(docker ps | grep -o "${MIRROR_CONTAINER}")
+
+create_mirror_container_from_base_image() {
+  echo -e "${BLUE}Spinning up ${MIRROR_CONTAINER} container with ID:${COLOR_ENDING}"
+
+  docker run --privileged=true --name "${MIRROR_CONTAINER}" -it \
+  -h "${MIRROR_HOSTNAME}" \
+  --net "${NETWORK}" \
+  --ip "${MIRROR_IP}" \
+  -d -p "${MIRROR_HOST_PORT}":"${MIRROR_PORT}" \
+  "${BASE_IMAGE}" bash
+
+  configure_mirror_ssh_access
+  run_mirror_container_orchestration
+}
+
+create_mirror_container_from_mirror_image() {
+  echo -e "${BLUE}Spinning up ${MIRROR_CONTAINER} container with ID:${COLOR_ENDING}"
+
+  docker run --privileged=true --name "${MIRROR_CONTAINER}" -it \
+  -h "${MIRROR_HOSTNAME}" \
+  --net "${NETWORK}" \
+  --ip "${MIRROR_IP}" \
+  -d -p "${MIRROR_HOST_PORT}":"${MIRROR_PORT}" \
+  "${MIRROR_IMAGE}" bash
+
+  configure_mirror_ssh_access
+  run_mirror_container_orchestration
+}
+
+create_mirror_image_from_mirror_container() {
+  echo -e "${BLUE}Committing ${MIRROR_IMAGE} image from ${MIRROR_CONTAINER} container...${COLOR_ENDING}"
+
+  docker commit -m "${MIRROR_CONTAINER} on $(date +"%Y-%m-%d")" "${MIRROR_CONTAINER}" "${MIRROR_IMAGE}"
+
+  echo -e "${BLUE}Deleting initial container...${COLOR_ENDING}"
+  docker rm -f "${MIRROR_CONTAINER}"
+  create_mirror_container_from_mirror_image
+}
+
+start_mirror_container() {
+  docker start "${MIRROR_CONTAINER}" > /dev/null 2>&1
+}
+
+provision_mirror_container() {
+  if [[ ${MIRROR_CONTAINER_EXISTS} ]]; then
+    echo -e "${GREEN}${MIRROR_CONTAINER} container already exists.${COLOR_ENDING}"
+
+    if [[ ! ${MIRROR_CONTAINER_STARTED} ]]; then
+      echo -e "${BLUE}Starting ${MIRROR_CONTAINER} container...${COLOR_ENDING}"
+      start_mirror_container
+      run_mirror_container_orchestration
+    else
+      run_mirror_container_orchestration
+    fi
+  else
+    if [[ ${MIRROR_IMAGE_EXISTS} ]]; then
+      echo -e "${GREEN}${MIRROR_IMAGE} custom image already exists.${COLOR_ENDING}"
+      create_mirror_container_from_mirror_image
+    else
+      create_mirror_container_from_base_image
+      create_mirror_image_from_mirror_container
+    fi
+  fi
+}

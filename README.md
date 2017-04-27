@@ -22,8 +22,9 @@
 
 _drucker_ is an opinionated [Docker](https://www.docker.com)-based [Drupal](https://www.drupal.org) stack managed by [Ansible](https://www.ansible.com) for orchestration. It automates creating [Debian](https://www.debian.org) containers on which it will deploy a common web stack to run Drupal applications.
 
-_drucker_ runs on 4 containers:
+_drucker_ runs on 5 containers:
 
+* `drucker_mirror` (`203.0.113.50`): APT mirror. Listens on port 3142. Allows for speedy reinstallation.
 * `drucker_reverse_proxy` (`203.0.113.2`): Varnish listens on port 80 and sends traffic to the Apache backend via nginx on port 8080).
 * `drucker_web` (`203.0.113.10`): Apache listens on port 80 and receives traffic from nginx.
 * `drucker_db` (`203.0.113.12`): MySQL listens on port 3306 and allows the stack to act as a multi-tier environment.

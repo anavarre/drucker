@@ -1,5 +1,5 @@
 ---
-- hosts: drucker_web
+- hosts: drucker_mirror
   become: yes
 
   gather_facts: yes
@@ -8,5 +8,4 @@
   handlers:
     - include: handlers.yml
   tasks:
-    - include: playbooks/common/mirror-deploy.yml
-    - include: playbooks/stack.yml
+    - include: playbooks/mirror-setup.yml

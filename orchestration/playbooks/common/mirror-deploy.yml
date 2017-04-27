@@ -1,0 +1,12 @@
+---
+- name: Check if apt.conf exists
+  stat:
+    path: /etc/apt/apt.conf
+  register: apt_conf_exists
+
+- name: Deploy apt.conf file
+  copy:
+    src: "{{ mirror_source_file }}"
+    dest: /etc/apt
+    mode: 0644
+  register: apt_conf_exists.stat.exists == false

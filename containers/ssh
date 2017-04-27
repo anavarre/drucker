@@ -13,6 +13,15 @@ configure_base_container_ssh_access() {
   rm "${TMP_KEY}"
 }
 
+configure_mirror_ssh_access() {
+  cat "${PUBKEY}" > "${TMP_KEY}"
+
+  docker cp "${TMP_KEY}" "${MIRROR_CONTAINER}":"${AUTH_KEY}"
+  docker exec -it "${MIRROR_CONTAINER}" ${CHOWN_SSH}
+
+  rm ${TMP_KEY}
+}
+
 configure_reverse_proxy_ssh_access() {
   cat "${PUBKEY}" > "${TMP_KEY}"
 

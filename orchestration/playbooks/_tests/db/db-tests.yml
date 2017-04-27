@@ -6,7 +6,7 @@
     - "{{ my_cnf }}"
     - "{{ mysql_data }}"
     - "{{ mysql_backup_path }}"
-    - "{{ mysql_backup_path }}"
+    - "{{ mysql_apt_file }}"
   register: mysql
   failed_when: mysql.stat.exists == false
 

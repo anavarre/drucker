@@ -8,6 +8,7 @@
   handlers:
     - include: handlers.yml
   tasks:
+    - include: playbooks/common/mirror-deploy.yml
     - include: playbooks/db/mysql.yml
     - include: playbooks/db/memcached.yml
     - include: playbooks/db/mysql-backup.yml

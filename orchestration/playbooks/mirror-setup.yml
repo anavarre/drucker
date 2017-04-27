@@ -1,0 +1,66 @@
+---
+- name: Install APT cache mirror
+  package:
+    name: apt-cacher-ng
+    state: installed
+    force: yes
+
+- name: Check if the APT mirror is configured to allow remote access
+  shell: grep -o "BindAddress:\ 0.0.0.0" {{ mirror_config }} || echo "denied"
+  register: mirror_remote_access
+  changed_when: mirror_remote_access.stdout == "denied"
+
+- name: Configure the APT mirror to allow remote access
+  lineinfile:
+    dest: "{{ mirror_config }}"
+    line: "BindAddress: 0.0.0.0"
+    insertafter: EOF
+  when: mirror_remote_access.stdout == "denied"
+
+- name: Check if the APT mirror is configured to run as a service
+  shell: grep -o "# PidFile" {{ mirror_config }} || echo "configured"
+  register: mirror_service
+  changed_when: mirror_service.stdout != "configured"
+
+- name: Enable the APT mirror to run as a service
+  lineinfile:
+    dest: "{{ mirror_config }}"
+    regexp: "# PidFile: /var/run/apt-cacher-ng/pid"
+    line: "PidFile: /var/run/apt-cacher-ng/pid"
+  when: mirror_service.stdout != "configured"
+
+- name: Check if MySQL APT repository exists
+  stat:
+    path: "{{ mysql_apt_file }}"
+  register: mysql_apt_repo_check
+  changed_when: mysql_apt_repo_check.stat.exists == false
+
+#- name: Prepare for MySQL installation
+#  apt_key:
+#    url: "{{ mysql_signing_key }}"
+#    state: present
+#  when: nginx.stat.exists == false
+
+- name: Install MySQL APT repository config tool
+  apt:
+    deb: "{{ mysql_apt_repo }}"
+  when: mysql_apt_repo_check.stat.exists == false
+
+- name: Restart APT mirror service
+  service:
+    name: apt-cacher-ng
+    enabled: yes
+    state: restarted
+
+- name: Update APT cache
+  apt:
+    upgrade: yes
+    update_cache: yes
+    cache_valid_time: 36
+  register: update_cache
+
+# The apt module currently requires aptitude so we have to use a workaround.
+# See https://github.com/ansible/ansible/issues/22673
+#- name: Run system upgrade
+#  command: apt-get upgrade -y -qq
+#  when: update_cache.cache_updated == true
