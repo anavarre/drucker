@@ -7,12 +7,12 @@
 
 - name: Download latest PECL uploadprogress release
   get_url:
-    url: "{{ uploadprogress_download_link }}"
+    url: "{{ uploadprogress_mirror_download_link }}"
     dest: "{{ download_dir }}"
     validate_certs: no
   register: uploadprogress_get_url_result
   until: "'OK' in uploadprogress_get_url_result.msg"
-  retries: 3
+  retries: 1
   delay: 10
   when: uploadprogress.stat.exists == false
 

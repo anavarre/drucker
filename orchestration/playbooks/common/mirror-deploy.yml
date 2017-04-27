@@ -1,7 +1,7 @@
 ---
 - name: Check if apt.conf exists
   stat:
-    path: /etc/apt/apt.conf
+    path: "{{ mirror_apt_conf_file }}"
   register: apt_conf_exists
 
 - name: Deploy apt.conf file

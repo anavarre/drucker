@@ -7,7 +7,7 @@
 
 - name: Download latest PECL YAML release
   get_url:
-    url: "{{ pecl_yaml_download_link }}"
+    url: "{{ pecl_yaml_mirror_download_link }}"
     dest: "{{ download_dir }}"
     validate_certs: no
   register: pecl_yaml_get_url_result

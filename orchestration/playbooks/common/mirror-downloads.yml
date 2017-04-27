@@ -11,6 +11,7 @@
     state: directory
   when: mirror_archives_dir_check.stat.exists == false
 
+# Apache Solr
 - name: Check if Apache Solr archive exists
   stat:
     path: "{{ solr_mirror_archive_path }}"
@@ -27,3 +28,57 @@
   retries: 3
   delay: 10
   when: solr_mirror_archive_path_check.stat.exists == false
+
+# PECL Upload Progress
+- name: Check if PECL uploadprogress archive exists
+  stat:
+    path: "{{ uploadprogress_mirror_archive_path }}"
+  register: uploadprogress_mirror_archive_path_check
+  changed_when: uploadprogress_mirror_archive_path_check.stat.exists == false
+
+- name: Download latest PECL uploadprogress release
+  get_url:
+    url: "{{ uploadprogress_download_link }}"
+    dest: "{{ mirror_archives_dir }}"
+    validate_certs: no
+  register: uploadprogress_get_url_result
+  until: "'OK' in uploadprogress_get_url_result.msg"
+  retries: 3
+  delay: 10
+  when: uploadprogress_mirror_archive_path_check.stat.exists == false
+
+# LibYAML
+- name: Check if the LibYAML C parser archive exists
+  stat:
+    path: "{{ libyaml_mirror_archive_path }}"
+  register: libyaml_archive_check
+  changed_when: libyaml_archive_check.stat.exists == false
+
+- name: Download latest LibYAML release
+  get_url:
+    url: "{{ libyaml_download_link }}"
+    dest: "{{ mirror_archives_dir }}"
+    validate_certs: no
+  register: libyaml_get_url_result
+  until: "'OK' in libyaml_get_url_result.msg"
+  retries: 3
+  delay: 10
+  when: libyaml_archive_check.stat.exists == false
+
+# PECL YAML
+- name: Check if the PECL YAML archive exists
+  stat:
+    path: "{{ pecl_yaml_mirror_archive_path }}"
+  register: pecl_yaml_archive_check
+  changed_when: pecl_yaml_archive_check.stat.exists == false
+
+- name: Download latest PECL YAML release
+  get_url:
+    url: "{{ pecl_yaml_download_link }}"
+    dest: "{{ mirror_archives_dir }}"
+    validate_certs: no
+  register: pecl_yaml_get_url_result
+  until: "'OK' in pecl_yaml_get_url_result.msg"
+  retries: 3
+  delay: 10
+  when: pecl_yaml_archive_check.stat.exists == false

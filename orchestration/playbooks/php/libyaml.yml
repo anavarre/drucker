@@ -6,7 +6,7 @@
 
 - name: Download latest LibYAML release
   get_url:
-    url: "{{ libyaml_download_link }}"
+    url: "{{ libyaml_mirror_download_link }}"
     dest: "{{ download_dir }}"
     validate_certs: no
   register: libyaml_get_url_result
@@ -14,6 +14,7 @@
   retries: 3
   delay: 10
   when: libyaml_archive.stat.exists == false
+  changed_when: libyaml_archive.stat.exists == false
 
 - name: Extract LibYAML files
   unarchive:
