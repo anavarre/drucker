@@ -9,4 +9,20 @@
     src: "{{ mirror_source_file }}"
     dest: /etc/apt
     mode: 0644
-  register: apt_conf_exists.stat.exists == false
+  when: apt_conf_exists.stat.exists == false
+
+- name: Update apt.conf file with expected values
+  replace:
+    dest: "{{ mirror_apt_conf_file }}"
+    regexp: '^(.*)HOST:PORT(.*)$'
+    replace: '\1{{ mirror_host }}:{{ mirror_port }}\2'
+  when: apt_conf_exists.stat.exists == false
+
+- name: Check if the APT mirror hostname is configured
+  shell: grep -o "{{ mirror_ip }}" {{ hosts_file }} || echo "absent"
+  register: mirror_hostname
+  changed_when: mirror_hostname.stdout == "absent"
+
+- name: Make sure the container can talk to the APT mirror proxy
+  shell: echo "{{ mirror_ip }}    {{ mirror_host }}" >> {{ hosts_file }}
+  when: mirror_hostname.stdout == "absent"

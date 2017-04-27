@@ -29,22 +29,17 @@
     line: "PidFile: /var/run/apt-cacher-ng/pid"
   when: mirror_service.stdout != "configured"
 
-- name: Check if MySQL APT repository exists
-  stat:
-    path: "{{ mysql_apt_file }}"
-  register: mysql_apt_repo_check
-  changed_when: mysql_apt_repo_check.stat.exists == false
+- name: Check if the APT mirror is configured to run as a service
+  shell: grep -E "^PassThroughPattern:\ .*" {{ mirror_config }} || echo "not configured"
+  register: passthrough
+  changed_when: passthrough.stdout == "not configured"
 
-#- name: Prepare for MySQL installation
-#  apt_key:
-#    url: "{{ mysql_signing_key }}"
-#    state: present
-#  when: nginx.stat.exists == false
-
-- name: Install MySQL APT repository config tool
-  apt:
-    deb: "{{ mysql_apt_repo }}"
-  when: mysql_apt_repo_check.stat.exists == false
+- name: Enable SSL/TLS support
+  lineinfile:
+    dest: "{{ mirror_config }}"
+    line: "PassThroughPattern: .*"
+    insertafter: "^# PassThroughPattern: .* # this would allow CONNECT to everything"
+  when: passthrough.stdout == "not configured"
 
 - name: Restart APT mirror service
   service:
@@ -54,13 +49,12 @@
 
 - name: Update APT cache
   apt:
-    upgrade: yes
     update_cache: yes
-    cache_valid_time: 36
+    cache_valid_time: 3600
   register: update_cache
 
 # The apt module currently requires aptitude so we have to use a workaround.
 # See https://github.com/ansible/ansible/issues/22673
-#- name: Run system upgrade
-#  command: apt-get upgrade -y -qq
-#  when: update_cache.cache_updated == true
+- name: Run system upgrade
+  command: apt-get upgrade -y -qq
+  when: update_cache.cache_updated == true

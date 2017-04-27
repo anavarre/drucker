@@ -34,6 +34,9 @@ ssl_source_dir: "{{ source_file_dir }}/ssl"
 vim_source_dir: "{{ source_file_dir }}/.vim"
 
 # APT mirror
+mirror_apt_conf_file: /etc/apt/apt.conf
+mirror_host: mirror.{{ tld }}
+mirror_port: 3142
 mirror_config: /etc/apt-cacher-ng/acng.conf
 mirror_cache_dir: /var/cache/apt-cacher-ng
 mirror_log_dir: /var/log/apt-cacher-ng
@@ -60,6 +63,7 @@ id_rsa_pub: "{{ home }}/.ssh/id_rsa.pub"
 
 # Networking
 gateway_ip: 203.0.113.254
+mirror_ip: 203.0.113.50
 web_ip: 203.0.113.10
 db_ip: 203.0.113.12
 search_ip: 203.0.113.13
@@ -222,6 +226,8 @@ mysql_port: 3306
 mysql_stable_release: 5.5
 mysql_apt_file: "{{ sources_list_d }}/mysql.list"
 mysql_apt_config_tool: 0.7.3-1
+# See https://dev.mysql.com/doc/mysql-apt-repo-quick-guide/en/#apt-repo-fresh-install
+mysql_gpg_key: 5072E1F5
 mysql_apt_repo: http://dev.mysql.com/get/mysql-apt-config_{{ mysql_apt_config_tool }}_all.deb
 mysql_backup_source_file: "{{ source_file_dir }}/mysql-backup.sh"
 mysql_backup_path: "{{ user_programs_path }}/mysql-backup.sh"

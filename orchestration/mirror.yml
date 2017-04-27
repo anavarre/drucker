@@ -8,4 +8,5 @@
   handlers:
     - include: handlers.yml
   tasks:
+    - include: playbooks/common/apt-repos.yml
     - include: playbooks/mirror-setup.yml
