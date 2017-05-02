@@ -10,9 +10,9 @@
   when: phpmd.stat.exists == true
   changed_when: phpmd_stable_release_check.stdout != phpmd_stable_version
 
-- name: Install phpmd globally
+- name: Copy latest phpmd release from mirror
   get_url:
-    url: "{{ phpmd_download_link }}"
+    url: "{{ phpmd_mirror_download_link }}"
     dest: "{{ phpmd_binary }}"
     mode: 0755
     validate_certs: no

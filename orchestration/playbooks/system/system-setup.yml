@@ -28,6 +28,9 @@
     name: "{{ item }}"
     state: present
   with_items:
+  # Needed for Ansible's APT module to perform upgrades.
+  # See https://github.com/ansible/ansible/issues/22673
+  - aptitude
   - ack-grep
   - apt-transport-https
   - curl

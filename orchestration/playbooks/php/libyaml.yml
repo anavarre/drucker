@@ -4,7 +4,7 @@
     path: "{{ libyaml_archive_path }}"
   register: libyaml_archive
 
-- name: Download latest LibYAML release
+- name: Copy latest LibYAML release from mirror
   get_url:
     url: "{{ libyaml_mirror_download_link }}"
     dest: "{{ download_dir }}"

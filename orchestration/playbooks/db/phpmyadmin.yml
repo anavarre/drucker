@@ -10,9 +10,9 @@
   register: phpmyadmin_update
   changed_when: phpmyadmin_update.stdout != phpmyadmin_stable_release
 
-- name: Download latest phpMyAdmin release
+- name: Copy latest phpMyAdmin release from mirror
   get_url:
-    url: "{{ phpmyadmin_download_link }}"
+    url: "{{ phpmyadmin_mirror_download_link }}"
     dest: "{{ download_dir }}"
     validate_certs: no
   register: pma_get_url_result

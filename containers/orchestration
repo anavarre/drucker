@@ -139,6 +139,12 @@ run_reverse_proxy_container_orchestration() {
   ${PLAYBOOK}/reverse_proxy.yml ${EXTRA_VARS}
 }
 
+run_ssh_container_orchestration() {
+  echo -e "${BLUE}Running SSH orchestration on the container...${COLOR_ENDING}"
+
+  ${PLAYBOOK}/ssh.yml ${EXTRA_VARS}
+}
+
 run_web_container_orchestration() {
   echo -e "${BLUE}Running ${WEB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 

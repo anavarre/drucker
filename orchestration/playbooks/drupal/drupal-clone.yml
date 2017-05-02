@@ -19,11 +19,8 @@
   register: git_clone_dir
   ignore_errors: True
 
-- name: Clone Drupal repository (this can take a while...)
-  git:
-    repo: "{{ drupal_git_clone_url }}"
-    dest: "{{ drupal_git_clone_path }}"
-    version: "{{ drupal_head }}"
+- name: Copy Drupal repository from mirror
+  shell: scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r {{ mirror_ip }}:{{ git_repo_mirror_directory }} {{ drupal_git_clone_path }}
   become: yes
   become_user: "{{ user }}"
   when: git_clone_dir.stat.exists == false

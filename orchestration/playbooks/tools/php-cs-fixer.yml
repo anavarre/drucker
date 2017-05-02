@@ -10,9 +10,9 @@
   when: php_cs_fixer.stat.exists == true
   changed_when: php_cs_fixer_version.stdout != php_cs_fixer_stable_release
 
-- name: Download PHP-CS-Fixer PHAR file
+- name: Copy latest PHP-CS-Fixer release from mirror
   get_url:
-    url: "{{ php_cs_fixer_download_link }}"
+    url: "{{ php_cs_fixer_mirror_download_link }}"
     dest: "{{ download_dir }}"
     mode: 0755
     validate_certs: no

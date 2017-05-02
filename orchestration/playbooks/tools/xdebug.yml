@@ -10,9 +10,9 @@
   when: xdebug.stat.exists == true
   changed_when: xdebug_update.stdout == "absent"
 
-- name: Download latest Xdebug release
+- name: Copy latest Xdebug release from mirror
   get_url:
-    url: "{{ xdebug_download_link }}"
+    url: "{{ xdebug_mirror_download_link }}"
     dest: "{{ download_dir }}"
     validate_certs: no
   register: xdebug_get_url_result

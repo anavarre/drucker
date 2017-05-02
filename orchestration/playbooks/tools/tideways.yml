@@ -9,9 +9,9 @@
   register: tideways_version_check
   changed_when: tideways_version_check.stdout == "update"
 
-- name: Download latest Tideways release
+- name: Copy latest Tideways release from mirror
   get_url:
-    url: "{{ tideways_download_link }}"
+    url: "{{ tideways_mirror_download_link }}"
     dest: "{{ download_dir }}"
     validate_certs: no
   register: tideways_get_url_result

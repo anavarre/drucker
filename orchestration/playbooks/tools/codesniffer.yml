@@ -21,14 +21,14 @@
   when: phpcbf.stat.exists == true
   changed_when: phpcbf_version.stdout != phpcbf_stable_release
 
-- name: Download phpcs PHAR file
+- name: Copy latest phpcs release from mirror
   get_url:
-    url: "{{ phpcs_download_link }}"
+    url: "{{ phpcs_mirror_download_link }}"
     dest: "{{ download_dir }}"
     mode: 0755
     validate_certs: no
-  register: codesniffer_get_url_result
-  until: "'OK' in codesniffer_get_url_result.msg"
+  register: phpcs_get_url_result
+  until: "'OK' in phpcs_get_url_result.msg"
   retries: 3
   delay: 10
   when: phpcs.stat.exists == false or phpcs_version.stdout != phpcs_stable_release
@@ -41,12 +41,16 @@
   command: mv {{ phpcs_temp_path }} {{ user_programs_path }}
   when: phpcs.stat.exists == false or phpcs_version.stdout != phpcs_stable_release
 
-- name: Download phpcbf PHAR file
+- name: Copy latest phpcbf release from mirror
   get_url:
-    url: "{{ phpcbf_download_link }}"
+    url: "{{ phpcbf_mirror_download_link }}"
     dest: "{{ download_dir }}"
     mode: 0755
     validate_certs: no
+  register: phpcbf_get_url_result
+  until: "'OK' in phpcbf_get_url_result.msg"
+  retries: 3
+  delay: 10
   when: phpcbf.stat.exists == false or phpcbf_version.stdout != phpcbf_stable_release
 
 - name: Rename phpcbf PHAR file
@@ -56,4 +60,3 @@
 - name: Install phpcbf globally
   command: mv {{ phpcbf_temp_path }} {{ user_programs_path }}
   when: phpcbf.stat.exists == false or phpcbf_version.stdout != phpcbf_stable_release
-

@@ -12,3 +12,26 @@
   uri:
     url: "http://mirror.{{ tld }}:3142"
     status_code: 406
+
+- name: "TEST: Archives, directories and files should be accessible"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ mirror_archives_dir }}"
+    - "{{ solr_mirror_archive_path }}"
+    - "{{ uploadprogress_mirror_archive_path }}"
+    - "{{ libyaml_mirror_archive_path }}"
+    - "{{ pecl_yaml_mirror_archive_path }}"
+    - "{{ xdebug_mirror_archive_path }}"
+    - "{{ tideways_mirror_archive_path }}"
+    - "{{ phantomjs_mirror_archive_path }}"
+    - "{{ phpcs_mirror_archive_path }}"
+    - "{{ phpcbf_mirror_archive_path }}"
+    - "{{ php_cs_fixer_mirror_archive_file }}"
+    - "{{ phpmd_mirror_archive_file }}"
+    - "{{ mcstat_mirror_archive_file }}"
+    - "{{ phpmyadmin_mirror_archive_file_path }}"
+    - "{{ adminer_mirror_filepath }}"
+    - "{{ git_repo_mirror_directory }}"
+  register: archive_elements
+  failed_when: archive_elements.stat.exists == false

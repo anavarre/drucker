@@ -147,11 +147,14 @@ composer_json_expected_filename: "{{ webroot }}/composer.json"
 
 # XDebug
 xdebug_stable_release: 2.5.3
-xdebug_download_link: http://xdebug.org/files/xdebug-{{ xdebug_stable_release }}.tgz
+xdebug_archive_file: xdebug-{{ xdebug_stable_release }}.tgz
+xdebug_download_link: http://xdebug.org/files/{{ xdebug_archive_file }}
 xdebug_extension_name: xdebug.so
 xdebug_extension_path: "{{ php_extensions }}/{{ xdebug_extension_name }}"
-xdebug_archive_path: "{{ download_dir }}/xdebug-{{ xdebug_stable_release }}.tgz"
+xdebug_archive_path: "{{ download_dir }}/{{ xdebug_archive_file }}"
 xdebug_remote_host: "{{ gateway_ip }}"
+xdebug_mirror_archive_path: "{{ mirror_archives_dir }}/{{ xdebug_archive_file }}"
+xdebug_mirror_download_link: http://{{ mirror_host }}/{{ xdebug_archive_file }}
 # This is temporary until there's a stable 2.5.0 release.
 xdebug_unarchived_path: "{{ download_dir }}/xdebug-{{ xdebug_stable_release }}"
 
@@ -176,7 +179,10 @@ pecl_yaml_mirror_archive_path: "{{ mirror_archives_dir }}/pecl-file_formats-yaml
 # Tideways
 tideways_stable_release: 4.1.2
 tideways_download_link: https://github.com/tideways/php-profiler-extension/archive/v{{ tideways_stable_release }}.tar.gz
-tideways_archive: "{{ download_dir }}/php-profiler-extension-{{ tideways_stable_release }}.tar.gz"
+tideways_archive_file: php-profiler-extension-{{ tideways_stable_release }}.tar.gz
+tideways_archive: "{{ download_dir }}/{{ tideways_archive_file }}"
+tideways_mirror_archive_path: "{{ mirror_archives_dir }}/{{ tideways_archive_file }}"
+tideways_mirror_download_link: http://{{ mirror_host }}/{{ tideways_archive_file }}
 tideways_extension_name: tideways.so
 tideways_extension_path: "{{ php_extensions }}/{{ tideways_extension_name }}"
 tideways_output_dir: "{{ download_dir }}/tideways/"
@@ -190,6 +196,8 @@ coder_binary: "{{ composer_dir_path }}/vendor/drupal/coder"
 # PHPcs
 phpcs_stable_release: 2.6.1
 phpcs_download_link: https://github.com/squizlabs/PHP_CodeSniffer/releases/download/{{ phpcs_stable_release }}/phpcs.phar
+phpcs_mirror_download_link: http://{{ mirror_host }}/phpcs.phar
+phpcs_mirror_archive_path: "{{ mirror_archives_dir }}/phpcs.phar"
 phpcs_binary: "{{ user_programs_path }}/phpcs"
 phpcs_temp_phar: "{{ download_dir }}/phpcs.phar"
 phpcs_temp_path: "{{ download_dir }}/phpcs"
@@ -197,6 +205,8 @@ phpcs_temp_path: "{{ download_dir }}/phpcs"
 # PHPcbf
 phpcbf_stable_release: 2.6.1
 phpcbf_download_link: https://github.com/squizlabs/PHP_CodeSniffer/releases/download/{{ phpcbf_stable_release }}/phpcbf.phar
+phpcbf_mirror_download_link: http://{{ mirror_host }}/phpcbf.phar
+phpcbf_mirror_archive_path: "{{ mirror_archives_dir }}/phpcbf.phar"
 phpcbf_binary: "{{ user_programs_path }}/phpcbf"
 phpcbf_temp_phar: "{{ download_dir }}/phpcbf.phar"
 phpcbf_temp_path: "{{ download_dir }}/phpcbf"
@@ -208,20 +218,26 @@ codesniffer_binary: "{{ composer_dir_path }}/vendor/drupal/coder/coder_sniffer"
 # PHP-CS-Fixer
 php_cs_fixer_stable_release: 1.12.2
 php_cs_fixer_download_link: https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v{{ php_cs_fixer_stable_release }}/php-cs-fixer.phar
+php_cs_fixer_mirror_download_link: http://{{ mirror_host }}/php-cs-fixer.phar
 php_cs_fixer_binary: "{{ user_programs_path }}/php-cs-fixer"
 php_cs_fixer_temp_phar: "{{ download_dir }}/php-cs-fixer.phar"
+php_cs_fixer_mirror_archive_file: "{{ mirror_archives_dir }}/php-cs-fixer.phar"
 php_cs_fixer_temp_path: "{{ download_dir }}/php-cs-fixer"
 
 # PhantomJS
 phantomjs_stable_version: 2.1.1
 phantomjs_download_link: https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
+phantomjs_mirror_download_link: http://{{ mirror_host }}/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
 phantomjs_binary: "{{ user_programs_path }}/phantomjs"
 phantomjs_temp_path: "{{ download_dir }}/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64"
 phantomjs_archive_path: "{{ phantomjs_temp_path }}.tar.bz2"
+phantomjs_mirror_archive_path: "{{ mirror_archives_dir }}/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2"
 
 # PHPmd
 phpmd_stable_version: 2.6.0
 phpmd_download_link: http://static.phpmd.org/php/{{ phpmd_stable_version }}/phpmd.phar
+phpmd_mirror_download_link: http://{{ mirror_host }}/phpmd.phar
+phpmd_mirror_archive_file: "{{ mirror_archives_dir }}/phpmd.phar"
 phpmd_binary: "{{ user_programs_path }}/phpmd"
 
 # MySQL
@@ -244,6 +260,7 @@ mysql_backup_path: "{{ user_programs_path }}/mysql-backup.sh"
 phpmyadmin_stable_release: 4.7.0
 phpmyadmin_archive_filename: phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
 phpmyadmin_download_link: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_stable_release }}/{{ phpmyadmin_archive_filename }}
+phpmyadmin_mirror_download_link: http://{{ mirror_host }}/{{ phpmyadmin_archive_filename }}
 phpmyadmin_archive_path: "{{ download_dir }}/phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz"
 phpmyadmin_temp_dirname: phpMyAdmin-{{ phpmyadmin_stable_release }}-english
 phpmyadmin_root: "{{ webroot }}/phpmyadmin"
@@ -251,21 +268,26 @@ phpmyadmin_config_sample: "{{ phpmyadmin_root }}/config.sample.inc.php"
 phpmyadmin_config: "{{ phpmyadmin_root }}/config.inc.php"
 phpmyadmin_release_date_file: "{{ phpmyadmin_root }}/RELEASE-DATE-{{ phpmyadmin_stable_release }}"
 phpmyadmin_hostname: phpmyadmin
+phpmyadmin_mirror_archive_file_path: "{{ mirror_archives_dir }}/{{ phpmyadmin_archive_filename }}"
 
 # Adminer
 adminer_stable_release: 4.3.1
 adminer_download_link: https://github.com/vrana/adminer/releases/download/v{{ adminer_stable_release }}/adminer-{{ adminer_stable_release }}-en.php
+adminer_mirror_download_link: http://{{ mirror_host }}/adminer-{{ adminer_stable_release }}-en.php
 adminer_root: "{{ webroot }}/adminer"
 adminer_index: "{{ adminer_root }}/index.php"
 adminer_hostname: adminer
+adminer_mirror_filepath: "{{ mirror_archives_dir }}/adminer-{{ adminer_stable_release }}-en.php"
 
 # mcstat
 mcstat_binary: "{{ user_programs_path }}/mcstat"
 mcstat_stable_release: 1.1.0
 mcstat_download_link: https://github.com/webbj74/mcstat/archive/{{ mcstat_stable_release }}.tar.gz
 mcstat_archive_file: mcstat-{{ mcstat_stable_release }}.tar.gz
+mcstat_mirror_download_link: http://{{ mirror_host }}/{{ mcstat_archive_file }}
 mcstat_unarchived_directory: mcstat-{{ mcstat_stable_release }}
 mcstat_archive_path: "{{ download_dir }}/{{ mcstat_archive_file }}"
+mcstat_mirror_archive_file: "{{ mirror_archives_dir }}/{{ mcstat_archive_file }}"
 
 # Drupal
 drupal_creds: admin
@@ -274,6 +296,7 @@ default_configuration_dir: config/default
 drupal_head: 8.4.x
 drupal_git_clone_url: https://git.drupal.org/project/drupal.git
 drupal_git_clone_path: "{{ git_repo_directory }}/drupal"
+git_repo_mirror_directory: "{{ mirror_archives_dir }}/drupal"
 drupal_root: "{{ webroot }}/{{ sitename }}"
 deployed_settings_php: "{{ drupal_root }}/{{default_site}}/settings.php"
 services_yml_template: "{{ drupal_root }}/{{default_site}}/default.services.yml"

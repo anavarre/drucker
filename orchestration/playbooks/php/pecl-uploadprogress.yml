@@ -5,7 +5,7 @@
     path: "{{ uploadprogress_extension_path }}"
   register: uploadprogress
 
-- name: Download latest PECL uploadprogress release
+- name: Copy latest PECL uploadprogress release from mirror
   get_url:
     url: "{{ uploadprogress_mirror_download_link }}"
     dest: "{{ download_dir }}"

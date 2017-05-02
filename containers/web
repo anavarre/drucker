@@ -3,6 +3,26 @@
 WEB_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${WEB_IMAGE}")
 WEB_CONTAINER_STARTED=$(docker ps | grep -o "${WEB_CONTAINER}")
 
+allow_web_to_mirror_ssh_access() {
+  if [[ ! -f ${RSA_DRUCKER_WEB} ]]; then
+    docker cp "${WEB_CONTAINER}":/home/"${USER}"/.ssh/id_rsa.pub "${RSA_DRUCKER_WEB}"
+    KEY=$(cat "${RSA_DRUCKER_WEB}")
+    docker exec -u "${USER}" -it "${MIRROR_CONTAINER}" /bin/grep -q "${KEY}" /home/"${USER}"/.ssh/authorized_keys > "${RSA_KEY_DEPLOYED}"
+
+    if [[ ! -s "${RSA_KEY_DEPLOYED}" ]]; then
+      docker exec -u "${USER}" -it "${MIRROR_CONTAINER}" bash -c "echo '${KEY}' >> /home/${USER}/.ssh/authorized_keys"
+    fi
+  else
+    docker cp "${WEB_CONTAINER}":/home/"${USER}"/.ssh/id_rsa.pub "${RSA_DRUCKER_WEB}"_check
+    KEY_CHECK=$(cat "${RSA_DRUCKER_WEB}"_check)
+    docker exec -u "${USER}" -it "${MIRROR_CONTAINER}" /bin/grep -q "${KEY_CHECK}" /home/"${USER}"/.ssh/authorized_keys > "${RSA_KEY_DEPLOYED}"
+
+    if [[ ! -s "${RSA_KEY_DEPLOYED}" ]]; then
+      docker exec -u "${USER}" -it "${MIRROR_CONTAINER}" bash -c "echo '${KEY_CHECK}' >> /home/${USER}/.ssh/authorized_keys"
+    fi
+  fi
+}
+
 create_web_container_from_base_image() {
   echo -e "${BLUE}Spinning up ${WEB_CONTAINER} container with ID:${COLOR_ENDING}"
 
@@ -17,6 +37,9 @@ create_web_container_from_base_image() {
   "${BASE_IMAGE}" bash
 
   configure_web_container_ssh_access
+  run_ssh_container_orchestration
+  # We need to set up web-to-mirror SSH access to SCP the Drupal Git repo.
+  allow_web_to_mirror_ssh_access
   run_web_container_orchestration
 }
 

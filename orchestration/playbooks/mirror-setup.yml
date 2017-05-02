@@ -49,12 +49,7 @@
 
 - name: Update APT cache
   apt:
+    upgrade: yes
     update_cache: yes
     cache_valid_time: 3600
   register: update_cache
-
-# The apt module currently requires aptitude so we have to use a workaround.
-# See https://github.com/ansible/ansible/issues/22673
-- name: Run system upgrade
-  command: apt-get upgrade -y -qq
-  when: update_cache.cache_updated == true

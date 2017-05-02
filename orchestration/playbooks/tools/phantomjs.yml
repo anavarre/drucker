@@ -15,9 +15,9 @@
     path: phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
   register: phantomjs_archive
 
-- name: Download latest phantomjs release
+- name: Copy latest phantomjs release from mirror
   get_url:
-    url: "{{ phantomjs_download_link }}"
+    url: "{{ phantomjs_mirror_download_link }}"
     dest: "{{ download_dir }}"
     validate_certs: no
   register: phantomjs_get_url_result

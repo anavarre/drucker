@@ -16,7 +16,7 @@
     src: "{{ drush_composer_executable }}"
     dest: "{{ drush_binary }}"
     state: link
-  #when: drush_check.stat.exists == false and drush_executable_check.stat.exists == true
+  when: drush_check.stat.exists == false and drush_executable_check.stat.exists == true
 
 - name: Check Drush version in composer.json file
   shell: grep -E "\"{{ drush_composer_package }}*.*" {{ composer_json_path }} | awk '{print $NF}' | tr -d '",'

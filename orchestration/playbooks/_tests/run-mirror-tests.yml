@@ -1,1 +1,2 @@
 - include: playbooks/_tests/proxy/mirror-tests.yml
+- include: playbooks/_tests/php/apache-common-tests.yml

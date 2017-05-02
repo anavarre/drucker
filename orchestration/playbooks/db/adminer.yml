@@ -20,9 +20,9 @@
     group: "{{ apache_user }}"
   when: adminer.stat.exists == false
 
-- name: Download latest adminer release
+- name: Copy latest adminer release from mirror
   get_url:
-    url: "{{ adminer_download_link }}"
+    url: "{{ adminer_mirror_download_link }}"
     dest: "{{ adminer_root }}"
     validate_certs: no
   register: adminer_get_url_result
