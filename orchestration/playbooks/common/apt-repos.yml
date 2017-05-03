@@ -34,3 +34,13 @@
   apt:
     deb: "{{ mysql_apt_repo }}"
   when: mysql_apt_repo_check.stat.exists == false
+
+- name: Add deb.sury.org GPG signature
+  apt_key:
+    url: "{{ sury_gpg }}"
+    state: present
+
+- name: Add deb.sury.org repository
+  apt_repository:
+    repo: "{{ sury_deb }}"
+    state: present
