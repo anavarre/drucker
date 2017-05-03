@@ -330,23 +330,23 @@
   become_user: "{{ user }}"
   when: drucker_site_check.stat.exists == false
 
-- name: Set up Drupal Console to work with the new docroot 1/2
-  composer:
-    command: require
-    arguments: "{{ drupal_console_composer_package }}:{{ drupal_console_composer_package_version }} --prefer-dist --optimize-autoloader"
-    working_dir: "{{ drucker_docroot }}"
-  become: yes
-  become_user: "{{ user }}"
-  when: drucker_site_check.stat.exists == false
-
-- name: Set up Drupal Console to work with the new docroot 2/2
-  composer:
-    command: update
-    arguments: "{{ drupal_console_composer_package }} --with-dependencies"
-    working_dir: "{{ drucker_docroot }}"
-  become: yes
-  become_user: "{{ user }}"
-  when: drucker_site_check.stat.exists == false
+#- name: Set up Drupal Console to work with the new docroot 1/2
+#  composer:
+#    command: require
+#    arguments: "{{ drupal_console_composer_package }}:{{ drupal_console_composer_package_version }} --prefer-dist --optimize-autoloader"
+#    working_dir: "{{ drucker_docroot }}"
+#  become: yes
+#  become_user: "{{ user }}"
+#  when: drucker_site_check.stat.exists == false
+#
+#- name: Set up Drupal Console to work with the new docroot 2/2
+#  composer:
+#    command: update
+#    arguments: "{{ drupal_console_composer_package }} --with-dependencies"
+#    working_dir: "{{ drucker_docroot }}"
+#  become: yes
+#  become_user: "{{ user }}"
+#  when: drucker_site_check.stat.exists == false
 
 - name: Check if Drupal Console has been configured in .bashrc
   shell: grep -o "source \"\$HOME/.console/console.rc\" 2>/dev/null" {{ bashrc }} || echo "absent"
@@ -374,11 +374,11 @@
     recurse: yes
   when: drucker_site_check.stat.exists == false or drucker_db.stat.exists == false
 
-- name: Add new vendor files under version control
-  shell: git -C "{{ drucker_site }}" add --all . && git -C "{{ drucker_site }}" commit -m "Extra commit for vendor files"
-  become: yes
-  become_user: "{{ user }}"
-  when: drucker_site_check.stat.exists == false
+#- name: Add new vendor files under version control
+#  shell: git -C "{{ drucker_site }}" add --all . && git -C "{{ drucker_site }}" commit -m "Extra commit for vendor files"
+#  become: yes
+#  become_user: "{{ user }}"
+#  when: drucker_site_check.stat.exists == false
 
 - name: Check if all hostnames are configured
   shell: grep -E '({{ phpmyadmin_hostname }}.{{ tld }}|{{ adminer_hostname }}.{{ tld }})' {{ hosts_file }} || echo "absent"
