@@ -95,6 +95,7 @@ Add the below host entries in your hosts file:
 ```
 203.0.113.2    drucker.local phpmyadmin.local adminer.local
 203.0.113.13   search.local
+203.0.113.50   mirror.local
 ```
 
 This will ensure you can access:
