@@ -1,6 +1,6 @@
 ---
 - include: playbooks/drupal/drupal-checkout.yml
-  when: git_tag is undefined
+  when: git_tag is undefined and git_commit is undefined
 
 - name: "CREATE: Check if new site exists"
   stat:

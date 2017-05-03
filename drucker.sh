@@ -14,7 +14,12 @@ source "${DIR}/config"
 
 export OPTION=$1
 export SITENAME=$2
-export GIT_TAG=$3
+
+if [[ $3 = *.* ]]; then
+  export GIT_TAG=$3
+else
+  export GIT_COMMIT=$3
+fi
 
 # Custom user configuration.
 set_local_ssh_path
