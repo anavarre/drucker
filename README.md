@@ -165,7 +165,8 @@ $ drucker --help
 
 --prod [sitename,...]             Opinionated setup with all known performance best practices enabled.
 
---create [sitename,...] [git_tag] Creates arbitrary docroots, vHosts and corresponding databases.
+--create [sitename,...] [git_ref] Creates arbitrary docroots, vHosts and corresponding databases.
+                                  Optionally select an arbitrary tag or commit ID.
 
 --import [sitename,...]           Imports the database, files and codebase from the web container's import directory.
 
