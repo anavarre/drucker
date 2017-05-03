@@ -139,3 +139,8 @@
 #   become: yes
 #   become_user: "{{ user }}"
 #   when: new_site.stat.exists == false
+
+- name: Switch the Drupal repository back to HEAD
+  shell: cd {{ drupal_git_clone_path }} && git -C "{{ drupal_git_clone_path }}" clean -fdx && git -C "{{ drupal_git_clone_path }}" reset --hard && git -C "{{ drupal_git_clone_path }}" checkout {{ drupal_head }}
+  become: yes
+  become_user: "{{ user }}"
