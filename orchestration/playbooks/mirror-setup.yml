@@ -53,3 +53,9 @@
     update_cache: yes
     cache_valid_time: 3600
   register: update_cache
+
+- name: Ensure Apache is started
+  service:
+    name: apache2
+    enabled: yes
+    state: started
