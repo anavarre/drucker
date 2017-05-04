@@ -88,6 +88,8 @@ create_site() {
       ${PLAYBOOK}/create.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE}"
       echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
     elif [[ -n "${GIT_TAG}" ]]; then
+      # Make sure we retrieve any new git tags.
+      $(docker exec ${WEB_CONTAINER} ${GIT_EXECUTABLE} -C ${DRUPAL_REPO} pull 2>&1 >/dev/null)
       export GIT_TAGS=($(docker exec ${WEB_CONTAINER} ${GIT_EXECUTABLE} -C ${DRUPAL_REPO} tag -l))
 
       if [[ " ${GIT_TAGS[*]} " == *" ${GIT_TAG} "* ]]; then
@@ -97,9 +99,12 @@ create_site() {
         ${PLAYBOOK}/create-tag.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_tag=${GIT_TAG}"
         echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
       else
+        echo -e "\n${RED}This git tag doesn't seem to exist.${COLOR_ENDING}\n"
         drucker_usage
       fi
     elif [[ -n "${GIT_COMMIT}" ]]; then
+      # Make sure we retrieve any new git commits.
+      $(docker exec ${WEB_CONTAINER} ${GIT_EXECUTABLE} -C ${DRUPAL_REPO} pull 2>&1 >/dev/null)
       export GIT_COMMITS=($(docker exec ${WEB_CONTAINER} ${GIT_EXECUTABLE} -C ${DRUPAL_REPO} rev-list ${DRUPAL_VERSION} --abbrev-commit --max-count=100))
 
       if [[ " ${GIT_COMMITS[*]} " == *" ${GIT_COMMIT} "* ]]; then
@@ -107,6 +112,7 @@ create_site() {
         ${PLAYBOOK}/create-commit.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_commit=${GIT_COMMIT}"
         echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
       else
+        echo -e "\n${RED}This git commit doesn't seem to exist. Remember to use a short hash.${COLOR_ENDING}\n"
         drucker_usage
       fi
     fi
