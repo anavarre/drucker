@@ -173,7 +173,7 @@ $ drucker --help
 
 --reinstall                       Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
 
---composer [sitename]             Installs Drupal from a composer.json file.
+--composer [sitename,...]         Installs arbitrary Drupal docroots from a composer.json file.
 
 --lightning [sitename,...]        Creates arbitrary Lightning docroots, vHosts and corresponding databases.
 

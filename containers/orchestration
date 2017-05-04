@@ -30,9 +30,25 @@ reinstall_drupal() {
 }
 
 drupal_composer() {
-  echo -e "${BLUE}Installing Drupal from composer.json file...${COLOR_ENDING}"
-  ${PLAYBOOK}/drupal-composer.yml --extra-vars "ansible_sudo_pass=${USER} composer=Y sitename=${SITENAME}"
-  echo -e "${GREEN}Remember to add the ${SITENAME}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
+  # SITE is the result of SITENAME supporting a comma-separated list of
+  # composer-built sites to create. See --composer definition.
+  if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
+    read -p "The ${SITE} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
+    if [[ ${REPLY} =~ ^[Nn]$ ]]; then
+      echo -e "${GREEN}Back to the comfort zone. Aborting.${COLOR_ENDING}"
+      exit 0
+    elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
+      echo "Sorry, the only accepted input characters are [Yy/Nn]. Aborting..."
+      exit 0
+    else
+      delete_site
+      drupal_composer
+    fi
+  else
+    echo -e "${BLUE}Installing Drupal from composer.json file...${COLOR_ENDING}"
+    ${PLAYBOOK}/drupal-composer.yml --extra-vars "ansible_sudo_pass=${USER} composer=Y   sitename=${SITE}"
+    echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
+  fi
 }
 
 drupal_lightning() {

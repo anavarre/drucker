@@ -76,7 +76,7 @@ ${GREEN_HELP}--import [sitename,...]${COLOR_ENDING_HELP}           Imports the d
 
 ${GREEN_HELP}--reinstall${COLOR_ENDING_HELP}                       Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
 
-${GREEN_HELP}--composer [sitename]${COLOR_ENDING_HELP}             Installs Drupal from a composer.json file.
+${GREEN_HELP}--composer [sitename,...]${COLOR_ENDING_HELP}         Installs arbitrary Drupal docroots from a composer.json file.
 
 ${GREEN_HELP}--lightning [sitename,...] ${COLOR_ENDING_HELP}       Creates arbitrary Lightning docroots, vHosts and corresponding databases.
 
@@ -174,15 +174,21 @@ drucker_argument() {
       fi
       ;;
       --composer)
-      if [[ "${OPTION}" == "--composer" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+,-]* ]]; then
+      # See validation() for details.
+      if [[ "${OPTION}" == "--composer" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
         validation
         drucker_usage
       else
-        drupal_composer
+        # Comma-separated sitenames are split into single values for drucker to
+        # get a list of sites to create from a composer.json file.
+        for SITE in ${SITENAME//,/ }; do
+          drupal_composer
+        done
         exit 0
       fi
       ;;
       --lightning)
+      # See validation() for details.
       if [[ "${OPTION}" == "--lightning" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
         validation
         drucker_usage
