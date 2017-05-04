@@ -105,7 +105,7 @@ create_site() {
       if [[ " ${GIT_COMMITS[*]} " == *" ${GIT_COMMIT} "* ]]; then
         echo -e "${BLUE}Creating Drupal site from commit ID ${GIT_COMMIT} into new ${SITE} docroot...${COLOR_ENDING}"
         ${PLAYBOOK}/create-commit.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_commit=${GIT_COMMIT}"
-        echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts   file!${COLOR_ENDING}"
+        echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
       else
         drucker_usage
       fi
