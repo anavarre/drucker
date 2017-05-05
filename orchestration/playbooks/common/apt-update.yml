@@ -8,7 +8,7 @@
 - set_fact:
     outdated_apt_cache: "{{ ansible_date_time.epoch|float - apt_cache_check.stat.mtime > 86400 }}"
 
-- name: Update APT cache
+- name: Update APT cache and upgrade the container
   apt:
     upgrade: yes
     update_cache: yes

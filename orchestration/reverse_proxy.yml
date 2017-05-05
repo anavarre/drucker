@@ -9,5 +9,6 @@
     - include: handlers.yml
   tasks:
     - include: playbooks/common/mirror-deploy.yml
+    - include: playbooks/common/apt-update.yml
     - include: playbooks/proxy/varnish.yml
     - include: playbooks/proxy/nginx.yml

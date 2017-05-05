@@ -9,6 +9,7 @@
     - include: handlers.yml
   tasks:
     - include: playbooks/common/mirror-deploy.yml
+    - include: playbooks/common/apt-update.yml
     - include: playbooks/db/mysql.yml
     - include: playbooks/db/memcached.yml
     - include: playbooks/db/mysql-backup.yml
