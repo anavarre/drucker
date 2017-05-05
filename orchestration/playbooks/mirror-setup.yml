@@ -1,9 +1,16 @@
 ---
+- name: Check if APT cache mirror exists
+  stat:
+    path: "{{ mirror_cache_dir }}"
+  register: mirror_cache_dir_check
+  changed_when: mirror_cache_dir_check.stat.exists == false
+
 - name: Install APT cache mirror
   package:
     name: apt-cacher-ng
     state: installed
     force: yes
+  when: mirror_cache_dir_check.stat.exists == false
 
 - name: Check if the APT mirror is configured to allow remote access
   shell: grep -o "BindAddress:\ 0.0.0.0" {{ mirror_config }} || echo "denied"
@@ -46,13 +53,9 @@
     name: apt-cacher-ng
     enabled: yes
     state: restarted
+  when: mirror_cache_dir_check.stat.exists == false
 
-- name: Update APT cache
-  apt:
-    upgrade: yes
-    update_cache: yes
-    cache_valid_time: 3600
-  register: update_cache
+- include: common/apt-update.yml
 
 - name: Ensure Apache is started
   service:

@@ -111,6 +111,7 @@ php_extensions: /usr/lib/php/{{ php_version }}/20131226
 user_programs_path: /usr/local/bin
 sury_gpg: https://packages.sury.org/php/apt.gpg
 sury_deb: deb https://packages.sury.org/php/ {{ codename }} main
+sury_repo: "{{ sources_list_d }}/packages_sury_org_php.list"
 apcu_stable_release: 5.1.8
 php_memcached_stable_release: 3.0.3
 

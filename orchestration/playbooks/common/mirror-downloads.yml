@@ -235,7 +235,7 @@
   until: "'OK' in mcstat_get_url_result.msg"
   retries: 3
   delay: 10
-  changed_when: mcstat_mirror_archive_file_check.stat.exists == false
+  when: mcstat_mirror_archive_file_check.stat.exists == false
 
 # phpMyAdmin
 - name: Check if phpMyAdmin archive exists
