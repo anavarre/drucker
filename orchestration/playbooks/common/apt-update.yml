@@ -1,15 +1,13 @@
 ---
 - name: Check if APT cache needs to be updated
-  stat:
-    path: /var/lib/apt/lists
+  apt:
+    update_cache: yes
+    cache_valid_time: 86400
   register: apt_cache_check
-
-# Only update the cache and perform upgrades once every 24 hours.
-- set_fact:
-    outdated_apt_cache: "{{ ansible_date_time.epoch|float - apt_cache_check.stat.mtime > 86400 }}"
+  changed_when: apt_cache_check == true
 
 - name: Update APT cache and upgrade the container
   apt:
     upgrade: yes
     update_cache: yes
-  when: outdated_apt_cache == true
+  when: apt_cache_check == true
