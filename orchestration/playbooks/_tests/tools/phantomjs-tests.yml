@@ -16,3 +16,9 @@
   fail:
     msg: "The phantomjs binary isn't executable"
   when: executable_phantomjs.stat.mode != "0755"
+
+- name: "TEST: The path to generate HTML files should be valid"
+  shell: grep -o "{{ simpletest_dir }}" {{ phpunit_xml }} || echo "incorrect"
+  register: phpunit_html_export_dir
+  changed_when: phpunit_html_export_dir.stdout == "incorrect"
+  failed_when: phpunit_html_export_dir.stdout == "incorrect"

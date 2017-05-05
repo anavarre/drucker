@@ -25,7 +25,7 @@
     <!-- Example SIMPLETEST_DB value: mysql://username:password@localhost/databasename#table_prefix -->
     <env name="SIMPLETEST_DB" value="mysql://root:root@localhost/SITENAME"/>
     <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/webroot/sites/simpletest/browser_output -->
-    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="/var/www/html/SITENAME/sites/simpletest"/>
+    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="/var/www/html/SITENAME/docroot/sites/simpletest"/>
   </php>
   <testsuites>
     <testsuite name="unit">
