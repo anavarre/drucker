@@ -147,7 +147,7 @@ composer_json_template_temp_filename: "{{ webroot }}/composer-template.json"
 composer_json_expected_filename: "{{ webroot }}/composer.json"
 
 # XDebug
-xdebug_stable_release: 2.5.3
+xdebug_stable_release: 2.5.4
 xdebug_archive_file: xdebug-{{ xdebug_stable_release }}.tgz
 xdebug_download_link: http://xdebug.org/files/{{ xdebug_archive_file }}
 xdebug_extension_name: xdebug.so
