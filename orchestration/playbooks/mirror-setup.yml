@@ -62,3 +62,9 @@
     name: apache2
     enabled: yes
     state: started
+
+- name: Ensure APT mirror service is started
+  service:
+    name: apt-cacher-ng
+    enabled: yes
+    state: started
