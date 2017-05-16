@@ -7,7 +7,7 @@
   changed_when: drupal_console_launcher.stat.exists == false
 
 - name: Check Drupal Console Launcher version
-  shell: drupal --version | awk '{print $NF}' | head -n1
+  shell: drupal --version | head -n1 | awk '{print $NF}' | cut -c 8-17
   register: drupal_console_launcher_check
   when: drupal_console_launcher.stat.exists == true
   changed_when: drupal_console_launcher_check.stdout != drupal_console_launcher_stable_release
@@ -26,6 +26,7 @@
 
 - name: Update Drupal Console Launcher
   command: drupal self-update
+  become: yes
   when: drupal_console_launcher.stat.exists == true and drupal_console_launcher_check.stdout != drupal_console_launcher_stable_release
 
 # Drupal Console Composer package
@@ -47,5 +48,4 @@
     working_dir: "{{ composer_dir_path }}"
   become: yes
   become_user: "{{ user }}"
-  when: drupal_console_executable_check.stat.exists == true and drupal_console_composer_package_version_check.stdout != drupal_console_composer_package_version
-
+  when: drupal_console_executable_check.stat.exists == true and drupal_console_launcher_check.stdout != drupal_console_launcher_stable_release
