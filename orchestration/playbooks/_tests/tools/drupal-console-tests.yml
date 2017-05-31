@@ -15,14 +15,6 @@
   changed_when: drupal_console_composer.stdout == "absent"
   failed_when: drupal_console_composer.stdout == "absent"
 
-- name: "TEST: Drupal Console packages should be up-to-date"
-  shell: composer info --working-dir={{ composer_dir_path }} {{ drupal_console_composer_package }} | grep versions | awk '{print $NF}'
-  register: drupal_console_packages
-  become: yes
-  become_user: "{{ user }}"
-  changed_when: drupal_console_packages.stdout != drupal_console_launcher_stable_release
-  failed_when: drupal_console_packages.stdout != drupal_console_launcher_stable_release
-
 - name: "TEST: Drupal Console Launcher should use the latest stable release"
   shell: drupal --version --root={{ drucker_docroot }} | awk '{print $NF}' | head -n1 | cut -c 8-17
   register: drupal_console_launcher_version
