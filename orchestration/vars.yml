@@ -338,13 +338,13 @@ drush_aliases_filepath: "{{ drush_aliases_path }}/{{ drush_aliases_template_file
 drush_binary: "{{ user_programs_path }}/drush"
 var_dumper_package_version: ~2.7
 drush_composer_package: drush/drush
-drush_composer_package_version: 9.0.0-beta1
+drush_composer_package_version: 9.0.0-beta2
 drush_composer_executable: "{{ composer_dir_path }}/vendor/drush/drush/drush"
 drush_dir: "{{ home }}/.drush"
 drucker_aliases: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
 
 # Drupal Console
-drupal_console_launcher_stable_release: 1.0.0-rc20
+drupal_console_launcher_stable_release: 1.0.0-rc21
 drupal_console_composer_package: drupal/console
 drupal_console_composer_package_version: ~1.0
 drupal_console_launcher_download_link: https://github.com/hechoendrupal/drupal-console-launcher/releases/download/{{ drupal_console_launcher_stable_release }}/drupal.phar
