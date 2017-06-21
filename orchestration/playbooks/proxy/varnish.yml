@@ -5,18 +5,6 @@
   register: varnish
   ignore_errors: True
 
-- name: Prepare for Varnish installation 1/2
-  apt_key:
-    url: "{{ varnish_gpg_key }}"
-    state: present
-  when: varnish.stat.exists == false
-
-- name: Prepare for Varnish installation 2/2
-  apt_repository:
-    repo: "{{ varnish_deb }}"
-    state: present
-  when: varnish.stat.exists == false
-
 - name: Install Varnish
   package:
     name: "{{ item }}"

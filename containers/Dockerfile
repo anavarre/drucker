@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM debian:stretch
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG USER=drucker

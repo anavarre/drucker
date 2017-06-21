@@ -1,6 +1,6 @@
 # System
 user: drucker
-codename: jessie
+codename: stretch
 tld: local
 home: /home/{{ user }}
 hosts_file: /etc/hosts
@@ -361,14 +361,10 @@ reverse_proxy_port: 80
 varnish_config: /etc/default/varnish
 varnish_default_path: /etc/varnish
 varnish_default_vcl: "{{ varnish_default_path }}/default.vcl"
-varnish_source_list_path: "{{ sources_list_d }}/repo_varnish_cache_org_debian.list"
 
 # nginx
 nginx_port: 8080
-nginx_source_list_path: "{{ sources_list_d }}/nginx_org_packages_debian.list"
 nginx_signing_key: http://nginx.org/keys/nginx_signing.key
-nginx_deb: deb http://nginx.org/packages/debian/ {{ codename }} nginx
-nginx_deb_src: deb-src http://nginx.org/packages/debian/ {{ codename }} nginx
 nginx_conf_dir: /etc/nginx
 nginx_conf_d: "{{ nginx_conf_dir }}/conf.d"
 nginx_default_template: "{{ nginx_conf_dir }}/nginx-template.conf"
