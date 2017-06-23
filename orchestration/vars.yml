@@ -242,20 +242,13 @@ phpmd_mirror_archive_file: "{{ mirror_archives_dir }}/phpmd.phar"
 phpmd_binary: "{{ user_programs_path }}/phpmd"
 
 # MySQL
-my_cnf: /etc/mysql/my.cnf
-mysqld_cnf: /etc/mysql/mysql.conf.d/mysqld.cnf
-mysql_data: /var/lib/mysql
-mysql_backup_dir: "{{ mysql_data }}/backup"
-mysql_creds: root
-mysql_port: 3306
-mysql_stable_release: 5.5
-mysql_apt_file: "{{ sources_list_d }}/mysql.list"
-mysql_apt_config_tool: 0.7.3-1
-# See https://dev.mysql.com/doc/mysql-apt-repo-quick-guide/en/#apt-repo-fresh-install
-mysql_gpg_key: 5072E1F5
-mysql_apt_repo: http://dev.mysql.com/get/mysql-apt-config_{{ mysql_apt_config_tool }}_all.deb
-mysql_backup_source_file: "{{ source_file_dir }}/mysql-backup.sh"
-mysql_backup_path: "{{ user_programs_path }}/mysql-backup.sh"
+db_config: /etc/mysql/mariadb.conf.d/50-server.cnf
+db_data: /var/lib/mysql
+db_backup_dir: "{{ db_data }}/backup"
+db_creds: root
+db_port: 3306
+db_backup_source_file: "{{ source_file_dir }}/db-backup.sh"
+db_backup_path: "{{ user_programs_path }}/db-backup.sh"
 
 # phpMyAdmin
 phpmyadmin_stable_release: 4.7.1

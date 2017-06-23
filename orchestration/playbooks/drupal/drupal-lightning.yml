@@ -7,7 +7,7 @@
 
 - name: "LIGHTNING: Check if new database exists"
   stat:
-    path: "{{ mysql_data }}/{{ sitename }}"
+    path: "{{ db_data }}/{{ sitename }}"
   register: new_db
 
 - name: "LIGHTNING: Install vendor dependencies (this can take a while)"
@@ -33,7 +33,7 @@
 - include: ../common/drupal-common.yml
 
 - name: "LIGHTNING: Install Drupal"
-  command: drush @{{ sitename }}.{{ tld }} site-install lightning install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@{{ db_ip }}:{{ mysql_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}
+  command: drush @{{ sitename }}.{{ tld }} site-install lightning install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ db_creds }}:{{ db_creds }}@{{ db_ip }}:{{ db_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}
   become: yes
   become_user: "{{ user }}"
   when: new_aliases.stat.exists == false

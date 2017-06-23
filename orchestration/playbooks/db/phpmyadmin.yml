@@ -67,8 +67,8 @@
   blockinfile:
     dest: "{{ phpmyadmin_config }}"
     block: |
-      $cfg['Servers'][$i]['username'] = '{{ mysql_creds }}';
-      $cfg['Servers'][$i]['password'] = '{{ mysql_creds }}';
+      $cfg['Servers'][$i]['username'] = '{{ db_creds }}';
+      $cfg['Servers'][$i]['password'] = '{{ db_creds }}';
     insertafter: '^(.*)auth_type(.*)$'
   when: config_inc.stat.exists == false
 
