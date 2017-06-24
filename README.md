@@ -77,14 +77,14 @@ _drucker_ ships with the following software stack:
 | PECL uploadprogress | master                | [ php/pecl-php-uploadprogress](https://github.com/php/pecl-php-uploadprogress)  (Github)     |
 | PECL YAML           | 2.0.0                 | [php/pecl-file_formats-yaml](https://github.com/php/pecl-file_formats-yaml) (Github)      |
 | LibYAML             | 0.1.7                 | [PyYAML](http://pyyaml.org/) (official site)     |
-| Xdebug              | 2.5.4                 | [Xdebug](https://xdebug.org/) (official site)     |
+| Xdebug              | 2.5.5                 | [Xdebug](https://xdebug.org/) (official site)     |
 | Tideways Profiler   | 4.1.2                 | [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension)  (Github)     |
 | phantomjs           | 2.1.1                 | [ariya/phantomjs](https://bitbucket.org/ariya/phantomjs/) (Bitbucket)     |
 | Drupal              | 8.4.x                 | [Drupal](https://www.drupal.org/project/drupal) (official site)     |
 | Drush               | 9.0.0-beta2           | [Drush](https://packagist.org/packages/drush/drush) (Packagist)      |
 | Drupal Console      | 1.0.0-rc21            | [hechoendrupal/drupal-console-launcher](https://github.com/hechoendrupal/drupal-console-launcher) (Github)      |
 | Composer            | 1.4.2                 | [Composer](https://getcomposer.org) (official site)     |
-| Apache Solr         | 6.5.1 or higher       | [Solr](https://lucene.apache.org/solr/) (official site) |
+| Apache Solr         | 6.6.0 or higher       | [Solr](https://lucene.apache.org/solr/) (official site) |
 | OpenJDK             | 1.8.0_121 or higher   | APT, via debian-backports |
 | bash-git-prompt     | 2.6.1                 | [magicmonty/bash-git-prompt](https://github.com/magicmonty/bash-git-prompt) (Github)      |
 

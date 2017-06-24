@@ -5,15 +5,13 @@
   with_items:
     - "{{ php_ini }}"
     - "{{ php_ini_cli }}"
-    - "{{ apache_fastcgi_conf }}"
-    - "{{ apache_fastcgi_mod }}"
+    - "{{ apache_proxy_fcgi_mod }}"
     - "{{ php_extensions }}"
   register: php
 
 - name: "TEST: Check if PHP packages are installed"
   shell: dpkg -l | grep {{ item }}
   with_items:
-    - libapache2-mod-fastcgi
     - php-apcu
     - php-imagick
     - php-memcached

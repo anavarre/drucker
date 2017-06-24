@@ -118,8 +118,8 @@
   notify: Reload Apache
   when: phpmyadmin_conf.stat.exists == false
 
-- name: Install MySQL client
+- name: Install MariaDB client
   package:
-    name: mysql-client-{{ mysql_stable_release }}
+    name: mariadb-client
     state: installed
     force: yes

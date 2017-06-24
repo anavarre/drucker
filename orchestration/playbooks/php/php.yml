@@ -31,8 +31,6 @@
     # Provides php-apcu which itself provides php7.1-apcu
     - php{{ php_version }}-common
     - php{{ php_version }}-dev
-    # Brings FastCGI support via Debian non-free.
-    - libapache2-mod-fastcgi
   when: fpm.stat.exists == false
 
 - name: Install PHP extensions
@@ -55,24 +53,29 @@
     - php{{ php_version }}-bz2
   when: fpm.stat.exists == false
 
-- name: Deploy fastcgi.conf template
-  copy:
-    src: "{{ fastcgi_source_file }}"
-    dest: "{{ apache_fastcgi_conf }}"
-    mode: 0644
-  when: fpm.stat.exists == false
-
-- name: Check if php 7 module is enabled
+- name: Check if php7 module is enabled
   stat:
     path: "{{ apache_php_mod }}"
   register: php7_module
 
-- name: Disable php 7 module
+- name: Disable php7 module
   apache2_module:
     state: absent
     name: php7
   notify: Restart PHP-FPM
   when: php7_module.stat.exists == true
+
+- name: Check if proxy_fcgi module is enabled
+  stat:
+    path: "{{ apache_proxy_fcgi_mod }}"
+  register: proxy_fcgi_module
+
+- name: Enable proxy_fcgi module
+  apache2_module:
+    state: present
+    name: proxy_fcgi
+  notify: Restart PHP-FPM
+  when: proxy_fcgi_module.stat.exists == false
 
 - include: php_ini.yml
 

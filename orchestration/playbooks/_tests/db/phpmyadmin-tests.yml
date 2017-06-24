@@ -14,3 +14,8 @@
     path: "{{ phpmyadmin_release_date_file }}"
   register: pma_version
   failed_when: pma_version.stat.exists == false
+
+- name: "TEST: The mariadb client should be installed"
+  shell: dpkg -l | grep mariadb-client
+  register: mariadb_client_package
+  changed_when: mariadb_client_package == ''

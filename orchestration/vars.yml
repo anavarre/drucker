@@ -25,7 +25,6 @@ varnish_conf_source_file: "{{ source_file_dir }}/varnish"
 varnish_default_vcl_source_file: "{{ source_file_dir }}/default.vcl"
 bash_aliases_source_file: "{{ source_file_dir }}/.bash_aliases"
 vimrc_source_file: "{{ source_file_dir }}/.vimrc"
-fastcgi_source_file: "{{ source_file_dir }}/fastcgi.conf"
 sources_list_source_file: "{{ source_file_dir }}/sources.list"
 mirror_source_file: "{{ source_file_dir }}/apt.conf"
 
@@ -88,8 +87,7 @@ apache_actions_mod: "{{ mods_enabled }}/actions.load"
 apache_rewrite_mod: "{{ mods_enabled }}/rewrite.load"
 apache_proxy_http_mod: "{{ mods_enabled }}/proxy_http.load"
 apache_php_mod: "{{ mods_available }}/php{{ php_version }}.conf"
-apache_fastcgi_conf: "{{ mods_available }}/fastcgi.conf"
-apache_fastcgi_mod: "{{ mods_enabled }}/fastcgi.load"
+apache_proxy_fcgi_mod: "{{ mods_enabled }}/proxy_fcgi.load"
 
 # vHosts
 default_available_vhost: "{{ sites_available }}/000-default.conf"
@@ -147,7 +145,7 @@ composer_json_template_temp_filename: "{{ webroot }}/composer-template.json"
 composer_json_expected_filename: "{{ webroot }}/composer.json"
 
 # XDebug
-xdebug_stable_release: 2.5.4
+xdebug_stable_release: 2.5.5
 xdebug_archive_file: xdebug-{{ xdebug_stable_release }}.tgz
 xdebug_download_link: http://xdebug.org/files/{{ xdebug_archive_file }}
 xdebug_extension_name: xdebug.so
@@ -369,7 +367,7 @@ client_max_body_size: 100m
 
 # Apache Solr
 solr_conf: "{{ source_file_dir }}/solr-conf-6.x/"
-solr_version: 6.5.1
+solr_version: 6.6.0
 solr_unarchived_directory: solr-{{ solr_version }}
 solr_temp_unarchived_path: /opt/{{ solr_unarchived_directory }}
 solr_installation_path: /opt/solr
