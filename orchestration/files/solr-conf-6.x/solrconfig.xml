@@ -858,7 +858,7 @@
 
   <!-- The more like this handler offers many advantages over the standard handler,
      when performing moreLikeThis requests.-->
-  <requestHandler name="mlt" class="solr.MoreLikeThisHandler">
+  <requestHandler name="/mlt" class="solr.MoreLikeThisHandler">
     <lst name="defaults">
       <str name="df">content</str>
       <str name="mlt.mintf">1</str>
