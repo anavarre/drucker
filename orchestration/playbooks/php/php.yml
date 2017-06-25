@@ -70,6 +70,7 @@
     path: "{{ apache_proxy_fcgi_mod }}"
   register: proxy_fcgi_module
 
+# php-fpm Fast-CGI support
 - name: Enable proxy_fcgi module
   apache2_module:
     state: present

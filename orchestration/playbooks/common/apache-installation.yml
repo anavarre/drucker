@@ -22,7 +22,6 @@
   with_items:
     - actions
     - rewrite
-    # php-fpm Fast-CGI support
     - proxy_http
   when: apache.stat.exists == false
 

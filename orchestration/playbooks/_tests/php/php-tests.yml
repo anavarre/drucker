@@ -29,6 +29,18 @@
   register: php_packages
   changed_when: php_packages == ''
 
+- name: "TEST: Apache's mod_proxy_fcgi needs to be correctly enabled"
+  stat:
+    path: "{{ apache_proxy_http_mod }}"
+  register: apache_proxy_http_mod_check
+  failed_when: apache_proxy_http_mod_check.stat.exists == false
+
+- name: "TEST: Apache vHosts need to support php-fpm Fast-CGI"
+  shell: grep -o "ProxyPassMatch" {{ drucker_vhost }} || echo "absent"
+  register: proxypassmatch_conf
+  changed_when: proxypassmatch_conf.stdout == "absent"
+  failed_when: proxypassmatch_conf.stdout == "absent"
+
 - name: "TEST: Check php.ini's custom configuration"
   shell: grep -o "{{ item }}" {{ php_ini }} || echo "absent"
   with_items:
