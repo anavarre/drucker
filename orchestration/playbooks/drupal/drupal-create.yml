@@ -40,7 +40,7 @@
 
 - name: "CREATE: Check if new database exists"
   stat:
-    path: "{{ mysql_data }}/{{ sitename }}"
+    path: "{{ db_data }}/{{ sitename }}"
   register: new_db
 
 - name: "CREATE: Make sure default site has correct permissions"
@@ -63,7 +63,7 @@
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
 - name: "CREATE: Install Drupal"
-  command: drush @{{ sitename }}.{{ tld }} site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@{{ db_ip }}:{{ mysql_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}
+  command: drush @{{ sitename }}.{{ tld }} site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ db_creds }}:{{ db_creds }}@{{ db_ip }}:{{ db_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}
   become: yes
   become_user: "{{ user }}"
   when: new_site.stat.exists == false or new_db.stat.exists == false

@@ -1,57 +1,52 @@
 ---
-- name: "TEST: MySQL and utilities need to be correctly installed"
+- name: "TEST: MariaDB and utilities need to be correctly installed"
   stat:
     path: "{{ item }}"
   with_items:
-    - "{{ my_cnf }}"
-    - "{{ mysql_data }}"
-    - "{{ mysql_backup_path }}"
-    - "{{ mysql_apt_file }}"
-  register: mysql
-  failed_when: mysql.stat.exists == false
+    - "{{ db_config }}"
+    - "{{ db_data }}"
+    - "{{ db_backup_path }}"
+  register: mariadb_check
+  failed_when: mariadb_check.stat.exists == false
 
-- name: "TEST: Check if MySQL and utilities packages are installed"
+- name: "TEST: Check if MariaDB and utilities packages are installed"
   shell: dpkg -l | grep {{ item }}
   with_items:
-    - mysql-client
-    - mysql-community-client
-    - mysql-community-server
+    - mariadb-server
     - mysql-common
-    - mysql-apt-config
     - python-mysqldb
-    - mytop
     - memcached
-  register: mysql_packages
-  changed_when: mysql_packages == ''
+  register: mariadb_packages
+  changed_when: mariadb_packages == ''
 
-- name: "TEST: Check if MySQL innodb_file_per_table setting is configured"
-  shell: grep -o "innodb_file_per_table = 1" {{ my_cnf }} || echo "missing"
-  register: innodb_setting
-  changed_when: innodb_setting.stdout == "missing"
-  failed_when: innodb_setting.stdout == "missing"
+- name: "TEST: Check if MariaDB innodb_file_per_table setting is configured"
+  shell: grep -o "innodb_file_per_table = 1" {{ db_config }} || echo "missing"
+  register: mariadb_innodb_setting
+  changed_when: mariadb_innodb_setting.stdout == "missing"
+  failed_when: mariadb_innodb_setting.stdout == "missing"
 
-- name: "TEST: Check if MySQL backup cron job exists"
-  shell: crontab -l | grep -o "{{ mysql_backup_path }}" || echo "missing"
-  register: mysql_backup_cron
-  changed_when: mysql_backup_cron.stdout == "missing"
-  failed_when: mysql_backup_cron.stdout == "missing"
+- name: "TEST: Check if MariaDB backup cron job exists"
+  shell: crontab -l | grep -o "{{ db_backup_path }}" || echo "missing"
+  register: mariadb_backup_cron
+  changed_when: mariadb_backup_cron.stdout == "missing"
+  failed_when: mariadb_backup_cron.stdout == "missing"
 
-- name: "TEST: Check if MySQL backup cleanup cron job exists"
+- name: "TEST: Check if MariaDB backup cleanup cron job exists"
   shell: crontab -l | grep -o "mmin +180" || echo "missing"
-  register: mysql_cleanup_cron
-  changed_when: mysql_cleanup_cron.stdout == "missing"
-  failed_when: mysql_cleanup_cron.stdout == "missing"
+  register: mariadb_cleanup_cron
+  changed_when: mariadb_cleanup_cron.stdout == "missing"
+  failed_when: mariadb_cleanup_cron.stdout == "missing"
 
-- name: "TEST: Check if MySQL remote access is configured"
-  shell: grep -o "0.0.0.0" {{ mysqld_cnf }} || echo "denied"
-  register: remote_access
-  changed_when: remote_access.stdout == "denied"
-  failed_when: remote_access.stdout == "denied"
+- name: "TEST: Check if MariaDB remote access is configured"
+  shell: grep -o "0.0.0.0" {{ db_config }} || echo "denied"
+  register: mariadb_remote_access
+  changed_when: mariadb_remote_access.stdout == "denied"
+  failed_when: mariadb_remote_access.stdout == "denied"
 
-- name: "TEST: MySQL service needs to be started"
-  command: mysqladmin -u {{ mysql_creds }} -p{{ mysql_creds }} status
+- name: "TEST: MariaDB service needs to be started"
+  command: mysqladmin -u {{ db_creds }} -p{{ db_creds }} status
   args:
     warn: no
-  register: mysql_service
-  changed_when: "'Uptime' not in mysql_service.stdout"
-  failed_when: "'Uptime' not in mysql_service.stdout"
+  register: mariadb_service
+  changed_when: "'Uptime' not in mariadb_service.stdout"
+  failed_when: "'Uptime' not in mariadb_service.stdout"

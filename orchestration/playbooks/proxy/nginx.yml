@@ -5,21 +5,6 @@
   register: nginx
   ignore_errors: True
 
-- name: Prepare for nginx installation 1/2
-  apt_key:
-    url: "{{ nginx_signing_key }}"
-    state: present
-  when: nginx.stat.exists == false
-
-- name: Prepare for nginx installation 2/2
-  apt_repository:
-    repo: "{{ item }}"
-    state: present
-  with_items:
-    - "{{ nginx_deb }}"
-    - "{{ nginx_deb_src }}"
-  when: nginx.stat.exists == false
-
 - name: Install nginx
   package:
     name: "{{ item }}"
@@ -80,8 +65,8 @@
 - name: Increase client_max_body_size
   lineinfile:
     dest: "{{ nginx_conf }}"
-    insertafter: '^(.*)sendfile        on;(.*)$'
-    line: "    client_max_body_size  {{ client_max_body_size }};"
+    insertafter: '^(.*)sendfile on;(.*)$'
+    line: "        client_max_body_size  {{ client_max_body_size }};"
 
 - name: Support fake SSL
   copy:

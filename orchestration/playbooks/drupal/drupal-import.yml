@@ -16,22 +16,22 @@
 
 - name: "IMPORT: Create new database"
   mysql_db:
-    login_user: "{{ mysql_creds }}"
-    login_password: "{{ mysql_creds }}"
+    login_user: "{{ db_creds }}"
+    login_password: "{{ db_creds }}"
     login_host: "{{ db_ip }}"
-    login_port: "{{ mysql_port }}"
-    config_file: "{{ my_cnf }}"
+    login_port: "{{ db_port }}"
+    config_file: "{{ db_config }}"
     name: "{{ sitename }}"
     state: present
   when: dump_detection.skipped is not defined
 
 - name: "IMPORT: Restore MySQL dump"
   mysql_db:
-    login_user: "{{ mysql_creds }}"
-    login_password: "{{ mysql_creds }}"
+    login_user: "{{ db_creds }}"
+    login_password: "{{ db_creds }}"
     login_host: "{{ db_ip }}"
-    login_port: "{{ mysql_port }}"
-    config_file: "{{ my_cnf }}"
+    login_port: "{{ db_port }}"
+    config_file: "{{ db_config }}"
     name: "{{ sitename }}"
     state: import
     target: "{{ dump }}"
@@ -160,11 +160,11 @@
     block: |
       $databases['default']['default'] = [
         'database' => '{{ sitename }}',
-        'username' => '{{ mysql_creds }}',
-        'password' => '{{ mysql_creds }}',
+        'username' => '{{ db_creds }}',
+        'password' => '{{ db_creds }}',
         'prefix' => '',
         'host' => '{{ db_ip }}',
-        'port' => '{{ mysql_port }}',
+        'port' => '{{ db_port }}',
         'driver' => 'mysql',
       ];
     insertafter: EOF

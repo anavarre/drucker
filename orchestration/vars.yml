@@ -1,6 +1,6 @@
 # System
 user: drucker
-codename: jessie
+codename: stretch
 tld: local
 home: /home/{{ user }}
 hosts_file: /etc/hosts
@@ -25,7 +25,6 @@ varnish_conf_source_file: "{{ source_file_dir }}/varnish"
 varnish_default_vcl_source_file: "{{ source_file_dir }}/default.vcl"
 bash_aliases_source_file: "{{ source_file_dir }}/.bash_aliases"
 vimrc_source_file: "{{ source_file_dir }}/.vimrc"
-fastcgi_source_file: "{{ source_file_dir }}/fastcgi.conf"
 sources_list_source_file: "{{ source_file_dir }}/sources.list"
 mirror_source_file: "{{ source_file_dir }}/apt.conf"
 
@@ -88,8 +87,7 @@ apache_actions_mod: "{{ mods_enabled }}/actions.load"
 apache_rewrite_mod: "{{ mods_enabled }}/rewrite.load"
 apache_proxy_http_mod: "{{ mods_enabled }}/proxy_http.load"
 apache_php_mod: "{{ mods_available }}/php{{ php_version }}.conf"
-apache_fastcgi_conf: "{{ mods_available }}/fastcgi.conf"
-apache_fastcgi_mod: "{{ mods_enabled }}/fastcgi.load"
+apache_proxy_fcgi_mod: "{{ mods_enabled }}/proxy_fcgi.load"
 
 # vHosts
 default_available_vhost: "{{ sites_available }}/000-default.conf"
@@ -242,20 +240,13 @@ phpmd_mirror_archive_file: "{{ mirror_archives_dir }}/phpmd.phar"
 phpmd_binary: "{{ user_programs_path }}/phpmd"
 
 # MySQL
-my_cnf: /etc/mysql/my.cnf
-mysqld_cnf: /etc/mysql/mysql.conf.d/mysqld.cnf
-mysql_data: /var/lib/mysql
-mysql_backup_dir: "{{ mysql_data }}/backup"
-mysql_creds: root
-mysql_port: 3306
-mysql_stable_release: 5.5
-mysql_apt_file: "{{ sources_list_d }}/mysql.list"
-mysql_apt_config_tool: 0.7.3-1
-# See https://dev.mysql.com/doc/mysql-apt-repo-quick-guide/en/#apt-repo-fresh-install
-mysql_gpg_key: 5072E1F5
-mysql_apt_repo: http://dev.mysql.com/get/mysql-apt-config_{{ mysql_apt_config_tool }}_all.deb
-mysql_backup_source_file: "{{ source_file_dir }}/mysql-backup.sh"
-mysql_backup_path: "{{ user_programs_path }}/mysql-backup.sh"
+db_config: /etc/mysql/mariadb.conf.d/50-server.cnf
+db_data: /var/lib/mysql
+db_backup_dir: "{{ db_data }}/backup"
+db_creds: root
+db_port: 3306
+db_backup_source_file: "{{ source_file_dir }}/db-backup.sh"
+db_backup_path: "{{ user_programs_path }}/db-backup.sh"
 
 # phpMyAdmin
 phpmyadmin_stable_release: 4.7.1
@@ -361,14 +352,10 @@ reverse_proxy_port: 80
 varnish_config: /etc/default/varnish
 varnish_default_path: /etc/varnish
 varnish_default_vcl: "{{ varnish_default_path }}/default.vcl"
-varnish_source_list_path: "{{ sources_list_d }}/repo_varnish_cache_org_debian.list"
 
 # nginx
 nginx_port: 8080
-nginx_source_list_path: "{{ sources_list_d }}/nginx_org_packages_debian.list"
 nginx_signing_key: http://nginx.org/keys/nginx_signing.key
-nginx_deb: deb http://nginx.org/packages/debian/ {{ codename }} nginx
-nginx_deb_src: deb-src http://nginx.org/packages/debian/ {{ codename }} nginx
 nginx_conf_dir: /etc/nginx
 nginx_conf_d: "{{ nginx_conf_dir }}/conf.d"
 nginx_default_template: "{{ nginx_conf_dir }}/nginx-template.conf"
@@ -380,7 +367,7 @@ client_max_body_size: 100m
 
 # Apache Solr
 solr_conf: "{{ source_file_dir }}/solr-conf-6.x/"
-solr_version: 6.5.1
+solr_version: 6.6.0
 solr_unarchived_directory: solr-{{ solr_version }}
 solr_temp_unarchived_path: /opt/{{ solr_unarchived_directory }}
 solr_installation_path: /opt/solr

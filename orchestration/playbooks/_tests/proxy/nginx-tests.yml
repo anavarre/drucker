@@ -5,18 +5,6 @@
   changed_when: nginx_key == "no signing key"
   failed_when: nginx_key == "no signing key"
 
-- name: "TEST: nginx deb entry should exist"
-  shell: grep -o "{{ nginx_deb }}" {{ nginx_source_list_path }} || echo "nginx deb entry is missing"
-  register: nginx_deb_entry
-  changed_when: nginx_deb_entry == "nginx deb entry is missing"
-  failed_when: nginx_deb_entry == "nginx deb entry is missing"
-
-- name: "TEST: nginx deb-src entry should exist"
-  shell: grep -o "{{ nginx_deb_src }}" {{ nginx_source_list_path }} || echo "nginx deb-src entry is missing"
-  register: nginx_deb_src_entry
-  changed_when: nginx_deb_src_entry == "nginx deb-src entry is missing"
-  failed_when: nginx_deb_src_entry == "nginx deb-src entry is missing"
-
 - name: "TEST: nginx needs to be correctly installed"
   stat:
     path: "{{ item }}"
@@ -24,7 +12,6 @@
     - "{{ nginx_conf }}"
     - "{{ drucker_nginx_vhost }}"
     - "{{ nginx_conf_dir }}"
-    - "{{ nginx_source_list_path }}"
   register: nginx
   failed_when: nginx.stat.exists == false
 

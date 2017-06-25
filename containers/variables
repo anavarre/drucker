@@ -60,7 +60,7 @@ export DB_HOSTNAME="db.${TLD}"
 export SEARCH_HOSTNAME="search.${TLD}"
 
 # Images
-export DISTRO_IMAGE="debian:latest"
+export DISTRO_IMAGE="debian:stretch"
 export SOLR_IMAGE="solr:latest"
 export CUSTOM_SOLR_IMAGE="${USER}:solr"
 export SEARCH_IMAGE="${USER}:search"

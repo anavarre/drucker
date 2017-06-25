@@ -48,4 +48,4 @@
     working_dir: "{{ composer_dir_path }}"
   become: yes
   become_user: "{{ user }}"
-  when: drupal_console_executable_check.stat.exists == true and drupal_console_launcher_check.stdout != drupal_console_launcher_stable_release
+  when: drupal_console_executable_check.stat.exists == true or drupal_console_launcher_check.stdout != drupal_console_launcher_stable_release

@@ -28,6 +28,10 @@
     name: "{{ item }}"
     state: present
   with_items:
+  # Useful to run commands as a non-privileged user.
+  # E.g. /opt/solr/bin/solr start
+  # See https://docs.ansible.com/ansible/become.html#becoming-an-unprivileged-user
+  - acl
   # Needed for Ansible's APT module to perform upgrades.
   # See https://github.com/ansible/ansible/issues/22673
   - aptitude

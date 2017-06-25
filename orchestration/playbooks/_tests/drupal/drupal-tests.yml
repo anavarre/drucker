@@ -13,7 +13,7 @@
     - "{{ simpletest_dir }}"
     - "{{ drupal_git }}"
     - "{{ drupal_gitignore }}"
-    - "{{ mysql_data }}/{{ user }}"
+    - "{{ db_data }}/{{ user }}"
     - "{{ drucker_vhost }}"
     - "{{ drucker_aliases }}"
     - "{{ phpunit_xml }}"

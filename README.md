@@ -59,10 +59,10 @@ _drucker_ ships with the following software stack:
 
 | Software            | Version               | Source            |
 | --------------------|-----------------------|-------------------|
-| Debian              | 8 (Jessie)            | [debian:latest](https://hub.docker.com/_/debian/) (Docker Hub) |
-| Varnish             | 4.1.2 or higher       | APT, via [Varnish APT repo](https://varnish-cache.org/releases/install_debian.html)      |
-| nginx               | 1.10.1 or higher      | APT, via [nginx APT repo](https://nginx.org/en/linux_packages.html)      |
-| Apache              | 2.4.10 or higher      | APT      |
+| Debian              | 9 (Stretch)           | [debian:stretch](https://hub.docker.com/_/debian/) (Docker Hub) |
+| Varnish             | 5.0.0 or higher       | APT               |
+| nginx               | 1.10.3 or higher      | APT               |
+| Apache              | 2.4.10 or higher      | APT               |
 | MySQL               | 5.7.17 or higher      | APT, via [MySQL APT repo](https://dev.mysql.com/downloads/repo/apt/)      |
 | memcached           | 3.0.3                 | APT, via [ppa:ondrej/php](https://deb.sury.org/)       |
 | mcstat              | 1.1.0                 | [webbj74/mcstat](https://github.com/webbj74/mcstat) (Github)      |
@@ -84,7 +84,7 @@ _drucker_ ships with the following software stack:
 | Drush               | 9.0.0-beta2           | [Drush](https://packagist.org/packages/drush/drush) (Packagist)      |
 | Drupal Console      | 1.0.0-rc21            | [hechoendrupal/drupal-console-launcher](https://github.com/hechoendrupal/drupal-console-launcher) (Github)      |
 | Composer            | 1.4.2                 | [Composer](https://getcomposer.org) (official site)     |
-| Apache Solr         | 6.5.1 or higher       | [Solr](https://lucene.apache.org/solr/) (official site) |
+| Apache Solr         | 6.6.0 or higher       | [Solr](https://lucene.apache.org/solr/) (official site) |
 | OpenJDK             | 1.8.0_121 or higher   | APT, via debian-backports |
 | bash-git-prompt     | 2.6.1                 | [magicmonty/bash-git-prompt](https://github.com/magicmonty/bash-git-prompt) (Github)      |
 

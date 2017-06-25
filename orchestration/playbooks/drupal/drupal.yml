@@ -42,7 +42,7 @@
 
 - name: Check if drucker database exists
   stat:
-    path: "{{ mysql_data }}/{{ user }}"
+    path: "{{ db_data }}/{{ user }}"
   register: drucker_db
 
 - name: Make sure default site has correct permissions
@@ -142,23 +142,23 @@
 
 - name: Ensure drucker database is wiped before installing
   mysql_db:
-    login_user: "{{ mysql_creds }}"
-    login_password: "{{ mysql_creds }}"
+    login_user: "{{ db_creds }}"
+    login_password: "{{ db_creds }}"
     login_host: "{{ db_ip }}"
-    login_port: "{{ mysql_port }}"
+    login_port: "{{ db_port }}"
     name: "{{ user }}"
-    config_file: "{{ my_cnf }}"
+    config_file: "{{ db_config }}"
     state: absent
   when: drucker_site_check.stat.exists == false
 
 - name: Create drucker database
   mysql_db:
-    login_user: "{{ mysql_creds }}"
-    login_password: "{{ mysql_creds }}"
+    login_user: "{{ db_creds }}"
+    login_password: "{{ db_creds }}"
     login_host: "{{ db_ip }}"
-    login_port: "{{ mysql_port }}"
+    login_port: "{{ db_port }}"
     name: "{{ user }}"
-    config_file: "{{ my_cnf }}"
+    config_file: "{{ db_config }}"
     state: present
   when: drucker_site_check.stat.exists == false or drucker_db.stat.exists == false
 
@@ -256,7 +256,7 @@
   when: drucker_site_check.stat.exists == false
 
 - name: Install Drupal
-  command: drush @{{ user }}.{{ tld }} site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ mysql_creds }}:{{ mysql_creds }}@{{ db_ip }}:{{ mysql_port }}/{{ user }} --site-name={{ user }} --site-mail={{ drupal_creds }}@{{ user }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ user }}.{{ tld }}
+  command: drush @{{ user }}.{{ tld }} site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ db_creds }}:{{ db_creds }}@{{ db_ip }}:{{ db_port }}/{{ user }} --site-name={{ user }} --site-mail={{ drupal_creds }}@{{ user }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ user }}.{{ tld }}
   become: yes
   become_user: "{{ user }}"
   when: drucker_site_check.stat.exists == false or drucker_db.stat.exists == false

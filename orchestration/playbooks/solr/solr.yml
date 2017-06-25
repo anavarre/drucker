@@ -25,7 +25,7 @@
   register: solr_archive_path_check
   changed_when: solr_archive_path_check.stat.exists == false
 
-- name: Download latest Apache Solr archive (this can take a while...)
+- name: Copy Apache Solr archive from mirror
   get_url:
     url: "{{ solr_mirror_download_link }}"
     dest: "{{ download_dir }}"
