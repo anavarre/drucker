@@ -191,6 +191,15 @@
   command: mv {{ vhost_template }} {{ drucker_available_vhost }}
   when: drucker_vhost_check.stat.exists == false
 
+- name: Add support for php-fpm Fast-CGI
+  blockinfile:
+    dest: "{{ drucker_available_vhost }}"
+    block: |6
+                  ProxyPassMatch ^/(.*\.php(/.*)?)$ unix:/var/run/php/php{{ php_version }}-fpm.sock|fcgi://127.0.0.1:9000/var/www/html/SITENAME/docroot/
+    insertafter: '^(.*)DocumentRoot(.*)$'
+    marker: "# {mark} MANAGED PHP-FPM FAST-CGI BLOCK"
+  when: drucker_vhost_check.stat.exists == false
+
 - name: Modify drucker vHost
   replace:
     dest: "{{ drucker_available_vhost }}"
