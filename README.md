@@ -63,7 +63,7 @@ _drucker_ ships with the following software stack:
 | Varnish             | 5.0.0 or higher       | APT               |
 | nginx               | 1.10.3 or higher      | APT               |
 | Apache              | 2.4.10 or higher      | APT               |
-| MySQL               | 5.7.17 or higher      | APT, via [MySQL APT repo](https://dev.mysql.com/downloads/repo/apt/)      |
+| MariaDB             | 10.1.23 or higher     | APT               |
 | memcached           | 3.0.3                 | APT, via [ppa:ondrej/php](https://deb.sury.org/)       |
 | mcstat              | 1.1.0                 | [webbj74/mcstat](https://github.com/webbj74/mcstat) (Github)      |
 | phpMyAdmin          | 4.7.1                 | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
