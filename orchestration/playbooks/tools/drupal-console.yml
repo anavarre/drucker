@@ -7,22 +7,23 @@
   changed_when: drupal_console_launcher.stat.exists == false
 
 - name: Check Drupal Console Launcher version
-  shell: drupal --version | head -n1 | awk '{print $NF}' | cut -c 8-17
+  shell: drupal --version | head -n1 | awk '{print $NF}'
   register: drupal_console_launcher_check
   when: drupal_console_launcher.stat.exists == true
   changed_when: drupal_console_launcher_check.stdout != drupal_console_launcher_stable_release
 
-- name: Install Drupal Console launcher
+- name: Copy latest Drupal Console Launcher release from mirror
   get_url:
-    url: "{{ drupal_console_launcher_download_link }}"
+    url: "{{ drupal_console_mirror_download_link }}"
     dest: "{{ drupal_console_binary }}"
     mode: 0755
     validate_certs: no
-  register: console_get_url_result
-  until: "'OK' in console_get_url_result.msg"
+    force: yes
+  register: drupal_console_get_url_result
+  until: "'OK' in drupal_console_get_url_result.msg"
   retries: 3
   delay: 10
-  when: drupal_console_launcher.stat.exists == false
+  when: drupal_console_launcher.stat.exists == false or drupal_console_launcher_check.stdout != drupal_console_launcher_stable_release
 
 - name: Update Drupal Console Launcher
   command: drupal self-update

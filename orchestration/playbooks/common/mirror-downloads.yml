@@ -83,6 +83,24 @@
   delay: 10
   when: pecl_yaml_archive_check.stat.exists == false
 
+- name: Check if the Drupal Console Launcher PHAR file exists
+  stat:
+    path: "{{ drupal_console_mirror_archive_path }}"
+  register: drupal_console_mirror_archive_path_check
+  changed_when: drupal_console_mirror_archive_path_check.stat.exists == false
+
+- name: Download Drupal Console Launcher PHAR file
+  get_url:
+    url: "{{ drupal_console_download_link }}"
+    dest: "{{ mirror_archives_dir }}"
+    mode: 0755
+    validate_certs: no
+  register: drupal_console_get_url_result
+  until: "'OK' in drupal_console_get_url_result.msg"
+  retries: 3
+  delay: 10
+  when: drupal_console_mirror_archive_path_check.stat.exists == false
+
 # Xdebug
 - name: Check if the Xdebug archive exists
   stat:

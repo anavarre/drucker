@@ -335,10 +335,13 @@ drush_dir: "{{ home }}/.drush"
 drucker_aliases: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
 
 # Drupal Console
-drupal_console_launcher_stable_release: 1.0.0-rc21
+drupal_console_launcher_stable_release: 1.0.0-rc23
+drupal_console_phar: drupal.phar
 drupal_console_composer_package: drupal/console
 drupal_console_composer_package_version: ~1.0
-drupal_console_launcher_download_link: https://github.com/hechoendrupal/drupal-console-launcher/releases/download/{{ drupal_console_launcher_stable_release }}/drupal.phar
+drupal_console_download_link: https://github.com/hechoendrupal/drupal-console-launcher/releases/download/{{ drupal_console_launcher_stable_release }}/{{ drupal_console_phar }}
+drupal_console_mirror_download_link: http://{{ mirror_host }}/{{ drupal_console_phar }}
+drupal_console_mirror_archive_path: "{{ mirror_archives_dir }}/{{ drupal_console_phar }}"
 drupal_console_executable: "{{ composer_dir_path }}/vendor/drupal/console/bin/drupal"
 drupal_console_binary: "{{ user_programs_path }}/drupal"
 drupal_console_config_file: "{{ home }}/.console/config.yml"

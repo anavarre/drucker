@@ -16,7 +16,7 @@
   failed_when: drupal_console_composer.stdout == "absent"
 
 - name: "TEST: Drupal Console Launcher should use the latest stable release"
-  shell: drupal --version --root={{ drucker_docroot }} | awk '{print $NF}' | head -n1 | cut -c 8-17
+  shell: drupal --version | head -n1 | awk '{print $NF}'
   register: drupal_console_launcher_version
   changed_when: drupal_console_launcher_version.stdout != drupal_console_launcher_stable_release
   failed_when: drupal_console_launcher_version.stdout != drupal_console_launcher_stable_release
