@@ -26,6 +26,7 @@
     - php{{ php_version }}-xmlrpc
     - php{{ php_version }}-xsl
     - php{{ php_version }}-bz2
+    - php{{ php_version }}-sqlite3
   register: php_packages
   changed_when: php_packages == ''
 

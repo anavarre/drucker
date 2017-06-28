@@ -51,6 +51,7 @@
     - php{{ php_version }}-xmlrpc
     - php{{ php_version }}-xsl
     - php{{ php_version }}-bz2
+    - php{{ php_version }}-sqlite3
   when: fpm.stat.exists == false
 
 - name: Check if php7 module is enabled
