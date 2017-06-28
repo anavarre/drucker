@@ -32,12 +32,3 @@
   register: webroot_permissions
   changed_when: webroot_permissions.stdout == "Wrong permissions"
   failed_when: webroot_permissions.stdout == "Wrong permissions"
-
-- name: "TEST: All URLs should be accessible"
-  uri:
-    url: "{{ item }}"
-  with_items:
-    - http://{{ user }}.{{ tld }}
-    - http://search.{{ tld }}:{{ solr_port }}/solr/#
-    - http://phpmyadmin.{{ tld }}
-    - http://adminer.{{ tld }}

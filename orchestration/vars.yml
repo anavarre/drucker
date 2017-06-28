@@ -105,6 +105,7 @@ imported_site_available_vhost: "{{ sites_available }}/{{ sitename }}.conf"
 
 # PHP
 php_version: 7.1
+php_process: php-fpm{{ php_version }}
 php_extensions: /usr/lib/php/{{ php_version }}/20131226
 user_programs_path: /usr/local/bin
 sury_gpg: https://packages.sury.org/php/apt.gpg

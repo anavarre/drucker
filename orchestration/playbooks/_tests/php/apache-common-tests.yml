@@ -16,10 +16,10 @@
   changed_when: poodle.stdout == "absent"
   failed_when: poodle.stdout == "absent"
 
-- name: "TEST: apache2 service needs to be started"
-  command: service apache2 status | grep -o "is running"
+- name: "TEST: apache2 process needs to be started"
+  command: pgrep apache2
   args:
     warn: no
-  register: apache2_service
-  changed_when: apache2_service.stdout == "is running"
-  failed_when: apache2_service.stdout == "is running"
+  register: apache2_process
+  changed_when: apache2_process.stdout == ""
+  failed_when: apache2_process.stdout == ""

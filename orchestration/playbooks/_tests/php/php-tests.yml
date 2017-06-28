@@ -75,10 +75,19 @@
   changed_when: memcached_version_check.stdout != php_memcached_stable_release
   failed_when: memcached_version_check.stdout != php_memcached_stable_release
 
-- name: "TEST: php-fpm service needs to be started"
-  command: service php{{ php_version }}-fpm status | grep -o "is running"
+- name: "TEST: php-fpm process needs to be started"
+  command: pgrep {{ php_process }}
   args:
     warn: no
-  register: php_fpm_service
-  changed_when: php_fpm_service.stdout == "is running"
-  failed_when: php_fpm_service.stdout == "is running"
+  register: php_fpm_process
+  changed_when: php_fpm_process.stdout == ""
+  failed_when: php_fpm_process.stdout == ""
+
+- name: "TEST: All URLs should be accessible"
+  uri:
+    url: "{{ item }}"
+  with_items:
+    - http://{{ user }}.{{ tld }}
+    - http://search.{{ tld }}:{{ solr_port }}/solr/#
+    - http://phpmyadmin.{{ tld }}
+    - http://adminer.{{ tld }}
