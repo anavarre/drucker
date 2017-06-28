@@ -6,8 +6,8 @@
   register: memcached_package
   changed_when: memcached_package == ''
 
-- name: "TEST: memcached needs to be started"
-  shell: pgrep memcached || echo "not started"
-  register: memcached_status
-  changed_when: memcached_status.stdout == "not started"
-  failed_when: memcached_status.stdout == "not started"
+- name: "TEST: memcached process needs to be started"
+  command: pgrep memcached
+  register: memcached_process
+  changed_when: memcached_process.stdout == ""
+  failed_when: memcached_process.stdout == ""

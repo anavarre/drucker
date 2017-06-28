@@ -7,10 +7,10 @@
     - memcached
 
 - name: Check if memcached is started
-  shell: pgrep memcached || echo "not started"
+  command: pgrep memcached
   register: memcached_status
-  changed_when: memcached_status.stdout == "not started"
+  changed_when: memcached_status.stdout == ""
 
 - name: Start the memcached daemon
   command: memcached -d -u nobody -m 64 -p 11211 127.0.0.1
-  when: memcached_status.stdout == "not started"
+  when: memcached_status.stdout == ""

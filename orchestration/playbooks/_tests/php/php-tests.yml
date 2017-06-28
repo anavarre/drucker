@@ -77,8 +77,6 @@
 
 - name: "TEST: php-fpm process needs to be started"
   command: pgrep {{ php_process }}
-  args:
-    warn: no
   register: php_fpm_process
   changed_when: php_fpm_process.stdout == ""
   failed_when: php_fpm_process.stdout == ""

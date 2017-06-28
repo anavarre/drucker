@@ -22,10 +22,8 @@
   changed_when: varnish_port_check.stdout == "wrong port"
   failed_when: varnish_port_check.stdout == "wrong port"
 
-- name: "TEST: Varnish service needs to be started"
-  command: service varnish status | grep -o "is running"
-  args:
-    warn: no
-  register: varnish_service
-  changed_when: varnish_service.stdout == "is running"
-  failed_when: varnish_service.stdout == "is running"
+- name: "TEST: Varnish process needs to be started"
+  command: pgrep varnishd
+  register: varnishd_process
+  changed_when: varnishd_process.stdout == ""
+  failed_when: varnishd_process.stdout == ""

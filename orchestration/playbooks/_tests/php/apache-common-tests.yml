@@ -18,8 +18,6 @@
 
 - name: "TEST: apache2 process needs to be started"
   command: pgrep apache2
-  args:
-    warn: no
   register: apache2_process
   changed_when: apache2_process.stdout == ""
   failed_when: apache2_process.stdout == ""

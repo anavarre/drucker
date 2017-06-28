@@ -43,10 +43,8 @@
   changed_when: mariadb_remote_access.stdout == "denied"
   failed_when: mariadb_remote_access.stdout == "denied"
 
-- name: "TEST: MariaDB service needs to be started"
-  command: mysqladmin -u {{ db_creds }} -p{{ db_creds }} status
-  args:
-    warn: no
-  register: mariadb_service
-  changed_when: "'Uptime' not in mariadb_service.stdout"
-  failed_when: "'Uptime' not in mariadb_service.stdout"
+- name: "TEST: MariaDB process needs to be started"
+  command: pgrep mysqld
+  register: mariadb_process
+  changed_when: mariadb_process.stdout == ""
+  failed_when: mariadb_process.stdout == ""
