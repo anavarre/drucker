@@ -138,21 +138,33 @@ create_site() {
 
 run_tests() {
   echo -e "${BLUE}Running the system test suite...${COLOR_ENDING}"
+
+  ${HOST_KEY_CHECKING}
   ${PLAYBOOK}/system-tests.yml ${EXTRA_VARS}
 
   echo -e "${BLUE}Running the mirror test suite...${COLOR_ENDING}"
+
+  ${HOST_KEY_CHECKING}
   ${PLAYBOOK}/mirror-tests.yml ${EXTRA_VARS}
 
   echo -e "${BLUE}Running the reverse proxy test suite...${COLOR_ENDING}"
+
+  ${HOST_KEY_CHECKING}
   ${PLAYBOOK}/reverse-proxy-tests.yml ${EXTRA_VARS}
 
   echo -e "${BLUE}Running the database test suite...${COLOR_ENDING}"
+
+  ${HOST_KEY_CHECKING}
   ${PLAYBOOK}/db-tests.yml ${EXTRA_VARS}
 
   echo -e "${BLUE}Running the search test suite...${COLOR_ENDING}"
+
+  ${HOST_KEY_CHECKING}
   ${PLAYBOOK}/search-tests.yml ${EXTRA_VARS}
 
   echo -e "${BLUE}Running the web test suite...${COLOR_ENDING}"
+
+  ${HOST_KEY_CHECKING}
   ${PLAYBOOK}/web-tests.yml ${EXTRA_VARS}
 }
 
