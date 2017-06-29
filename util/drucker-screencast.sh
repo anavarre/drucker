@@ -53,7 +53,7 @@ correctly configured."
 
 wait
 
-tail -n2 /etc/hosts
+tail -n3 /etc/hosts
 
 separator
 echo "To make sure SSH access will be working, we
