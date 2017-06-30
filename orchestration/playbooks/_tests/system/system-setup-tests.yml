@@ -10,8 +10,7 @@
     path: "{{ item }}"
   with_items:
     - "{{ bash_aliases }}"
-    - "{{ vimrc }}"
-    - "{{ vim_dir }}"
+    - "{{ sudo_tty_workaround_file }}"
   register: system
   failed_when: system.stat.exists == false
 
