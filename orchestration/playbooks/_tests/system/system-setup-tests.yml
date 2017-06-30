@@ -46,7 +46,7 @@
     - telnet
     - tcpdump
     - time
-    - vim-gtk
+    - neovim
     - wget
     - xterm
   register: system_packages

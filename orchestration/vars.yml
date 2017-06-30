@@ -24,13 +24,11 @@ nginx_template_source_file: "{{ source_file_dir }}/nginx-template.conf"
 varnish_conf_source_file: "{{ source_file_dir }}/varnish"
 varnish_default_vcl_source_file: "{{ source_file_dir }}/default.vcl"
 bash_aliases_source_file: "{{ source_file_dir }}/.bash_aliases"
-vimrc_source_file: "{{ source_file_dir }}/.vimrc"
 sources_list_source_file: "{{ source_file_dir }}/sources.list"
 mirror_source_file: "{{ source_file_dir }}/apt.conf"
 
 # Source directories
 ssl_source_dir: "{{ source_file_dir }}/ssl"
-vim_source_dir: "{{ source_file_dir }}/.vim"
 
 # APT mirror
 mirror_apt_conf_file: /etc/apt/apt.conf
@@ -52,10 +50,6 @@ bash_git_prompt_stable_version: 2.6.2
 bash_git_prompt_download_link: https://github.com/magicmonty/bash-git-prompt/archive/{{ bash_git_prompt_stable_version }}.tar.gz
 bash_git_prompt_archive_path: "{{ download_dir }}/bash-git-prompt-{{ bash_git_prompt_stable_version }}.tar.gz"
 bash_git_prompt_temp_path: "{{ download_dir }}/bash-git-prompt-{{ bash_git_prompt_stable_version }}"
-
-# VIM
-vim_dir: "{{ home }}/.vim"
-vimrc: "{{ home }}/.vimrc"
 
 # SSH
 sshd_config: /etc/ssh/sshd_config

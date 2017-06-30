@@ -57,7 +57,7 @@
   - telnet
   - tcpdump
   - time
-  - vim-gtk
+  - neovim
   - wget
   # Allows to resize (/usr/bin/resize) the prompt if $COLUMNS and $LINES are
   # suddenly messed up, e.g. in a tmux session.
@@ -76,22 +76,6 @@
     mode: 0644
     owner: "{{ user }}"
     group: "{{ user }}"
-  become: yes
-  become_user: "{{ user }}"
-
-- name: Deploy .vimrc file
-  copy:
-    src: "{{ vimrc_source_file }}"
-    dest: "{{ home }}"
-    mode: 0644
-  become: yes
-  become_user: "{{ user }}"
-
-- name: Deploy .vim directory
-  copy:
-    src: "{{ vim_source_dir }}"
-    dest: "{{ home }}"
-    mode: 0755
   become: yes
   become_user: "{{ user }}"
 
