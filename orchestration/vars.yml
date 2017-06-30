@@ -9,6 +9,7 @@ sources_list_d: "{{ sources_list }}.d"
 bashrc: "{{ home }}/.bashrc"
 bash_aliases: "{{ home }}/.bash_aliases"
 download_dir: /tmp
+sudo_tty_workaround_file: /etc/sudoers.d/docker-tty-sudo-nopasswd
 
 # Source files
 source_file_dir: files
