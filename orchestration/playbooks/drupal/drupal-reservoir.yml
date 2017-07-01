@@ -81,6 +81,12 @@
   become_user: "{{ user }}"
   when: reservoir_gitignore.stat.exists == false
 
+- name: "RESERVOIR: Check if Git repository exists"
+  stat:
+    path: "{{ drupal_root }}/.git"
+  register: reservoir_git_repo
+  ignore_errors: True
+
 - name: "RESERVOIR: Initialize Git repository"
   shell: git -C {{ drupal_root }} init
   args:
@@ -88,13 +94,13 @@
   register: initial_commit
   become: yes
   become_user: "{{ user }}"
-  when: reservoir_gitignore.stat.exists == false
+  when: reservoir_git_repo.stat.exists == false
 
 - name: "RESERVOIR: Add all new files under version control"
   shell: git -C {{ drupal_root }} add --all . && git -C {{ drupal_root }} commit -m "Initial commit"
   become: yes
   become_user: "{{ user }}"
-  when: reservoir_gitignore.stat.exists == false
+  when: reservoir_git_repo.stat.exists == false
 
 - name: "RESERVOIR: Make sure files dir ownership is correct"
   file:
