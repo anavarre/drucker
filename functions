@@ -80,6 +80,8 @@ ${GREEN_HELP}--composer [sitename,...]${COLOR_ENDING_HELP}         Installs arbi
 
 ${GREEN_HELP}--lightning [sitename,...] ${COLOR_ENDING_HELP}       Creates arbitrary Lightning docroots, vHosts and corresponding databases.
 
+${GREEN_HELP}--reservoir [sitename,...] ${COLOR_ENDING_HELP}       Creates arbitrary Reservoir docroots, vHosts and corresponding databases.
+
 ${GREEN_HELP}--delete [sitename,...]${COLOR_ENDING_HELP}           Deletes arbitrary docroots, vHosts and corresponding databases.
 
 ${GREEN_HELP}--tests${COLOR_ENDING_HELP}                           Runs the Ansible test suite.
@@ -97,6 +99,7 @@ drucker_argument() {
        [[ "${OPTION}" != "--reinstall" ]] && \
        [[ "${OPTION}" != "--composer" ]] && \
        [[ "${OPTION}" != "--lightning" ]] && \
+       [[ "${OPTION}" != "--reservoir" ]] && \
        [[ "${OPTION}" != "--delete" ]] && \
        [[ "${OPTION}" != "--tests" ]] && \
        [[ "${OPTION}" != "--help" ]]; then
@@ -197,6 +200,20 @@ drucker_argument() {
         # get a list of Lightning sites to create.
         for SITE in ${SITENAME//,/ }; do
           drupal_lightning
+        done
+        exit 0
+      fi
+      ;;
+      --reservoir)
+      # See validation() for details.
+      if [[ "${OPTION}" == "--reservoir" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+        validation
+        drucker_usage
+      else
+        # Comma-separated sitenames are split into single values for drucker to
+        # get a list of Reservoir sites to create.
+        for SITE in ${SITENAME//,/ }; do
+          drupal_reservoir
         done
         exit 0
       fi

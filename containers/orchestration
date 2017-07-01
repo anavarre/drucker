@@ -74,6 +74,28 @@ drupal_lightning() {
   fi
 }
 
+drupal_reservoir() {
+  # SITE is the result of SITENAME supporting a comma-separated list of
+  # Reservoir sites to create. See --reservoir definition.
+  if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
+    read -p "The ${SITE} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
+    if [[ ${REPLY} =~ ^[Nn]$ ]]; then
+      echo -e "${GREEN}Back to the comfort zone. Aborting.${COLOR_ENDING}"
+      exit 0
+    elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
+      echo "Sorry, the only accepted input characters are [Yy/Nn]. Aborting..."
+      exit 0
+    else
+      delete_site
+      drupal_reservoir
+    fi
+  else
+    echo -e "${BLUE}Installing Reservoir site into new ${SITE} docroot...${COLOR_ENDING}"
+    ${PLAYBOOK}/drupal-reservoir.yml --extra-vars "ansible_sudo_pass=${USER} reservoir=Y sitename=${SITE}"
+    echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
+  fi
+}
+
 delete_site() {
   # SITE is the result of SITENAME supporting a comma-separated list of sites
   # to delete. See --delete definition.
