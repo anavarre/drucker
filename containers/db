@@ -7,13 +7,13 @@ create_db_container_from_base_image() {
   echo -e "${BLUE}Spinning up ${DB_CONTAINER} container with ID:${COLOR_ENDING}"
 
   docker run --privileged=true --name "${DB_CONTAINER}" -it \
-  -h "${DB_HOSTNAME}" \
-  --net "${NETWORK}" \
-  --ip "${DB_IP}" \
-  -d -p "${HOST_DB_PORT}":"${DB_PORT}" \
-  -p "${HOST_TCP_PORT_MAPPER_DB}":"${TCP_PORT_MAPPER_DB}" \
-  -v "${HOST_DB_PATH}":"${CONTAINER_DB_PATH}" \
-  "${BASE_IMAGE}" bash
+    -h "${DB_HOSTNAME}" \
+    --net "${NETWORK}" \
+    --ip "${DB_IP}" \
+    -d -p "${HOST_DB_PORT}":"${DB_PORT}" \
+    -p "${HOST_TCP_PORT_MAPPER_DB}":"${TCP_PORT_MAPPER_DB}" \
+    -v "${HOST_DB_PATH}":"${CONTAINER_DB_PATH}" \
+    "${BASE_IMAGE}" bash
 
   configure_db_container_ssh_access
   run_db_container_orchestration
@@ -23,13 +23,13 @@ create_db_container_from_db_image() {
   echo -e "${BLUE}Spinning up ${DB_CONTAINER} container with ID:${COLOR_ENDING}"
 
   docker run --privileged=true --name "${DB_CONTAINER}" -it \
-  -h "${DB_HOSTNAME}" \
-  --net "${NETWORK}" \
-  --ip "${DB_IP}" \
-  -d -p "${HOST_DB_PORT}":"${DB_PORT}" \
-  -p "${HOST_TCP_PORT_MAPPER_DB}":"${TCP_PORT_MAPPER_DB}" \
-  -v "${HOST_DB_PATH}":"${CONTAINER_DB_PATH}" \
-  "${DB_IMAGE}" bash
+    -h "${DB_HOSTNAME}" \
+    --net "${NETWORK}" \
+    --ip "${DB_IP}" \
+    -d -p "${HOST_DB_PORT}":"${DB_PORT}" \
+    -p "${HOST_TCP_PORT_MAPPER_DB}":"${TCP_PORT_MAPPER_DB}" \
+    -v "${HOST_DB_PATH}":"${CONTAINER_DB_PATH}" \
+    "${DB_IMAGE}" bash
 
   configure_db_container_ssh_access
   run_db_container_orchestration
