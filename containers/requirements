@@ -24,8 +24,9 @@ cat <<EOF
 
 You should add the below entries:
 
-${REVERSE_PROXY_IP}    drucker.local phpmyadmin.local adminer.local
+${REVERSE_PROXY_IP}    drucker.local phpmyadmin.local adminer.local lightning.local reservoir.local
 ${SEARCH_IP}   search.local
+${MIRROR_IP}   mirror.local
 EOF
   fi
 }
