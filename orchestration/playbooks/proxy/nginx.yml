@@ -75,8 +75,14 @@
     mode: 0755
   when: nginx_drucker_host.stat.exists == false
 
-- name: Ensure nginx is started
+- name: Ensure nginx starts on boot
   service:
     name: nginx
     enabled: yes
+  when: nginx_drucker_host.stat.exists == false
+
+- name: Ensure nginx is started
+  service:
+    name: nginx
     state: started
+    pattern: pgrep nginx
