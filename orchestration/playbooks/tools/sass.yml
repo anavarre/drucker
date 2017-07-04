@@ -1,0 +1,8 @@
+---
+- name: Install compass (Sass)
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - ruby-compass
+    - ruby-sass

@@ -15,5 +15,6 @@
 - include: playbooks/tools/coder.yml
 - include: playbooks/tools/phpmd.yml
 - include: playbooks/tools/mcstat.yml
+- include: playbooks/tools/sass.yml
 - include: playbooks/drupal/drupal.yml
 - include: playbooks/db/db-tools.yml
