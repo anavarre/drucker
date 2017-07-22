@@ -325,7 +325,7 @@ drush_aliases_filepath: "{{ drush_aliases_path }}/{{ drush_aliases_template_file
 drush_binary: "{{ user_programs_path }}/drush"
 var_dumper_package_version: ~2.7
 drush_composer_package: drush/drush
-drush_composer_package_version: 9.0.0-beta2
+drush_composer_package_version: 9.0.0-beta3
 drush_composer_executable: "{{ composer_dir_path }}/vendor/drush/drush/drush"
 drush_dir: "{{ home }}/.drush"
 drucker_aliases: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
