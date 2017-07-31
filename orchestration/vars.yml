@@ -281,7 +281,7 @@ mcstat_mirror_archive_file: "{{ mirror_archives_dir }}/{{ mcstat_archive_file }}
 drupal_creds: admin
 default_site: docroot/sites/default
 default_configuration_dir: config/default
-drupal_head: 8.4.x
+drupal_head: 8.5.x
 drupal_git_clone_url: https://git.drupal.org/project/drupal.git
 drupal_git_clone_path: "{{ git_repo_directory }}/drupal"
 git_repo_mirror_directory: "{{ mirror_archives_dir }}/drupal"
