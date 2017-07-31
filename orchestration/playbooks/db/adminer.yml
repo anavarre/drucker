@@ -59,6 +59,15 @@
   command: mv {{ vhost_template }} {{ adminer_available_vhost }}
   when: adminer_conf.stat.exists == false
 
+- name: "Add support for php-fpm Fast-CGI"
+  blockinfile:
+    dest: "{{ adminer_available_vhost }}"
+    block: |6
+                  ProxyPassMatch ^/(.*\.php(/.*)?)$ unix:/var/run/php/php{{ php_version }}-fpm.sock|fcgi://127.0.0.1:9000/var/www/html/adminer/
+    insertafter: '^(.*)DocumentRoot(.*)$'
+    marker: "# {mark} MANAGED PHP-FPM FAST-CGI BLOCK"
+  when: adminer_conf.stat.exists == false
+
 - name: Modify adminer vHost 1/2
   replace:
     dest: "{{ adminer_available_vhost }}"
