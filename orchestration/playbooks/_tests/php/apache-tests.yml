@@ -25,7 +25,7 @@
 - name: "TEST: Permissions should be correct in the webroot"
   shell: stat -c %U:%G "{{ item }}" | grep "{{ user }}:{{ apache_user }}" || echo "Wrong permissions"
   with_items:
-    - "{{ drucker_site }}"
+    - "{{ drupal_root }}"
     - "{{ adminer_root }}"
     - "{{ phpmyadmin_root }}"
     - "{{ import_dir }}"

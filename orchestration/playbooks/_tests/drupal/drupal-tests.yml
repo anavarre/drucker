@@ -3,9 +3,9 @@
   stat:
     path: "{{ item }}"
   with_items:
-    - "{{ drucker_site }}"
-    - "{{ drucker_docroot }}"
-    - "{{ drucker_site }}/{{ default_configuration_dir }}"
+    - "{{ drupal_root }}"
+    - "{{ drupal_root }}/{{ default_configuration_dir }}"
+    - "{{ drupal_docroot }}"
     - "{{ files_dir }}"
     - "{{ libraries_dir }}"
     - "{{ settings_php }}"
@@ -14,12 +14,11 @@
     - "{{ drupal_git }}"
     - "{{ drupal_gitignore }}"
     - "{{ db_data }}/{{ user }}"
-    - "{{ drucker_vhost }}"
-    - "{{ drucker_aliases }}"
+    # - "{{ drucker_vhost }}"
+    # - "{{ drucker_aliases }}"
     - "{{ phpunit_xml }}"
     - "{{ import_dir }}"
     - "{{ archives_dir }}"
-    - "{{ drupal_git_clone_path }}"
     - "{{ log_dir }}/{{ user }}-access.log"
     - "{{ log_dir }}/{{ user }}-error.log"
   register: drupal
@@ -41,7 +40,7 @@
   failed_when: styles_dir_ownership.stdout != expected_ownership
 
 - name: "TEST: Make sure the codebase was added under version control"
-  shell: git -C {{ drucker_site }} log --oneline | grep -o "Initial commit" || echo 'no commit'
+  shell: git -C {{ drupal_root }} log --oneline | grep -o "Initial commit" || echo 'no commit'
   args:
     warn: no
   register: initial_commit
@@ -53,11 +52,11 @@
   register: remote_db_management
   changed_when: remote_db_management == ''
 
-- name: "TEST: Ensure drucker Drush aliases are correctly configured"
-  shell: grep -o "{{ user }}" {{ drucker_aliases }} || echo "absent"
-  register: drucker_aliases_check
-  changed_when: drucker_aliases_check == "absent"
-  failed_when: drucker_aliases_check == "absent"
+# - name: "TEST: Ensure drucker Drush aliases are correctly configured"
+#   shell: grep -o "{{ user }}" {{ drucker_aliases }} || echo "absent"
+#   register: drucker_aliases_check
+#   changed_when: drucker_aliases_check == "absent"
+#   failed_when: drucker_aliases_check == "absent"
 
 - name: "TEST: Ensure Drupal can talk to the Solr backend"
   shell: grep -o "{{ search_ip }}" {{ hosts_file }} || echo "absent"

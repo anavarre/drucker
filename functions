@@ -69,18 +69,18 @@ ${GREEN_HELP}--dev [sitename,...]${COLOR_ENDING_HELP}              Prepare site(
 
 ${GREEN_HELP}--prod [sitename,...]${COLOR_ENDING_HELP}             Opinionated setup with all known performance best practices enabled.
 
-${GREEN_HELP}--create [sitename,...] [git_ref]${COLOR_ENDING_HELP} Creates arbitrary docroots, vHosts and corresponding databases.
-                                  Optionally select an arbitrary Git tag or commit ID.
+${GREEN_HELP}--create [sitename,...] [git_ref]${COLOR_ENDING_HELP} Creates arbitrary Drupal docroots, vHosts and corresponding databases.
+                                  [TEMPORARILY DISABLED] Optionally select an arbitrary Git tag or commit ID.
 
 ${GREEN_HELP}--import [sitename,...]${COLOR_ENDING_HELP}           Imports the database, files and codebase from the web container's import directory.
 
-${GREEN_HELP}--reinstall${COLOR_ENDING_HELP}                       Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
+${GREEN_HELP}--reinstall [sitename,...]${COLOR_ENDING_HELP}        Reinstalls arbitrary Drupal docroots, vHosts and corresponding databases.
 
-${GREEN_HELP}--composer [sitename,...]${COLOR_ENDING_HELP}         Installs arbitrary Drupal docroots from a composer.json file.
+${GREEN_HELP}--lightning [sitename,...]${COLOR_ENDING_HELP}        Creates arbitrary Lightning docroots, vHosts and corresponding databases.
+                                  [BROKEN UNTIL 8.4.0]
 
-${GREEN_HELP}--lightning [sitename,...] ${COLOR_ENDING_HELP}       Creates arbitrary Lightning docroots, vHosts and corresponding databases.
-
-${GREEN_HELP}--reservoir [sitename,...] ${COLOR_ENDING_HELP}       Creates arbitrary Reservoir docroots, vHosts and corresponding databases.
+${GREEN_HELP}--reservoir [sitename,...]${COLOR_ENDING_HELP}        Creates arbitrary Reservoir docroots, vHosts and corresponding databases.
+                                  [BROKEN UNTIL 8.4.0]
 
 ${GREEN_HELP}--delete [sitename,...]${COLOR_ENDING_HELP}           Deletes arbitrary docroots, vHosts and corresponding databases.
 
@@ -97,7 +97,6 @@ drucker_argument() {
        [[ "${OPTION}" != "--create" ]] && \
        [[ "${OPTION}" != "--import" ]] && \
        [[ "${OPTION}" != "--reinstall" ]] && \
-       [[ "${OPTION}" != "--composer" ]] && \
        [[ "${OPTION}" != "--lightning" ]] && \
        [[ "${OPTION}" != "--reservoir" ]] && \
        [[ "${OPTION}" != "--delete" ]] && \
@@ -150,7 +149,7 @@ drucker_argument() {
         # Comma-separated sitenames are split into single values for drucker to
         # get a list of sites to create.
         for SITE in ${SITENAME//,/ }; do
-          create_site
+          drupal_create
         done
         exit 0
       fi
@@ -169,23 +168,22 @@ drucker_argument() {
       fi
       ;;
       --reinstall)
-      if [[ "${OPTION}" == "--reinstall" ]] && [[ ! -z ${SITENAME} ]]; then
-        drucker_usage
-      else
-        reinstall_drupal
-        exit 0
-      fi
-      ;;
-      --composer)
+      # if [[ "${OPTION}" == "--reinstall" ]] && [[ ! -z ${SITENAME} ]]; then
+      #   drucker_usage
+      # else
+      #   reinstall_drupal
+      #   exit 0
+      # fi
+      # ;;
       # See validation() for details.
-      if [[ "${OPTION}" == "--composer" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+      if [[ "${OPTION}" == "--reinstall" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
         validation
         drucker_usage
       else
         # Comma-separated sitenames are split into single values for drucker to
-        # get a list of sites to create from a composer.json file.
+        # get a list of sites to reinstall.
         for SITE in ${SITENAME//,/ }; do
-          drupal_composer
+          drupal_reinstall
         done
         exit 0
       fi

@@ -25,30 +25,75 @@ import_site() {
   ${PLAYBOOK}/import.yml --extra-vars "ansible_sudo_pass=${USER} import=Y sitename=${SITE}"
 }
 
-reinstall_drupal() {
-  echo -e "${BLUE}Reinstalling Drupal...${COLOR_ENDING}"
-  ${PLAYBOOK}/reinstall.yml --extra-vars "ansible_sudo_pass=${USER} reinstall=Y"
+drupal_reinstall() {
+  # SITE is the result of SITENAME supporting a comma-separated list of sites
+  # to reinstall. See --reinstall definition.
+  echo -e "${BLUE}Reinstalling Drupal for docroot ${SITE}...${COLOR_ENDING}"
+  ${PLAYBOOK}/reinstall.yml --extra-vars "ansible_sudo_pass=${USER} reinstall=Y sitename=${SITE}"
 }
 
-drupal_composer() {
+input() {
+  read -p "The ${SITE} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
+}
+
+cancellation() {
+  echo -e "${GREEN}Back to the comfort zone. Aborting.${COLOR_ENDING}"
+  exit 0
+}
+
+failure() {
+  echo "Sorry, the only accepted input characters are [Yy/Nn]. Aborting..."
+  exit 0
+}
+
+hosts_file() {
+  echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
+}
+
+drupal_create() {
   # SITE is the result of SITENAME supporting a comma-separated list of
-  # composer-built sites to create. See --composer definition.
+  # composer-built sites to create. See --create definition.
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
-    read -p "The ${SITE} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
+    input
     if [[ ${REPLY} =~ ^[Nn]$ ]]; then
-      echo -e "${GREEN}Back to the comfort zone. Aborting.${COLOR_ENDING}"
-      exit 0
+      cancellation
     elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
-      echo "Sorry, the only accepted input characters are [Yy/Nn]. Aborting..."
-      exit 0
+      failure
     else
       delete_site
-      drupal_composer
+      drupal_create
     fi
   else
-    echo -e "${BLUE}Installing Drupal from composer.json file...${COLOR_ENDING}"
-    ${PLAYBOOK}/drupal-composer.yml --extra-vars "ansible_sudo_pass=${USER} composer=Y   sitename=${SITE}"
-    echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
+    if [[ -z "${GIT_TAG}" ]] && [[ -z "${GIT_COMMIT}" ]]; then
+      echo -e "${BLUE}Creating site into new ${SITE} docroot...${COLOR_ENDING}"
+      # SITE is the result of SITENAME supporting a comma-separated list of sites
+      # to create.
+      ${PLAYBOOK}/create.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE}"
+      hosts_file
+    elif [[ -n "${GIT_TAG}" ]]; then
+      if [[ " ${GIT_TAGS[*]} " == *" ${GIT_TAG} "* ]]; then
+        echo -e "${BLUE}Creating Drupal ${GIT_TAG} site into new ${SITE} docroot...${COLOR_ENDING}"
+        # SITE is the result of SITENAME supporting a comma-separated list of sites
+        # to create.
+        ${PLAYBOOK}/create-tag.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_tag=${GIT_TAG}"
+        hosts_file
+      else
+        echo -e "\n${RED}This git tag doesn't seem to exist.${COLOR_ENDING}\n"
+        drucker_usage
+      fi
+    elif [[ -n "${GIT_COMMIT}" ]]; then
+      if [[ " ${GIT_COMMITS[*]} " == *" ${GIT_COMMIT} "* ]]; then
+        echo -e "${BLUE}Creating Drupal site from commit ID ${GIT_COMMIT} into new ${SITE} docroot...${COLOR_ENDING}"
+        ${PLAYBOOK}/create-commit.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_commit=${GIT_COMMIT}"
+        hosts_file
+      else
+        echo -e "\n${RED}This git commit doesn't seem to exist. Remember to use a short hash.${COLOR_ENDING}\n"
+        drucker_usage
+      fi
+    fi
+    # echo -e "${BLUE}Installing Drupal...${COLOR_ENDING}"
+    # ${PLAYBOOK}/drupal-create.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE}"
+    # hosts_file
   fi
 }
 
@@ -56,13 +101,11 @@ drupal_lightning() {
   # SITE is the result of SITENAME supporting a comma-separated list of
   # Lightning sites to create. See --lightning definition.
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
-    read -p "The ${SITE} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
+    input
     if [[ ${REPLY} =~ ^[Nn]$ ]]; then
-      echo -e "${GREEN}Back to the comfort zone. Aborting.${COLOR_ENDING}"
-      exit 0
+      cancellation
     elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
-      echo "Sorry, the only accepted input characters are [Yy/Nn]. Aborting..."
-      exit 0
+      failure
     else
       delete_site
       drupal_lightning
@@ -70,7 +113,7 @@ drupal_lightning() {
   else
     echo -e "${BLUE}Installing Lightning site into new ${SITE} docroot...${COLOR_ENDING}"
     ${PLAYBOOK}/drupal-lightning.yml --extra-vars "ansible_sudo_pass=${USER} lightning=Y sitename=${SITE}"
-    echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
+    hosts_file
   fi
 }
 
@@ -78,13 +121,11 @@ drupal_reservoir() {
   # SITE is the result of SITENAME supporting a comma-separated list of
   # Reservoir sites to create. See --reservoir definition.
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
-    read -p "The ${SITE} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
+    input
     if [[ ${REPLY} =~ ^[Nn]$ ]]; then
-      echo -e "${GREEN}Back to the comfort zone. Aborting.${COLOR_ENDING}"
-      exit 0
+      cancellation
     elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
-      echo "Sorry, the only accepted input characters are [Yy/Nn]. Aborting..."
-      exit 0
+      failure
     else
       delete_site
       drupal_reservoir
@@ -92,7 +133,7 @@ drupal_reservoir() {
   else
     echo -e "${BLUE}Installing Reservoir site into new ${SITE} docroot...${COLOR_ENDING}"
     ${PLAYBOOK}/drupal-reservoir.yml --extra-vars "ansible_sudo_pass=${USER} reservoir=Y sitename=${SITE}"
-    echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
+    hosts_file
   fi
 }
 
@@ -102,60 +143,6 @@ delete_site() {
   echo -e "${BLUE}Deleting docroot ${SITE}...${COLOR_ENDING}"
   ${PLAYBOOK}/delete.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y sitename=${SITE}"
   echo -e "${GREEN}Remember to remove the ${SITE}.local entry from your local /etc/hosts file!${COLOR_ENDING}"
-}
-
-create_site() {
-  # SITE is the result of SITENAME supporting a comma-separated list of sites
-  # to create. See --create definition.
-  if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
-    read -p "The ${SITE} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
-    if [[ ${REPLY} =~ ^[Nn]$ ]]; then
-      echo -e "${GREEN}Back to the comfort zone. Aborting.${COLOR_ENDING}"
-      exit 0
-    elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
-      echo "Sorry, the only accepted input characters are [Yy/Nn]. Aborting..."
-      exit 0
-    else
-      delete_site
-      create_site
-    fi
-  else
-    if [[ -z "${GIT_TAG}" ]] && [[ -z "${GIT_COMMIT}" ]]; then
-      echo -e "${BLUE}Creating site into new ${SITE} docroot...${COLOR_ENDING}"
-      # SITE is the result of SITENAME supporting a comma-separated list of sites
-      # to create.
-      ${PLAYBOOK}/create.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE}"
-      echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
-    elif [[ -n "${GIT_TAG}" ]]; then
-      # Make sure we retrieve any new git tags.
-      $(docker exec ${WEB_CONTAINER} ${GIT_EXECUTABLE} -C ${DRUPAL_REPO} pull 2>&1 >/dev/null)
-      export GIT_TAGS=($(docker exec ${WEB_CONTAINER} ${GIT_EXECUTABLE} -C ${DRUPAL_REPO} tag -l))
-
-      if [[ " ${GIT_TAGS[*]} " == *" ${GIT_TAG} "* ]]; then
-        echo -e "${BLUE}Creating Drupal ${GIT_TAG} site into new ${SITE} docroot...${COLOR_ENDING}"
-        # SITE is the result of SITENAME supporting a comma-separated list of sites
-        # to create.
-        ${PLAYBOOK}/create-tag.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_tag=${GIT_TAG}"
-        echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
-      else
-        echo -e "\n${RED}This git tag doesn't seem to exist.${COLOR_ENDING}\n"
-        drucker_usage
-      fi
-    elif [[ -n "${GIT_COMMIT}" ]]; then
-      # Make sure we retrieve any new git commits.
-      $(docker exec ${WEB_CONTAINER} ${GIT_EXECUTABLE} -C ${DRUPAL_REPO} pull 2>&1 >/dev/null)
-      export GIT_COMMITS=($(docker exec ${WEB_CONTAINER} ${GIT_EXECUTABLE} -C ${DRUPAL_REPO} rev-list ${DRUPAL_VERSION} --abbrev-commit --max-count=100))
-
-      if [[ " ${GIT_COMMITS[*]} " == *" ${GIT_COMMIT} "* ]]; then
-        echo -e "${BLUE}Creating Drupal site from commit ID ${GIT_COMMIT} into new ${SITE} docroot...${COLOR_ENDING}"
-        ${PLAYBOOK}/create-commit.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_commit=${GIT_COMMIT}"
-        echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
-      else
-        echo -e "\n${RED}This git commit doesn't seem to exist. Remember to use a short hash.${COLOR_ENDING}\n"
-        drucker_usage
-      fi
-    fi
-  fi
 }
 
 run_tests() {

@@ -1,6 +1,22 @@
 ---
-- include: playbooks/drupal/drupal-checkout.yml
-  when: git_tag is undefined and git_commit is undefined
+- name: "CREATE: Check if composer.json exists"
+  stat:
+    path: "{{ composer_json_expected_filename }}"
+  register: composer_webroot
+  ignore_errors: True
+
+- name: "CREATE: Deploy default composer.json template"
+  copy:
+    src: "{{ composer_json_template_file }}"
+    dest: "{{ webroot }}"
+    mode: 0644
+  become: yes
+  become_user: "{{ user }}"
+  when: composer_webroot.stat.exists == false
+
+- name: "CREATE: Rename composer-template.json filename"
+  command: mv {{ composer_json_template_temp_filename }} {{ composer_json_expected_filename }}
+  when: composer_webroot.stat.exists == false
 
 - name: "CREATE: Check if new site exists"
   stat:
@@ -8,103 +24,63 @@
   register: new_site
   ignore_errors: True
 
-- name: "CREATE: Create new site structure"
-  file:
-    path: "{{ item }}"
-    state: directory
-    mode: 02755
-    owner: "{{ user }}"
-    group: "{{ apache_user }}"
-  with_items:
-    - "{{ drupal_root }}"
-    - "{{ drupal_root }}/config"
-  when: new_site.stat.exists == false
-
-- name: "CREATE: Copy Drupal checkout into new site stucture"
-  command: cp -R {{ drupal_git_clone_path }} {{ drupal_root }}
-  become: yes
-  become_user: "{{ user }}"
-  when: new_site.stat.exists == false
-
-- name: "CREATE: Rename copied Drupal checkout with expected sitename"
-  command: mv {{ drupal_root }}/drupal {{ drupal_root }}/docroot
-  become: yes
-  become_user: "{{ user }}"
-  when: new_site.stat.exists == false
-
-- name: "CREATE: Remove default .git directory"
-  file:
-    path: "{{ drupal_root }}/docroot/.git"
-    state: absent
-  when: new_site.stat.exists == false
-
 - name: "CREATE: Check if new database exists"
   stat:
     path: "{{ db_data }}/{{ sitename }}"
   register: new_db
 
-- name: "CREATE: Make sure default site has correct permissions"
+- name: "CREATE: Create new site architecture"
   file:
-    path: "{{ drupal_root }}/{{ default_site }}"
+    path: "{{ drupal_root }}"
     state: directory
-    mode: 02755
-    owner: "{{ user }}"
-    group: "{{ apache_user }}"
-  when: new_site.stat.exists == false
-
-- include: ../common/drupal-common.yml
-
-- name: "CREATE: Pull vendor dependencies"
-  composer:
-    command: install
-    working_dir: "{{ drupal_root }}/docroot"
   become: yes
   become_user: "{{ user }}"
-  when: new_site.stat.exists == false or new_db.stat.exists == false
+  when: new_site.stat.exists == false
+
+- name: "CREATE: Move composer.json file into new docroot"
+  command: mv {{ composer_json_expected_filename }} {{ drupal_root }}
+  when: new_site.stat.exists == false
+
+- name: "CREATE: Install vendor dependencies from composer.json file (this can take a while)"
+  composer:
+    command: install
+    working_dir: "{{ drupal_root }}"
+  become: yes
+  become_user: "{{ user }}"
+
+- include: ../common/drupal-common.yml
 
 - name: "CREATE: Install Drupal"
   command: drush @{{ sitename }}.{{ tld }} site-install standard install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ db_creds }}:{{ db_creds }}@{{ db_ip }}:{{ db_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}
   become: yes
   become_user: "{{ user }}"
-  when: new_site.stat.exists == false or new_db.stat.exists == false
+  when: new_aliases.stat.exists == false
 
 - name: "CREATE: Check if phpunit.xml file exists"
   stat:
-    path: "{{ drupal_root }}/docroot/core/phpunit.xml"
-  register: new_phpunit
+    path: "{{ drupal_docroot }}/core/phpunit.xml"
+  register: phpunit_check
 
 - name: "CREATE: Deploy phpunit.xml file"
   copy:
     src: "{{ phpunit_source_file }}"
-    dest: "{{ drupal_root }}/docroot/core/"
+    dest: "{{ drupal_docroot }}/core/"
     mode: 0644
   become: yes
   become_user: "{{ user }}"
-  when: new_phpunit.stat.exists == false
+  when: phpunit_check.stat.exists == false
 
 - name: "CREATE: Modify phpunit.xml file"
   replace:
-    dest: "{{ drupal_root }}/docroot/core/phpunit.xml"
+    dest: "{{ drupal_docroot }}/core/phpunit.xml"
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1{{ sitename }}\2'
-  when: new_phpunit.stat.exists == false
-
-- name: "CREATE: Add new site under version control"
-  shell: git -C "{{ drupal_root }}" init
-  become: yes
-  become_user: "{{ user }}"
-  when: new_site.stat.exists == false
-
-- name: "CREATE: Add all new files under version control"
-  shell: git -C "{{ drupal_root }}" add --all . && git -C "{{ drupal_root }}" commit -m "Initial commit"
-  become: yes
-  become_user: "{{ user }}"
-  when: new_site.stat.exists == false
+  when: phpunit_check.stat.exists == false
 
 - name: "CREATE: Check if .gitignore exists"
   stat:
     path: "{{ drupal_root }}/.gitignore"
-  register: new_gitignore
+  register: gitignore_check
   ignore_errors: True
 
 - name: "CREATE: Create .gitignore file"
@@ -112,35 +88,29 @@
     src: "{{ gitignore_source_file }}"
     dest: "{{ drupal_root }}"
     mode: 0644
-    owner: "{{ user }}"
-    group: "{{ apache_user }}"
-  when: new_gitignore.stat.exists == false
-
-# - name: "CREATE: Set up Drupal Console to work with the new docroot 1/2"
-#   composer:
-#     command: require
-#     arguments: "{{ drupal_console_composer_package }}:{{ drupal_console_composer_package_version }} --prefer-dist --optimize-autoloader"
-#     working_dir: "{{ drupal_root }}/docroot"
-#   become: yes
-#   become_user: "{{ user }}"
-#   when: new_site.stat.exists == false
-#
-# - name: "CREATE: Set up Drupal Console to work with the new docroot 2/2"
-#   composer:
-#     command: update
-#     arguments: "{{ drupal_console_composer_package }} --with-dependencies"
-#     working_dir: "{{ drupal_root }}/docroot"
-#   become: yes
-#   become_user: "{{ user }}"
-#   when: new_site.stat.exists == false
-#
-# - name: "CREATE: Add new vendor files under version control"
-#   shell: git -C "{{ drupal_root }}" add --all . && git -C "{{ drupal_root }}" commit -m "Extra commit for vendor files"
-#   become: yes
-#   become_user: "{{ user }}"
-#   when: new_site.stat.exists == false
-
-- name: Switch the Drupal repository back to HEAD
-  shell: cd {{ drupal_git_clone_path }} && git -C "{{ drupal_git_clone_path }}" clean -fdx && git -C "{{ drupal_git_clone_path }}" reset --hard && git -C "{{ drupal_git_clone_path }}" checkout {{ drupal_head }}
   become: yes
   become_user: "{{ user }}"
+  when: gitignore_check.stat.exists == false
+
+- name: "CREATE: Initialize Git repository"
+  shell: git -C {{ drupal_root }} init
+  args:
+    warn: no
+  register: initial_commit
+  become: yes
+  become_user: "{{ user }}"
+  when: gitignore_check.stat.exists == false
+
+- name: "CREATE: Add all new files under version control"
+  shell: git -C {{ drupal_root }} add --all . && git -C {{ drupal_root }} commit -m "Initial commit"
+  become: yes
+  become_user: "{{ user }}"
+  when: gitignore_check.stat.exists == false
+
+- name: "CREATE: Make sure files dir ownership is correct"
+  file:
+    path: "{{ drupal_docroot }}/{{ default_site }}/files"
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+    recurse: yes
+  when: new_site.stat.exists == false or new_db.stat.exists == false

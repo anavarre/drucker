@@ -39,6 +39,39 @@
     line: "\tSSLProtocol all -SSLv2 -SSLv3"
   when: apache.stat.exists == false
 
+- name: Delete default vHost
+  file:
+    path: "{{ default_vhost }}"
+    state: absent
+  when: apache.stat.exists == false
+
+- name: Delete default vHost symlink
+  file:
+    path: "{{ default_vhost }}"
+    state: absent
+  when: apache.stat.exists == false
+
+- name: Check if import directories exist
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ import_dir }}"
+    - "{{ archives_dir }}"
+  register: import_directories
+  ignore_errors: True
+
+- name: Create import directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  with_items:
+    - "{{ import_dir }}"
+    - "{{ archives_dir }}"
+  when: import_directories.results[0]['item'] or import_directories.results[1]['item']
+
 - name: Ensure Apache is started
   service:
     name: apache2

@@ -9,3 +9,5 @@
     - include: handlers.yml
   tasks:
     - include: playbooks/drupal/drupal-reinstall.yml
+      vars:
+        sitename: "drucker"

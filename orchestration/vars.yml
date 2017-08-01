@@ -42,7 +42,6 @@ mirror_log_dir: /var/log/apt-cacher-ng
 mirror_conf: mirror.conf
 
 # Git
-git_repo_directory: "{{ www_dir }}/repo"
 git_completion: "{{ home }}/.git-completion.bash"
 git_prompt: "{{ home }}/.git-prompt.sh"
 git_config: "{{ home }}/.gitconfig"
@@ -93,8 +92,6 @@ phpmyadmin_available_vhost: "{{ sites_available }}/phpmyadmin.conf"
 phpmyadmin_vhost: "{{ sites_enabled }}/phpmyadmin.conf"
 adminer_available_vhost: "{{ sites_available }}/adminer.conf"
 adminer_vhost: "{{ sites_enabled }}/adminer.conf"
-drucker_available_vhost: "{{ sites_available }}/{{ user }}.conf"
-drucker_vhost: "{{ sites_enabled }}/{{ user }}.conf"
 imported_site_vhost: "{{ sites_enabled }}/{{ sitename }}.conf"
 imported_site_available_vhost: "{{ sites_available }}/{{ sitename }}.conf"
 
@@ -279,34 +276,28 @@ mcstat_mirror_archive_file: "{{ mirror_archives_dir }}/{{ mcstat_archive_file }}
 
 # Drupal
 drupal_creds: admin
-default_site: docroot/sites/default
+default_site: sites/default
 default_configuration_dir: config/default
 drupal_head: 8.5.x
-drupal_git_clone_url: https://git.drupal.org/project/drupal.git
-drupal_git_clone_path: "{{ git_repo_directory }}/drupal"
-git_repo_mirror_directory: "{{ mirror_archives_dir }}/drupal"
 drupal_root: "{{ webroot }}/{{ sitename }}"
-deployed_settings_php: "{{ drupal_root }}/{{default_site}}/settings.php"
-services_yml_template: "{{ drupal_root }}/{{default_site}}/default.services.yml"
-deployed_services_yml: "{{ drupal_root }}/{{default_site}}/services.yml"
-settings_local_php_template: "{{ drucker_docroot }}/sites/example.settings.local.php"
-deployed_settings_local_php: "{{ drupal_root }}/{{default_site}}/settings.local.php"
-
-# drucker Drupal
-drucker_site: "{{ webroot }}/{{ user }}"
-drucker_docroot: "{{ drucker_site }}/docroot"
-drupal_git: "{{ drucker_site }}/.git"
-drupal_gitignore: "{{ drucker_site }}/.gitignore"
-default_settings_php: "{{ drucker_site }}/{{default_site}}/default.settings.php"
-settings_php: "{{ drucker_site }}/{{default_site}}/settings.php"
-default_services_yml: "{{ drucker_site }}/{{default_site}}/default.services.yml"
-example_settings_local_php: "{{ drucker_docroot }}/sites/example.settings.local.php"
-settings_local_php: "{{ drucker_site }}/{{default_site}}/settings.local.php"
-services_yml: "{{ drucker_site }}/{{default_site}}/services.yml"
-files_dir: "{{ drucker_site }}/{{default_site}}/files"
-libraries_dir: "{{ drucker_docroot }}/libraries"
-simpletest_dir: "{{ drucker_docroot }}/sites/simpletest"
-phpunit_xml: "{{ drucker_docroot }}/core/phpunit.xml"
+drupal_docroot: "{{ drupal_root }}/docroot"
+libraries_dir: "{{ drupal_docroot }}/libraries"
+deployed_settings_php: "{{ drupal_docroot }}/{{ default_site }}/settings.php"
+services_yml_template: "{{ drupal_docroot }}/{{ default_site }}/default.services.yml"
+deployed_services_yml: "{{ drupal_docroot }}/{{ default_site }}/services.yml"
+settings_local_php_template: "{{ drupal_docroot }}/sites/example.settings.local.php"
+deployed_settings_local_php: "{{ drupal_docroot }}/{{ default_site }}/settings.local.php"
+drupal_git: "{{ drupal_root }}/.git"
+drupal_gitignore: "{{ drupal_root }}/.gitignore"
+default_settings_php: "{{ drupal_docroot }}/{{ default_site }}/default.settings.php"
+settings_php: "{{ drupal_docroot }}/{{ default_site }}/settings.php"
+default_services_yml: "{{ drupal_docroot }}/{{ default_site }}/default.services.yml"
+example_settings_local_php: "{{ drupal_docroot }}/sites/example.settings.local.php"
+settings_local_php: "{{ drupal_docroot }}/{{ default_site }}/settings.local.php"
+services_yml: "{{ drupal_docroot }}/{{ default_site }}/services.yml"
+files_dir: "{{ drupal_docroot }}/{{ default_site }}/files"
+simpletest_dir: "{{ drupal_docroot }}/sites/simpletest"
+phpunit_xml: "{{ drupal_docroot }}/core/phpunit.xml"
 
 # Import
 import_dir: "{{ webroot }}/import"
@@ -328,7 +319,6 @@ drush_composer_package: drush/drush
 drush_composer_package_version: 9.0.0-beta3
 drush_composer_executable: "{{ composer_dir_path }}/vendor/drush/drush/drush"
 drush_dir: "{{ home }}/.drush"
-drucker_aliases: "{{ drush_aliases_path }}/{{ user }}.aliases.drushrc.php"
 
 # Drupal Console
 drupal_console_launcher_stable_release: 1.0.0-rc26

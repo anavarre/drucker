@@ -1,16 +1,3 @@
 ---
-- include: playbooks/drupal/drupal-checkout.yml
-
-- name: "REINSTALL: Check if drucker site exists"
-  stat:
-    path: "{{ drucker_site }}"
-  register: drucker_site_reinstall_check
-  ignore_errors: True
-
-- name: "REINSTALL: Deletes drucker site"
-  file:
-    path: "{{ drucker_site }}"
-    state: absent
-  when: drucker_site_reinstall_check.stat.exists == true
-
+- include: playbooks/drupal/drupal-delete.yml
 - include: playbooks/drupal/drupal.yml

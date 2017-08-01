@@ -32,6 +32,5 @@
     - "{{ mcstat_mirror_archive_file }}"
     - "{{ phpmyadmin_mirror_archive_file_path }}"
     - "{{ adminer_mirror_filepath }}"
-    - "{{ git_repo_mirror_directory }}"
   register: archive_elements
   failed_when: archive_elements.stat.exists == false

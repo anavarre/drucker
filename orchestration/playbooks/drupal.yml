@@ -1,0 +1,3 @@
+- include: playbooks/tools/drush.yml
+- include: playbooks/tools/drupal-console.yml
+- include: playbooks/drupal/drupal.yml

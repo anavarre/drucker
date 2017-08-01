@@ -11,3 +11,5 @@
     - include: playbooks/common/mirror-deploy.yml
     - include: playbooks/common/apt-update.yml
     - include: playbooks/stack.yml
+    - include: playbooks/drupal.yml
+    - include: playbooks/post-install.yml

@@ -5,5 +5,13 @@
     name: libmemcached-tools
     state: present
 
+- name: Ensure we can manage remote MySQL databases
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - python-mysqldb
+    - mysql-client
+
 - include: playbooks/db/phpmyadmin.yml
 - include: playbooks/db/adminer.yml

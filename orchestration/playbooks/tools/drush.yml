@@ -40,3 +40,24 @@
   become: yes
   become_user: "{{ user }}"
   when: drush_composer_package_version_check.stdout != drush_composer_package_version
+
+- name: Check if sites-aliases directory exists
+  stat:
+    path: "{{ drush_aliases_path }}"
+  register: site_aliases_check
+  changed_when: site_aliases_check.stat.exists == false
+
+- name: Create site-aliases directory
+  file:
+    path: "{{ drush_aliases_path }}"
+    state: directory
+  when: site_aliases_check.stat.exists == false
+
+- name: Create .drush directory
+  file:
+    path: "{{ drush_dir }}"
+    state: directory
+    mode: 0755
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  when: site_aliases_check.stat.exists == false

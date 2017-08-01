@@ -1,7 +1,0 @@
----
-- name: Switch Drupal checkout to preferred tag
-  shell: cd {{ drupal_git_clone_path }} && git -C "{{ drupal_git_clone_path }}" clean -fdx && git -C "{{ drupal_git_clone_path }}" reset --hard && git -C "{{ drupal_git_clone_path }}" checkout tags/{{ git_tag }}
-  become: yes
-  become_user: "{{ user }}"
-
-- include: playbooks/drupal/drupal-create.yml

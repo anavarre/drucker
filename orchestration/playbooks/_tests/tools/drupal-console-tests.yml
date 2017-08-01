@@ -28,7 +28,7 @@
   failed_when: drupal_console_bashrc == "absent"
 
 - name: "TEST: Check if Drupal Console can connect to the drucker database"
-  shell: drupal database:connect --root={{ drucker_docroot }} | grep -o "{{ user }}" || echo "Cannot connect to the database"
+  shell: drupal database:connect --root={{ drupal_docroot }} | grep -o "{{ user }}" || echo "Cannot connect to the database"
   register: drupal_console_db_connection
   changed_when: drupal_console_db_connection.stdout == "Cannot connect to the database"
   failed_when: drupal_console_db_connection.stdout == "Cannot connect to the database"

@@ -5,8 +5,6 @@
 - include: playbooks/php/libyaml.yml
 - include: playbooks/php/pecl-yaml.yml
 - include: playbooks/tools/composer.yml
-- include: playbooks/tools/drush.yml
-- include: playbooks/tools/drupal-console.yml
 - include: playbooks/tools/xdebug.yml
 - include: playbooks/tools/tideways.yml
 - include: playbooks/tools/phantomjs.yml
@@ -16,5 +14,4 @@
 - include: playbooks/tools/phpmd.yml
 - include: playbooks/tools/mcstat.yml
 - include: playbooks/tools/sass.yml
-- include: playbooks/drupal/drupal.yml
 - include: playbooks/db/db-tools.yml

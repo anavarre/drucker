@@ -290,17 +290,3 @@
   retries: 3
   delay: 10
   when: adminer_mirror_filepath_check.stat.exists == false
-
-# Drupal Git clone
-- name: Check if Drupal Git repo directory exists
-  stat:
-    path: "{{ git_repo_mirror_directory }}"
-  register: git_repo_mirror_directory_check
-  changed_when: git_repo_mirror_directory_check.stat.exists == false
-
-- name: Clone Drupal repository (this can take a while...)
-  git:
-    repo: "{{ drupal_git_clone_url }}"
-    dest: "{{ mirror_archives_dir }}/drupal"
-    version: "{{ drupal_head }}"
-  when: git_repo_mirror_directory_check.stat.exists == false

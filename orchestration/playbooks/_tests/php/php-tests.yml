@@ -37,7 +37,7 @@
   failed_when: apache_proxy_http_mod_check.stat.exists == false
 
 - name: "TEST: Apache vHosts need to support php-fpm Fast-CGI"
-  shell: grep -o "ProxyPassMatch" {{ drucker_vhost }} || echo "absent"
+  shell: grep -o "ProxyPassMatch" "{{ sites_enabled }}/{{ sitename }}.conf" || echo "absent"
   register: proxypassmatch_conf
   changed_when: proxypassmatch_conf.stdout == "absent"
   failed_when: proxypassmatch_conf.stdout == "absent"

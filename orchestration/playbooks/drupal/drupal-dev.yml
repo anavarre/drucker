@@ -1,7 +1,7 @@
 ---
 - name: "DEV: Make sure default site has correct permissions"
   file:
-    path: "{{ drupal_root }}/{{default_site}}"
+    path: "{{ drupal_docroot }}/{{ default_site }}"
     state: directory
     mode: 02755
     owner: "{{ user }}"
