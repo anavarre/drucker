@@ -81,7 +81,7 @@ _drucker_ ships with the following software stack:
 | Tideways Profiler   | 4.1.2                 | [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension)  (Github)     |
 | phantomjs           | 2.1.1                 | [ariya/phantomjs](https://bitbucket.org/ariya/phantomjs/) (Bitbucket)     |
 | Drupal              | 8.5.x                 | [Drupal](https://www.drupal.org/project/drupal) (official site)     |
-| Drush               | 9.0.0-beta3           | [Drush](https://packagist.org/packages/drush/drush) (Packagist)      |
+| Drush               | 9.0.0-beta4           | [Drush](https://packagist.org/packages/drush/drush) (Packagist)      |
 | Drupal Console      | 1.0.1                 | [hechoendrupal/drupal-console-launcher](https://github.com/hechoendrupal/drupal-console-launcher) (Github)      |
 | Composer            | 1.5.1                 | [Composer](https://getcomposer.org) (official site)     |
 | Apache Solr         | 6.6.0 or higher       | [Solr](https://lucene.apache.org/solr/) (official site) |
