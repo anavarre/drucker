@@ -46,7 +46,7 @@ git_completion: "{{ home }}/.git-completion.bash"
 git_prompt: "{{ home }}/.git-prompt.sh"
 git_config: "{{ home }}/.gitconfig"
 bash_git_prompt: "{{ home }}/.bash-git-prompt"
-bash_git_prompt_stable_version: 2.6.2
+bash_git_prompt_stable_version: 2.6.3
 bash_git_prompt_download_link: https://github.com/magicmonty/bash-git-prompt/archive/{{ bash_git_prompt_stable_version }}.tar.gz
 bash_git_prompt_archive_path: "{{ download_dir }}/bash-git-prompt-{{ bash_git_prompt_stable_version }}.tar.gz"
 bash_git_prompt_temp_path: "{{ download_dir }}/bash-git-prompt-{{ bash_git_prompt_stable_version }}"
