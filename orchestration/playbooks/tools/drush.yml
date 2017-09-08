@@ -25,8 +25,8 @@
 
 - name: Install Drush via composer.json
   composer:
-    command: require
-    arguments: "{{ drush_composer_package }}:{{ drush_composer_package_version }} --prefer-dist --optimize-autoloader"
+    command: update
+    arguments: "{{ drush_composer_package }}:{{ drush_composer_package_version }} --with-dependencies --prefer-dist --optimize-autoloader"
     working_dir: "{{ composer_dir_path }}"
   become: yes
   become_user: "{{ user }}"

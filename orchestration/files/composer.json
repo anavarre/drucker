@@ -2,7 +2,6 @@
     "require": {
         "hirak/prestissimo": "^0.3",
         "drupal/console": drupal_console_version,
-        "symfony/var-dumper": var_dumper_version,
         "drush/drush": drush_version
     },
     "minimum-stability": "dev",
