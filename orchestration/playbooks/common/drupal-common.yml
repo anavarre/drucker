@@ -25,24 +25,21 @@
     group: "{{ apache_user }}"
   when: new_site.stat.exists == false
 
-- name: Make sure default site permissions are correct
+- name: "COMMON: Make sure default site permissions are correct"
   file:
     path: "{{ drupal_docroot }}/{{ default_site }}"
     mode: 0755
   become: yes
   become_user: "{{ user }}"
-  when: new_site.stat.exists == false
 
 - name: "COMMON: Create settings.php file"
   command: cp {{ drupal_docroot }}/{{ default_site }}/default.settings.php {{ drupal_docroot }}/{{ default_site }}/settings.php
   become: yes
-  become_user: "{{ user }}"
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
 - name: "COMMON: Create services.yml file"
   command: cp {{ drupal_docroot }}/{{ default_site }}/default.services.yml {{ drupal_docroot }}/{{ default_site }}/services.yml
   become: yes
-  become_user: "{{ user }}"
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
 - name: "COMMON: Ensure settings.php and services.yml have correct ownership"
