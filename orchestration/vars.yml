@@ -129,7 +129,7 @@ uploadprogress_extension_path: "{{ php_extensions }}/{{ uploadprogress_extension
 uploadprogress_mirror_archive_path: "{{ mirror_archives_dir }}/pecl-php-uploadprogress-{{ uploadprogress_release }}.zip"
 
 # Composer
-composer_stable_release: 1.5.1
+composer_stable_release: 1.5.2
 composer_download_link: https://getcomposer.org/download/{{ composer_stable_release }}/composer.phar
 composer_binary: "{{ user_programs_path }}/composer"
 composer_dir_path: "{{ home }}/.composer"
