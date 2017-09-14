@@ -10,10 +10,10 @@
     path: "{{ db_data }}/{{ sitename }}"
   register: new_db
 
-- name: "LIGHTNING: Install vendor dependencies (this can take a while)"
+- name: "LIGHTNING: Create project with vendor dependencies (this can take a while)"
   composer:
     command: create-project
-    arguments: acquia/lightning-project {{ sitename }}
+    arguments: acquia/lightning-project:^8.1.0 {{ sitename }} --no-interaction
     working_dir: "{{ webroot }}"
   become: yes
   become_user: "{{ user }}"
@@ -31,6 +31,8 @@
   when: new_site.stat.exists == false
 
 - include: ../common/drupal-common.yml
+
+- meta: end_play
 
 - name: "LIGHTNING: Install Drupal"
   command: drush @{{ sitename }}.{{ tld }} site-install lightning install_configure_form.update_status_module='array(FALSE,FALSE)' -qy --db-url=mysql://{{ db_creds }}:{{ db_creds }}@{{ db_ip }}:{{ db_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}

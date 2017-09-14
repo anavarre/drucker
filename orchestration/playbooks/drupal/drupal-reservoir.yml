@@ -10,7 +10,7 @@
     path: "{{ db_data }}/{{ sitename }}"
   register: new_db
 
-- name: "RESERVOIR: Install vendor dependencies (this can take a while)"
+- name: "RESERVOIR: Create project with vendor dependencies (this can take a while)"
   composer:
     command: create-project
     arguments: acquia/reservoir-project {{ sitename }} --stability=alpha
