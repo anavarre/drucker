@@ -1,22 +1,31 @@
 ---
-- name: Check if Drush binary is in the $PATH
+- name: Check if Drush launcher is installed
   stat:
-    path: "{{ drush_binary }}"
-  register: drush_check
-  changed_when: drush_check.stat.exists == false
+    path: "{{ drush_launcher }}"
+  register: drush_launcher
+  changed_when: drush_launcher.stat.exists == false
 
-- name: Check if Drush binary exists
-  stat:
-    path: "{{ drush_composer_executable }}"
-  register: drush_executable_check
-  changed_when: drush_executable_check.stat.exists == false
+- name: Check if Drush launcher needs to be updated
+  shell: drush --version| head -n1 | awk '{print $NF}'
+  register: drush_launcher_stable_release_check
+  when: drush_launcher.stat.exists == true
+  changed_when: drush_launcher_stable_release_check.stdout != drush_launcher_stable_release
 
-- name: Add Drush to $PATH
-  file:
-    src: "{{ drush_composer_executable }}"
-    dest: "{{ drush_binary }}"
-    state: link
-  when: drush_check.stat.exists == false and drush_executable_check.stat.exists == true
+- name: Copy latest Drush launcher release from mirror
+  get_url:
+    url: "{{ drush_launcher_mirror_download_link }}"
+    dest: "{{ user_programs_path }}"
+    mode: 0755
+    validate_certs: no
+  register: drush_launcher_get_url_result
+  until: "'OK' in drush_launcher_get_url_result.msg"
+  retries: 3
+  delay: 10
+  when: drush_launcher.stat.exists == false or drush_launcher_stable_release_check.stdout != drush_launcher_stable_release
+
+- name: Rename Drush launcher PHAR file
+  command: mv {{ user_programs_path }}/{{ drush_launcher_archive_file }} {{ user_programs_path }}/drush
+  when: drush_launcher.stat.exists == false or drush_launcher_stable_release_check.stdout != drush_launcher_stable_release
 
 - name: Check Drush version in composer.json file
   shell: grep -E "\"{{ drush_composer_package }}*.*" {{ composer_json_path }} | awk '{print $NF}' | tr -d '",'

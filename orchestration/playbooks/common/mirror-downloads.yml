@@ -83,6 +83,7 @@
   delay: 10
   when: pecl_yaml_archive_check.stat.exists == false
 
+# Drupal Console
 - name: Check if the Drupal Console Launcher PHAR file exists
   stat:
     path: "{{ drupal_console_mirror_archive_path }}"
@@ -290,3 +291,21 @@
   retries: 3
   delay: 10
   when: adminer_mirror_filepath_check.stat.exists == false
+
+# Drush launcher
+- name: Check if Drush launcher file exists
+  stat:
+    path: "{{ drush_launcher_mirror_filepath }}"
+  register: drush_launcher_mirror_filepath_check
+  changed_when: drush_launcher_mirror_filepath_check.stat.exists == false
+
+- name: Download latest Drush launcher release
+  get_url:
+    url: "{{ drush_launcher_download_link }}"
+    dest: "{{ mirror_archives_dir }}"
+    validate_certs: no
+  register: drush_launcher_get_url_result
+  until: "'OK' in drush_launcher_get_url_result.msg"
+  retries: 3
+  delay: 10
+  when: drush_launcher_mirror_filepath_check.stat.exists == false

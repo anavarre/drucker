@@ -3,7 +3,7 @@
   stat:
     path: "{{ item }}"
   with_items:
-    - "{{ drush_binary }}"
+    - "{{ drush_launcher }}"
     - "{{ drush_aliases_path }}"
     - "{{ drush_dir }}"
   register: drush
@@ -17,7 +17,7 @@
 
 - name: "TEST: The Drush binary should be a symlink"
   stat:
-    path: "{{ drush_binary }}"
+    path: "{{ drush_launcher }}"
   register: drush_symlink
 
 - assert:
