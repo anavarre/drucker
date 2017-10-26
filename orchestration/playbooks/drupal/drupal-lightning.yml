@@ -10,11 +10,10 @@
     path: "{{ db_data }}/{{ sitename }}"
   register: new_db
 
+# We're using the shell command here, because using the composer command leaves us
+# with missing vendor dependencies, for some reason.
 - name: "LIGHTNING: Create project with vendor dependencies (this can take a while)"
-  composer:
-    command: create-project
-    arguments: acquia/lightning-project {{ sitename }} --no-interaction
-    working_dir: "{{ webroot }}"
+  shell: cd {{ webroot }} && composer create-project acquia/lightning-project {{ sitename }} ^8.2 --no-interaction
   become: yes
   become_user: "{{ user }}"
 
@@ -33,20 +32,20 @@
 - include: ../common/drupal-common.yml
 
 - name: "LIGHTNING: Install Drupal"
-  command: drush --root={{ drupal_root }}  site-install lightning install_configure_form.enable_update_status_module=NULL -qy --db-url=mysql://{{ db_creds }}:{{ db_creds }}@{{ db_ip }}:{{ db_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}
+  command: drush --root={{ drupal_docroot }} site-install lightning install_configure_form.enable_update_status_module=NULL -qy --db-url=mysql://{{ db_creds }}:{{ db_creds }}@{{ db_ip }}:{{ db_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}
   become: yes
   become_user: "{{ user }}"
-  when: new_aliases.stat.exists == false
+  when: new_alias.stat.exists == false
 
 - name: "LIGHTNING: Check if phpunit.xml file exists"
   stat:
-    path: "{{ drupal_root }}/docroot/core/phpunit.xml"
+    path: "{{ drupal_docroot }}/core/phpunit.xml"
   register: lightning_phpunit
 
 - name: "LIGHTNING: Deploy phpunit.xml file"
   copy:
     src: "{{ phpunit_source_file }}"
-    dest: "{{ drupal_root }}/docroot/core/"
+    dest: "{{ drupal_docroot }}/core/"
     mode: 0644
   become: yes
   become_user: "{{ user }}"
@@ -54,14 +53,14 @@
 
 - name: "LIGHTNING: Modify phpunit.xml file"
   replace:
-    dest: "{{ drupal_root }}/docroot/core/phpunit.xml"
+    dest: "{{ drupal_docroot }}/core/phpunit.xml"
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1{{ sitename }}\2'
   when: lightning_phpunit.stat.exists == false
 
 - name: "LIGHTNING: Make sure we're down one level for the PHPUnit path"
   replace:
-    dest: "{{ drupal_root }}/docroot/core/phpunit.xml"
+    dest: "{{ drupal_docroot }}/core/phpunit.xml"
     regexp: '^(.*){{ drupal_root }}(.*)$'
     replace: '\1{{ drupal_root }}/docroot\2'
   when: lightning_phpunit.stat.exists == false
@@ -107,5 +106,6 @@
     path: "{{ drupal_root }}/{{ default_site }}/files"
     owner: "{{ user }}"
     group: "{{ apache_user }}"
+    state: directory
     recurse: yes
   when: new_site.stat.exists == false or new_db.stat.exists == false
