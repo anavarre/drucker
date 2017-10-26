@@ -4,28 +4,19 @@
     path: "{{ item }}"
   with_items:
     - "{{ drush_launcher }}"
-    - "{{ drush_aliases_path }}"
+    - "{{ drush_alias_path }}"
     - "{{ drush_dir }}"
   register: drush
   failed_when: drush.stat.exists == false
 
-- name: "TEST: Drush should use the latest stable release"
-  shell: drush version | awk '{print $NF}'
-  register: drush_version_check
-  changed_when: drush_version_check.stdout != drush_composer_package_version
-  failed_when: drush_version_check.stdout != drush_composer_package_version
-
-- name: "TEST: The Drush binary should be a symlink"
-  stat:
-    path: "{{ drush_launcher }}"
-  register: drush_symlink
-
-- assert:
-   that:
-     - drush_symlink.stat.islnk
+- name: "TEST: Drush Launcher should use the latest stable release"
+  shell: drush --version | head -n1 | awk '{print $NF}'
+  register: drush_launcher_version_check
+  changed_when: drush_launcher_version_check.stdout != drush_launcher_version
+  failed_when: drush_launcher_version_check.stdout != drush_launcher_version
 
 - name: "TEST: Check if Drush can connect to the drucker database"
-  shell: drush @{{ user }}.{{ tld }} sql-connect | grep -o "{{ user }}" || echo "Cannot connect to the database"
+  shell: drush --root={{ webroot }}/{{ user }} sql-connect | grep -o "{{ user }}" || echo "Cannot connect to the database"
   register: drush_db_connection
   changed_when: drush_db_connection.stdout == "Cannot connect to the database"
   failed_when: drush_db_connection.stdout == "Cannot connect to the database"

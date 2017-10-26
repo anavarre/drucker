@@ -323,7 +323,7 @@ drush_alias_source_file: "{{ source_file_dir }}/{{ drush_alias_template_file }}"
 drush_alias_path: /etc/drush/site-aliases
 drush_alias_filepath: "{{ drush_alias_path }}/{{ drush_alias_template_file }}"
 drush_composer_package: drush/drush
-drush_composer_package_version: 9.0.0-beta8
+drush_launcher_version: 0.4.2
 drush_dir: "{{ home }}/.drush"
 
 # Drupal Console
