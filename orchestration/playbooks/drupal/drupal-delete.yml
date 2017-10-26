@@ -45,13 +45,13 @@
     - "{{ sitename }}-error.log"
   when: apache_conf.stat.exists == true
 
-- name: "DELETE: Check if Drush aliases exist"
+- name: "DELETE: Check if Drush alias exist"
   stat:
-    path: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
-  register: sitename_aliases
+    path: "{{ drush_alias_path }}/{{ sitename }}.{{ drush_alias_extension }}"
+  register: sitename_alias
 
-- name: "DELETE: Delete Drush aliases"
+- name: "DELETE: Delete Drush alias"
   file:
-    path: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
+    path: "{{ drush_alias_path }}/{{ sitename }}.{{ drush_alias_extension }}"
     state: absent
-  when: sitename_aliases.stat.exists == true
+  when: sitename_alias.stat.exists == true

@@ -300,8 +300,9 @@ simpletest_dir: "{{ drupal_docroot }}/sites/simpletest"
 phpunit_xml: "{{ drupal_docroot }}/core/phpunit.xml"
 
 # Import
+drush_alias_extension: alias.yml
 import_dir: "{{ webroot }}/import"
-imported_site_aliases: "{{ drush_aliases_path }}/{{ sitename }}.aliases.drushrc.php"
+imported_site_alias: "{{ drush_alias_path }}/{{ sitename }}.{{ drush_alias_extension }}"
 archives_dir: "{{ webroot }}/import/archives"
 import_archive_path: "{{ archives_dir }}/{{ sitename }}"
 import_sqlgz: "{{ import_dir }}/{{ sitename }}.sql.gz"
@@ -316,14 +317,14 @@ drush_launcher_archive_path: "{{ download_dir }}/{{ drush_launcher_archive_file 
 drush_launcher_download_link: https://github.com/drush-ops/drush-launcher/releases/download/{{ drush_launcher_stable_release }}/drush.phar
 drush_launcher_mirror_filepath: "{{ mirror_archives_dir }}/drush.phar"
 drush_launcher: "{{ user_programs_path }}/drush"
-drush_aliases_template_file: drush.aliases.drushrc.php
-drush_aliases_source_file: "{{ source_file_dir }}/{{ drush_aliases_template_file }}"
-drush_aliases_path: /etc/drush/site-aliases
-drush_aliases_filepath: "{{ drush_aliases_path }}/{{ drush_aliases_template_file }}"
+drush_yml_source_file: "{{ source_file_dir }}/drush.yml"
+drush_alias_template_file: drush.{{ drush_alias_extension }}
+drush_alias_source_file: "{{ source_file_dir }}/{{ drush_alias_template_file }}"
+drush_alias_path: /etc/drush/site-aliases
+drush_alias_filepath: "{{ drush_alias_path }}/{{ drush_alias_template_file }}"
 drush_composer_package: drush/drush
-drush_composer_package_version: 9.0.0-beta4
-# drush_composer_executable: "{{ composer_dir_path }}/vendor/drush/drush/drush"
-# drush_dir: "{{ home }}/.drush"
+drush_composer_package_version: 9.0.0-beta8
+drush_dir: "{{ home }}/.drush"
 
 # Drupal Console
 drupal_console_launcher_stable_release: 1.0.2

@@ -14,8 +14,6 @@
     - "{{ drupal_git }}"
     - "{{ drupal_gitignore }}"
     - "{{ db_data }}/{{ user }}"
-    # - "{{ drucker_vhost }}"
-    # - "{{ drucker_aliases }}"
     - "{{ phpunit_xml }}"
     - "{{ import_dir }}"
     - "{{ archives_dir }}"
@@ -51,12 +49,6 @@
   shell: dpkg -l | grep "python-mysqldb"
   register: remote_db_management
   changed_when: remote_db_management == ''
-
-# - name: "TEST: Ensure drucker Drush aliases are correctly configured"
-#   shell: grep -o "{{ user }}" {{ drucker_aliases }} || echo "absent"
-#   register: drucker_aliases_check
-#   changed_when: drucker_aliases_check == "absent"
-#   failed_when: drucker_aliases_check == "absent"
 
 - name: "TEST: Ensure Drupal can talk to the Solr backend"
   shell: grep -o "{{ search_ip }}" {{ hosts_file }} || echo "absent"

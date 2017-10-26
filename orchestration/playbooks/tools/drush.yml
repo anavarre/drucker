@@ -27,40 +27,17 @@
   command: mv {{ user_programs_path }}/{{ drush_launcher_archive_file }} {{ user_programs_path }}/drush
   when: drush_launcher.stat.exists == false or drush_launcher_stable_release_check.stdout != drush_launcher_stable_release
 
-- name: Check Drush version in composer.json file
-  shell: grep -E "\"{{ drush_composer_package }}*.*" {{ composer_json_path }} | awk '{print $NF}' | tr -d '",'
-  register: drush_composer_package_version_check
-  changed_when: drush_composer_package_version_check.stdout != drush_composer_package_version
-
-- name: Install Drush via composer.json
-  composer:
-    command: update
-    arguments: "{{ drush_composer_package }}:{{ drush_composer_package_version }} --with-dependencies --prefer-dist --optimize-autoloader"
-    working_dir: "{{ composer_dir_path }}"
-  become: yes
-  become_user: "{{ user }}"
-  when: drush_composer_package_version_check.stdout != drush_composer_package_version
-
-- name: Update Drush Composer package
-  composer:
-    command: update
-    arguments: "{{ drush_composer_package }} --with-dependencies"
-    working_dir: "{{ composer_dir_path }}"
-  become: yes
-  become_user: "{{ user }}"
-  when: drush_composer_package_version_check.stdout != drush_composer_package_version
-
 - name: Check if sites-aliases directory exists
   stat:
-    path: "{{ drush_aliases_path }}"
-  register: site_aliases_check
-  changed_when: site_aliases_check.stat.exists == false
+    path: "{{ drush_alias_path }}"
+  register: site_alias_check
+  changed_when: site_alias_check.stat.exists == false
 
 - name: Create site-aliases directory
   file:
-    path: "{{ drush_aliases_path }}"
+    path: "{{ drush_alias_path }}"
     state: directory
-  when: site_aliases_check.stat.exists == false
+  when: site_alias_check.stat.exists == false
 
 - name: Create .drush directory
   file:
@@ -69,4 +46,18 @@
     mode: 0755
     owner: "{{ user }}"
     group: "{{ user }}"
-  when: site_aliases_check.stat.exists == false
+  when: site_alias_check.stat.exists == false
+
+- name: Check if drush.yml file exists
+  stat:
+    path: "{{ drush_yml_source_file }}"
+  register: drush_yml_check
+  changed_when: drush_yml_check.stat.exists == false
+
+- name: Deploy drush.yml file"
+  copy:
+    src: "{{ drush_yml_source_file }}"
+    dest: "{{ drush_dir }}"
+    mode: 0644
+  when: drush_yml_check.stat.exists == false
+  ignore_errors: true

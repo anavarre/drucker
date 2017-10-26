@@ -1,0 +1,3 @@
+local:
+  root: /var/www/html/SITENAME
+  uri: http://SITENAME.local

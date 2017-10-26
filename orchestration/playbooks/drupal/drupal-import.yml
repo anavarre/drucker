@@ -130,24 +130,24 @@
   notify: Reload Apache
   when: apache_conf.stat.exists == false
 
-- name: "IMPORT: Check if Drush aliases exist"
+- name: "IMPORT: Check if Drush alias exist"
   stat:
-    path: "{{ imported_site_aliases }}"
-  register: sitename_aliases
+    path: "{{ imported_site_alias }}"
+  register: sitename_alias
 
-- name: "IMPORT: Deploy Drush aliases"
+- name: "IMPORT: Deploy Drush alias"
   copy:
-    src: "{{ drush_aliases_source_file }}"
-    dest: "{{ imported_site_aliases }}"
+    src: "{{ drush_alias_source_file }}"
+    dest: "{{ imported_site_alias }}"
     mode: 0644
-  when: sitename_aliases.stat.exists == false
+  when: sitename_alias.stat.exists == false
 
-- name: "IMPORT: Update Drush aliases"
+- name: "IMPORT: Update Drush alias"
   replace:
-    dest: "{{ imported_site_aliases }}"
+    dest: "{{ imported_site_alias }}"
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1{{ sitename }}\2'
-  when: sitename_aliases.stat.exists == false
+  when: sitename_alias.stat.exists == false
 
 - name: "IMPORT: Check if default settings.php exists"
   stat:
