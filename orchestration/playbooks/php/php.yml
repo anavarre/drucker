@@ -79,7 +79,7 @@
   notify: Restart PHP-FPM
   when: proxy_fcgi_module.stat.exists == false
 
-- include: php_ini.yml
+- import_tasks: php_ini.yml
 
 - name: Ensure PHP extensions directory exists
   file:

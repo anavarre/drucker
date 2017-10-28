@@ -1,4 +1,4 @@
 ---
-- include: playbooks/drupal/drupal-create.yml
+- import_tasks: playbooks/drupal/drupal-create.yml
   vars:
     sitename: "drucker"

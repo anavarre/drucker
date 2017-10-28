@@ -6,9 +6,9 @@
   vars_files:
     - vars.yml
   handlers:
-    - include: handlers.yml
+    - import_tasks: handlers.yml
   tasks:
-    - include: playbooks/common/mirror-deploy.yml
-    - include: playbooks/common/apt-update.yml
-    - include: playbooks/proxy/varnish.yml
-    - include: playbooks/proxy/nginx.yml
+    - import_tasks: playbooks/common/mirror-deploy.yml
+    - import_tasks: playbooks/common/apt-update.yml
+    - import_tasks: playbooks/proxy/varnish.yml
+    - import_tasks: playbooks/proxy/nginx.yml

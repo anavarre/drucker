@@ -13,5 +13,5 @@
     - python-mysqldb
     - mysql-client
 
-- include: playbooks/db/phpmyadmin.yml
-- include: playbooks/db/adminer.yml
+- import_tasks: playbooks/db/phpmyadmin.yml
+- import_tasks: playbooks/db/adminer.yml

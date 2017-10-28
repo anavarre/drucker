@@ -6,6 +6,6 @@
   vars_files:
     - vars.yml
   handlers:
-    - include: handlers.yml
+    - import_tasks: handlers.yml
   tasks:
-    - include: playbooks/drupal/drupal-create-commit.yml
+    - import_tasks: playbooks/drupal/drupal-create-commit.yml

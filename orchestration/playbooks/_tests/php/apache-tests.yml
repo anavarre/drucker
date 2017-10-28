@@ -1,5 +1,5 @@
 ---
-- include: apache-common-tests.yml
+- import_tasks: apache-common-tests.yml
 
 - name: "TEST: Check if Apache and web tools are installed"
   shell: dpkg -l | grep {{ item }}

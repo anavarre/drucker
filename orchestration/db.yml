@@ -6,10 +6,10 @@
   vars_files:
     - vars.yml
   handlers:
-    - include: handlers.yml
+    - import_tasks: handlers.yml
   tasks:
-    - include: playbooks/common/mirror-deploy.yml
-    - include: playbooks/common/apt-update.yml
-    - include: playbooks/db/mysql.yml
-    - include: playbooks/db/memcached.yml
-    - include: playbooks/db/mysql-backup.yml
+    - import_tasks: playbooks/common/mirror-deploy.yml
+    - import_tasks: playbooks/common/apt-update.yml
+    - import_tasks: playbooks/db/mysql.yml
+    - import_tasks: playbooks/db/memcached.yml
+    - import_tasks: playbooks/db/mysql-backup.yml

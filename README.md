@@ -38,12 +38,12 @@ You need to have both [Docker](https://www.docker.com/) and [Ansible](https://ww
 
 ```
 $ docker --version
-Docker version 1.10.3, build 20f81dd
+Docker version 17.09.0-ce, build afdb6d4
 $ ansible --version
-ansible 2.3.0.0
+ansible 2.4.1.0
 ```
 
-**Important**: Ansible 2 or later is required.
+**Important**: Ansible 2.4 or later is required.
 
 ### <a name="Disk_space"></a>Disk space
 

@@ -1,2 +1,2 @@
-- include: playbooks/_tests/proxy/varnish-tests.yml
-- include: playbooks/_tests/proxy/nginx-tests.yml
+- import_tasks: playbooks/_tests/proxy/varnish-tests.yml
+- import_tasks: playbooks/_tests/proxy/nginx-tests.yml

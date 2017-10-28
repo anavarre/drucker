@@ -55,7 +55,7 @@
     state: restarted
   when: mirror_cache_dir_check.stat.exists == false
 
-- include: common/apt-update.yml
+- import_tasks: common/apt-update.yml
 
 - name: Ensure Apache is started
   service:

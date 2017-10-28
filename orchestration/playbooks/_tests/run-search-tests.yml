@@ -1,1 +1,1 @@
-- include: playbooks/_tests/solr/solr-configuration-tests.yml
+- import_tasks: playbooks/_tests/solr/solr-configuration-tests.yml

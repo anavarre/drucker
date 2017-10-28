@@ -6,10 +6,10 @@
   vars_files:
     - vars.yml
   handlers:
-    - include: handlers.yml
+    - import_tasks: handlers.yml
   tasks:
-    - include: playbooks/common/apache-installation.yml
-    - include: playbooks/mirror/mirror-vhost.yml
-    - include: playbooks/common/apt-repos.yml
-    - include: playbooks/common/mirror-downloads.yml
-    - include: playbooks/mirror-setup.yml
+    - import_tasks: playbooks/common/apache-installation.yml
+    - import_tasks: playbooks/mirror/mirror-vhost.yml
+    - import_tasks: playbooks/common/apt-repos.yml
+    - import_tasks: playbooks/common/mirror-downloads.yml
+    - import_tasks: playbooks/mirror-setup.yml
