@@ -94,7 +94,7 @@
 
 - name: Deploy Solr conf files
   copy:
-    src: "{{ solr_conf }}"
+    src: "{{ solr_conf }}/"
     dest: "{{ solr_configuration_path }}"
     mode: 0644
   become: yes
