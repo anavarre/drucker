@@ -361,8 +361,8 @@ drucker_nginx_vhost: "{{ nginx_conf_d }}/{{ user }}.conf"
 client_max_body_size: 100m
 
 # Apache Solr
-solr_conf: "{{ source_file_dir }}/solr-conf-6.x/"
-solr_version: 6.6.1
+solr_conf: "{{ source_file_dir }}/solr-conf-7.x"
+solr_version: 7.1.0
 solr_unarchived_directory: solr-{{ solr_version }}
 solr_temp_unarchived_path: /opt/{{ solr_unarchived_directory }}
 solr_installation_path: /opt/solr
