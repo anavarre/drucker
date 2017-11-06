@@ -86,3 +86,13 @@
     path: "{{ php_extensions }}"
     state: directory
   when: fpm.stat.exists == false
+
+- name: Check if PHP FPM is started
+  shell: pgrep php-fpm || echo 'down'
+  register: check_phpfpm_up
+  changed_when: check_phpfpm_up.stdout == "down"
+
+- name: Ensure PHP FPM is started
+  command: /etc/init.d/php{{ php_version }}-fpm start
+  become: yes
+  when: check_phpfpm_up.stdout == "down"
