@@ -81,8 +81,12 @@
     enabled: yes
   when: nginx_drucker_host.stat.exists == false
 
+- name: Check if nginx is started
+  shell: pgrep nginx || echo 'down'
+  register: check_nginx_up
+  changed_when: check_nginx_up.stdout == "down"
+
 - name: Ensure nginx is started
-  service:
-    name: nginx
-    state: started
-    pattern: pgrep nginx
+  command: /etc/init.d/nginx start
+  become: yes
+  when: check_nginx_up.stdout == "down"
