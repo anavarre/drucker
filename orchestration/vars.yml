@@ -134,8 +134,6 @@ composer_download_link: https://getcomposer.org/download/{{ composer_stable_rele
 composer_binary: "{{ user_programs_path }}/composer"
 composer_dir_path: "{{ home }}/.composer"
 composer_json_path: "{{ home }}/.composer/composer.json"
-composer_json_template_temp_filename: "{{ webroot }}/composer-template.json"
-composer_json_expected_filename: "{{ webroot }}/composer.json"
 
 # XDebug
 xdebug_stable_release: 2.5.5

@@ -1,23 +1,4 @@
 ---
-- name: "CREATE: Check if composer.json exists"
-  stat:
-    path: "{{ composer_json_expected_filename }}"
-  register: composer_webroot
-  ignore_errors: True
-
-- name: "CREATE: Deploy default composer.json template"
-  copy:
-    src: "{{ composer_json_template_file }}"
-    dest: "{{ webroot }}"
-    mode: 0644
-  become: yes
-  become_user: "{{ user }}"
-  when: composer_webroot.stat.exists == false
-
-- name: "CREATE: Rename composer-template.json filename"
-  command: mv {{ composer_json_template_temp_filename }} {{ composer_json_expected_filename }}
-  when: composer_webroot.stat.exists == false
-
 - name: "CREATE: Check if new site exists"
   stat:
     path: "{{ drupal_root }}"
@@ -37,8 +18,17 @@
   become_user: "{{ user }}"
   when: new_site.stat.exists == false
 
-- name: "CREATE: Move composer.json file into new docroot"
-  command: mv {{ composer_json_expected_filename }} {{ drupal_root }}
+- name: "CREATE: Deploy default composer.json template"
+  copy:
+    src: "{{ composer_json_template_file }}"
+    dest: "{{ drupal_root }}"
+    mode: 0644
+  become: yes
+  become_user: "{{ user }}"
+  when: new_site.stat.exists == false
+
+- name: "CREATE: Rename composer-template.json filename"
+  command: mv {{ drupal_root }}/composer-template.json {{ drupal_root }}/composer.json
   when: new_site.stat.exists == false
 
 - name: "CREATE: Install vendor dependencies from composer.json file (this can take a while)"
