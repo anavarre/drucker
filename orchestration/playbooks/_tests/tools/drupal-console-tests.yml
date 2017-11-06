@@ -4,8 +4,6 @@
     path: "{{ item }}"
   with_items:
     - "{{ drupal_console_binary }}"
-    # Not required anymore?
-    # - "{{ drupal_console_config_file }}"
   register: drupal_console
   failed_when: drupal_console.stat.exists == false
 

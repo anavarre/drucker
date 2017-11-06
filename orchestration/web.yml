@@ -11,5 +11,5 @@
     - import_tasks: playbooks/common/mirror-deploy.yml
     - import_tasks: playbooks/common/apt-update.yml
     - import_tasks: playbooks/stack.yml
-    # - import_tasks: playbooks/drupal.yml
-    # - import_tasks: playbooks/post-install.yml
+    - import_tasks: playbooks/drupal.yml
+    - import_tasks: playbooks/post-install.yml

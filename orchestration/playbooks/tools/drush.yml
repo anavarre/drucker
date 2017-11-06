@@ -27,6 +27,18 @@
   command: mv {{ user_programs_path }}/{{ drush_launcher_archive_file }} {{ user_programs_path }}/drush
   when: drush_launcher.stat.exists == false or drush_launcher_stable_release_check.stdout != drush_launcher_stable_release
 
+- name: Check if Drush etc directory exists
+  stat:
+    path: "{{ drush_etc_path }}"
+  register: drush_etc_check
+  changed_when: drush_etc_check.stat.exists == false
+
+- name: Create Drush etc directory
+  file:
+    path: "{{ drush_etc_path }}"
+    state: directory
+  when: drush_etc_check.stat.exists == false
+
 - name: Check if sites-aliases directory exists
   stat:
     path: "{{ drush_alias_path }}"
