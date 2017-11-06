@@ -68,20 +68,6 @@
   become_user: "{{ user }}"
   when: composer_json.stat.exists == false
 
-- name: Prepare composer.json for Drush
-  replace:
-    dest: "{{ composer_json_path }}"
-    regexp: '^(.*)drush_version(.*)$'
-    replace: '\1"{{ drush_composer_package_version }}"\2'
-  when: composer_json.stat.exists == false
-
-- name: Prepare composer.json for Drupal Console
-  replace:
-    dest: "{{ composer_json_path }}"
-    regexp: '^(.*)drupal_console_version(.*)$'
-    replace: '\1"{{ drupal_console_composer_package_version }}"\2'
-  when: composer_json.stat.exists == false
-
 - name: Make sure permissions are correct for the .composer directory
   file:
     path: "{{ composer_dir_path }}"

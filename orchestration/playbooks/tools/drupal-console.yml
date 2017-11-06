@@ -29,24 +29,3 @@
   command: drupal self-update
   become: yes
   when: drupal_console_launcher.stat.exists == true and drupal_console_launcher_check.stdout != drupal_console_launcher_stable_release
-
-# Drupal Console Composer package
-- name: Check if Drupal Console is installed
-  stat:
-    path: "{{ drupal_console_executable }}"
-  register: drupal_console_executable_check
-  changed_when: drupal_console_executable_check.stat.exists == false
-
-- name: Check Drupal Console version in composer.json file
-  shell: grep -E "\"{{ drupal_console_composer_package }}*.*" {{ composer_json_path }} | awk '{print $NF}' | tr -d '",'
-  register: drupal_console_composer_package_version_check
-  changed_when: drupal_console_composer_package_version_check.stdout != drupal_console_composer_package_version
-
-- name: Update Drupal Console Composer package
-  composer:
-    command: update
-    arguments: "{{ drupal_console_composer_package }} --with-dependencies"
-    working_dir: "{{ composer_dir_path }}"
-  become: yes
-  become_user: "{{ user }}"
-  when: drupal_console_executable_check.stat.exists == true or drupal_console_launcher_check.stdout != drupal_console_launcher_stable_release

@@ -9,12 +9,6 @@
   register: drupal_console
   failed_when: drupal_console.stat.exists == false
 
-- name: "TEST: Drupal Console package should be present in composer.json"
-  shell: grep -o "{{ drupal_console_composer_package_version }}" {{ composer_json_path }} || echo "absent"
-  register: drupal_console_composer
-  changed_when: drupal_console_composer.stdout == "absent"
-  failed_when: drupal_console_composer.stdout == "absent"
-
 - name: "TEST: Drupal Console Launcher should use the latest stable release"
   shell: drupal --version | head -n1 | awk '{print $NF}'
   register: drupal_console_launcher_version

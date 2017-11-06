@@ -1,8 +1,9 @@
 {
+    "name": "drucker/home",
+    "description": "Base dependencies",
+    "license": "GPL-2.0+",
     "require": {
-        "hirak/prestissimo": "^0.3",
-        "drupal/console": drupal_console_version,
-        "drush/drush": drush_version
+        "hirak/prestissimo": "^0.3"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
