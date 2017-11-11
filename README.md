@@ -62,8 +62,8 @@ _drucker_ ships with the following software stack:
 | Debian              | 9 (Stretch)           | [debian:stretch](https://hub.docker.com/_/debian/) (Docker Hub) |
 | Varnish             | 5.0.0 or higher       | APT               |
 | nginx               | 1.10.3 or higher      | APT               |
-| Apache              | 2.4.10 or higher      | APT               |
-| MariaDB             | 10.1.23 or higher     | APT               |
+| Apache              | 2.4.25 or higher      | APT               |
+| MariaDB             | 10.1.26 or higher     | APT               |
 | memcached           | 3.0.3                 | APT, via [ppa:ondrej/php](https://deb.sury.org/)       |
 | mcstat              | 1.1.0                 | [webbj74/mcstat](https://github.com/webbj74/mcstat) (Github)      |
 | phpMyAdmin          | 4.7.5                 | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
@@ -81,9 +81,10 @@ _drucker_ ships with the following software stack:
 | Tideways Profiler   | 4.1.4                 | [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension)  (Github)     |
 | phantomjs           | 2.1.1                 | [ariya/phantomjs](https://bitbucket.org/ariya/phantomjs/) (Bitbucket)     |
 | Drupal              | 8.5.x                 | [Drupal](https://www.drupal.org/project/drupal) (official site)     |
-| Drush               | 9.0.0-beta4           | [Drush](https://packagist.org/packages/drush/drush) (Packagist)      |
+| Drush               | ^9.0                  | [Drush](https://packagist.org/packages/drush/drush) (Packagist)      |
 | Drush Launcher      | 0.4.2                 | [Drush Launcher](https://github.com/drush-ops/drush-launcher) (Github)      |
-| Drupal Console      | 1.0.2                 | [hechoendrupal/drupal-console-launcher](https://github.com/hechoendrupal/drupal-console-launcher) (Github)      |
+
+| Drupal Console      | ~1.0                  | [hechoendrupal/drupal-console-launcher](https://github.com/hechoendrupal/drupal-console-launcher) (Github)      |
 | Composer            | 1.5.2                 | [Composer](https://getcomposer.org) (official site)     |
 | Apache Solr         | 7.0.1                 | [Solr](https://lucene.apache.org/solr/) (official site) |
 | OpenJDK             | 1.8.0_121 or higher   | APT, via debian-backports |
