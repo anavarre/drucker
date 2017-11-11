@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Get the current path to the ansible.cfg override.
+CONTAINERS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export ANSIBLE_CONFIG="${CONTAINERS_DIR}/ansible.cfg"
+
 SOLR_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${SOLR_IMAGE}")
 CUSTOM_SOLR_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${CUSTOM_SOLR_IMAGE}")
 SEARCH_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${SEARCH_IMAGE}")

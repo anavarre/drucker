@@ -6,10 +6,10 @@ ARG SSH=/home/"$USER"/.ssh
 
 VOLUME ["/data"]
 
-# Ensure we're up-to-date
+# Ensure we're up-to-date.
 RUN apt-get update -y && apt-get upgrade -y
 
-# Make sure dpkg works as intended
+# Make sure dpkg works as intended.
 RUN apt-get install -y apt-utils
 
 # Packages needed for Ansible orchestration.

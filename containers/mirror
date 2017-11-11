@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Get the current path to the ansible.cfg override.
+CONTAINERS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export ANSIBLE_CONFIG="${CONTAINERS_DIR}/ansible.cfg"
+
 MIRROR_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${MIRROR_IMAGE}")
 MIRROR_CONTAINER_STARTED=$(docker ps | grep -o "${MIRROR_CONTAINER}")
 

@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Get the current path to the ansible.cfg override.
+CONTAINERS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export ANSIBLE_CONFIG="${CONTAINERS_DIR}/ansible.cfg"
+
 WEB_IMAGE_EXISTS=$(docker images | awk '{print $1":"$2}' | grep "${WEB_IMAGE}")
 WEB_CONTAINER_STARTED=$(docker ps | grep -o "${WEB_CONTAINER}")
 
