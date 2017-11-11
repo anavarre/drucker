@@ -4,30 +4,25 @@ export HOST_KEY_CHECKING='export ANSIBLE_HOST_KEY_CHECKING=False'
 export PLAYBOOK="ansible-playbook -i ${DIR}/orchestration/hosts --user=${USER} ${DIR}/orchestration"
 export EXTRA_VARS="--extra-vars ansible_sudo_pass=${USER}"
 
+# In several of the below functions, SITE is the result of SITENAME supporting
+# a comma-separated list of sites. See functions file for details.
+
 drupal_dev_mode() {
-  # SITE is the result of SITENAME supporting a comma-separated list of sites
-  # to switch to development mode. See --dev definition.
   echo -e "${BLUE}Configuring ${SITE} docroot for development...${COLOR_ENDING}"
   ${PLAYBOOK}/dev.yml --extra-vars "ansible_sudo_pass=${USER} dev=Y sitename=${SITE}"
 }
 
 drupal_prod_mode() {
-  # SITE is the result of SITENAME supporting a comma-separated list of sites
-  # to switch to production mode. See --prod definition.
   echo -e "${BLUE}Configuring ${SITE} docroot for production...${COLOR_ENDING}"
   ${PLAYBOOK}/prod.yml --extra-vars "ansible_sudo_pass=${USER} prod=Y sitename=${SITE}"
 }
 
 import_site() {
-  # SITE is the result of SITENAME supporting a comma-separated list of sites
-  # to import. See --import definition.
   echo -e "${BLUE}Importing site into new docroot ${SITE}...${COLOR_ENDING}"
   ${PLAYBOOK}/import.yml --extra-vars "ansible_sudo_pass=${USER} import=Y sitename=${SITE}"
 }
 
 drupal_reinstall() {
-  # SITE is the result of SITENAME supporting a comma-separated list of sites
-  # to reinstall. See --reinstall definition.
   echo -e "${BLUE}Reinstalling Drupal for docroot ${SITE}...${COLOR_ENDING}"
   ${PLAYBOOK}/reinstall.yml --extra-vars "ansible_sudo_pass=${USER} reinstall=Y sitename=${SITE}"
 }
@@ -51,8 +46,6 @@ hosts_file() {
 }
 
 drupal_create() {
-  # SITE is the result of SITENAME supporting a comma-separated list of
-  # composer-built sites to create. See --create definition.
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
     input
     if [[ ${REPLY} =~ ^[Nn]$ ]]; then
@@ -66,15 +59,11 @@ drupal_create() {
   else
     if [[ -z "${GIT_TAG}" ]] && [[ -z "${GIT_COMMIT}" ]]; then
       echo -e "${BLUE}Creating site into new ${SITE} docroot...${COLOR_ENDING}"
-      # SITE is the result of SITENAME supporting a comma-separated list of sites
-      # to create.
       ${PLAYBOOK}/create.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE}"
       hosts_file
     elif [[ -n "${GIT_TAG}" ]]; then
       if [[ " ${GIT_TAGS[*]} " == *" ${GIT_TAG} "* ]]; then
         echo -e "${BLUE}Creating Drupal ${GIT_TAG} site into new ${SITE} docroot...${COLOR_ENDING}"
-        # SITE is the result of SITENAME supporting a comma-separated list of sites
-        # to create.
         ${PLAYBOOK}/create-tag.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_tag=${GIT_TAG}"
         hosts_file
       else
@@ -91,15 +80,10 @@ drupal_create() {
         drucker_usage
       fi
     fi
-    # echo -e "${BLUE}Installing Drupal...${COLOR_ENDING}"
-    # ${PLAYBOOK}/drupal-create.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE}"
-    # hosts_file
   fi
 }
 
 drupal_lightning() {
-  # SITE is the result of SITENAME supporting a comma-separated list of
-  # Lightning sites to create. See --lightning definition.
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
     input
     if [[ ${REPLY} =~ ^[Nn]$ ]]; then
@@ -118,8 +102,6 @@ drupal_lightning() {
 }
 
 drupal_reservoir() {
-  # SITE is the result of SITENAME supporting a comma-separated list of
-  # Reservoir sites to create. See --reservoir definition.
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
     input
     if [[ ${REPLY} =~ ^[Nn]$ ]]; then
@@ -138,8 +120,6 @@ drupal_reservoir() {
 }
 
 delete_site() {
-  # SITE is the result of SITENAME supporting a comma-separated list of sites
-  # to delete. See --delete definition.
   echo -e "${BLUE}Deleting docroot ${SITE}...${COLOR_ENDING}"
   ${PLAYBOOK}/delete.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y sitename=${SITE}"
   echo -e "${GREEN}Remember to remove the ${SITE}.local entry from your local /etc/hosts file!${COLOR_ENDING}"
