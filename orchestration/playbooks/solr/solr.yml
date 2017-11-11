@@ -97,8 +97,15 @@
     src: "{{ solr_conf }}/"
     dest: "{{ solr_configuration_path }}"
     mode: 0644
-  become: yes
-  become_user: solr
+  when: schemaxml_check.stat.exists == false or (solr_conf_files is defined and solr_conf_files.stdout != "search_api")
+
+- name: Ensure correct permissions on Solr conf files
+  file:
+    path: "{{ solr_configuration_path }}"
+    state: directory
+    owner: solr
+    group: users
+    recurse: yes
   when: schemaxml_check.stat.exists == false or (solr_conf_files is defined and solr_conf_files.stdout != "search_api")
 
 - name: Restart Solr

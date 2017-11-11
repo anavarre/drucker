@@ -9,8 +9,6 @@
     - schema.xml
     - schema_extra_fields.xml
     - schema_extra_types.xml
-    - schema_legacy_fields.xml
-    - schema_legacy_types.xml
     - solrconfig.xml
     - solrconfig_spellcheck.xml
     - solrcore.properties
