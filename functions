@@ -64,6 +64,12 @@ drucker_usage() {
 cat <<EOF
 ${GREEN_HELP}--version${COLOR_ENDING_HELP}                         Returns the drucker version.
 
+${GREEN_HELP}--start${COLOR_ENDING_HELP}                           Starts all drucker containers.
+
+${GREEN_HELP}--stop${COLOR_ENDING_HELP}                            Stops all drucker containers.
+
+${GREEN_HELP}--restart${COLOR_ENDING_HELP}                         Restarts all drucker containers.
+
 ${GREEN_HELP}--dev [sitename,...]${COLOR_ENDING_HELP}              Prepare site(s) for development work with no caching and helper modules enabled.
                                   WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
 
@@ -77,10 +83,9 @@ ${GREEN_HELP}--import [sitename,...]${COLOR_ENDING_HELP}           Imports the d
 ${GREEN_HELP}--reinstall [sitename,...]${COLOR_ENDING_HELP}        Reinstalls arbitrary Drupal docroots, vHosts and corresponding databases.
 
 ${GREEN_HELP}--lightning [sitename,...]${COLOR_ENDING_HELP}        Creates arbitrary Lightning docroots, vHosts and corresponding databases.
-                                  [BROKEN UNTIL 8.4.0]
 
 ${GREEN_HELP}--reservoir [sitename,...]${COLOR_ENDING_HELP}        Creates arbitrary Reservoir docroots, vHosts and corresponding databases.
-                                  [BROKEN UNTIL 8.4.0]
+                                  [CURRENTLY BROKEN]
 
 ${GREEN_HELP}--delete [sitename,...]${COLOR_ENDING_HELP}           Deletes arbitrary docroots, vHosts and corresponding databases.
 
@@ -92,6 +97,9 @@ exit 0
 drucker_argument() {
   if [[ -n "${OPTION}" ]] && \
        [[ "${OPTION}" != "--version" ]] && \
+       [[ "${OPTION}" != "--start" ]] && \
+       [[ "${OPTION}" != "--stop" ]] && \
+       [[ "${OPTION}" != "--restart" ]] && \
        [[ "${OPTION}" != "--dev" ]] && \
        [[ "${OPTION}" != "--prod" ]] && \
        [[ "${OPTION}" != "--create" ]] && \
@@ -115,7 +123,53 @@ drucker_argument() {
       else
         echo ${DRUCKER_VERSION_CHECK}
         exit 0
-     fi
+      fi
+      ;;
+      --start)
+      if [[ "${OPTION}" == "--start" ]]; then
+        mapfile -t CONTAINERS_TO_START < <( docker ps -a | grep 'Exited' | grep 'drucker_' | awk '{print $NF}' )
+        if [[ -z "${CONTAINERS_TO_START}" ]]; then
+          echo "All drucker containers are already started."
+          exit 0
+        else
+          echo -e "${BLUE}Starting drucker containers...${COLOR_ENDING}"
+          for CONTAINER_TO_START in ${CONTAINERS_TO_START[@]}; do
+            docker start ${CONTAINER_TO_START}
+          done
+        fi
+        exit 0
+      fi
+      ;;
+      --stop)
+      if [[ "${OPTION}" == "--stop" ]]; then
+        mapfile -t CONTAINERS_TO_STOP < <( docker ps -a | grep 'Up' | grep 'drucker_' | awk '{print $NF}' )
+        if [[ -z "${CONTAINERS_TO_STOP}" ]]; then
+          echo "All drucker containers are already stopped."
+          exit 0
+        else
+          echo -e "${BLUE}Stopping drucker containers...${COLOR_ENDING}"
+          for CONTAINER_TO_STOP in ${CONTAINERS_TO_STOP[@]}; do
+            docker stop ${CONTAINER_TO_STOP}
+          done
+          exit 0
+        fi
+      fi
+      ;;
+      --restart)
+      if [[ "${OPTION}" == "--restart" ]]; then
+        mapfile -t CONTAINERS_TO_RESTART < <( docker ps -a | grep 'Up' | grep 'drucker_' | awk '{print $NF}' )
+        if [[ -z "${CONTAINERS_TO_RESTART}" ]]; then
+          echo -e "drucker containers should be started before being restarted.\n"
+          echo "Run drucker --start"
+          exit 0
+        else
+          echo -e "${BLUE}Restarting drucker containers...${COLOR_ENDING}"
+          for CONTAINER_TO_RESTART in ${CONTAINERS_TO_RESTART[@]}; do
+            docker restart ${CONTAINER_TO_RESTART}
+          done
+          exit 0
+        fi
+      fi
       ;;
       --dev)
       if [[ "${OPTION}" == "--dev" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
@@ -168,14 +222,6 @@ drucker_argument() {
       fi
       ;;
       --reinstall)
-      # if [[ "${OPTION}" == "--reinstall" ]] && [[ ! -z ${SITENAME} ]]; then
-      #   drucker_usage
-      # else
-      #   reinstall_drupal
-      #   exit 0
-      # fi
-      # ;;
-      # See validation() for details.
       if [[ "${OPTION}" == "--reinstall" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
         validation
         drucker_usage
