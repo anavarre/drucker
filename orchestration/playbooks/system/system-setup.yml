@@ -42,6 +42,8 @@
   - exuberant-ctags
   - git
   - htop
+  # syslog
+  - inetutils-syslogd
   - iputils-ping
   # phantomjs secret dependency
   - libfontconfig1
