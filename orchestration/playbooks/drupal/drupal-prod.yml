@@ -39,15 +39,15 @@
   when: deployed_services_yml_prod.stat.exists == true
 
 - name: "PROD: Check if the Testing module is installed"
-  shell: drush @{{ sitename }}.{{ tld }} pm-list --type=module --status=enabled | grep simpletest | awk '{print $4}'
+  shell: drush --root={{ drupal_root }} pm-list --type=module --status=enabled | grep simpletest | awk '{print $4}'
   register: testing_module_check
 
 - name: "PROD: Uninstall the Testing module"
-  command: drush @{{ sitename }}.{{ tld }} pm-uninstall -y simpletest
+  command: drush --root={{ drupal_root }} pm-uninstall -y simpletest
   when: testing_module_check.stdout == "Enabled"
 
 - name: "PROD: Rebuild Drupal cache"
-  command: drush @{{ sitename }}.{{ tld }} cache-rebuild
+  command: drush --root={{ drupal_root }} cache-rebuild
   when: turn_off_twig_debugging.changed
 
 - name: "PROD: Check the Zend assertions status"

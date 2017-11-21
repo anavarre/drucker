@@ -72,10 +72,10 @@
     replace: '\1    cache: false\2'
 
 - name: "DEV: Enable the Testing module"
-  command: drush @{{ sitename }}.{{ tld }} pm-enable simpletest
+  command: drush --root={{ drupal_root }} pm-enable simpletest
 
 - name: "DEV: Rebuild Drupal cache"
-  command: drush @{{ sitename }}.{{ tld }} cache-rebuild
+  command: drush --root={{ drupal_root }} cache-rebuild
   when: turn_on_twig_debugging.changed
 
 - name: "DEV: Check the Zend assertions status"
