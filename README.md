@@ -163,6 +163,12 @@ For more advanced `drucker` usage, you can pass several CLI parameters:
 $ drucker --help
 --version                         Returns the drucker version.
 
+--start                           Starts all drucker containers.
+
+--stop                            Stops all drucker containers.
+
+--restart                         Restarts all drucker containers.
+
 --dev [sitename,...]              Prepare site(s) for development work with no caching and helper modules enabled.
                                   WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
 
