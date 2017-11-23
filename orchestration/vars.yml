@@ -104,7 +104,7 @@ sury_gpg: https://packages.sury.org/php/apt.gpg
 sury_deb: deb https://packages.sury.org/php/ {{ codename }} main
 sury_repo: "{{ sources_list_d }}/packages_sury_org_php.list"
 apcu_stable_release: 5.1.8
-php_memcached_stable_release: 3.0.3
+php_memcached_stable_release: 3.0.4
 
 # php.ini
 php_ini: /etc/php/{{ php_version }}/fpm/php.ini
