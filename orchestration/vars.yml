@@ -298,7 +298,7 @@ simpletest_dir: "{{ drupal_docroot }}/sites/simpletest"
 phpunit_xml: "{{ drupal_docroot }}/core/phpunit.xml"
 
 # Import
-drush_alias_extension: alias.yml
+drush_alias_extension: site.yml
 import_dir: "{{ webroot }}/import"
 imported_site_alias: "{{ drush_alias_path }}/{{ sitename }}.{{ drush_alias_extension }}"
 archives_dir: "{{ webroot }}/import/archives"
