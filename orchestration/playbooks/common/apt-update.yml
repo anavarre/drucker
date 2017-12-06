@@ -4,10 +4,10 @@
     update_cache: yes
     cache_valid_time: 86400
   register: apt_cache_check
-  changed_when: apt_cache_check == true
+  changed_when: apt_cache_check.cache_updated == true
 
 - name: Update APT cache and upgrade the container
   apt:
     upgrade: yes
     update_cache: yes
-  when: apt_cache_check == true
+  when: apt_cache_check.cache_updated == true
