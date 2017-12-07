@@ -50,6 +50,23 @@ load_container_files() {
   done
 }
 
+start_services() {
+  if [[ "${CONTAINER_TO_START}" == "drucker_search" ]]; then
+    docker exec -u solr -it ${CONTAINER_TO_START} /opt/solr/bin/solr start > /dev/null 2>&1
+  elif [[ "${CONTAINER_TO_START}" == "drucker_web" ]]; then
+    docker exec -it ${CONTAINER_TO_START} service apache2 start > /dev/null 2>&1
+    docker exec -it ${CONTAINER_TO_START} service php7.1-fpm start > /dev/null 2>&1
+  elif [[ "${CONTAINER_TO_START}" == "drucker_db" ]]; then
+    docker exec -it ${CONTAINER_TO_START} service mysql start > /dev/null 2>&1
+  elif [[ "${CONTAINER_TO_START}" == "drucker_mirror" ]]; then
+    docker exec -it ${CONTAINER_TO_START} service apache2 start > /dev/null 2>&1
+    docker exec -it ${CONTAINER_TO_START} service apt-cacher-ng start > /dev/null 2>&1
+  elif [[ "${CONTAINER_TO_START}" == "drucker_reverse_proxy" ]]; then
+    docker exec -it ${CONTAINER_TO_START} service varnish start > /dev/null 2>&1
+    docker exec -it ${CONTAINER_TO_START} service nginx start > /dev/null 2>&1
+  fi
+}
+
 validation() {
   if [[ -z ${SITENAME} ]]; then
     echo -e "\n${RED}You need to pass a sitename.${COLOR_ENDING}\n"
@@ -135,6 +152,7 @@ drucker_argument() {
           echo -e "${BLUE}Starting drucker containers...${COLOR_ENDING}"
           for CONTAINER_TO_START in ${CONTAINERS_TO_START[@]}; do
             docker start ${CONTAINER_TO_START}
+            start_services
           done
         fi
         exit 0
@@ -166,6 +184,7 @@ drucker_argument() {
           echo -e "${BLUE}Restarting drucker containers...${COLOR_ENDING}"
           for CONTAINER_TO_RESTART in ${CONTAINERS_TO_RESTART[@]}; do
             docker restart ${CONTAINER_TO_RESTART}
+            start_services
           done
           exit 0
         fi
