@@ -18,6 +18,15 @@
   become: yes
   become_user: "{{ user }}"
 
+- name: "RESERVOIR: Require Drush in composer.json"
+  composer:
+    command: require
+    arguments: "{{ drush_composer_package }}:{{ drush_composer_version }}"
+    working_dir: "{{ drupal_root }}"
+  become: yes
+  become_user: "{{ user }}"
+  ignore_errors: yes
+
 - name: "RESERVOIR: Create config directories"
   file:
     path: "{{ item }}"
@@ -36,7 +45,7 @@
   command: drush --root={{ drupal_root }}  site-install reservoir install_configure_form.enable_update_status_module=NULL -qy --db-url=mysql://{{ db_creds }}:{{ db_creds }}@{{ db_ip }}:{{ db_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}
   become: yes
   become_user: "{{ user }}"
-  when: new_aliases.stat.exists == false
+  when: new_alias.stat.exists == false
 
 - name: "RESERVOIR: Check if phpunit.xml file exists"
   stat:
