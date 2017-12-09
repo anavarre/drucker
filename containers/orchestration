@@ -27,7 +27,7 @@ drupal_reinstall() {
   ${PLAYBOOK}/reinstall.yml --extra-vars "ansible_sudo_pass=${USER} reinstall=Y sitename=${SITE}"
 }
 
-input() {
+user_confirmation() {
   read -p "The ${SITE} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
 }
 
@@ -47,7 +47,7 @@ hosts_file() {
 
 drupal_create() {
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
-    input
+    user_confirmation
     if [[ ${REPLY} =~ ^[Nn]$ ]]; then
       cancellation
     elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
@@ -85,7 +85,7 @@ drupal_create() {
 
 drupal_lightning() {
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
-    input
+    user_confirmation
     if [[ ${REPLY} =~ ^[Nn]$ ]]; then
       cancellation
     elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
@@ -103,7 +103,7 @@ drupal_lightning() {
 
 drupal_reservoir() {
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
-    input
+    user_confirmation
     if [[ ${REPLY} =~ ^[Nn]$ ]]; then
       cancellation
     elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
