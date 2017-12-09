@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+
+start_services() {
+  if [[ "${CONTAINER_TO_START}" == "drucker_search" ]]; then
+    docker exec -it -u solr ${CONTAINER_TO_START} /opt/solr/bin/solr start > /dev/null 2>&1
+    sleep 1
+  elif [[ "${CONTAINER_TO_START}" == "drucker_web" ]]; then
+    docker exec -it ${CONTAINER_TO_START} service apache2 start > /dev/null 2>&1
+    sleep 1
+    docker exec -it ${CONTAINER_TO_START} service php7.1-fpm start > /dev/null 2>&1
+    sleep 1
+  elif [[ "${CONTAINER_TO_START}" == "drucker_db" ]]; then
+    docker exec -t ${CONTAINER_TO_START} mysqld& > /dev/null 2>&1
+    sleep 1
+    docker exec -it ${CONTAINER_TO_START} memcached -d -u nobody -m 64 -p 11211 127.0.0.1 > /dev/null 2>&1
+    sleep 1
+  elif [[ "${CONTAINER_TO_START}" == "drucker_reverse_proxy" ]]; then
+    docker exec -it ${CONTAINER_TO_START} service varnish start > /dev/null 2>&1
+    sleep 1
+    docker exec -it ${CONTAINER_TO_START} service nginx start > /dev/null 2>&1
+    sleep 1
+  elif [[ "${CONTAINER_TO_START}" == "drucker_mirror" ]]; then
+    docker exec -it ${CONTAINER_TO_START} service apache2 start > /dev/null 2>&1
+    sleep 1
+    docker exec -it ${CONTAINER_TO_START} service apt-cacher-ng start > /dev/null 2>&1
+    sleep 1
+  fi
+}
+
+start_containers() {
+  mapfile -t CONTAINERS_TO_START < <( docker ps -a | grep 'Exited' | grep 'drucker_' | awk '{print $NF}' )
+  if [[ -z "${CONTAINERS_TO_START}" ]]; then
+    echo "All drucker containers are already started."
+    exit 0
+  else
+    echo -e "${BLUE}Starting drucker containers...${COLOR_ENDING}"
+    for CONTAINER_TO_START in ${CONTAINERS_TO_START[@]}; do
+      docker start ${CONTAINER_TO_START}
+      start_services
+    done
+  fi
+  exit 0
+}
+
+stop_containers() {
+  mapfile -t CONTAINERS_TO_STOP < <( docker ps -a | grep 'Up' | grep 'drucker_' | awk '{print $NF}' )
+  if [[ -z "${CONTAINERS_TO_STOP}" ]]; then
+    echo "All drucker containers are already stopped."
+    exit 0
+  else
+    echo -e "${BLUE}Stopping drucker containers...${COLOR_ENDING}"
+    for CONTAINER_TO_STOP in ${CONTAINERS_TO_STOP[@]}; do
+      docker stop ${CONTAINER_TO_STOP}
+    done
+  fi
+}
+
+restart_containers() {
+  mapfile -t CONTAINERS_TO_RESTART < <( docker ps -a | grep 'Up' | grep 'drucker_' | awk '{print $NF}' )
+  if [[ -z "${CONTAINERS_TO_RESTART}" ]]; then
+    echo -e "drucker containers should be started before being restarted.\n"
+    echo "Run drucker --start"
+    exit 0
+  else
+    stop_containers
+    start_containers
+  fi
+  exit 0
+}

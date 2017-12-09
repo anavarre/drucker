@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+
+load_function_files() {
+  FUNCTION_DIR="functions"
+  FUNCTION_FILES="local_setup containers_management helpers arguments"
+
+  for FUNCTION_FILE in ${FUNCTION_FILES} ; do
+    source "${DIR}/${FUNCTION_DIR}/${FUNCTION_FILE}"
+  done
+}
+
+load_container_files() {
+  CONTAINER_DIR="containers"
+  CONTAINER_FILES="variables requirements init ssh orchestration mirror base reverse_proxy web db search"
+
+  for CONTAINER_FILE in ${CONTAINER_FILES} ; do
+    source "${DIR}/${CONTAINER_DIR}/${CONTAINER_FILE}"
+  done
+}
+
+drucker_argument() {
+  if [[ -n "${OPTION}" ]] && \
+       [[ "${OPTION}" != "--version" ]] && \
+       [[ "${OPTION}" != "--start" ]] && \
+       [[ "${OPTION}" != "--stop" ]] && \
+       [[ "${OPTION}" != "--restart" ]] && \
+       [[ "${OPTION}" != "--dev" ]] && \
+       [[ "${OPTION}" != "--prod" ]] && \
+       [[ "${OPTION}" != "--create" ]] && \
+       [[ "${OPTION}" != "--import" ]] && \
+       [[ "${OPTION}" != "--reinstall" ]] && \
+       [[ "${OPTION}" != "--lightning" ]] && \
+       [[ "${OPTION}" != "--reservoir" ]] && \
+       [[ "${OPTION}" != "--delete" ]] && \
+       [[ "${OPTION}" != "--tests" ]] && \
+       [[ "${OPTION}" != "--help" ]]; then
+    usage
+  else
+    case "$OPTION" in
+      --version)
+        return_version
+        ;;
+      --start)
+        if [[ "${OPTION}" == "--start" ]]; then
+          start_containers
+        fi
+        ;;
+      --stop)
+        if [[ "${OPTION}" == "--stop" ]]; then
+          stop_containers
+          exit 0
+        fi
+        ;;
+      --restart)
+        if [[ "${OPTION}" == "--restart" ]]; then
+          restart_containers
+        fi
+        ;;
+      --dev)
+        if [[ "${OPTION}" == "--dev" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+          usage
+        else
+          enable_dev_mode
+        fi
+        ;;
+      --prod)
+        if [[ "${OPTION}" == "--prod" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+          usage
+        else
+          enable_prod_mode
+        fi
+        ;;
+      --create)
+        if [[ "${OPTION}" == "--create" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]  || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+          validation
+          usage
+        else
+          create_sites
+        fi
+        ;;
+      --import)
+        if [[ "${OPTION}" == "--import" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+          validation
+          usage
+        else
+          import_sites
+        fi
+        ;;
+      --reinstall)
+        if [[ "${OPTION}" == "--reinstall" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+          validation
+          usage
+        else
+          reinstall_sites
+        fi
+        ;;
+      --lightning)
+        # See validation() for details.
+        if [[ "${OPTION}" == "--lightning" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+          validation
+          usage
+        else
+          create_lightning_sites
+        fi
+        ;;
+      --reservoir)
+        # See validation() for details.
+        if [[ "${OPTION}" == "--reservoir" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+          validation
+          usage
+        else
+          create_reservoir_sites
+        fi
+        ;;
+      --delete)
+        if [[ "${OPTION}" == "--delete" ]] && [[ -z ${SITENAME} ]]; then
+          usage
+        else
+          delete_sites
+        fi
+        ;;
+      --tests)
+        if [[ "${OPTION}" == "--tests" ]] && [[ ! -z ${SITENAME} ]]; then
+          usage
+          exit 0
+        else
+          run_tests
+          exit 0
+        fi
+        ;;
+      --help)
+        usage
+        exit 0
+        ;;
+    esac
+  fi
+}

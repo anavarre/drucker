@@ -3,7 +3,8 @@
 # Invoke the script from anywhere (e.g .bashrc alias)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-source "${DIR}/functions"
+source "${DIR}/init"
+load_function_files
 load_container_files
 
 check_software_requirements

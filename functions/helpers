@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+validation() {
+  if [[ -z ${SITENAME} ]]; then
+    echo -e "\n${RED}You need to pass a sitename.${COLOR_ENDING}\n"
+  elif [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+    echo -e "\n${RED}You cannot use only digits.${COLOR_ENDING}\n"
+  elif [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+    echo -e "\n${RED}You cannot use special characters.${COLOR_ENDING}\n"
+  fi
+}
+
+usage() {
+cat <<EOF
+${GREEN_HELP}--version${COLOR_ENDING_HELP}                         Returns the drucker version.
+
+${GREEN_HELP}--start${COLOR_ENDING_HELP}                           Starts all drucker containers.
+
+${GREEN_HELP}--stop${COLOR_ENDING_HELP}                            Stops all drucker containers.
+
+${GREEN_HELP}--restart${COLOR_ENDING_HELP}                         Restarts all drucker containers.
+
+${GREEN_HELP}--dev [sitename,...]${COLOR_ENDING_HELP}              Prepare site(s) for development work with no caching and helper modules enabled.
+                                  WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
+
+${GREEN_HELP}--prod [sitename,...]${COLOR_ENDING_HELP}             Opinionated setup with all known performance best practices enabled.
+
+${GREEN_HELP}--create [sitename,...] [git_ref]${COLOR_ENDING_HELP} Creates arbitrary Drupal docroots, vHosts and corresponding databases.
+                                  [TEMPORARILY DISABLED] Optionally select an arbitrary Git tag or commit ID.
+
+${GREEN_HELP}--import [sitename,...]${COLOR_ENDING_HELP}           Imports the database, files and codebase from the web container's import directory.
+
+${GREEN_HELP}--reinstall [sitename,...]${COLOR_ENDING_HELP}        Reinstalls arbitrary Drupal docroots, vHosts and corresponding databases.
+
+${GREEN_HELP}--lightning [sitename,...]${COLOR_ENDING_HELP}        Creates arbitrary Lightning docroots, vHosts and corresponding databases.
+
+${GREEN_HELP}--reservoir [sitename,...]${COLOR_ENDING_HELP}        Creates arbitrary Reservoir docroots, vHosts and corresponding databases.
+                                  [CURRENTLY BROKEN]
+
+${GREEN_HELP}--delete [sitename,...]${COLOR_ENDING_HELP}           Deletes arbitrary docroots, vHosts and corresponding databases.
+
+${GREEN_HELP}--tests${COLOR_ENDING_HELP}                           Runs the Ansible test suite.
+EOF
+exit 0
+}

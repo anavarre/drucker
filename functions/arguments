@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+return_version() {
+  DRUCKER_VERSION_CHECK=$(grep "DRUCKER_VERSION" ${DIR}/containers/variables | awk '{print $2}' | grep -oP   'DRUCKER_VERSION="\K[^"]+')
+  latest_commit=$(cd ${DIR} && git rev-parse --short HEAD)
+
+  if [[ ${DRUCKER_VERSION_CHECK} == 'dev' ]]; then
+    echo ${DRUCKER_VERSION_CHECK}:${latest_commit}
+    exit 0
+  else
+    echo ${DRUCKER_VERSION_CHECK}
+    exit 0
+  fi
+}
+
+enable_dev_mode() {
+  # Comma-separated sitenames are split into single values for drucker to
+  # get a list of sites to switch to development mode.
+  for SITE in ${SITENAME//,/ }; do
+    drupal_dev_mode
+  done
+  exit 0
+}
+
+enable_prod_mode() {
+  # Comma-separated sitenames are split into single values for drucker to
+  # get a list of sites to switch to production mode.
+  for SITE in ${SITENAME//,/ }; do
+    drupal_prod_mode
+  done
+  exit 0
+}
+
+create_sites() {
+  # Comma-separated sitenames are split into single values for drucker to
+  # get a list of sites to create.
+  for SITE in ${SITENAME//,/ }; do
+    drupal_create
+  done
+  exit 0
+}
+
+import_sites() {
+  # Comma-separated sitenames are split into single values for drucker to
+  # get a list of sites to import.
+  for SITE in ${SITENAME//,/ }; do
+    import_site
+  done
+  exit 0
+}
+
+reinstall_sites() {
+  # Comma-separated sitenames are split into single values for drucker to
+  # get a list of sites to reinstall.
+  for SITE in ${SITENAME//,/ }; do
+    drupal_reinstall
+  done
+  exit 0
+}
+
+create_lightning_sites() {
+  # Comma-separated sitenames are split into single values for drucker to
+  # get a list of Lightning sites to create.
+  for SITE in ${SITENAME//,/ }; do
+    drupal_lightning
+  done
+  exit 0
+}
+
+create_reservoir_sites() {
+  # Comma-separated sitenames are split into single values for drucker to
+  # get a list of Reservoir sites to create.
+  for SITE in ${SITENAME//,/ }; do
+    drupal_reservoir
+  done
+  exit 0
+}
+
+delete_sites() {
+  # Comma-separated sitenames are split into single values for drucker to
+  # get a list of sites to delete.
+  for SITE in ${SITENAME//,/ }; do
+    delete_site
+  done
+  exit 0
+}
