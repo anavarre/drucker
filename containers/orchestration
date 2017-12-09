@@ -5,7 +5,7 @@ export PLAYBOOK="ansible-playbook -i ${DIR}/orchestration/hosts --user=${USER} $
 export EXTRA_VARS="--extra-vars ansible_sudo_pass=${USER}"
 
 # In several of the below functions, SITE is the result of SITENAME supporting
-# a comma-separated list of sites. See functions file for details.
+# a comma-separated list of sites. See functions/arguments file for details.
 
 drupal_dev_mode() {
   echo -e "${BLUE}Configuring ${SITE} docroot for development...${COLOR_ENDING}"

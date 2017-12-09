@@ -21,6 +21,7 @@ load_container_files() {
 drucker_argument() {
   if [[ -n "${OPTION}" ]] && \
        [[ "${OPTION}" != "--version" ]] && \
+       [[ "${OPTION}" != "--health" ]] && \
        [[ "${OPTION}" != "--start" ]] && \
        [[ "${OPTION}" != "--stop" ]] && \
        [[ "${OPTION}" != "--restart" ]] && \
@@ -39,6 +40,9 @@ drucker_argument() {
     case "$OPTION" in
       --version)
         return_version
+        ;;
+      --health)
+        run_healthcheck
         ;;
       --start)
         if [[ "${OPTION}" == "--start" ]]; then

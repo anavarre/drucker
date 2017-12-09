@@ -13,6 +13,122 @@ return_version() {
   fi
 }
 
+apache_check() {
+  if [[ -z $(docker exec -it ${CONTAINER} pgrep apache2 | head -1) ]]; then
+    echo "!!! Apache is down. Starting..."
+    docker exec -it ${CONTAINER} service apache2 start > /dev/null 2>&1
+    sleep 1
+  else
+    echo '- Apache is up'
+  fi
+}
+
+phpfpm_check() {
+  if [[ -z $(docker exec -it ${CONTAINER} pgrep php-fpm | head -1) ]]; then
+    echo "!!! PHP-FPM is down. Starting..."
+    docker exec -it ${CONTAINER} service php7.2-fpm start > /dev/null 2>&1
+    sleep 1
+  else
+    echo '- PHP-FPM is up'
+  fi
+}
+
+mysql_check() {
+  if [[ -z $(docker exec -it ${CONTAINER} pgrep mysqld | head -1) ]]; then
+    echo "!!! MySQL is down. Starting..."
+    docker exec -t ${CONTAINER} mysqld& > /dev/null 2>&1
+    sleep 1
+  else
+    echo '- MySQL is up'
+  fi
+}
+
+memcached_check() {
+  if [[ -z $(docker exec -it ${CONTAINER} pgrep memcached) ]]; then
+    echo "!!! memcached is down. Starting..."
+    docker exec -it ${CONTAINER} memcached -d -u nobody -m 64 -p 11211 127.0.0.1 > /dev/null 2>&1
+    sleep 1
+  else
+    echo '- memcached is up'
+  fi
+}
+
+varnish_check() {
+  if [[ -z $(docker exec -it ${CONTAINER} pgrep varnish) ]]; then
+    echo "!!! Varnish is down. Starting..."
+    docker exec -it ${CONTAINER} service varnish start > /dev/null 2>&1
+    sleep 1
+  else
+    echo '- Varnish is up'
+  fi
+}
+
+nginx_check() {
+  if [[ -z $(docker exec -it ${CONTAINER} pgrep nginx | head -1) ]]; then
+    echo "!!! nginx is down. Starting..."
+    docker exec -it ${CONTAINER} service nginx start > /dev/null 2>&1
+    sleep 1
+  else
+    echo '- nginx is up'
+  fi
+}
+
+aptcacherng_check() {
+  if [[ -z $(docker exec -it ${CONTAINER} pgrep apt-cacher-ng) ]]; then
+    echo "!!! Apt-Cacher NG is down. Starting..."
+    docker exec -it ${CONTAINER} service apt-cacher-ng start > /dev/null 2>&1
+    sleep 1
+  else
+    echo '- Apt-Cacher NG is up'
+  fi
+}
+
+solr_check() {
+  if [[ -z $(docker exec -it ${CONTAINER} ps -ef | grep -m1 solr | awk '{print $1}') ]]; then
+    echo "!!! Apache Solr is down. Starting..."
+    docker exec -it -u solr ${CONTAINER} /opt/solr/bin/solr start > /dev/null 2>&1
+    sleep 1
+  else
+    echo '- Apache Solr is up'
+  fi
+}
+
+run_healthcheck() {
+  mapfile -t CONTAINERS < <( docker ps | grep 'drucker_' | awk '{print $NF}' )
+
+  for CONTAINER in ${CONTAINERS[@]}; do
+    if [[ "${CONTAINER}" == "drucker_web" ]]; then
+      echo -e "Checking services for ${CONTAINER}\n"
+      apache_check
+      phpfpm_check
+    fi
+
+    if [[ "${CONTAINER}" == "drucker_search" ]]; then
+      echo -e "\nChecking services for ${CONTAINER}\n"
+      solr_check
+    fi
+
+    if [[ "${CONTAINER}" == "drucker_db" ]]; then
+      echo -e "\nChecking services for ${CONTAINER}\n"
+      mysql_check
+      memcached_check
+    fi
+
+    if [[ "${CONTAINER}" == "drucker_reverse_proxy" ]]; then
+      echo -e "\nChecking services for ${CONTAINER}\n"
+      varnish_check
+      nginx_check
+    fi
+
+    if [[ "${CONTAINER}" == "drucker_mirror" ]]; then
+      echo -e "\nChecking services for ${CONTAINER}\n"
+      apache_check
+      aptcacherng_check
+    fi
+  done
+  exit 0
+}
+
 enable_dev_mode() {
   # Comma-separated sitenames are split into single values for drucker to
   # get a list of sites to switch to development mode.

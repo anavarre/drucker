@@ -162,6 +162,8 @@ For more advanced `drucker` usage, you can pass several CLI parameters:
 $ drucker --help
 --version                         Returns the drucker version.
 
+--health                          Runs a service healthcheck.
+
 --start                           Starts all drucker containers.
 
 --stop                            Stops all drucker containers.

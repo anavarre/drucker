@@ -1,29 +1,49 @@
 #!/usr/bin/env bash
 
+start_drucker_search_services() {
+  docker exec -it -u solr ${CONTAINER_TO_START} /opt/solr/bin/solr start > /dev/null 2>&1
+  sleep 1
+}
+
+start_drucker_web_services() {
+  docker exec -it ${CONTAINER_TO_START} service apache2 start > /dev/null 2>&1
+  sleep 1
+  docker exec -it ${CONTAINER_TO_START} service php7.2-fpm start > /dev/null 2>&1
+  sleep 1
+}
+
+start_drucker_db_services() {
+  docker exec -t ${CONTAINER_TO_START} mysqld& > /dev/null 2>&1
+  sleep 1
+  docker exec -it ${CONTAINER_TO_START} memcached -d -u nobody -m 64 -p 11211 127.0.0.1 > /dev/null 2>&1
+  sleep 1
+}
+
+start_drucker_reverse_proxy_services() {
+  docker exec -it ${CONTAINER_TO_START} service varnish start > /dev/null 2>&1
+  sleep 1
+  docker exec -it ${CONTAINER_TO_START} service nginx start > /dev/null 2>&1
+  sleep 1
+}
+
+start_drucker_mirror_services() {
+  docker exec -it ${CONTAINER_TO_START} service apache2 start > /dev/null 2>&1
+  sleep 1
+  docker exec -it ${CONTAINER_TO_START} service apt-cacher-ng start > /dev/null 2>&1
+  sleep 1
+}
+
 start_services() {
   if [[ "${CONTAINER_TO_START}" == "drucker_search" ]]; then
-    docker exec -it -u solr ${CONTAINER_TO_START} /opt/solr/bin/solr start > /dev/null 2>&1
-    sleep 1
+    start_drucker_search_services
   elif [[ "${CONTAINER_TO_START}" == "drucker_web" ]]; then
-    docker exec -it ${CONTAINER_TO_START} service apache2 start > /dev/null 2>&1
-    sleep 1
-    docker exec -it ${CONTAINER_TO_START} service php7.2-fpm start > /dev/null 2>&1
-    sleep 1
+    start_drucker_web_services
   elif [[ "${CONTAINER_TO_START}" == "drucker_db" ]]; then
-    docker exec -t ${CONTAINER_TO_START} mysqld& > /dev/null 2>&1
-    sleep 1
-    docker exec -it ${CONTAINER_TO_START} memcached -d -u nobody -m 64 -p 11211 127.0.0.1 > /dev/null 2>&1
-    sleep 1
+    start_drucker_db_services
   elif [[ "${CONTAINER_TO_START}" == "drucker_reverse_proxy" ]]; then
-    docker exec -it ${CONTAINER_TO_START} service varnish start > /dev/null 2>&1
-    sleep 1
-    docker exec -it ${CONTAINER_TO_START} service nginx start > /dev/null 2>&1
-    sleep 1
+    start_drucker_reverse_proxy_services
   elif [[ "${CONTAINER_TO_START}" == "drucker_mirror" ]]; then
-    docker exec -it ${CONTAINER_TO_START} service apache2 start > /dev/null 2>&1
-    sleep 1
-    docker exec -it ${CONTAINER_TO_START} service apt-cacher-ng start > /dev/null 2>&1
-    sleep 1
+    start_drucker_mirror_services
   fi
 }
 

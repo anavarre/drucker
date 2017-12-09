@@ -14,6 +14,8 @@ usage() {
 cat <<EOF
 ${GREEN_HELP}--version${COLOR_ENDING_HELP}                         Returns the drucker version.
 
+${GREEN_HELP}--health${COLOR_ENDING_HELP}                          Runs a service healthcheck.
+
 ${GREEN_HELP}--start${COLOR_ENDING_HELP}                           Starts all drucker containers.
 
 ${GREEN_HELP}--stop${COLOR_ENDING_HELP}                            Stops all drucker containers.
