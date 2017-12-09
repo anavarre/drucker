@@ -7,7 +7,7 @@ start_services() {
   elif [[ "${CONTAINER_TO_START}" == "drucker_web" ]]; then
     docker exec -it ${CONTAINER_TO_START} service apache2 start > /dev/null 2>&1
     sleep 1
-    docker exec -it ${CONTAINER_TO_START} service php7.1-fpm start > /dev/null 2>&1
+    docker exec -it ${CONTAINER_TO_START} service php7.2-fpm start > /dev/null 2>&1
     sleep 1
   elif [[ "${CONTAINER_TO_START}" == "drucker_db" ]]; then
     docker exec -t ${CONTAINER_TO_START} mysqld& > /dev/null 2>&1

@@ -68,7 +68,7 @@ _drucker_ ships with the following software stack:
 | mcstat              | 1.1.0                 | [webbj74/mcstat](https://github.com/webbj74/mcstat) (Github)      |
 | phpMyAdmin          | 4.7.6                 | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
 | adminer             | 4.3.0                 | [vrana/adminer](https://github.com/vrana/adminer) (Github)      |
-| PHP-FPM             | 7.1.1 or higher       | APT, via [ppa:ondrej/php](https://deb.sury.org/)      |
+| PHP-FPM             | 7.2.0 or higher       | APT, via [ppa:ondrej/php](https://deb.sury.org/)      |
 | APCu                | 5.1.8 or higher       | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
 | Coder               | 8.2.11                | [drupal/coder](https://packagist.org/packages/drupal/coder) (Packagist)      |
 | Code Sniffer        | 2.6.1                 | [squizlabs/PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) (Github)      |
@@ -77,7 +77,7 @@ _drucker_ ships with the following software stack:
 | PECL uploadprogress | master                | [ php/pecl-php-uploadprogress](https://github.com/php/pecl-php-uploadprogress)  (Github)     |
 | PECL YAML           | 2.0.0                 | [php/pecl-file_formats-yaml](https://github.com/php/pecl-file_formats-yaml) (Github)      |
 | LibYAML             | 0.1.7                 | [PyYAML](http://pyyaml.org/) (official site)     |
-| Xdebug              | 2.5.5                 | [Xdebug](https://xdebug.org/) (official site)     |
+| Xdebug              | 2.6.0alpha1           | [Xdebug](https://xdebug.org/) (official site)     |
 | Tideways Profiler   | 4.1.4                 | [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension)  (Github)     |
 | phantomjs           | 2.1.1                 | [ariya/phantomjs](https://bitbucket.org/ariya/phantomjs/) (Bitbucket)     |
 | Drupal              | 8.5.x                 | [Drupal](https://www.drupal.org/project/drupal) (official site)     |
