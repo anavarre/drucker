@@ -9,6 +9,10 @@
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
+        },
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
         }
     ],
     "require": {
@@ -23,12 +27,21 @@
         "drupal/core": "7.*"
     },
     "extra": {
+        "installer-types": [
+            "bower-asset",
+            "npm-asset"
+        ],
         "installer-paths": {
             "docroot/core": ["type:drupal-core"],
-            "docroot/libraries/{$name}": ["type:drupal-library"],
-            "docroot/modules/contrib/{$name}": ["type:drupal-module"],
-            "docroot/profiles/contrib/{$name}": ["type:drupal-profile"],
-            "docroot/themes/contrib/{$name}": ["type:drupal-theme"]
+            "docroot/modules/contrib/{$name}/": ["type:drupal-module"],
+            "docroot/modules/custom/{$name}/": ["type:drupal-module-custom"],
+            "docroot/themes/contrib/{$name}/": ["type:drupal-theme"],
+            "docroot/profiles/contrib/{$name}/": ["type:drupal-profile"],
+            "drush/contrib/{$name}": ["type:drupal-drush"],
+            "docroot/libraries/{$name}": [
+                "type:bower-asset",
+                "type:npm-asset"
+            ]
         }
     }
 }
