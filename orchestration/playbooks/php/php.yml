@@ -46,7 +46,6 @@
     - php{{ php_version }}-curl
     - php{{ php_version }}-gd
     - php{{ php_version }}-mbstring
-    - php{{ php_version }}-sodium
     - php{{ php_version }}-mysql
     - php{{ php_version }}-xmlrpc
     - php{{ php_version }}-xsl
