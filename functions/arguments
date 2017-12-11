@@ -15,7 +15,7 @@ return_version() {
 
 apache_check() {
   if [[ -z $(docker exec -it ${CONTAINER} pgrep apache2 | head -1) ]]; then
-    echo "!!! Apache is down. Starting..."
+    echo -e "${RED}!!! Apache is down.${COLOR_ENDING} Starting..."
     docker exec -it ${CONTAINER} service apache2 start > /dev/null 2>&1
     sleep 1
   else
@@ -25,7 +25,7 @@ apache_check() {
 
 phpfpm_check() {
   if [[ -z $(docker exec -it ${CONTAINER} pgrep php-fpm | head -1) ]]; then
-    echo "!!! PHP-FPM is down. Starting..."
+    echo -e "${RED}!!! PHP-FPM is down.${COLOR_ENDING} Starting..."
     docker exec -it ${CONTAINER} service php7.2-fpm start > /dev/null 2>&1
     sleep 1
   else
@@ -35,7 +35,7 @@ phpfpm_check() {
 
 mysql_check() {
   if [[ -z $(docker exec -it ${CONTAINER} pgrep mysqld | head -1) ]]; then
-    echo "!!! MySQL is down. Starting..."
+    echo -e "${RED}!!! MySQL is down.${COLOR_ENDING} Starting..."
     docker exec -t ${CONTAINER} mysqld& > /dev/null 2>&1
     sleep 1
   else
@@ -45,7 +45,7 @@ mysql_check() {
 
 memcached_check() {
   if [[ -z $(docker exec -it ${CONTAINER} pgrep memcached) ]]; then
-    echo "!!! memcached is down. Starting..."
+    echo -e "${RED}!!! memcached is down.${COLOR_ENDING} Starting..."
     docker exec -it ${CONTAINER} memcached -d -u nobody -m 64 -p 11211 127.0.0.1 > /dev/null 2>&1
     sleep 1
   else
@@ -55,7 +55,7 @@ memcached_check() {
 
 varnish_check() {
   if [[ -z $(docker exec -it ${CONTAINER} pgrep varnish) ]]; then
-    echo "!!! Varnish is down. Starting..."
+    echo -e "${RED}!!! Varnish is down.${COLOR_ENDING} Starting..."
     docker exec -it ${CONTAINER} service varnish start > /dev/null 2>&1
     sleep 1
   else
@@ -65,7 +65,7 @@ varnish_check() {
 
 nginx_check() {
   if [[ -z $(docker exec -it ${CONTAINER} pgrep nginx | head -1) ]]; then
-    echo "!!! nginx is down. Starting..."
+    echo -e "${RED}!!! nginx is down.${COLOR_ENDING} Starting..."
     docker exec -it ${CONTAINER} service nginx start > /dev/null 2>&1
     sleep 1
   else
@@ -75,7 +75,7 @@ nginx_check() {
 
 aptcacherng_check() {
   if [[ -z $(docker exec -it ${CONTAINER} pgrep apt-cacher-ng) ]]; then
-    echo "!!! Apt-Cacher NG is down. Starting..."
+    echo -e "${RED}!!! Apt-Cacher NG is down.${COLOR_ENDING} Starting..."
     docker exec -it ${CONTAINER} service apt-cacher-ng start > /dev/null 2>&1
     sleep 1
   else
@@ -85,7 +85,7 @@ aptcacherng_check() {
 
 solr_check() {
   if [[ -z $(docker exec -it ${CONTAINER} ps -ef | grep -m1 solr | awk '{print $1}') ]]; then
-    echo "!!! Apache Solr is down. Starting..."
+    echo -e "${RED}!!! Apache Solr is down.${COLOR_ENDING} Starting..."
     docker exec -it -u solr ${CONTAINER} /opt/solr/bin/solr start > /dev/null 2>&1
     sleep 1
   else
@@ -93,35 +93,47 @@ solr_check() {
   fi
 }
 
+container_status() {
+  mapfile -t CONTAINERS_STATUS < <( docker ps -a | grep 'drucker_' | awk '{print $9}' )
+  for STATUS in ${CONTAINERS_STATUS[@]}; do
+    if [[ " ${STATUS[*]} " == *" Exited "* ]]; then
+      echo 'All containers need to be started to run the health check.'
+      echo 'Run drucker --start'
+      exit 0
+    fi
+  done
+}
+
 run_healthcheck() {
+  container_status
   mapfile -t CONTAINERS < <( docker ps | grep 'drucker_' | awk '{print $NF}' )
 
   for CONTAINER in ${CONTAINERS[@]}; do
     if [[ "${CONTAINER}" == "drucker_web" ]]; then
-      echo -e "Checking services for ${CONTAINER}\n"
+      echo -e "${BLUE}Checking services for ${CONTAINER}${COLOR_ENDING}"
       apache_check
       phpfpm_check
     fi
 
     if [[ "${CONTAINER}" == "drucker_search" ]]; then
-      echo -e "\nChecking services for ${CONTAINER}\n"
+      echo -e "${BLUE}Checking services for ${CONTAINER}${COLOR_ENDING}"
       solr_check
     fi
 
     if [[ "${CONTAINER}" == "drucker_db" ]]; then
-      echo -e "\nChecking services for ${CONTAINER}\n"
+      echo -e "${BLUE}Checking services for ${CONTAINER}${COLOR_ENDING}"
       mysql_check
       memcached_check
     fi
 
     if [[ "${CONTAINER}" == "drucker_reverse_proxy" ]]; then
-      echo -e "\nChecking services for ${CONTAINER}\n"
+      echo -e "${BLUE}Checking services for ${CONTAINER}${COLOR_ENDING}"
       varnish_check
       nginx_check
     fi
 
     if [[ "${CONTAINER}" == "drucker_mirror" ]]; then
-      echo -e "\nChecking services for ${CONTAINER}\n"
+      echo -e "${BLUE}Checking services for ${CONTAINER}${COLOR_ENDING}"
       apache_check
       aptcacherng_check
     fi
