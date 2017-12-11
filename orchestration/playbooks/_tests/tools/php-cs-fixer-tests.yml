@@ -6,7 +6,7 @@
   failed_when: php_cs_fixer.stat.exists == false
 
 - name: "TEST: php-cs-fixer should use the latest stable release"
-  shell: php-cs-fixer --version | awk '{print $5}'
+  shell: php-cs-fixer --version | awk '{print $4}'
   register: php_cs_fixer_version_check
   changed_when: php_cs_fixer_version_check.stdout != php_cs_fixer_stable_release
   failed_when: php_cs_fixer_version_check.stdout != php_cs_fixer_stable_release
