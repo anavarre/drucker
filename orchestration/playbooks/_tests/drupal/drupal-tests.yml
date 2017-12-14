@@ -22,6 +22,12 @@
   register: drupal
   failed_when: drupal.stat.exists == false
 
+- name: "TEST: The config directory should have correct permissions"
+  shell: stat -c -%a {{ drupal_root }}/{{ default_configuration_dir }} | tail -c5
+  register: config_permissions
+  changed_when: config_permissions.stdout != "2775"
+  failed_when: config_permissions.stdout != "2775"
+
 - name: "TEST: settings.php should hold the correct trusted_host_patterns setting"
   shell: grep -F "{{ user }}\.{{ tld }}" {{ settings_php }} || echo "missing"
   register: trusted_host_patterns

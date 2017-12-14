@@ -27,18 +27,6 @@
   become_user: "{{ user }}"
   ignore_errors: yes
 
-- name: "RESERVOIR: Create config directories"
-  file:
-    path: "{{ item }}"
-    state: directory
-    mode: 02755
-    owner: "{{ user }}"
-    group: "{{ apache_user }}"
-  with_items:
-    - "{{ drupal_root }}/config"
-    - "{{ drupal_root }}/{{ default_configuration_dir }}"
-  when: new_site.stat.exists == false
-
 - import_tasks: ../common/drupal-common.yml
 
 - name: "RESERVOIR: Install Drupal"

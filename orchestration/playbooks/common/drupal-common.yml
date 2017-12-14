@@ -1,4 +1,16 @@
 ---
+- name: "COMMON: Create config directories"
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 02775
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  with_items:
+    - "{{ drupal_root }}/config"
+    - "{{ drupal_root }}/{{ default_configuration_dir }}"
+  when: new_site.stat.exists == false
+
 - name: "COMMON: Create files directory"
   file:
     path: "{{ drupal_docroot }}/{{ default_site }}/files"
