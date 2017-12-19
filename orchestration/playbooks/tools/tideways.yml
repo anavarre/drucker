@@ -70,8 +70,8 @@
     dest: "{{ php_ini }}"
     block: |
       extension={{ tideways_extension_path }}
-      tideways.output_dir={{ tideways_output_dir }}/
-    marker: ; {mark} MANAGED tideways BLOCK
+      tideways.output_dir={{ tideways_output_dir }}
+    marker: ; {mark} MANAGED TIDEWAYS BLOCK
   when: tideways_config.stdout == "absent"
 
 - name: Ensure Apache is restarted
