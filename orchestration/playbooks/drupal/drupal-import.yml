@@ -72,12 +72,8 @@
   ignore_errors: True
 
 - name: "IMPORT: Import docroot"
-  command: cp -R {{ importable_sitename_path }} {{ drupal_root }}
+  command: cp -R {{ importable_sitename_path }} {{ webroot }}
   register: import_docroot
-  when: import_site_structure.stat.exists == false and docroot_import.stat.exists == true
-
-- name: "IMPORT: Rename imported docroot"
-  command: mv {{ drupal_root }}/{{ sitename }} {{ drupal_root}}/docroot
   when: import_site_structure.stat.exists == false and docroot_import.stat.exists == true
 
 - name: "IMPORT: Check if archived docroot exists"
