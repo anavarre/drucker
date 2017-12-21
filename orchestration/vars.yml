@@ -92,7 +92,6 @@ phpmyadmin_available_vhost: "{{ sites_available }}/phpmyadmin.conf"
 phpmyadmin_vhost: "{{ sites_enabled }}/phpmyadmin.conf"
 adminer_available_vhost: "{{ sites_available }}/adminer.conf"
 adminer_vhost: "{{ sites_enabled }}/adminer.conf"
-imported_site_vhost: "{{ sites_enabled }}/{{ sitename }}.conf"
 imported_site_available_vhost: "{{ sites_available }}/{{ sitename }}.conf"
 
 # PHP

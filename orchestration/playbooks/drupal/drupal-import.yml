@@ -98,37 +98,7 @@
     recurse: yes
   when: import_site_structure.stat.exists == false and docroot_import.stat.exists == true
 
-- name: "IMPORT: Check if vHost exists"
-  stat:
-    path: "{{ imported_site_vhost }}"
-  register: apache_conf
-  ignore_errors: True
-
-- name: "IMPORT: Deploy default vHost template"
-  copy:
-    src: "{{ apache_template_source_file }}"
-    dest: "{{ sites_available }}"
-    mode: 0644
-  when: apache_conf.stat.exists == false
-
-- name: "IMPORT: Rename default vHost template"
-  command: mv {{ vhost_template }} {{ imported_site_available_vhost }}
-  when: apache_conf.stat.exists == false
-
-- name: "IMPORT: Modify vHost"
-  replace:
-    dest: "{{ imported_site_available_vhost }}"
-    regexp: '^(.*)SITENAME(.*)$'
-    replace: '\1{{ sitename }}\2'
-  when: apache_conf.stat.exists == false
-
-- name: "IMPORT: Enable vHost"
-  file:
-    src: ../sites-available/{{ sitename }}.conf
-    dest: "{{ imported_site_vhost }}"
-    state: link
-  notify: Reload Apache
-  when: apache_conf.stat.exists == false
+- import_tasks: ../common/apache-vhost.yml
 
 - name: "IMPORT: Check if Drush alias exist"
   stat:
