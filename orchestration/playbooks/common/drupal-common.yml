@@ -54,7 +54,12 @@
   become: yes
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
-- name: "COMMON: Ensure settings.php and services.yml have correct ownership"
+- name: "COMMON: Create sites.php file"
+  command: cp {{ drupal_docroot }}/{{ examples_sites }} {{ drupal_docroot }}/{{ sites_php }}
+  become: yes
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Ensure configuration files have correct ownership"
   file:
     path: "{{ item }}"
     owner: "{{ user }}"
@@ -62,6 +67,7 @@
   with_items:
     - "{{ drupal_docroot }}/{{ default_site }}/settings.php"
     - "{{ drupal_docroot }}/{{ default_site }}/services.yml"
+    - "{{ drupal_docroot }}/{{ sites_php }}"
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
 - name: "COMMON: Add trusted_host_patterns in settings.php"
@@ -99,6 +105,15 @@
        */
     insertafter: EOF
     marker: "# {mark} MANAGED MEMCACHED BLOCK"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Add sites array in sites.php"
+  blockinfile:
+    dest: "{{ drupal_docroot }}/{{ sites_php }}"
+    block: |
+      $sites['{{ sitename }}.{{ tld }}'] = 'default';
+    insertafter: EOF
+    marker: "# {mark} MANAGED SITES BLOCK"
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
 - name: "COMMON: Ensure database is wiped before installing"

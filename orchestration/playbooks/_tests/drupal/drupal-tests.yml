@@ -4,6 +4,9 @@
     path: "{{ item }}"
   with_items:
     - "{{ drupal_root }}"
+    - "{{ drupal_docroot }}/{{ default_site }}/settings.php"
+    - "{{ drupal_docroot }}/{{ default_site }}/services.yml"
+    - "{{ drupal_docroot }}/{{ sites_php }}"
     - "{{ drupal_root }}/{{ default_configuration_dir }}"
     - "{{ drupal_docroot }}"
     - "{{ files_dir }}"
