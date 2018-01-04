@@ -135,7 +135,7 @@ composer_dir_path: "{{ home }}/.composer"
 composer_json_path: "{{ home }}/.composer/composer.json"
 
 # XDebug
-xdebug_stable_release: 2.6.0alpha1
+xdebug_stable_release: 2.6.0beta1
 xdebug_archive_file: xdebug-{{ xdebug_stable_release }}.tgz
 xdebug_download_link: http://xdebug.org/files/{{ xdebug_archive_file }}
 xdebug_extension_name: xdebug.so
