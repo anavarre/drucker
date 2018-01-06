@@ -5,6 +5,8 @@ export GREEN="\033[0;32m"
 export GREEN_HELP=$(printf '\033[0;32m')
 export RED="\033[0;31m"
 export BLUE="\033[94m"
+export ORANGE="\033[38;5;178m"
+export ORANGE_HELP=$(printf '\033[38;5;178m')
 export COLOR_ENDING="\033[0m"
 export COLOR_ENDING_HELP=$(printf '\033[0m')
 

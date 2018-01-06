@@ -11,37 +11,40 @@ validation() {
 }
 
 usage() {
+  return_version
 cat <<EOF
-${GREEN_HELP}--version${COLOR_ENDING_HELP}                         Returns the drucker version.
 
-${GREEN_HELP}--health${COLOR_ENDING_HELP}                          Runs a service healthcheck.
+${ORANGE_HELP}Usage:${COLOR_ENDING_HELP}
+  drucker [command] [app,...] [git_ref]
 
-${GREEN_HELP}--start${COLOR_ENDING_HELP}                           Starts all drucker containers.
+  The [app,...] argument is only valid for the following commands:
+    create, delete, reinstall, import, lightning, reservoir, dev, prod
 
-${GREEN_HELP}--stop${COLOR_ENDING_HELP}                            Stops all drucker containers.
+  The [git_ref] argument is only valid for the 'create' command
 
-${GREEN_HELP}--restart${COLOR_ENDING_HELP}                         Restarts all drucker containers.
+ ${ORANGE_HELP}containers${COLOR_ENDING_HELP}
+  ${GREEN_HELP}health${COLOR_ENDING_HELP}       Runs a service healthcheck
+  ${GREEN_HELP}start${COLOR_ENDING_HELP}        Starts all drucker containers
+  ${GREEN_HELP}stop${COLOR_ENDING_HELP}         Stops all drucker containers
+  ${GREEN_HELP}restart${COLOR_ENDING_HELP}      Restarts all drucker containers
 
-${GREEN_HELP}--dev [sitename,...]${COLOR_ENDING_HELP}              Prepare site(s) for development work with no caching and helper modules enabled.
-                                  WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
+ ${ORANGE_HELP}app${COLOR_ENDING_HELP}
+  ${GREEN_HELP}create${COLOR_ENDING_HELP}       Spins up a ready-to-use Drupal install
+  ${GREEN_HELP}delete${COLOR_ENDING_HELP}       Deletes an arbitrary docroot
+  ${GREEN_HELP}reinstall${COLOR_ENDING_HELP}    Reinstalls Drupal
+  ${GREEN_HELP}import${COLOR_ENDING_HELP}       Imports and app from the web container's import directory
 
-${GREEN_HELP}--prod [sitename,...]${COLOR_ENDING_HELP}             Opinionated setup with all known performance best practices enabled.
+ ${ORANGE_HELP}distributions${COLOR_ENDING_HELP}
+  ${GREEN_HELP}lightning${COLOR_ENDING_HELP}    Spins up a ready-to-use Lightning install
+  ${GREEN_HELP}reservoir${COLOR_ENDING_HELP}    Spins up a ready-to-use Reservoir install
 
-${GREEN_HELP}--create [sitename,...] [git_ref]${COLOR_ENDING_HELP} Creates arbitrary Drupal docroots, vHosts and corresponding databases.
-                                  [TEMPORARILY DISABLED] Optionally select an arbitrary Git tag or commit ID.
+ ${ORANGE_HELP}mode${COLOR_ENDING_HELP}
+  ${GREEN_HELP}dev${COLOR_ENDING_HELP}          Prepare app(s) for development work with no caching and helper modules enabled.
+  ${GREEN_HELP}prod${COLOR_ENDING_HELP}         Opinionated setup with all known performance best practices enabled.
 
-${GREEN_HELP}--import [sitename,...]${COLOR_ENDING_HELP}           Imports the database, files and codebase from the web container's import directory.
-
-${GREEN_HELP}--reinstall [sitename,...]${COLOR_ENDING_HELP}        Reinstalls arbitrary Drupal docroots, vHosts and corresponding databases.
-
-${GREEN_HELP}--lightning [sitename,...]${COLOR_ENDING_HELP}        Creates arbitrary Lightning docroots, vHosts and corresponding databases.
-
-${GREEN_HELP}--reservoir [sitename,...]${COLOR_ENDING_HELP}        Creates arbitrary Reservoir docroots, vHosts and corresponding databases.
-                                  [CURRENTLY BROKEN]
-
-${GREEN_HELP}--delete [sitename,...]${COLOR_ENDING_HELP}           Deletes arbitrary docroots, vHosts and corresponding databases.
-
-${GREEN_HELP}--tests${COLOR_ENDING_HELP}                           Runs the Ansible test suite.
+ ${ORANGE_HELP}util${COLOR_ENDING_HELP}
+  ${GREEN_HELP}version${COLOR_ENDING_HELP}      Returns the drucker version
+  ${GREEN_HELP}tests${COLOR_ENDING_HELP}        Runs the Ansible test suite
 EOF
 exit 0
 }

@@ -159,36 +159,40 @@ git update-index --no-assume-unchanged config
 For more advanced `drucker` usage, you can pass several CLI parameters:
 
 ```
-$ drucker --help
---version                         Returns the drucker version.
+$ drucker help
+drucker version dev:0259030
 
---health                          Runs a service healthcheck.
+Usage:
+  drucker [command] [app,...] [git_ref]
 
---start                           Starts all drucker containers.
+  The [app,...] argument is only valid for the following commands:
+    create, delete, reinstall, import, lightning, reservoir, dev, prod
 
---stop                            Stops all drucker containers.
+  The [git_ref] argument is only valid for the 'create' command
 
---restart                         Restarts all drucker containers.
+ containers
+  health       Runs a service healthcheck
+  start        Starts all drucker containers
+  stop         Stops all drucker containers
+  restart      Restarts all drucker containers
 
---dev [sitename,...]              Prepare site(s) for development work with no caching and helper modules enabled.
-                                  WARNING: when running automated tests, 'twig_debug' should be set to FALSE.
+ app
+  create       Spins up a ready-to-use Drupal install
+  delete       Deletes an arbitrary docroot
+  reinstall    Reinstalls Drupal
+  import       Imports and app from the web container's import directory
 
---prod [sitename,...]             Opinionated setup with all known performance best practices enabled.
+ distributions
+  lightning    Spins up a ready-to-use Lightning install
+  reservoir    Spins up a ready-to-use Reservoir install
 
---create [sitename,...] [git_ref] Creates arbitrary docroots, vHosts and corresponding databases.
-                                  Optionally select an arbitrary tag or commit ID.
+ mode
+  dev          Prepare app(s) for development work with no caching and helper modules enabled.
+  prod         Opinionated setup with all known performance best practices enabled.
 
---import [sitename,...]           Imports the database, files and codebase from the web container's import directory.
-
---reinstall                       Deletes the existing drucker codebase and database and reinstalls from the latest dev tarball.
-
---composer [sitename,...]         Installs arbitrary Drupal docroots from a composer.json file.
-
---lightning [sitename,...]        Creates arbitrary Lightning docroots, vHosts and corresponding databases.
-
---delete [sitename,...]           Deletes arbitrary docroots, vHosts and corresponding databases.
-
---tests                           Runs the Ansible test suite.
+ util
+  version      Returns the drucker version
+  tests        Runs the Ansible test suite
 ```
 
 The `--import [sitename]` parameter is a special beast. Please [read more about it in the wiki](https://github.com/anavarre/drucker/wiki/Importing-an-existing-site-to-drucker).
