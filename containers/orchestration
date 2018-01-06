@@ -85,7 +85,7 @@ drupal_create() {
 
 drupal_lightning() {
   echo "Installing Lightning on PHP 7.2 is currently broken."
-  echo "See https://www.drupal.org/project/panels/issues/2923286"
+  echo "Wait until Drupal 8.5.0 is released or install drucker 0.5.8"
   exit 0
 
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
@@ -107,7 +107,7 @@ drupal_lightning() {
 
 drupal_reservoir() {
   echo "Installing Reservoir on PHP 7.2 is currently broken."
-  echo "See https://www.drupal.org/project/drupal/issues/2923015"
+  echo "Wait until Drupal 8.5.0 is released or install drucker 0.5.8"
   exit 0
 
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
