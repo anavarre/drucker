@@ -195,6 +195,8 @@ Usage:
   tests        Runs the Ansible test suite
 ```
 
+Warning: when running automated tests, 'twig_debug' should be set to FALSE.
+
 The `--import [sitename]` parameter is a special beast. Please [read more about it in the wiki](https://github.com/anavarre/drucker/wiki/Importing-an-existing-site-to-drucker).
 
 At the beginning of the build process, _drucker_ will prompt you to enter the path to your SSH public key (in order to run [Ansible](https://www.ansible.com/) orchestration on your container). `~/.ssh/id_rsa.pub` is assumed, but you can enter the path to a custom public key then.
