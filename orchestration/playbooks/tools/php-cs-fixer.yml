@@ -5,7 +5,7 @@
   register: php_cs_fixer
 
 - name: Check PHP-CS-Fixer version
-  shell: php-cs-fixer --version | awk '{print $5}'
+  shell: php-cs-fixer --version | awk '{print $4}'
   register: php_cs_fixer_version
   when: php_cs_fixer.stat.exists == true
   changed_when: php_cs_fixer_version.stdout != php_cs_fixer_stable_release
