@@ -38,6 +38,8 @@
   - ack-grep
   - apt-transport-https
   - curl
+  # Provides dig command.
+  - dnsutils
   - dstat
   - exuberant-ctags
   - git
