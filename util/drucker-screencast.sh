@@ -1,5 +1,23 @@
 #!/usr/bin/env bash
 
+# Run:
+#   $ clear ; asciinema rec -t "drucker" -w 2 /tmp/drucker.json
+# Then, immediately after:
+#   $ ./drucker-screencast.sh
+# To upload the screencast, type:
+#   $ asciinema upload /tmp/drucker.json
+
+function recorder_check() {
+  RECORDER="$(which asciinema)"
+
+  if [[ ! ${RECORDER} ]]; then
+    echo 'asciinema must be installed to run this script.'
+    exit 0
+  fi
+}
+
+recorder_check
+
 function wait() {
   sleep 2
   echo ---------------------------------------------
@@ -68,7 +86,7 @@ echo ">>>> You can find all of the above in the README.md file."
 
 separator
 echo "Okay. Now, let's explore what drucker has to
-offer. Type drucker --help"
+offer. Type 'drucker help'"
 
 wait
 
@@ -76,8 +94,8 @@ wait
 
 separator
 
-echo "Assumptions are being made both with the --dev
-and --prod modes. Just type drucker if you wish
+echo "Assumptions are being made both with the 'dev'
+and 'prod' modes. Just type 'drucker' if you wish
 to go with the defaults only."
 
 wait

@@ -2,23 +2,26 @@
 
 # drucker: Drupal + Docker
 
-[![drucker demo](https://asciinema.org/a/126829.png)](https://asciinema.org/a/126829)
+[![drucker demo](https://asciinema.org/a/156876.png)](https://asciinema.org/a/156876)
 
-* [Introduction](#Introduction)
+* [Introduction](#introduction)
 * [Requirements](#Requirements)
-  * [Software](#Software)
-  * [Disk Space](#Disk_space)
-  * [SSH](#SSH)
-* [Technology](#Technology)
-* [Installation](#Installation)
-* [Usage](#Usage)
-  * [Passwords](#Passwords)
-* [Tips and tricks](#Tips_and_tricks)
-  * [Delete a container](#Delete_a_container)
-  * [Delete an image](#Delete_an_image)
-* [Troubleshooting](#Troubleshooting)
+  * [Software](#software)
+  * [Disk Space](#disk_space)
+  * [SSH](#ssh)
+* [Technology](#technology)
+* [Installation](#installation)
+  * [Configuring the hosts file](#hosts_file)
+  * [Creating or configuring the config file](#config_file)
+* [Usage](#usage)
+  * [Passwords](#passwords)
+* [Working with containers](#containers)
+  * [Get into a container](#connect_container)
+  * [Delete a container](#delete_container)
+  * [Delete an image](#delete_image)
+* [Troubleshooting](#troubleshooting)
 
-## <a name="Introduction"></a>Introduction
+## <a name="introduction"></a>Introduction
 
 _drucker_ is an opinionated [Docker](https://www.docker.com)-based [Drupal](https://www.drupal.org) stack managed by [Ansible](https://www.ansible.com) for orchestration. It automates creating [Debian](https://www.debian.org) containers on which it will deploy a common web stack to run Drupal applications.
 
@@ -30,9 +33,9 @@ _drucker_ runs on 5 containers:
 * `drucker_db` (`203.0.113.12`): MySQL listens on port 3306 and allows the stack to act as a multi-tier environment.
 * `drucker_search` (`203.0.113.13`): Apache Solr listens on port 8983.
 
-## <a name="Requirements"></a>Requirements
+## <a name="requirements"></a>Requirements
 
-### <a name="Software"></a>Software
+### <a name="software"></a>Software
 
 You need to have both [Docker](https://www.docker.com/) and [Ansible](https://www.ansible.com/) installed on your machine. Check with the below commands:
 
@@ -45,15 +48,15 @@ ansible 2.4.1.0
 
 **Important**: Ansible 2.4 or later is required.
 
-### <a name="Disk_space"></a>Disk space
+### <a name="disk_space"></a>Disk space
 
-You need to have approximately 4GB available.
+You need to have approximately 6GB available.
 
-### <a name="SSH"></a>SSH
+### <a name="ssh"></a>SSH
 
 You also need to [generate a SSH key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) if you don't have one already.
 
-## <a name="Technology"></a>Technology
+## <a name="technology"></a>Technology
 
 _drucker_ ships with the following software stack:
 
@@ -89,9 +92,11 @@ _drucker_ ships with the following software stack:
 | OpenJDK             | 1.8.0_121 or higher   | APT, via debian-backports |
 | bash-git-prompt     | 2.7.1                 | [magicmonty/bash-git-prompt](https://github.com/magicmonty/bash-git-prompt) (Github)      |
 
-## <a name="Installation"></a>Installation
+## <a name="installation"></a>Installation
 
-Add the below host entries in your hosts file:
+### <a name="hosts_file"></a>Configuring the hosts file
+
+Add the below entries in your `/etc/hosts` file:
 
 ```
 203.0.113.2    drucker.local phpmyadmin.local adminer.local lightning.local reservoir.local
@@ -120,6 +125,8 @@ $ source ~/.bashrc
 
 This will allow you to invoke `drucker` from anywhere on your system.
 
+### <a name="config_file"></a>Creating or configuring the config file
+
 Add the below in your `config` file (under `$HOME/.ssh`) or create the file if it doesn't exist.
 
 ```
@@ -131,7 +138,7 @@ Host 203.0.113.99 203.0.113.2 203.0.113.10 203.0.113.12 203.0.113.13
 
 This will prevent SSH strict host key checking from getting in the way, since _drucker_ is for development purposes only.
 
-## <a name="Usage"></a>Usage
+## <a name="usage"></a>Usage
 
 Simply run `drucker` if you have a bash alias, or invoke the `drucker.sh` script directly.
 
@@ -142,7 +149,7 @@ Where should we store drucker sites locally? [/var/www/html]:
 Where should we store drucker databases locally? [/var/lib/mysql]:
 ```
 
-On the first run, `drucker` will prompt you with the path to your SSH public key, but will also try to map the `drucker` sites and databases paths to local directories of your choice, so that containers are made disposable by still preserving your data. You can totally override the default paths and this information will be stored in the `config` file going forward.
+On the first run, `drucker` will prompt you with the path to your SSH public key, but will also try to map the `drucker` sites and databases paths to local directories of your choice, so that containers are made disposable by still preserving your data. You can override the default paths and this information will be stored in the `config` file going forward.
 
 To prevent Git from prompting you with changes to the `config` file, you can exclude it from the Git tracking entirely with:
 
@@ -155,6 +162,12 @@ Should you want to stop doing so, just type:
 ```
 git update-index --no-assume-unchanged config
 ```
+
+### <a name="passwords"></a>Passwords:
+
+* _drucker_ user password in containers: `drucker`
+* MySQL credentials: `root`/`root`
+* Drupal credentials: `admin`/`admin`
 
 For more advanced `drucker` usage, you can pass several CLI parameters:
 
@@ -195,23 +208,22 @@ Usage:
   tests        Runs the Ansible test suite
 ```
 
-Warning: when running automated tests, 'twig_debug' should be set to FALSE.
+Notes:
 
-The `--import [sitename]` parameter is a special beast. Please [read more about it in the wiki](https://github.com/anavarre/drucker/wiki/Importing-an-existing-site-to-drucker).
+* Warning: when running automated tests, `'twig_debug'` should be set to FALSE.
+* The `import` parameter is a special beast. Please [read more about it in the wiki](https://github.com/anavarre/drucker/wiki/Importing-an-existing-site-to-drucker).
 
-At the beginning of the build process, _drucker_ will prompt you to enter the path to your SSH public key (in order to run [Ansible](https://www.ansible.com/) orchestration on your container). `~/.ssh/id_rsa.pub` is assumed, but you can enter the path to a custom public key then.
+## <a name="containers"></a>Working with containers
 
-When spinning up the web container, drucker will try to map its web directory to a local path (`/var/www/html`) on your computer. Feel free to change this default path to one that is more convenient.
+### <a name="connect_container"></a>Get into a container
 
-The `--composer [sitename]` parameter allows to install Drupal from an arbitrary `composer.json` file. Simply put your file in the webroot (`/var/www/html`) and `drucker` will pick it up. If it can't find any, it'll copy the default `composer-template.json` file from within the `orchestration/files` directory.
-
-To connect to a container as the privileged _drucker_ user, simply type:
+The below command will get you in as the privileged user _drucker_
 
 ```
 $ docker exec -u drucker -it <container_name> bash
 ```
 
-To connect to a container as _root_, type:
+To get in as _root_ instead, type:
 
 ```
 $ docker exec -it <container_name> bash
@@ -223,32 +235,24 @@ As _root_, if you wish to log in as the _drucker_ username again (which is recom
 $ su drucker
 ```
 
-### <a name="Passwords"></a>Passwords:
-
-* _drucker_ user on the container: `drucker`
-* MySQL credentials: `root`/`root`
-* Drupal credentials: `admin`/`admin`
-
-## <a name="Tips_and_tricks"></a>Tips and tricks
-
-### <a name="Delete_a_container"></a>Delete a container
-
-Run:
+### <a name="delete_container"></a>Delete a container
 
 ```
 $ docker rm -f <container_name>
 ```
 
-### <a name="Delete_an_image"></a>Delete an image
+When you run `drucker`, missing containers will be spun up from existing images.
 
-Run:
+### <a name="delete_image"></a>Delete an image
 
 ```
 $ docker rmi <drucker:image>
 ```
 
-If you run `drucker` again it will spin up containers (and optionally will build images). Orchestration will then be run as expected.
+When you run `drucker`, missing images will be built.
 
-## <a name="Troubleshooting"></a>Troubleshooting
+## <a name="troubleshooting"></a>Troubleshooting
 
-See [Troubleshooting drucker](https://github.com/anavarre/drucker/wiki/Troubleshooting-drucker)
+If for any reason an image would fail to be built or a container would be giving you troubles, go ahead and delete the offender! Running _drucker_ will always have your back and rebuild missing images and containers.
+
+For more assistance, see [Troubleshooting drucker](https://github.com/anavarre/drucker/wiki/Troubleshooting-drucker) or file an issue.
