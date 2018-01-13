@@ -316,13 +316,30 @@
   when: adminer_mirror_filepath_check.stat.exists == false
 
 # Drush launcher
-- name: Check if Drush launcher file exists
+- name: Check if the Drush Launcher version file exists
+  stat:
+    path: "{{ drush_launcher_version_file }}"
+  register: drush_launcher_version_file_check
+  changed_when: drush_launcher_version_file_check.stat.exists == false
+
+- name: Write the Drush Launcher version to file
+  copy:
+    content: "{{ drush_launcher_stable_release }}"
+    dest: "{{ drush_launcher_version_file }}"
+  when: drush_launcher_version_file_check.stat.exists == false
+
+- name: Store the Drush Launcher version variable
+  shell: cat {{ drush_launcher_version_file }}
+  register: drush_launcher_read_version
+  changed_when: drush_launcher_version_file_check.stat.exists == false
+
+- name: Check if the Drush launcher PHAR file exists
   stat:
     path: "{{ drush_launcher_mirror_filepath }}"
   register: drush_launcher_mirror_filepath_check
   changed_when: drush_launcher_mirror_filepath_check.stat.exists == false
 
-- name: Download latest Drush launcher release
+- name: Download latest Drush launcher PHAR release
   get_url:
     url: "{{ drush_launcher_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -331,4 +348,10 @@
   until: "'OK' in drush_launcher_get_url_result.msg"
   retries: 3
   delay: 10
-  when: drush_launcher_mirror_filepath_check.stat.exists == false
+  when: drush_launcher_mirror_filepath_check.stat.exists == false or drush_launcher_read_version.stdout != drush_launcher_stable_release
+
+- name: Write new Drush Launcher version to file
+  copy:
+    content: "{{ drush_launcher_stable_release }}"
+    dest: "{{ drush_launcher_version_file }}"
+  when: drush_launcher_get_url_result.changed

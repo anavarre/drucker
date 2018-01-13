@@ -4,16 +4,23 @@
     path: "{{ item }}"
   with_items:
     - "{{ drush_launcher }}"
+    - "{{ global_drush }}"
     - "{{ drush_alias_path }}"
     - "{{ drush_dir }}"
   register: drush
   failed_when: drush.stat.exists == false
 
 - name: "TEST: Drush Launcher should use the latest stable release"
-  shell: drush --version | head -n1 | awk '{print $NF}'
+  shell: drush --root={{ webroot }}/{{ user }} --version | head -n1 | awk '{print $NF}'
   register: drush_launcher_version_check
-  changed_when: drush_launcher_version_check.stdout != drush_launcher_version
-  failed_when: drush_launcher_version_check.stdout != drush_launcher_version
+  changed_when: drush_launcher_version_check.stdout != drush_launcher_stable_release
+  failed_when: drush_launcher_version_check.stdout != drush_launcher_stable_release
+
+- name: "TEST: Global Drush should use the latest stable release"
+  shell: drush --root={{ webroot }}/{{ user }} --version | tail -n1 | awk '{print $NF}'
+  register: global_drush_version_check
+  changed_when: global_drush_version_check.stdout != global_drush_stable_release
+  failed_when: global_drush_version_check.stdout != global_drush_stable_release
 
 - name: "TEST: Check if Drush can connect to the drucker database"
   shell: drush --root={{ webroot }}/{{ user }} sql-connect | grep -o "{{ user }}" || echo "Cannot connect to the database"

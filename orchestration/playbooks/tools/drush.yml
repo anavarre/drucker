@@ -1,4 +1,5 @@
 ---
+# Drush Launcher
 - name: Check if Drush launcher is installed
   stat:
     path: "{{ drush_launcher }}"
@@ -26,6 +27,28 @@
 - name: Rename Drush launcher PHAR file
   command: mv {{ user_programs_path }}/{{ drush_launcher_archive_file }} {{ user_programs_path }}/drush
   when: drush_launcher.stat.exists == false or drush_launcher_stable_release_check.stdout != drush_launcher_stable_release
+
+# Drush (installed globally)
+- name: Check if the global Drush is installed
+  stat:
+    path: "{{ global_drush }}"
+  register: global_drush_check
+  changed_when: global_drush_check.stat.exists == false
+
+- name: "Copy global-drush to $PATH"
+  file:
+    src: "{{ composer_dir_path }}/vendor/drush/drush/drush"
+    dest: "{{ global_drush }}"
+    state: link
+  when: global_drush_check.stat.exists == false
+
+- name: "Make sure the Drush Launcher falls back to the global Drush"
+  blockinfile:
+    dest: "{{ bashrc }}"
+    block: |
+      export DRUSH_LAUNCHER_FALLBACK=`which global-drush`
+    insertafter: EOF
+    marker: "# {mark} MANAGED DRUSH LAUNCHER FALLBACK BLOCK"
 
 - name: Check if Drush etc directory exists
   stat:

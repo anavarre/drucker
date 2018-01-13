@@ -309,14 +309,19 @@ import_sqlgz: "{{ import_dir }}/{{ sitename }}.sql.gz"
 import_sql: "{{ import_dir }}/{{ sitename }}.sql"
 importable_sitename_path: "{{ import_dir }}/{{ sitename }}"
 
-# Drush
-drush_launcher_stable_release: 0.4.2
+# Drush Launcher
+drush_launcher_stable_release: 0.5.1
 drush_launcher_archive_file: drush.phar
+drush_launcher_version_file: "{{ mirror_archives_dir }}/drush-launcher-version"
 drush_launcher_mirror_download_link: http://{{ mirror_host }}/{{ drush_launcher_archive_file }}
 drush_launcher_archive_path: "{{ download_dir }}/{{ drush_launcher_archive_file }}"
 drush_launcher_download_link: https://github.com/drush-ops/drush-launcher/releases/download/{{ drush_launcher_stable_release }}/drush.phar
 drush_launcher_mirror_filepath: "{{ mirror_archives_dir }}/drush.phar"
 drush_launcher: "{{ user_programs_path }}/drush"
+
+# Drush
+global_drush: "{{ user_programs_path }}/global-drush"
+global_drush_stable_release: 9.0.0-rc2
 drush_yml_source_file: "{{ source_file_dir }}/drush.yml"
 drush_alias_template_file: drush.{{ drush_alias_extension }}
 drush_alias_source_file: "{{ source_file_dir }}/{{ drush_alias_template_file }}"
@@ -324,8 +329,7 @@ drush_etc_path: /etc/drush
 drush_alias_path: "{{ drush_etc_path }}/site-aliases"
 drush_alias_filepath: "{{ drush_alias_path }}/{{ drush_alias_template_file }}"
 drush_composer_package: drush/drush
-drush_composer_version: ^9
-drush_launcher_version: 0.4.2
+drush_composer_version: ^9.0
 drush_dir: "{{ home }}/.drush"
 
 # Drupal Console
