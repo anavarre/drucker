@@ -29,6 +29,7 @@ ${SEARCH_IP}   search.local
 ${MIRROR_IP}   mirror.local
 EOF
   fi
+  exit 0
 }
 
 check_ssh_config_file() {
