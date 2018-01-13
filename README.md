@@ -180,7 +180,7 @@ Usage:
   create       Spins up a ready-to-use Drupal install
   delete       Deletes an arbitrary docroot
   reinstall    Reinstalls Drupal
-  import       Imports and app from the web container's import directory
+  import       Imports an app from the web container's import directory
 
  distributions
   lightning    Spins up a ready-to-use Lightning install
