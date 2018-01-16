@@ -79,7 +79,7 @@ restart_containers() {
   mapfile -t CONTAINERS_TO_RESTART < <( docker ps -a | grep 'Up' | grep 'drucker_' | awk '{print $NF}' )
   if [[ -z "${CONTAINERS_TO_RESTART}" ]]; then
     echo -e "drucker containers should be started before being restarted.\n"
-    echo "Run drucker --start"
+    echo "Run: drucker start"
     exit 0
   else
     stop_containers
