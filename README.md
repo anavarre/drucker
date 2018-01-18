@@ -194,10 +194,9 @@ Usage:
   delete       Deletes an arbitrary docroot
   reinstall    Reinstalls Drupal
   import       Imports an app from the web container's import directory
-
- distributions
   lightning    Spins up a ready-to-use Lightning install
   reservoir    Spins up a ready-to-use Reservoir install
+  blt          Spins up a ready-to-use BLT build
 
  mode
   dev          Prepare app(s) for development work with no caching and helper modules enabled.

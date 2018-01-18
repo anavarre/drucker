@@ -279,7 +279,7 @@ default_configuration_dir: config/default
 drupal_head: 8.5.x
 drupal_root: "{{ webroot }}/{{ sitename }}"
 drupal_docroot: "{{ drupal_root }}/docroot"
-blt: ./vendor/acquia/blt/bin/blt
+blt_command: ./vendor/acquia/blt/bin/blt
 blt_local_settings: "{{ drupal_docroot }}/sites/default/settings/local.settings.php"
 libraries_dir: "{{ drupal_docroot }}/libraries"
 deployed_settings_php: "{{ drupal_docroot }}/{{ default_site }}/settings.php"

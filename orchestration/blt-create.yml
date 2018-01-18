@@ -8,4 +8,4 @@
   handlers:
     - import_tasks: handlers.yml
   tasks:
-    - import_tasks: playbooks/drupal/blt.yml
+    - import_tasks: playbooks/drupal/blt-create.yml
