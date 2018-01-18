@@ -1,0 +1,24 @@
+---
+- name: "COMMON: Check if new Drush alias exist"
+  stat:
+    path: "{{ drush_alias_path }}/{{ sitename }}.{{ drush_alias_extension }}"
+  register: new_alias
+
+- name: "COMMON: Deploy new Drush alias"
+  copy:
+    src: "{{ drush_alias_source_file }}"
+    dest: "{{ drush_alias_path }}"
+    mode: 0644
+  when: new_alias.stat.exists == false
+  ignore_errors: true
+
+- name: "COMMON: Rename default Drush alias"
+  command: mv {{ drush_alias_filepath }} {{ drush_alias_path }}/{{ sitename }}.{{ drush_alias_extension }}
+  when: new_alias.stat.exists == false
+
+- name: "COMMON: Modify Drush alias"
+  replace:
+    dest: "{{ drush_alias_path }}/{{ sitename }}.{{ drush_alias_extension }}"
+    regexp: '^(.*)SITENAME(.*)$'
+    replace: '\1{{ sitename }}\2'
+  when: new_alias.stat.exists == false

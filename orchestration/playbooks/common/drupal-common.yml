@@ -116,50 +116,6 @@
     marker: "# {mark} MANAGED SITES BLOCK"
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
-- name: "COMMON: Ensure database is wiped before installing"
-  mysql_db:
-    login_user: "{{ db_creds }}"
-    login_password: "{{ db_creds }}"
-    login_host: "{{ db_ip }}"
-    login_port: "{{ db_port }}"
-    name: "{{ sitename }}"
-    config_file: "{{ db_config }}"
-    state: absent
-  when: new_site.stat.exists == false
-
-- name: "COMMON: Create new database"
-  mysql_db:
-    login_user: "{{ db_creds }}"
-    login_password: "{{ db_creds }}"
-    login_host: "{{ db_ip }}"
-    login_port: "{{ db_port }}"
-    name: "{{ sitename }}"
-    config_file: "{{ db_config }}"
-    state: present
-  when: new_site.stat.exists == false or new_db.stat.exists == false
-
+- import_tasks: database.yml
 - import_tasks: apache-vhost.yml
-
-- name: "COMMON: Check if new Drush alias exist"
-  stat:
-    path: "{{ drush_alias_path }}/{{ sitename }}.{{ drush_alias_extension }}"
-  register: new_alias
-
-- name: "COMMON: Deploy new Drush alias"
-  copy:
-    src: "{{ drush_alias_source_file }}"
-    dest: "{{ drush_alias_path }}"
-    mode: 0644
-  when: new_alias.stat.exists == false
-  ignore_errors: true
-
-- name: "COMMON: Rename default Drush alias"
-  command: mv {{ drush_alias_filepath }} {{ drush_alias_path }}/{{ sitename }}.{{ drush_alias_extension }}
-  when: new_alias.stat.exists == false
-
-- name: "COMMON: Modify Drush alias"
-  replace:
-    dest: "{{ drush_alias_path }}/{{ sitename }}.{{ drush_alias_extension }}"
-    regexp: '^(.*)SITENAME(.*)$'
-    replace: '\1{{ sitename }}\2'
-  when: new_alias.stat.exists == false
+- import_tasks: drush-aliases.yml

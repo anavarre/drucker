@@ -1,0 +1,22 @@
+---
+- name: "COMMON: Ensure database is wiped before installing"
+  mysql_db:
+    login_user: "{{ db_creds }}"
+    login_password: "{{ db_creds }}"
+    login_host: "{{ db_ip }}"
+    login_port: "{{ db_port }}"
+    name: "{{ sitename }}"
+    config_file: "{{ db_config }}"
+    state: absent
+  when: new_site.stat.exists == false
+
+- name: "COMMON: Create new database"
+  mysql_db:
+    login_user: "{{ db_creds }}"
+    login_password: "{{ db_creds }}"
+    login_host: "{{ db_ip }}"
+    login_port: "{{ db_port }}"
+    name: "{{ sitename }}"
+    config_file: "{{ db_config }}"
+    state: present
+  when: new_site.stat.exists == false or new_db.stat.exists == false
