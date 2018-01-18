@@ -30,6 +30,7 @@ drucker_argument() {
        [[ "${OPTION}" != "create" ]] && \
        [[ "${OPTION}" != "import" ]] && \
        [[ "${OPTION}" != "reinstall" ]] && \
+       [[ "${OPTION}" != "blt" ]] && \
        [[ "${OPTION}" != "lightning" ]] && \
        [[ "${OPTION}" != "reservoir" ]] && \
        [[ "${OPTION}" != "delete" ]] && \
@@ -97,6 +98,14 @@ drucker_argument() {
         usage
       else
         reinstall_sites
+      fi
+      ;;
+      blt)
+      if [[ "${OPTION}" == "blt" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+        validation
+        usage
+      else
+        create_blt_builds
       fi
       ;;
       lightning)

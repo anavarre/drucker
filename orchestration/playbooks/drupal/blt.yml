@@ -1,0 +1,77 @@
+---
+- name: "BLT: Check if new build exists"
+  stat:
+    path: "{{ drupal_root }}"
+  register: new_site
+  ignore_errors: True
+
+- name: "BLT: Check if new database exists"
+  stat:
+    path: "{{ db_data }}/{{ sitename }}"
+  register: new_db
+
+- import_tasks: ../common/database.yml
+
+# We're using the shell command here, because using the composer command leaves
+# us with missing vendor dependencies, for some reason.
+- name: "BLT: Create build (this can take a while)"
+  shell: composer create-project acquia/blt-project:9.1.x-dev --no-interaction {{ sitename }}
+  args:
+    chdir: "{{ webroot }}"
+  become: yes
+  become_user: "{{ user }}"
+  when: new_site.stat.exists == false
+
+- name: "BLT: Make sure to source the .bashrc file"
+  shell: source {{ bashrc }}
+  args:
+     executable: /bin/bash
+  when: new_site.stat.exists == false
+
+- name: "BLT: Generate default local settings files"
+  command: ./vendor/acquia/blt/bin/blt setup:settings
+  args:
+    chdir: "{{ drupal_root }}"
+  become: yes
+  become_user: "{{ user }}"
+  when: new_site.stat.exists == false
+
+- name: "BLT: Update database name"
+  replace:
+    dest: "{{ blt_local_settings }}"
+    regexp: '^(.*)\$db_name = ''drupal'';(.*)$'
+    replace: '\1$db_name = ''{{ sitename }}'';\2'
+  when: new_site.stat.exists == false
+
+- name: "BLT: Update database username"
+  replace:
+    dest: "{{ blt_local_settings }}"
+    regexp: '^(.*)''username'' => ''drupal'',(.*)$'
+    replace: '\1''username'' => ''{{ db_creds }}'',\2'
+  when: new_site.stat.exists == false
+
+- name: "BLT: Update database password"
+  replace:
+    dest: "{{ blt_local_settings }}"
+    regexp: '^(.*)''password'' => ''drupal'',(.*)$'
+    replace: '\1''password'' => ''{{ db_creds }}'',\2'
+  when: new_site.stat.exists == false
+
+- name: "BLT: Update database host"
+  replace:
+    dest: "{{ blt_local_settings }}"
+    regexp: '^(.*)''host'' => ''localhost'',(.*)$'
+    replace: '\1''host'' => ''{{ db_ip }}'',\2'
+  when: new_site.stat.exists == false
+
+- import_tasks: ../common/drush-aliases.yml
+
+- name: "BLT: Install Drupal (Lightning) and finish setup"
+  command: ./vendor/acquia/blt/bin/blt setup
+  args:
+    chdir: "{{ drupal_root }}"
+  become: yes
+  become_user: "{{ user }}"
+  when: new_site.stat.exists == false
+
+- import_tasks: ../common/apache-vhost.yml

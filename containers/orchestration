@@ -83,6 +83,24 @@ drupal_create() {
   fi
 }
 
+blt() {
+  if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
+    user_confirmation
+    if [[ ${REPLY} =~ ^[Nn]$ ]]; then
+      cancellation
+    elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
+      failure
+    else
+      delete_site
+      create_blt_builds
+    fi
+  else
+    echo -e "${BLUE}Provisioning BLT build into new ${SITE} docroot...${COLOR_ENDING}"
+    ${PLAYBOOK}/blt.yml --extra-vars "ansible_sudo_pass=${USER} blt=Y sitename=${SITE}"
+    hosts_file
+  fi
+}
+
 drupal_lightning() {
   echo "Installing Lightning on PHP 7.2 is currently broken."
   echo "Wait until Drupal 8.5.0 is released or install drucker 0.5.8"

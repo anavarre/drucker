@@ -184,6 +184,15 @@ reinstall_sites() {
   exit 0
 }
 
+create_blt_builds() {
+  # Comma-separated builds are split into single values for drucker to
+  # get a list of BLT builds to create.
+  for SITE in ${SITENAME//,/ }; do
+    blt
+  done
+  exit 0
+}
+
 create_lightning_sites() {
   # Comma-separated sitenames are split into single values for drucker to
   # get a list of Lightning sites to create.
