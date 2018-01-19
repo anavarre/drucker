@@ -1,0 +1,66 @@
+######################
+# OS generated files #
+######################
+ehthumbs.db
+Icon?
+Thumbs.db
+._*
+.DS*
+.project
+*.lnk
+tmp*
+
+############
+# Packages #
+############
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+######################
+# Logs and databases #
+######################
+*.log
+*.sql
+
+######################
+# Vim generated files #
+######################
+*.un~
+*.swp
+
+##########
+# SASS #
+##########
+.sass-cache
+
+########################
+# Patch/diff artifacts #
+########################
+*.patch
+*.diff
+*.orig
+*.rej
+interdiff*.txt
+
+###################
+# emacs artifacts #
+###################
+*~
+\#*\#
+
+########
+# IDEs #
+########
+nbproject
+.idea
+
+##########
+# Drupal #
+##########
+~/Sites/git/drupal/drupal/vendor

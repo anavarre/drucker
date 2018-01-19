@@ -16,6 +16,7 @@ source_file_dir: files
 git_completion_source_file: "{{ source_file_dir }}/.git-completion.bash"
 git_prompt_source_file: "{{ source_file_dir }}/.git-prompt.sh"
 git_config_source_file: "{{ source_file_dir }}/.gitconfig"
+global_gitignore_source_file: "{{ source_file_dir }}/.gitignore-global"
 apache_template_source_file: "{{ source_file_dir }}/apache-template.conf"
 phpunit_source_file: "{{ source_file_dir }}/phpunit.xml"
 gitignore_source_file: "{{ source_file_dir }}/.gitignore"
@@ -45,6 +46,7 @@ mirror_conf: mirror.conf
 git_completion: "{{ home }}/.git-completion.bash"
 git_prompt: "{{ home }}/.git-prompt.sh"
 git_config: "{{ home }}/.gitconfig"
+global_gitignore: "{{ home }}/.gitignore"
 bash_git_prompt: "{{ home }}/.bash-git-prompt"
 bash_git_prompt_stable_version: 2.7.1
 bash_git_prompt_download_link: https://github.com/magicmonty/bash-git-prompt/archive/{{ bash_git_prompt_stable_version }}.tar.gz

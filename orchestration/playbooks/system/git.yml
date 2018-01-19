@@ -47,6 +47,22 @@
   become_user: "{{ user }}"
   when: git_config.stat.exists == false
 
+- name: Check if global .gitignore file exists
+  stat:
+    path: "{{ global_gitignore }}"
+  register: global_gitignore
+
+- name: Deploy global .gitignore file
+  copy:
+    src: "{{ global_gitignore_source_file }}"
+    dest: "{{ home }}/.gitignore"
+    mode: 0644
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  become: yes
+  become_user: "{{ user }}"
+  when: global_gitignore.stat.exists == false
+
 - name: Check if bash-git-prompt archive exists
   stat:
     path: "{{ bash_git_prompt_archive_path }}"
