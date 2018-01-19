@@ -79,6 +79,10 @@ drupal_create() {
 }
 
 blt_create() {
+  echo "Installing BLT on PHP 7.2 is currently broken due to an incompatibility with Lightning."
+  echo "Wait until Drupal 8.5.0 is released or install drucker 0.5.8"
+  exit 0
+
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
     user_confirmation
     if [[ ${REPLY} =~ ^[Nn]$ ]]; then
