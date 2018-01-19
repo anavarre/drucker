@@ -40,6 +40,7 @@
     - net-tools
     - ntp
     - patchutils
+    - silversearcher-ag
     - strace
     - sysstat
     - telnet
