@@ -209,7 +209,7 @@ Usage:
 Notes:
 
 * Warning: when running automated tests, `'twig_debug'` should be set to FALSE.
-* The `import` parameter is a special beast. Please [read more about it in the wiki](https://github.com/anavarre/drucker/wiki/Importing-an-existing-site-to-drucker).
+* The `app:import` parameter is a special beast. Please [read more about it in the wiki](https://github.com/anavarre/drucker/wiki/Importing-an-existing-site-to-drucker).
 
 ## <a name="containers"></a>Working with containers
 
