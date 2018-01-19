@@ -1,3 +1,0 @@
----
-- import_tasks: playbooks/drupal/drupal-delete.yml
-- import_tasks: playbooks/drupal/drupal.yml

@@ -18,32 +18,31 @@ ${ORANGE_HELP}Usage:${COLOR_ENDING_HELP}
   drucker [command] [app,...] [git_ref]
 
   The [app,...] argument is only valid for the following commands:
-    create, delete, reinstall, import, blt, lightning, reservoir, dev, prod
+    create:[drupal,lightning,reservoir,blt]
+    app:[delete,import,dev,prod]
 
   The [git_ref] argument is only valid for the 'create' command
 
  ${ORANGE_HELP}containers${COLOR_ENDING_HELP}
-  ${GREEN_HELP}health${COLOR_ENDING_HELP}       Runs a service healthcheck
-  ${GREEN_HELP}start${COLOR_ENDING_HELP}        Starts all drucker containers
-  ${GREEN_HELP}stop${COLOR_ENDING_HELP}         Stops all drucker containers
-  ${GREEN_HELP}restart${COLOR_ENDING_HELP}      Restarts all drucker containers
+  ${GREEN_HELP}containers:health${COLOR_ENDING_HELP}   Runs a service healthcheck
+  ${GREEN_HELP}containers:start${COLOR_ENDING_HELP}    Starts all drucker containers
+  ${GREEN_HELP}containers:stop${COLOR_ENDING_HELP}     Stops all drucker containers
+  ${GREEN_HELP}containers:restart${COLOR_ENDING_HELP}  Restarts all drucker containers
 
  ${ORANGE_HELP}app${COLOR_ENDING_HELP}
-  ${GREEN_HELP}create${COLOR_ENDING_HELP}       Spins up a ready-to-use Drupal install
-  ${GREEN_HELP}delete${COLOR_ENDING_HELP}       Deletes an arbitrary docroot
-  ${GREEN_HELP}reinstall${COLOR_ENDING_HELP}    Reinstalls Drupal
-  ${GREEN_HELP}import${COLOR_ENDING_HELP}       Imports an app from the web container's import directory
-  ${GREEN_HELP}lightning${COLOR_ENDING_HELP}    Spins up a ready-to-use Lightning install
-  ${GREEN_HELP}reservoir${COLOR_ENDING_HELP}    Spins up a ready-to-use Reservoir install
-  ${GREEN_HELP}blt${COLOR_ENDING_HELP}          Spins up a ready-to-use BLT build
-
- ${ORANGE_HELP}mode${COLOR_ENDING_HELP}
-  ${GREEN_HELP}dev${COLOR_ENDING_HELP}          Prepare app(s) for development work with no caching and helper modules enabled.
-  ${GREEN_HELP}prod${COLOR_ENDING_HELP}         Opinionated setup with all known performance best practices enabled.
+  ${GREEN_HELP}create:drupal${COLOR_ENDING_HELP}       Spins up a ready-to-use Drupal install
+  ${GREEN_HELP}create:lightning${COLOR_ENDING_HELP}    Spins up a ready-to-use Lightning install
+  ${GREEN_HELP}create:reservoir${COLOR_ENDING_HELP}    Spins up a ready-to-use Reservoir install
+  ${GREEN_HELP}create:blt${COLOR_ENDING_HELP}          Spins up a ready-to-use BLT build
+  ${GREEN_HELP}app:delete${COLOR_ENDING_HELP}          Deletes an arbitrary docroot
+  ${GREEN_HELP}app:import${COLOR_ENDING_HELP}          Imports an app from the web container's import directory
+  ${GREEN_HELP}app:dev${COLOR_ENDING_HELP}             Prepare app for development work with no caching and helper modules enabled.
+  ${GREEN_HELP}app:prod${COLOR_ENDING_HELP}            Opinionated setup with all known performance best practices enabled.
 
  ${ORANGE_HELP}util${COLOR_ENDING_HELP}
-  ${GREEN_HELP}version${COLOR_ENDING_HELP}      Returns the drucker version
-  ${GREEN_HELP}tests${COLOR_ENDING_HELP}        Runs the Ansible test suite
+  ${GREEN_HELP}version${COLOR_ENDING_HELP}             Returns the drucker version
+  ${GREEN_HELP}tests${COLOR_ENDING_HELP}               Runs the Ansible test suite
+  ${GREEN_HELP}help${COLOR_ENDING_HELP}                Displays valid drucker commands and their use
 EOF
 exit 0
 }

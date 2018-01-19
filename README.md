@@ -40,7 +40,7 @@ _drucker_ runs on 5 containers:
 You need to have both [Docker](https://www.docker.com/) and [Ansible](https://www.ansible.com/) installed on your machine. Check with the below commands:
 
 ```
-$ docker --version
+$ docker version
 Docker version 17.09.0-ce, build afdb6d4
 $ ansible --version
 ansible 2.4.1.0
@@ -173,38 +173,37 @@ For more advanced `drucker` usage, you can pass several CLI parameters:
 
 ```
 $ drucker help
-drucker version dev:0259030
+drucker version dev:ba964ca
 
 Usage:
   drucker [command] [app,...] [git_ref]
 
   The [app,...] argument is only valid for the following commands:
-    create, delete, reinstall, import, lightning, reservoir, dev, prod
+    create:[drupal,lightning,reservoir,blt]
+    app:[delete,import,dev,prod]
 
   The [git_ref] argument is only valid for the 'create' command
 
  containers
-  health       Runs a service healthcheck
-  start        Starts all drucker containers
-  stop         Stops all drucker containers
-  restart      Restarts all drucker containers
+  containers:health   Runs a service healthcheck
+  containers:start    Starts all drucker containers
+  containers:stop     Stops all drucker containers
+  containers:restart  Restarts all drucker containers
 
  app
-  create       Spins up a ready-to-use Drupal install
-  delete       Deletes an arbitrary docroot
-  reinstall    Reinstalls Drupal
-  import       Imports an app from the web container's import directory
-  lightning    Spins up a ready-to-use Lightning install
-  reservoir    Spins up a ready-to-use Reservoir install
-  blt          Spins up a ready-to-use BLT build
-
- mode
-  dev          Prepare app(s) for development work with no caching and helper modules enabled.
-  prod         Opinionated setup with all known performance best practices enabled.
+  create:drupal       Spins up a ready-to-use Drupal install
+  create:lightning    Spins up a ready-to-use Lightning install
+  create:reservoir    Spins up a ready-to-use Reservoir install
+  create:blt          Spins up a ready-to-use BLT build
+  app:delete          Deletes an arbitrary docroot
+  app:import          Imports an app from the web container's import directory
+  app:dev             Prepare app for development work with no caching and helper modules enabled.
+  app:prod            Opinionated setup with all known performance best practices enabled.
 
  util
-  version      Returns the drucker version
-  tests        Runs the Ansible test suite
+  version             Returns the drucker version
+  tests               Runs the Ansible test suite
+  help                Displays valid drucker commands and their use
 ```
 
 Notes:

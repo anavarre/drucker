@@ -22,11 +22,6 @@ import_site() {
   ${PLAYBOOK}/import.yml --extra-vars "ansible_sudo_pass=${USER} import=Y sitename=${SITE}"
 }
 
-drupal_reinstall() {
-  echo -e "${BLUE}Reinstalling Drupal for docroot ${SITE}...${COLOR_ENDING}"
-  ${PLAYBOOK}/reinstall.yml --extra-vars "ansible_sudo_pass=${USER} reinstall=Y sitename=${SITE}"
-}
-
 user_confirmation() {
   read -p "The ${SITE} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
 }
