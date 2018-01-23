@@ -176,13 +176,14 @@ $ drucker help
 drucker version dev:ba964ca
 
 Usage:
-  drucker [command] [app,...] [git_ref]
+  drucker [command] [site,...] [git_ref]
 
-  The [app,...] argument is only valid for the following commands:
-    create:[drupal,lightning,reservoir,blt]
+  The [site,...] argument is only valid for the following commands:
+    app:[drupal,lightning,reservoir,blt]
     app:[delete,import,dev,prod]
 
-  The [git_ref] argument is only valid for the 'create' command
+  The [git_ref] argument is only valid for the following commands:
+    app:[drupal,lightning,reservoir,blt]
 
  containers
   containers:health   Runs a service healthcheck
@@ -191,10 +192,10 @@ Usage:
   containers:restart  Restarts all drucker containers
 
  app
-  create:drupal       Spins up a ready-to-use Drupal install
-  create:lightning    Spins up a ready-to-use Lightning install
-  create:reservoir    Spins up a ready-to-use Reservoir install
-  create:blt          Spins up a ready-to-use BLT build
+  app:drupal          Spins up a ready-to-use Drupal install
+  app:lightning       Spins up a ready-to-use Lightning install
+  app:reservoir       Spins up a ready-to-use Reservoir install
+  app:blt             Spins up a ready-to-use BLT build
   app:delete          Deletes an arbitrary docroot
   app:import          Imports an app from the web container's import directory
   app:dev             Prepare app for development work with no caching and helper modules enabled.

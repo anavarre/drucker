@@ -1,16 +1,16 @@
 ---
-- name: "CREATE: Check if new site exists"
+- name: "APP: Check if new site exists"
   stat:
     path: "{{ drupal_root }}"
   register: new_site
   ignore_errors: True
 
-- name: "CREATE: Check if new database exists"
+- name: "APP: Check if new database exists"
   stat:
     path: "{{ db_data }}/{{ sitename }}"
   register: new_db
 
-- name: "CREATE: Create new site architecture"
+- name: "APP: Create new site architecture"
   file:
     path: "{{ drupal_root }}"
     state: directory
@@ -18,7 +18,7 @@
   become_user: "{{ user }}"
   when: new_site.stat.exists == false
 
-- name: "CREATE: Deploy default composer.json template"
+- name: "APP: Deploy default composer.json template"
   copy:
     src: "{{ composer_json_template_file }}"
     dest: "{{ drupal_root }}"
@@ -27,11 +27,11 @@
   become_user: "{{ user }}"
   when: new_site.stat.exists == false
 
-- name: "CREATE: Rename composer-template.json filename"
+- name: "APP: Rename composer-template.json filename"
   command: mv {{ drupal_root }}/composer-template.json {{ drupal_root }}/composer.json
   when: new_site.stat.exists == false
 
-- name: "CREATE: Install vendor dependencies from composer.json file (this can take a while)"
+- name: "APP: Install vendor dependencies from composer.json file (this can take a while)"
   composer:
     command: install
     working_dir: "{{ drupal_root }}"
@@ -40,18 +40,18 @@
 
 - import_tasks: ../common/drupal-common.yml
 
-- name: "CREATE: Install Drupal"
+- name: "APP: Install Drupal"
   command: drush --root={{ drupal_root }} site-install standard install_configure_form.enable_update_status_module=NULL -qy --db-url=mysql://{{ db_creds }}:{{ db_creds }}@{{ db_ip }}:{{ db_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}
   become: yes
   become_user: "{{ user }}"
   when: new_alias.stat.exists == false
 
-- name: "CREATE: Check if phpunit.xml file exists"
+- name: "APP: Check if phpunit.xml file exists"
   stat:
     path: "{{ drupal_docroot }}/core/phpunit.xml"
   register: phpunit_check
 
-- name: "CREATE: Deploy phpunit.xml file"
+- name: "APP: Deploy phpunit.xml file"
   copy:
     src: "{{ phpunit_source_file }}"
     dest: "{{ drupal_docroot }}/core/"
@@ -60,20 +60,20 @@
   become_user: "{{ user }}"
   when: phpunit_check.stat.exists == false
 
-- name: "CREATE: Modify phpunit.xml file"
+- name: "APP: Modify phpunit.xml file"
   replace:
     dest: "{{ drupal_docroot }}/core/phpunit.xml"
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1{{ sitename }}\2'
   when: phpunit_check.stat.exists == false
 
-- name: "CREATE: Check if .gitignore exists"
+- name: "APP: Check if .gitignore exists"
   stat:
     path: "{{ drupal_root }}/.gitignore"
   register: gitignore_check
   ignore_errors: True
 
-- name: "CREATE: Create .gitignore file"
+- name: "APP: Create .gitignore file"
   copy:
     src: "{{ gitignore_source_file }}"
     dest: "{{ drupal_root }}"
@@ -82,7 +82,7 @@
   become_user: "{{ user }}"
   when: gitignore_check.stat.exists == false
 
-- name: "CREATE: Initialize Git repository"
+- name: "APP: Initialize Git repository"
   shell: git -C {{ drupal_root }} init
   args:
     warn: no
@@ -91,13 +91,13 @@
   become_user: "{{ user }}"
   when: gitignore_check.stat.exists == false
 
-- name: "CREATE: Add all new files under version control"
+- name: "APP: Add all new files under version control"
   shell: git -C {{ drupal_root }} add --all . && git -C {{ drupal_root }} commit -m "Initial commit"
   become: yes
   become_user: "{{ user }}"
   when: gitignore_check.stat.exists == false
 
-- name: "CREATE: Make sure files dir ownership is correct"
+- name: "APP: Make sure files dir ownership is correct"
   file:
     path: "{{ drupal_docroot }}/{{ default_site }}/files"
     owner: "{{ user }}"

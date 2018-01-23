@@ -24,10 +24,10 @@ drucker_argument() {
        [[ "${OPTION}" != "containers:start" ]] && \
        [[ "${OPTION}" != "containers:stop" ]] && \
        [[ "${OPTION}" != "containers:restart" ]] && \
-       [[ "${OPTION}" != "create:drupal" ]] && \
-       [[ "${OPTION}" != "create:lightning" ]] && \
-       [[ "${OPTION}" != "create:reservoir" ]] && \
-       [[ "${OPTION}" != "create:blt" ]] && \
+       [[ "${OPTION}" != "app:drupal" ]] && \
+       [[ "${OPTION}" != "app:lightning" ]] && \
+       [[ "${OPTION}" != "app:reservoir" ]] && \
+       [[ "${OPTION}" != "app:blt" ]] && \
        [[ "${OPTION}" != "app:delete" ]] && \
        [[ "${OPTION}" != "app:import" ]] && \
        [[ "${OPTION}" != "app:dev" ]] && \
@@ -57,34 +57,34 @@ drucker_argument() {
         restart_containers
       fi
       ;;
-      create:drupal)
-      if [[ "${OPTION}" == "create:drupal" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]  || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+      app:drupal)
+      if [[ "${OPTION}" == "app:drupal" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]  || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
         validation
         usage
       else
         create_sites
       fi
       ;;
-      create:lightning)
+      app:lightning)
       # See validation() for details.
-      if [[ "${OPTION}" == "create:lightning" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+      if [[ "${OPTION}" == "app:lightning" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
         validation
         usage
       else
         create_lightning_sites
       fi
       ;;
-      create:reservoir)
+      app:reservoir)
       # See validation() for details.
-      if [[ "${OPTION}" == "create:reservoir" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+      if [[ "${OPTION}" == "app:reservoir" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
         validation
         usage
       else
         create_reservoir_sites
       fi
       ;;
-      create:blt)
-      if [[ "${OPTION}" == "create:blt" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+      app:blt)
+      if [[ "${OPTION}" == "app:blt" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
         validation
         usage
       else
