@@ -306,6 +306,8 @@ sites_php: sites/sites.php
 # Import
 drush_alias_extension: site.yml
 import_dir: "{{ webroot }}/import"
+readme_import_source_file: "{{ source_file_dir }}/README-import.txt"
+imported_readme: "{{ import_dir }}/README.txt"
 imported_site_alias: "{{ drush_alias_path }}/{{ sitename }}.{{ drush_alias_extension }}"
 archives_dir: "{{ webroot }}/import/archives"
 import_archive_path: "{{ archives_dir }}/{{ sitename }}"
