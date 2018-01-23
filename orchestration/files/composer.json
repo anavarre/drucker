@@ -1,7 +1,7 @@
 {
     "name": "drucker/home",
     "description": "Base dependencies",
-    "license": "GPL-2.0+",
+    "license": "GPL-2.0-or-later",
     "require": {
         "hirak/prestissimo": "^0.3",
         "symfony/yaml": "^3.0",

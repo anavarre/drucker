@@ -2,7 +2,7 @@
     "name": "anavarre/drucker",
     "description": "drucker build.",
     "type": "project",
-    "license": "GPL-2.0+",
+    "license": "GPL-2.0-or-later",
     "minimum-stability": "dev",
     "prefer-stable": true,
     "repositories": [
