@@ -278,7 +278,7 @@ mcstat_mirror_archive_file: "{{ mirror_archives_dir }}/{{ mcstat_archive_file }}
 drupal_creds: admin
 default_site: sites/default
 default_configuration_dir: config/default
-drupal_head: 8.5.x
+drupal_head: 8.6.x
 drupal_root: "{{ webroot }}/{{ sitename }}"
 drupal_docroot: "{{ drupal_root }}/docroot"
 blt_command: ./vendor/acquia/blt/bin/blt

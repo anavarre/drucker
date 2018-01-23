@@ -83,7 +83,7 @@ _drucker_ ships with the following software stack:
 | Xdebug              | 2.6.0beta1            | [Xdebug](https://xdebug.org/) (official site)     |
 | Tideways Profiler   | 4.1.4                 | [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension)  (Github)     |
 | phantomjs           | 2.1.1                 | [ariya/phantomjs](https://bitbucket.org/ariya/phantomjs/) (Bitbucket)     |
-| Drupal              | 8.5.x                 | [Drupal](https://www.drupal.org/project/drupal) (official site)     |
+| Drupal              | 8.6.x                 | [Drupal](https://www.drupal.org/project/drupal) (official site)     |
 | Drush               | ^9.0                  | [Drush](https://packagist.org/packages/drush/drush) (Packagist)      |
 | Drush Launcher      | 0.4.2                 | [Drush Launcher](https://github.com/drush-ops/drush-launcher) (Github)      
 | Drupal Console      | ~1.0                  | [hechoendrupal/drupal-console-launcher](https://github.com/hechoendrupal/drupal-console-launcher) (Github)      |
