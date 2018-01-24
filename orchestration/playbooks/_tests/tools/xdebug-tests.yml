@@ -13,3 +13,9 @@
   register: xdebug_phpini
   changed_when: xdebug_phpini == "absent"
   failed_when: xdebug_phpini == "absent"
+
+- name: "TEST: Xdebug should use the latest release"
+  shell: php -c {{ php_ini }} -i | grep -m1 -o {{ xdebug_stable_release }} || "absent"
+  register: xdebug_phpini_version
+  changed_when: xdebug_phpini_version == "absent"
+  failed_when: xdebug_phpini_version == "absent"
