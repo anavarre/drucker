@@ -103,6 +103,23 @@
   when: drupal_console_mirror_archive_path_check.stat.exists == false
 
 # Xdebug
+- name: Check if the Xdebug version file exists
+  stat:
+    path: "{{ xdebug_version_file }}"
+  register: xdebug_version_file_check
+  changed_when: xdebug_version_file_check.stat.exists == false
+
+- name: Write Xdebug version to file
+  copy:
+    content: "{{ xdebug_stable_release }}"
+    dest: "{{ xdebug_version_file }}"
+  when: xdebug_version_file_check.stat.exists == false
+
+- name: Store Xdebug version variable
+  shell: cat {{ xdebug_version_file }}
+  register: xdebug_read_version
+  changed_when: xdebug_version_file_check.stat.exists == false
+
 - name: Check if the Xdebug archive exists
   stat:
     path: "{{ xdebug_mirror_archive_path }}"
@@ -125,6 +142,12 @@
   retries: 3
   delay: 10
   when: xdebug_mirror_archive_path_check.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
+
+- name: Write new Xdebug version to file
+  copy:
+    content: "{{ xdebug_stable_release }}"
+    dest: "{{ xdebug_version_file }}"
+  when: xdebug_get_url_result.changed
 
 # Tideways
 - name: Check if the Tideways archive exists
