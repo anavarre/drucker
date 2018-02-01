@@ -101,9 +101,11 @@ blt_create() {
 }
 
 drupal_lightning() {
-  echo "Installing Lightning on PHP 7.2 is currently broken."
-  echo "Wait until Drupal 8.5.0 is released or install drucker 0.5.8"
-  exit 0
+  if [[ $(docker exec -u "${USER}" -it "${WEB_CONTAINER}" /bin/cat /var/run/php/php_version) == 7.2 ]]; then
+    echo "Installing Lightning on PHP 7.2 is currently broken."
+    echo "Please switch to PHP 7.1 instead with 'drucker php:7.1'"
+    exit 0
+  fi
 
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
     user_confirmation
