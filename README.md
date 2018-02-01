@@ -71,7 +71,7 @@ _drucker_ ships with the following software stack:
 | mcstat              | 1.1.0                 | [webbj74/mcstat](https://github.com/webbj74/mcstat) (Github)      |
 | phpMyAdmin          | 4.7.7                 | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
 | adminer             | 4.5.0                 | [vrana/adminer](https://github.com/vrana/adminer) (Github)      |
-| PHP-FPM             | 7.2.0 or higher       | APT, via [ppa:ondrej/php](https://deb.sury.org/)      |
+| PHP-FPM             | 7.1 or 7.2            | APT, via [ppa:ondrej/php](https://deb.sury.org/)      |
 | APCu                | 5.1.8 or higher       | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
 | Coder               | 8.2.11                | [drupal/coder](https://packagist.org/packages/drupal/coder) (Packagist)      |
 | Code Sniffer        | 2.6.1                 | [squizlabs/PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) (Github)      |
@@ -202,6 +202,7 @@ Usage:
   app:prod            Opinionated setup with all known performance best practices enabled.
 
  util
+  php:[version]       Sets the PHP version to 7.1 or 7.2
   version             Returns the drucker version
   tests               Runs the Ansible test suite
   help                Displays valid drucker commands and their use

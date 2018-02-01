@@ -41,6 +41,7 @@ ${ORANGE_HELP}Usage:${COLOR_ENDING_HELP}
   ${GREEN_HELP}app:prod${COLOR_ENDING_HELP}            Opinionated setup with all known performance best practices enabled.
 
  ${ORANGE_HELP}util${COLOR_ENDING_HELP}
+  ${GREEN_HELP}php:[version]${COLOR_ENDING_HELP}       Sets the PHP version to 7.1 or 7.2
   ${GREEN_HELP}version${COLOR_ENDING_HELP}             Returns the drucker version
   ${GREEN_HELP}tests${COLOR_ENDING_HELP}               Runs the Ansible test suite
   ${GREEN_HELP}help${COLOR_ENDING_HELP}                Displays valid drucker commands and their use

@@ -1,0 +1,83 @@
+---
+- name: Check if PHP 7.1 is installed
+  stat:
+    path: "{{ php71_ini }}"
+  register: php71_fpm
+
+- name: Install PHP 7.1 core packages
+  package:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - php{{ php71_version }}-fpm
+    - php{{ php71_version }}-cli
+    - php{{ php71_version }}-common
+    - php{{ php71_version }}-dev
+  when: php71_fpm.stat.exists == false
+
+- name: Install PHP 7.1 extensions
+  package:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - php{{ php71_version }}-apcu
+    - php{{ php71_version }}-curl
+    - php{{ php71_version }}-gd
+    - php{{ php71_version }}-mbstring
+    - php{{ php71_version }}-mysql
+    - php{{ php71_version }}-xmlrpc
+    - php{{ php71_version }}-xsl
+    - php{{ php71_version }}-bz2
+    - php{{ php71_version }}-sqlite3
+  when: php71_fpm.stat.exists == false
+
+- name: Check if the PHP version file exists
+  stat:
+    path: "{{ php_version_file }}"
+  register: php_version_file_check
+  failed_when: php_version_file_check.stat.exists == false
+
+- name: Store PHP version variable
+  shell: cat {{ php_version_file }}
+  register: php_read_version
+  when: php_version_file_check.stat.exists == true
+
+- name: Retrieve existing vHosts
+  shell: ls {{ sites_available }}/*.conf | grep -Ev '(000-default|default-ssl.conf)'
+  register: apache_vhosts
+
+- name: Update PHP FPM version in vHosts
+  replace:
+    dest: "{{ item }}"
+    regexp: '^(.*)php{{ php_read_version.stdout }}-fpm.sock(.*)$'
+    replace: '\1php{{ php71_version }}-fpm.sock\2'
+  with_items:
+    - "{{ apache_vhosts.stdout_lines }}"
+
+- name: Switch PHP CLI version
+  command: update-alternatives --set php /usr/bin/php{{ php71_version }}
+
+- name: Check if PHP FPM is already started
+  shell: pgrep -ln php-fpm | awk '{print $NF}' || echo 'stopped'
+  register: phpfpm_is_started
+
+- name: Stop current PHP FPM process
+  command: /etc/init.d/php{{ php_read_version.stdout }}-fpm stop
+  become: yes
+  when: phpfpm_is_started.stdout != 'stopped'
+
+- name: Start PHP 7.1 FPM
+  command: /etc/init.d/php{{ php71_version }}-fpm start
+  become: yes
+  when: php71_version != php_read_version.stdout or phpfpm_is_started.stdout == 'stopped'
+
+- name: Ensure PHP 7.1 FPM is started
+  shell: pgrep -ln php-fpm | awk '{print $NF}'
+  register: php71fpm_is_started
+  notify: Restart Apache
+
+- name: Write new PHP version to file
+  copy:
+    content: "{{ php71_version }}"
+    dest: "{{ php_version_file }}"
+  when: php71fpm_is_started.changed

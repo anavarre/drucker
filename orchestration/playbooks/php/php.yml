@@ -95,3 +95,9 @@
   command: /etc/init.d/php{{ php_version }}-fpm start
   become: yes
   when: check_phpfpm_up.stdout == "down"
+
+- name: Write PHP version to file
+  copy:
+    content: "{{ php_version }}"
+    dest: "{{ php_version_file }}"
+  when: check_phpfpm_up.stdout == "down"

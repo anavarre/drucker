@@ -120,6 +120,18 @@ drucker_argument() {
         enable_prod_mode
       fi
       ;;
+      php:7.1)
+      if [[ "${COMMAND}" == "php:7.1" ]]; then
+        set_php71
+        exit 0
+      fi
+      ;;
+      php:7.2)
+      if [[ "${COMMAND}" == "php:7.2" ]]; then
+        set_php72
+        exit 0
+      fi
+      ;;
       version)
       return_version
       exit 0
