@@ -19,46 +19,48 @@ load_container_files() {
 }
 
 drucker_argument() {
-  if [[ -n "${OPTION}" ]] && \
-       [[ "${OPTION}" != "containers:health" ]] && \
-       [[ "${OPTION}" != "containers:start" ]] && \
-       [[ "${OPTION}" != "containers:stop" ]] && \
-       [[ "${OPTION}" != "containers:restart" ]] && \
-       [[ "${OPTION}" != "app:drupal" ]] && \
-       [[ "${OPTION}" != "app:lightning" ]] && \
-       [[ "${OPTION}" != "app:reservoir" ]] && \
-       [[ "${OPTION}" != "app:blt" ]] && \
-       [[ "${OPTION}" != "app:delete" ]] && \
-       [[ "${OPTION}" != "app:import" ]] && \
-       [[ "${OPTION}" != "app:dev" ]] && \
-       [[ "${OPTION}" != "app:prod" ]] && \
-       [[ "${OPTION}" != "version" ]] && \
-       [[ "${OPTION}" != "tests" ]] && \
-       [[ "${OPTION}" != "help" ]]; then
+  if [[ -n "${COMMAND}" ]] && \
+       [[ "${COMMAND}" != "containers:health" ]] && \
+       [[ "${COMMAND}" != "containers:start" ]] && \
+       [[ "${COMMAND}" != "containers:stop" ]] && \
+       [[ "${COMMAND}" != "containers:restart" ]] && \
+       [[ "${COMMAND}" != "app:drupal" ]] && \
+       [[ "${COMMAND}" != "app:lightning" ]] && \
+       [[ "${COMMAND}" != "app:reservoir" ]] && \
+       [[ "${COMMAND}" != "app:blt" ]] && \
+       [[ "${COMMAND}" != "app:delete" ]] && \
+       [[ "${COMMAND}" != "app:import" ]] && \
+       [[ "${COMMAND}" != "app:dev" ]] && \
+       [[ "${COMMAND}" != "app:prod" ]] && \
+       [[ "${COMMAND}" != "php:7.1" ]] && \
+       [[ "${COMMAND}" != "php:7.2" ]] && \
+       [[ "${COMMAND}" != "version" ]] && \
+       [[ "${COMMAND}" != "tests" ]] && \
+       [[ "${COMMAND}" != "help" ]]; then
     usage
   else
-    case "$OPTION" in
+    case "$COMMAND" in
       containers:health)
       run_healthcheck
       ;;
       containers:start)
-      if [[ "${OPTION}" == "containers:start" ]]; then
+      if [[ "${COMMAND}" == "containers:start" ]]; then
         start_containers
       fi
       ;;
       containers:stop)
-      if [[ "${OPTION}" == "containers:stop" ]]; then
+      if [[ "${COMMAND}" == "containers:stop" ]]; then
         stop_containers
         exit 0
       fi
       ;;
       containers:restart)
-      if [[ "${OPTION}" == "containers:restart" ]]; then
+      if [[ "${COMMAND}" == "containers:restart" ]]; then
         restart_containers
       fi
       ;;
       app:drupal)
-      if [[ "${OPTION}" == "app:drupal" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]  || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+      if [[ "${COMMAND}" == "app:drupal" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]  || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
         validation
         usage
       else
@@ -67,7 +69,7 @@ drucker_argument() {
       ;;
       app:lightning)
       # See validation() for details.
-      if [[ "${OPTION}" == "app:lightning" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+      if [[ "${COMMAND}" == "app:lightning" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
         validation
         usage
       else
@@ -76,7 +78,7 @@ drucker_argument() {
       ;;
       app:reservoir)
       # See validation() for details.
-      if [[ "${OPTION}" == "app:reservoir" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+      if [[ "${COMMAND}" == "app:reservoir" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
         validation
         usage
       else
@@ -84,7 +86,7 @@ drucker_argument() {
       fi
       ;;
       app:blt)
-      if [[ "${OPTION}" == "app:blt" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+      if [[ "${COMMAND}" == "app:blt" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
         validation
         usage
       else
@@ -92,14 +94,14 @@ drucker_argument() {
       fi
       ;;
       app:delete)
-      if [[ "${OPTION}" == "app:delete" ]] && [[ -z ${SITENAME} ]]; then
+      if [[ "${COMMAND}" == "app:delete" ]] && [[ -z ${SITENAME} ]]; then
         usage
       else
         delete_sites
       fi
       ;;
       app:import)
-      if [[ "${OPTION}" == "app:import" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+      if [[ "${COMMAND}" == "app:import" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
         validation
         usage
       else
@@ -107,14 +109,14 @@ drucker_argument() {
       fi
       ;;
       app:dev)
-      if [[ "${OPTION}" == "app:dev" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+      if [[ "${COMMAND}" == "app:dev" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         usage
       else
         enable_dev_mode
       fi
       ;;
       app:prod)
-      if [[ "${OPTION}" == "app:prod" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+      if [[ "${COMMAND}" == "app:prod" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         usage
       else
         enable_prod_mode
@@ -137,7 +139,7 @@ drucker_argument() {
       exit 0
       ;;
       tests)
-      if [[ "${OPTION}" == "tests" ]] && [[ ! -z ${SITENAME} ]]; then
+      if [[ "${COMMAND}" == "tests" ]] && [[ ! -z ${SITENAME} ]]; then
         usage
         exit 0
       else

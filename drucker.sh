@@ -13,7 +13,7 @@ check_ssh_config_file
 
 source "${DIR}/config"
 
-export OPTION=$1
+export COMMAND=$1
 export SITENAME=$2
 
 if [[ $3 = *.* ]]; then
