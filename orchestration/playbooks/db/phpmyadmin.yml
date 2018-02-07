@@ -100,7 +100,7 @@
   blockinfile:
     dest: "{{ phpmyadmin_available_vhost }}"
     block: |6
-                  ProxyPassMatch ^/(.*\.php(/.*)?)$ unix:/var/run/php/php{{ php_version }}-fpm.sock|fcgi://127.0.0.1:9000/var/www/html/phpmyadmin/
+                  ProxyPassMatch ^/(.*\.php(/.*)?)$ unix:/var/run/php/php{{ default_php_version }}-fpm.sock|fcgi://127.0.0.1:9000/var/www/html/phpmyadmin/
     insertafter: '^(.*)DocumentRoot(.*)$'
     marker: "# {mark} MANAGED PHP-FPM FAST-CGI BLOCK"
   when: phpmyadmin_conf.stat.exists == false

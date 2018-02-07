@@ -38,7 +38,7 @@
   when: xdebug.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
 
 - name: Copy compiled Xdebug extension
-  command: cp {{ xdebug_unarchived_path }}/modules/{{ xdebug_extension_name }} {{ php_extensions }}
+  command: cp {{ xdebug_unarchived_path }}/modules/{{ xdebug_extension_name }} {{ default_php_extensions }}
   when: xdebug.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
 
 - name: Make sure permissions are correct
@@ -54,13 +54,13 @@
   when: xdebug.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
 
 - name: Check Xdebug config in php.ini
-  shell: grep -o "{{ xdebug_extension_name }}" {{ php_ini }} || echo "absent"
+  shell: grep -o "{{ xdebug_extension_name }}" {{ default_php_ini }} || echo "absent"
   register: xdebug_config
   changed_when: xdebug_config.stdout == "absent"
 
 - name: Configure Xdebug in php.ini
   blockinfile:
-    dest: "{{ php_ini }}"
+    dest: "{{ default_php_ini }}"
     block: |
       zend_extension = {{ xdebug_extension_path }}
       xdebug.remote_host={{ xdebug_remote_host }}

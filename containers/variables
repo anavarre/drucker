@@ -94,6 +94,8 @@ export SEARCH_CONTAINER_EXISTS
 # Services
 export WEB_SERVICES="apache2 mysql"
 export REVERSE_PROXY_SERVICES="nginx varnish"
+export DEFAULT_PHP="7.2"
+export PREVIOUS_PHP="7.1"
 
 # Git
 export GIT_EXECUTABLE="/usr/bin/git"

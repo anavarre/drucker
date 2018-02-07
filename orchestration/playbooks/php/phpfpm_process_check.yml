@@ -1,0 +1,8 @@
+---
+- name: Check if PHP FPM is already started
+  shell: pgrep -ln php-fpm | awk '{print $NF}' || echo 'stopped'
+  register: phpfpm_is_started
+
+- name: Stop current PHP FPM process
+  command: /etc/init.d/php{{ php_read_version.stdout }}-fpm stop
+  when: phpfpm_is_started.stdout != 'stopped'

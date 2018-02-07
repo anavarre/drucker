@@ -3,10 +3,10 @@
   stat:
     path: "{{ item }}"
   with_items:
-    - "{{ php_ini }}"
-    - "{{ php_ini_cli }}"
+    - "{{ default_php_ini }}"
+    - "{{ default_php_ini_cli }}"
     - "{{ apache_proxy_fcgi_mod }}"
-    - "{{ php_extensions }}"
+    - "{{ default_php_extensions }}"
   register: php
 
 - name: "TEST: Check if PHP packages are installed"
@@ -15,18 +15,18 @@
     - php-apcu
     - php-imagick
     - php-memcached
-    - php{{ php_version }}-fpm
-    - php{{ php_version }}-cli
-    - php{{ php_version }}-common
-    - php{{ php_version }}-dev
-    - php{{ php_version }}-curl
-    - php{{ php_version }}-gd
-    - php{{ php_version }}-mbstring
-    - php{{ php_version }}-mysql
-    - php{{ php_version }}-xmlrpc
-    - php{{ php_version }}-xsl
-    - php{{ php_version }}-bz2
-    - php{{ php_version }}-sqlite3
+    - php{{ default_php_version }}-fpm
+    - php{{ default_php_version }}-cli
+    - php{{ default_php_version }}-common
+    - php{{ default_php_version }}-dev
+    - php{{ default_php_version }}-curl
+    - php{{ default_php_version }}-gd
+    - php{{ default_php_version }}-mbstring
+    - php{{ default_php_version }}-mysql
+    - php{{ default_php_version }}-xmlrpc
+    - php{{ default_php_version }}-xsl
+    - php{{ default_php_version }}-bz2
+    - php{{ default_php_version }}-sqlite3
   register: php_packages
   changed_when: php_packages == ''
 
@@ -43,7 +43,7 @@
   failed_when: proxypassmatch_conf.stdout == "absent"
 
 - name: "TEST: Check php.ini's custom configuration"
-  shell: grep -o "{{ item }}" {{ php_ini }} || echo "absent"
+  shell: grep -o "{{ item }}" {{ default_php_ini }} || echo "absent"
   with_items:
     - max_input_time = {{ max_input_time }}
     - max_execution_time = {{ max_execution_time }}
@@ -56,7 +56,7 @@
   failed_when: php_ini_conf.stdout == "absent"
 
 - name: "TEST: Check php.ini CLI's custom configuration"
-  shell: grep -o "{{ item }}" {{ php_ini_cli }} || echo "absent"
+  shell: grep -o "{{ item }}" {{ default_php_ini_cli }} || echo "absent"
   with_items:
     - date.timezone = {{ timezone }}
   register: php_ini_cli_conf

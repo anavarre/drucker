@@ -79,13 +79,13 @@
   when: turn_on_twig_debugging.changed
 
 - name: "DEV: Check the Zend assertions status"
-  shell: grep "^zend.assertions = -1" "{{ php_ini }}" || echo "on"
+  shell: grep "^zend.assertions = -1" "{{ default_php_ini }}" || echo "on"
   register: zend_assertions_enable
   changed_when: zend_assertions_enable.stdout != "on"
 
 - name: "DEV: Turn on Zend assertions"
   replace:
-    dest: "{{ php_ini }}"
+    dest: "{{ default_php_ini }}"
     regexp: '^(.*)zend.assertions = -1(.*)$'
     replace: '\1zend.assertions = 1\2'
   notify: Restart Apache

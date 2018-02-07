@@ -5,7 +5,7 @@
   register: tideways
 
 - name: Check if Tideways can be updated
-  shell: php -c {{ php_ini }} -i | grep 'tideways' | grep -o '{{ tideways_stable_release }}' || echo 'update'
+  shell: php -c {{ default_php_ini }} -i | grep 'tideways' | grep -o '{{ tideways_stable_release }}' || echo 'update'
   register: tideways_version_check
   changed_when: tideways_version_check.stdout == "update"
 
@@ -38,7 +38,7 @@
   when: tideways.stat.exists == false or tideways_version_check.stdout != tideways_stable_release
 
 - name: Copy compiled Tideways extension
-  command: cp {{ tideways_temp_dir }}/modules/{{ tideways_extension_name }} {{ php_extensions }}
+  command: cp {{ tideways_temp_dir }}/modules/{{ tideways_extension_name }} {{ default_php_extensions }}
   when: tideways.stat.exists == false or tideways_version_check.stdout != tideways_stable_release
 
 - name: Make sure permissions are correct
@@ -54,7 +54,7 @@
   when: tideways.stat.exists == false or tideways_version_check.stdout != tideways_stable_release
 
 - name: Check Tideways config in php.ini
-  shell: grep -o "{{ tideways_extension_name }}" {{ php_ini }} || echo "absent"
+  shell: grep -o "{{ tideways_extension_name }}" {{ default_php_ini }} || echo "absent"
   register: tideways_config
   changed_when: tideways_config == "absent"
 
@@ -67,7 +67,7 @@
 
 - name: Configure Tideways in php.ini
   blockinfile:
-    dest: "{{ php_ini }}"
+    dest: "{{ default_php_ini }}"
     block: |
       extension={{ tideways_extension_path }}
       tideways.output_dir={{ tideways_output_dir }}
@@ -82,6 +82,6 @@
 
 - name: Ensure PHP-FPM is restarted
   service:
-    name: php{{ php_version }}-fpm
+    name: php{{ default_php_version }}-fpm
     enabled: yes
     state: restarted

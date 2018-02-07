@@ -124,13 +124,13 @@ drucker_argument() {
       ;;
       php:7.1)
       if [[ "${COMMAND}" == "php:7.1" ]]; then
-        set_php71
+        set_previous_php_version
         exit 0
       fi
       ;;
       php:7.2)
       if [[ "${COMMAND}" == "php:7.2" ]]; then
-        set_php72
+        set_default_php_version
         exit 0
       fi
       ;;

@@ -1,57 +1,38 @@
 ---
 - name: Check if PHP is installed
   stat:
-    path: "{{ php_ini }}"
-  register: fpm
+    path: "{{ default_php_ini }}"
+  register: phpfpm_is_installed
 
 - name: Add deb.sury.org GPG signature
   apt_key:
     url: "{{ sury_gpg }}"
     state: present
-  when: fpm.stat.exists == false
+  when: phpfpm_is_installed.stat.exists == false
 
 - name: Add deb.sury.org repository
   apt_repository:
     repo: "{{ sury_deb }}"
     state: present
-  when: fpm.stat.exists == false
+  when: phpfpm_is_installed.stat.exists == false
 
 - name: Update APT cache
   apt:
     update_cache: yes
-  when: fpm.stat.exists == false
+  when: phpfpm_is_installed.stat.exists == false
 
-- name: Install PHP core packages
-  package:
-    name: "{{ item }}"
-    state: installed
-  with_items:
-    - php{{ php_version }}-fpm
-    - php{{ php_version }}-cli
-    # Provides php-apcu which itself provides php7.2-apcu
-    - php{{ php_version }}-common
-    - php{{ php_version }}-dev
-  when: fpm.stat.exists == false
+- name: Check if the PHP version file exists
+  stat:
+    path: "{{ default_php_version_file }}"
+  register: php_version_file_check
 
-- name: Install PHP extensions
-  package:
-    name: "{{ item }}"
-    state: installed
-  with_items:
-    # Provides php7.2-imagick
-    - php-imagick
-    # Provides php7.2-memcached
-    - php-memcached
-    - php{{ php_version }}-apcu
-    - php{{ php_version }}-curl
-    - php{{ php_version }}-gd
-    - php{{ php_version }}-mbstring
-    - php{{ php_version }}-mysql
-    - php{{ php_version }}-xmlrpc
-    - php{{ php_version }}-xsl
-    - php{{ php_version }}-bz2
-    - php{{ php_version }}-sqlite3
-  when: fpm.stat.exists == false
+- name: Write default PHP version to file
+  copy:
+    content: "{{ default_php_version }}"
+    dest: "{{ default_php_version_file }}"
+  when: php_version_file_check.stat.exists == false
+
+- import_tasks: default-php.yml
 
 - name: Check if php7 module is enabled
   stat:
@@ -78,26 +59,12 @@
   notify: Restart PHP-FPM
   when: proxy_fcgi_module.stat.exists == false
 
-- import_tasks: php_ini.yml
-
-- name: Ensure PHP extensions directory exists
-  file:
-    path: "{{ php_extensions }}"
-    state: directory
-  when: fpm.stat.exists == false
-
 - name: Check if PHP FPM is started
   shell: pgrep php-fpm || echo 'down'
   register: check_phpfpm_up
   changed_when: check_phpfpm_up.stdout == "down"
 
 - name: Ensure PHP FPM is started
-  command: /etc/init.d/php{{ php_version }}-fpm start
+  command: /etc/init.d/php{{ default_php_version }}-fpm start
   become: yes
-  when: check_phpfpm_up.stdout == "down"
-
-- name: Write PHP version to file
-  copy:
-    content: "{{ php_version }}"
-    dest: "{{ php_version_file }}"
   when: check_phpfpm_up.stdout == "down"

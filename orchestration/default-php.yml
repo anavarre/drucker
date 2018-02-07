@@ -8,4 +8,4 @@
   handlers:
     - import_tasks: handlers.yml
   tasks:
-    - import_tasks: playbooks/php/php71.yml
+    - import_tasks: playbooks/php/default-php.yml

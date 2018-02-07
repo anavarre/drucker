@@ -1,4 +1,4 @@
-- import_tasks: playbooks/php/apache.yml
+- import_tasks: playbooks/common/permissions.yml
 - import_tasks: playbooks/common/apache-installation.yml
 - import_tasks: playbooks/php/php.yml
 - import_tasks: playbooks/php/pecl-uploadprogress.yml

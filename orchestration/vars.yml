@@ -4,6 +4,7 @@ codename: stretch
 tld: local
 home: /home/{{ user }}
 hosts_file: /etc/hosts
+user_programs_path: /usr/local/bin
 sources_list: /etc/apt/sources.list
 sources_list_d: "{{ sources_list }}.d"
 bashrc: "{{ home }}/.bashrc"
@@ -82,7 +83,7 @@ apache_ssl_mod: "{{ mods_available }}/ssl.conf"
 apache_actions_mod: "{{ mods_enabled }}/actions.load"
 apache_rewrite_mod: "{{ mods_enabled }}/rewrite.load"
 apache_proxy_http_mod: "{{ mods_enabled }}/proxy_http.load"
-apache_php_mod: "{{ mods_available }}/php{{ php_version }}.conf"
+apache_php_mod: "{{ mods_available }}/php{{ default_php_version }}.conf"
 apache_proxy_fcgi_mod: "{{ mods_enabled }}/proxy_fcgi.load"
 
 # vHosts
@@ -96,30 +97,16 @@ adminer_available_vhost: "{{ sites_available }}/adminer.conf"
 adminer_vhost: "{{ sites_enabled }}/adminer.conf"
 imported_site_available_vhost: "{{ sites_available }}/{{ sitename }}.conf"
 
-# PHP
-php_version_file: /var/run/php/php_version
+# PHP common
+default_php_version_file: /var/run/php/default_php_version
 phpfpm_process: php-fpm
-php71_version: 7.1
-php72_version: 7.2
-php71_process: "{{ phpfpm_process }}{{ php71_version }}"
-php72_process: "{{ phpfpm_process }}{{ php72_version }}"
-php_version: 7.2
-php_process: php-fpm{{ php_version }}
-php_extensions: /usr/lib/php/{{ php_version }}/20131226
-user_programs_path: /usr/local/bin
+php_process: php-fpm{{ default_php_version }}
 sury_gpg: https://packages.sury.org/php/apt.gpg
 sury_deb: deb https://packages.sury.org/php/ {{ codename }} main
 sury_repo: "{{ sources_list_d }}/packages_sury_org_php.list"
 apcu_stable_release: 5.1.8
 php_memcached_stable_release: 3.0.4
-
 # php.ini
-php71_ini: /etc/php/{{ php71_version }}/fpm/php.ini
-php72_ini: /etc/php/{{ php72_version }}/fpm/php.ini
-php71_ini_cli: /etc/php/{{ php71_version }}/cli/php.ini
-php72_ini_cli: /etc/php/{{ php72_version }}/cli/php.ini
-php_ini: /etc/php/{{ php_version }}/fpm/php.ini
-php_ini_cli: /etc/php/{{ php_version }}/cli/php.ini
 max_input_time: 300
 max_execution_time: 300
 memory_limit: 256M
@@ -129,6 +116,22 @@ post_max_size: 100M
 opcache_max_accelerated_files: 4000
 timezone: UTC
 
+# Default PHP version: 7.2
+# Remember to also change the DEFAULT_PHP bash variable.
+default_php_version: 7.2
+default_php_ini: /etc/php/{{ default_php_version }}/fpm/php.ini
+default_php_ini_cli: /etc/php/{{ default_php_version }}/cli/php.ini
+default_php_process: "{{ phpfpm_process }}{{ default_php_version }}"
+default_php_extensions: /usr/lib/php/{{ default_php_version }}/20131226
+
+# Previous PHP version: 7.1
+# Remember to also change the PREVIOUS_PHP bash variable.
+previous_php_version: 7.1
+previous_php_process: "{{ phpfpm_process }}{{ previous_php_version }}"
+previous_php_ini: /etc/php/{{ previous_php_version }}/fpm/php.ini
+previous_php_ini_cli: /etc/php/{{ previous_php_version }}/cli/php.ini
+previous_php_extensions: /usr/lib/php/{{ previous_php_version }}/20131226
+
 # PECL Upload Progress
 uploadprogress_release: master
 uploadprogress_download_link: https://github.com/php/pecl-php-uploadprogress/archive/{{ uploadprogress_release }}.zip
@@ -136,7 +139,7 @@ uploadprogress_mirror_download_link: http://{{ mirror_host }}/pecl-php-uploadpro
 uploadprogress_temp_path: "{{ download_dir }}/pecl-php-uploadprogress-{{ uploadprogress_release}}"
 uploadprogress_archive: "{{ uploadprogress_temp_path }}.zip"
 uploadprogress_extension_name: uploadprogress.so
-uploadprogress_extension_path: "{{ php_extensions }}/{{ uploadprogress_extension_name }}"
+uploadprogress_extension_path: "{{ default_php_extensions }}/{{ uploadprogress_extension_name }}"
 uploadprogress_mirror_archive_path: "{{ mirror_archives_dir }}/pecl-php-uploadprogress-{{ uploadprogress_release }}.zip"
 
 # Composer
@@ -152,12 +155,11 @@ xdebug_version_file: "{{ mirror_archives_dir }}/xdebug-version"
 xdebug_archive_file: xdebug-{{ xdebug_stable_release }}.tgz
 xdebug_download_link: http://xdebug.org/files/{{ xdebug_archive_file }}
 xdebug_extension_name: xdebug.so
-xdebug_extension_path: "{{ php_extensions }}/{{ xdebug_extension_name }}"
+xdebug_extension_path: "{{ default_php_extensions }}/{{ xdebug_extension_name }}"
 xdebug_archive_path: "{{ download_dir }}/{{ xdebug_archive_file }}"
 xdebug_remote_host: "{{ gateway_ip }}"
 xdebug_mirror_archive_path: "{{ mirror_archives_dir }}/{{ xdebug_archive_file }}"
 xdebug_mirror_download_link: http://{{ mirror_host }}/{{ xdebug_archive_file }}
-# This is temporary until there's a stable 2.5.0 release.
 xdebug_unarchived_path: "{{ download_dir }}/xdebug-{{ xdebug_stable_release }}"
 
 # LibYAML
@@ -173,7 +175,7 @@ pecl_yaml_stable_release: 2.0.0
 pecl_yaml_download_link: https://github.com/php/pecl-file_formats-yaml/archive/{{ pecl_yaml_stable_release }}.tar.gz
 pecl_yaml_mirror_download_link: http://{{ mirror_host }}/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}.tar.gz
 pecl_yaml_extension_name: yaml.so
-pecl_yaml_extension_path: "{{ php_extensions }}/{{ pecl_yaml_extension_name }}"
+pecl_yaml_extension_path: "{{ default_php_extensions }}/{{ pecl_yaml_extension_name }}"
 pecl_yaml_temp_path: "{{ download_dir }}/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}"
 pecl_yaml_archive: "{{ pecl_yaml_temp_path }}.tar.gz"
 pecl_yaml_mirror_archive_path: "{{ mirror_archives_dir }}/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}.tar.gz"
@@ -186,7 +188,7 @@ tideways_archive: "{{ download_dir }}/{{ tideways_archive_file }}"
 tideways_mirror_archive_path: "{{ mirror_archives_dir }}/{{ tideways_archive_file }}"
 tideways_mirror_download_link: http://{{ mirror_host }}/{{ tideways_archive_file }}
 tideways_extension_name: tideways.so
-tideways_extension_path: "{{ php_extensions }}/{{ tideways_extension_name }}"
+tideways_extension_path: "{{ default_php_extensions }}/{{ tideways_extension_name }}"
 tideways_output_dir: "{{ download_dir }}/tideways/"
 tideways_temp_dir: "{{ download_dir }}/php-profiler-extension-{{ tideways_stable_release }}"
 

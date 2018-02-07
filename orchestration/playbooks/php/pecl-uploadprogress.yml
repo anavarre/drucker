@@ -33,7 +33,7 @@
   when: uploadprogress.stat.exists == false
 
 - name: Copy compiled PECL uploadprogress extension
-  command: cp {{ uploadprogress_temp_path }}/modules/{{ uploadprogress_extension_name }} {{ php_extensions }}
+  command: cp {{ uploadprogress_temp_path }}/modules/{{ uploadprogress_extension_name }} {{ default_php_extensions }}
   when: uploadprogress.stat.exists == false
 
 - name: Make sure permissions are correct
@@ -49,13 +49,13 @@
   when: uploadprogress.stat.exists == false
 
 - name: Check PECL uploadprogress config in php.ini
-  shell: grep -o "{{ uploadprogress_extension_name }}" {{ php_ini }} || echo "absent"
+  shell: grep -o "{{ uploadprogress_extension_name }}" {{ default_php_ini }} || echo "absent"
   register: uploadprogress_config
   changed_when: uploadprogress_config.stdout == "absent"
 
 - name: Configure PECL uploadprogress in php.ini
   lineinfile:
-    dest: "{{ php_ini }}"
+    dest: "{{ default_php_ini }}"
     line: "extension={{ uploadprogress_extension_path }}"
   when: uploadprogress_config.stdout == "absent"
 
@@ -67,6 +67,6 @@
 
 - name: Ensure PHP-FPM is restarted
   service:
-    name: php{{ php_version }}-fpm
+    name: php{{ default_php_version }}-fpm
     enabled: yes
     state: restarted

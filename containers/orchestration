@@ -152,14 +152,14 @@ delete_site() {
   echo -e "${GREEN}Remember to remove the ${SITE}.local entry from your local /etc/hosts file!${COLOR_ENDING}"
 }
 
-set_php71() {
-  echo -e "${BLUE}Switch to PHP 7.1...${COLOR_ENDING}"
-  ${PLAYBOOK}/php71.yml --extra-vars "ansible_sudo_pass=${USER}"
+set_previous_php_version() {
+  echo -e "${BLUE}Switch to ${PREVIOUS_PHP}...${COLOR_ENDING}"
+  ${PLAYBOOK}/previous-php.yml --extra-vars "ansible_sudo_pass=${USER}"
 }
 
-set_php72() {
-  echo -e "${BLUE}Switch to PHP 7.2...${COLOR_ENDING}"
-  ${PLAYBOOK}/php72.yml --extra-vars "ansible_sudo_pass=${USER}"
+set_default_php_version() {
+  echo -e "${BLUE}Switch to ${DEFAULT_PHP}...${COLOR_ENDING}"
+  ${PLAYBOOK}/default-php.yml --extra-vars "ansible_sudo_pass=${USER}"
 }
 
 run_tests() {
