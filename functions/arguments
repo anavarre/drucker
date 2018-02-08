@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-return_version() {
-  DRUCKER_VERSION_CHECK=$(grep "DRUCKER_VERSION" ${DIR}/containers/variables | awk '{print $2}' | grep -oP   'DRUCKER_VERSION="\K[^"]+')
-  latest_commit=$(cd ${DIR} && git rev-parse --short HEAD)
-
-  if [[ ${DRUCKER_VERSION_CHECK} == 'dev' ]]; then
-    echo -e "${GREEN}drucker${COLOR_ENDING} version ${ORANGE}${DRUCKER_VERSION_CHECK}:${latest_commit}${COLOR_ENDING}"
-  else
-    echo -e "${GREEN}drucker${COLOR_ENDING} version ${ORANGE}${DRUCKER_VERSION_CHECK}${COLOR_ENDING}"
-  fi
-}
+# return_version() {
+#   DRUCKER_VERSION_CHECK=$(grep "DRUCKER_VERSION" ${DIR}/containers/variables | awk '{print $2}' | grep -oP   'DRUCKER_VERSION="\K[^"]+')
+#   latest_commit=$(cd ${DIR} && git rev-parse --short HEAD)
+#
+#   if [[ ${DRUCKER_VERSION_CHECK} == 'dev' ]]; then
+#     echo -e "${GREEN}drucker${COLOR_ENDING} version ${ORANGE}${DRUCKER_VERSION_CHECK}:${latest_commit}${COLOR_ENDING}"
+#   else
+#     echo -e "${GREEN}drucker${COLOR_ENDING} version ${ORANGE}${DRUCKER_VERSION_CHECK}${COLOR_ENDING}"
+#   fi
+# }
 
 apache_check() {
   if [[ -z $(docker exec -it ${CONTAINER} pgrep apache2 | head -1) ]]; then

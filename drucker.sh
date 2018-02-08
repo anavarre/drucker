@@ -2,12 +2,14 @@
 
 # Invoke the script from anywhere (e.g .bashrc alias)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
 source "${DIR}/init"
 load_function_files
 load_container_files
 
-check_software_requirements
+python_version
+${PYTHON} "${DIR}/functions/requirements"
+exit 0
+# check_software_requirements
 check_hosts_file
 check_ssh_config_file
 

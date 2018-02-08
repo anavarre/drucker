@@ -135,7 +135,9 @@ drucker_argument() {
       fi
       ;;
       version)
-      return_version
+      /usr/bin/python3 functions/version
+      # python3 -c 'from version import *; print print_version()'
+      # return_version
       exit 0
       ;;
       tests)

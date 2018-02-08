@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+
+import subprocess
+import git
+import colorful
+
+def print_version():
+    ''' Get latest Git SHA1 '''
+    repo = git.Repo(search_parent_directories=True)
+    sha1 = repo.head.object.hexsha
+    latest_commit = repo.git.rev_parse(sha1, short=7)
+
+    ''' Version is either 'dev' or semver-friendly '''
+    version = subprocess.run("grep 'DRUCKER_VERSION' \
+                             ./containers/variables | \
+                             grep -oP 'DRUCKER_VERSION=\"\K[^\"]+'",
+                             stdout=subprocess.PIPE,
+                             shell=True).stdout.decode('utf-8').strip()
+
+    if version == 'dev':
+        print(colorful.green('drucker') + " version " +
+              colorful.orange("%s:%s" % (version, latest_commit)))
+    else:
+        print(colorful.green('drucker') + " version " +
+              colorful.orange("%s" % (version)))
+
+print_version()
