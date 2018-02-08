@@ -60,7 +60,7 @@ drucker_argument() {
       fi
       ;;
       app:drupal)
-      if [[ "${COMMAND}" == "app:drupal" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]  || [[ ${SITENAME} == *[\'!\'@#\$%^\&*()_+-]* ]]; then
+      if [[ "${COMMAND}" == "app:drupal" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         validation
         usage
       else
@@ -69,7 +69,7 @@ drucker_argument() {
       ;;
       app:lightning)
       # See validation() for details.
-      if [[ "${COMMAND}" == "app:lightning" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *[\'!\'@#\$%^\&*()_+-]* ]]; then
+      if [[ "${COMMAND}" == "app:lightning" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         validation
         usage
       else
@@ -78,7 +78,7 @@ drucker_argument() {
       ;;
       app:reservoir)
       # See validation() for details.
-      if [[ "${COMMAND}" == "app:reservoir" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *[\'!\'@#\$%^\&*()_+-]* ]]; then
+      if [[ "${COMMAND}" == "app:reservoir" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         validation
         usage
       else
@@ -86,7 +86,7 @@ drucker_argument() {
       fi
       ;;
       app:blt)
-      if [[ "${COMMAND}" == "app:blt" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *[\'!\'@#\$%^\&*()_+-]* ]]; then
+      if [[ "${COMMAND}" == "app:blt" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         validation
         usage
       else
@@ -101,7 +101,7 @@ drucker_argument() {
       fi
       ;;
       app:import)
-      if [[ "${COMMAND}" == "app:import" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]] || [[ ${SITENAME} == *[\'!\'@#\$%^\&*()_+-]* ]]; then
+      if [[ "${COMMAND}" == "app:import" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         validation
         usage
       else
