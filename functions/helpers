@@ -5,7 +5,7 @@ validation() {
     echo -e "\n${RED}You need to pass a sitename.${COLOR_ENDING}\n"
   elif [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
     echo -e "\n${RED}You cannot use only digits.${COLOR_ENDING}\n"
-  elif [[ ${SITENAME} == *['!'@#\$%^\&*()_+-]* ]]; then
+  elif [[ ${SITENAME} == *[\'!\'@#\$%^\&*()_+-]* ]]; then
     echo -e "\n${RED}You cannot use special characters.${COLOR_ENDING}\n"
   fi
 }
