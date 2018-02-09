@@ -130,7 +130,7 @@ This will allow you to invoke `drucker` from anywhere on your system.
 Add the below in your `config` file (under `$HOME/.ssh`) or create the file if it doesn't exist.
 
 ```
-Host 203.0.113.99 203.0.113.2 203.0.113.10 203.0.113.12 203.0.113.13
+Host 203.0.113.99 203.0.113.2 203.0.113.10 203.0.113.12 203.0.113.13 203.0.113.50
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
   LogLevel=error
