@@ -182,15 +182,16 @@ pecl_yaml_mirror_archive_path: "{{ mirror_archives_dir }}/pecl-file_formats-yaml
 
 # Tideways
 tideways_stable_release: 4.1.5
-tideways_download_link: https://github.com/tideways/php-profiler-extension/archive/v{{ tideways_stable_release }}.tar.gz
-tideways_archive_file: php-profiler-extension-{{ tideways_stable_release }}.tar.gz
+tideways_github_project_name: php-xhprof-extension
+tideways_download_link: https://github.com/tideways/{{ tideways_github_project_name }}/archive/v{{ tideways_stable_release }}.tar.gz
+tideways_archive_file: "{{ tideways_github_project_name }}-{{ tideways_stable_release }}.tar.gz"
 tideways_archive: "{{ download_dir }}/{{ tideways_archive_file }}"
 tideways_mirror_archive_path: "{{ mirror_archives_dir }}/{{ tideways_archive_file }}"
 tideways_mirror_download_link: http://{{ mirror_host }}/{{ tideways_archive_file }}
 tideways_extension_name: tideways.so
 tideways_extension_path: "{{ default_php_extensions }}/{{ tideways_extension_name }}"
 tideways_output_dir: "{{ download_dir }}/tideways/"
-tideways_temp_dir: "{{ download_dir }}/php-profiler-extension-{{ tideways_stable_release }}"
+tideways_temp_dir: "{{ download_dir }}/{{ tideways_github_project_name }}-{{ tideways_stable_release }}"
 
 # Coder
 coder_stable_release: 8.2.12
