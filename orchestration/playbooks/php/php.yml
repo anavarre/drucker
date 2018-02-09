@@ -21,17 +21,6 @@
     update_cache: yes
   when: phpfpm_is_installed.stat.exists == false
 
-- name: Check if the PHP version file exists
-  stat:
-    path: "{{ default_php_version_file }}"
-  register: php_version_file_check
-
-- name: Write default PHP version to file
-  copy:
-    content: "{{ default_php_version }}"
-    dest: "{{ default_php_version_file }}"
-  when: php_version_file_check.stat.exists == false
-
 - import_tasks: default-php.yml
 
 - name: Check if php7 module is enabled

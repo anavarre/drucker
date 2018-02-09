@@ -98,7 +98,7 @@ adminer_vhost: "{{ sites_enabled }}/adminer.conf"
 imported_site_available_vhost: "{{ sites_available }}/{{ sitename }}.conf"
 
 # PHP common
-default_php_version_file: /var/run/php/default_php_version
+default_php_version_file: /etc/php/default_php_version
 phpfpm_process: php-fpm
 php_process: php-fpm{{ default_php_version }}
 sury_gpg: https://packages.sury.org/php/apt.gpg
