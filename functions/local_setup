@@ -6,7 +6,8 @@ set_local_ssh_path() {
     read -p "Enter path to SSH public key [${DEFAULT_SSH_PATH}]: " PUBKEY
     PUBKEY=${PUBKEY:-$DEFAULT_SSH_PATH}
 
-    sed -i "s#key_path#${PUBKEY}#g" ${DIR}/config
+    sed -i.bak "s#key_path#${PUBKEY}#g" ${DIR}/config
+    rm "${DIR}/config.bak"
   else
     READ_PUBKEY_VAR_LINE=$(sed -n 3p ${DIR}/config | tr -d '"')
     export PUBKEY=${READ_PUBKEY_VAR_LINE:18}
@@ -20,7 +21,8 @@ set_local_html_path() {
     read -p "Where should we store drucker sites locally? [${DEFAULT_HOST_HTML_PATH}]: " HOST_HTML_PATH
     HOST_HTML_PATH=${HOST_HTML_PATH:-$DEFAULT_HOST_HTML_PATH}
 
-    sed -i "s#html_path#${HOST_HTML_PATH}#g" ${DIR}/config
+    sed -i.bak "s#html_path#${HOST_HTML_PATH}#g" ${DIR}/config
+    rm "${DIR}/config.bak"
   else
     READ_HTML_VAR_LINE=$(sed -n 4p ${DIR}/config | tr -d '"')
     export HOST_HTML_PATH=${READ_HTML_VAR_LINE:23}
@@ -34,7 +36,8 @@ set_local_db_path() {
     read -p "Where should we store database backups locally? [${DEFAULT_HOST_DB_PATH}]: " HOST_DB_PATH
     HOST_DB_PATH=${HOST_DB_PATH:-$DEFAULT_HOST_DB_PATH}
 
-    sed -i "s#db_path#${HOST_DB_PATH}#g" ${DIR}/config
+    sed -i.bak "s#db_path#${HOST_DB_PATH}#g" ${DIR}/config
+    rm "${DIR}/config.bak"
   else
     READ_DB_VAR_LINE=$(sed -n 5p ${DIR}/config | tr -d '"')
     export HOST_DB_PATH=${READ_DB_VAR_LINE:21}
