@@ -96,7 +96,7 @@ container_status() {
   for STATUS in ${CONTAINERS_STATUS[@]}; do
     if [[ " ${STATUS[*]} " == *" Exited "* ]]; then
       echo 'All containers need to be started to run the health check.'
-      echo 'Run drucker --start'
+      echo 'Run drucker containers:start'
       exit 0
     fi
   done
