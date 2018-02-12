@@ -1,0 +1,17 @@
+- import_tasks: common/permissions.yml
+- import_tasks: common/apache-installation.yml
+- import_tasks: php/php.yml
+- import_tasks: php/pecl-uploadprogress.yml
+- import_tasks: php/libyaml.yml
+- import_tasks: php/pecl-yaml.yml
+- import_tasks: tools/composer.yml
+- import_tasks: tools/xdebug.yml
+- import_tasks: tools/tideways.yml
+- import_tasks: tools/phantomjs.yml
+- import_tasks: tools/codesniffer.yml
+- import_tasks: tools/php-cs-fixer.yml
+- import_tasks: tools/coder.yml
+- import_tasks: tools/phpmd.yml
+- import_tasks: tools/mcstat.yml
+- import_tasks: tools/sass.yml
+- import_tasks: db/db-tools.yml

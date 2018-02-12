@@ -1,0 +1,17 @@
+---
+- name: Install libmemcached-tools package
+  package:
+    # Provides memcstat.
+    name: libmemcached-tools
+    state: present
+
+- name: Ensure we can manage remote MySQL databases
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - python-mysqldb
+    - mysql-client
+
+- import_tasks: phpmyadmin.yml
+- import_tasks: adminer.yml

@@ -1,0 +1,15 @@
+---
+- hosts: drucker_db
+  become: yes
+
+  gather_facts: yes
+  vars_files:
+    - ../vars.yml
+  handlers:
+    - import_tasks: ../handlers.yml
+  tasks:
+    - import_tasks: ../plays/common/mirror-deploy.yml
+    - import_tasks: ../plays/common/apt-update.yml
+    - import_tasks: ../plays/db/mysql.yml
+    - import_tasks: ../plays/db/memcached.yml
+    - import_tasks: ../plays/db/mysql-backup.yml

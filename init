@@ -64,7 +64,7 @@ drucker_argument() {
         validation
         usage
       else
-        create_sites
+        run_app_drupal
       fi
       ;;
       app:lightning)
@@ -73,7 +73,7 @@ drucker_argument() {
         validation
         usage
       else
-        create_lightning_sites
+        run_app_lightning
       fi
       ;;
       app:reservoir)
@@ -82,7 +82,7 @@ drucker_argument() {
         validation
         usage
       else
-        create_reservoir_sites
+        run_app_reservoir
       fi
       ;;
       app:blt)
@@ -90,14 +90,14 @@ drucker_argument() {
         validation
         usage
       else
-        create_blt_builds
+        run_app_blt
       fi
       ;;
       app:delete)
       if [[ "${COMMAND}" == "app:delete" ]] && [[ -z ${SITENAME} ]]; then
         usage
       else
-        delete_sites
+        run_app_delete
       fi
       ;;
       app:import)
@@ -105,21 +105,21 @@ drucker_argument() {
         validation
         usage
       else
-        import_sites
+        run_app_import
       fi
       ;;
       app:dev)
       if [[ "${COMMAND}" == "app:dev" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         usage
       else
-        enable_dev_mode
+        run_app_dev
       fi
       ;;
       app:prod)
       if [[ "${COMMAND}" == "app:prod" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         usage
       else
-        enable_prod_mode
+        run_app_prod
       fi
       ;;
       php:7.1)

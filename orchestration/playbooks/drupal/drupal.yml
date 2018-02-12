@@ -1,4 +1,0 @@
----
-- import_tasks: playbooks/drupal/drupal-create.yml
-  vars:
-    sitename: "drucker"

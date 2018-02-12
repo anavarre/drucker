@@ -1,0 +1,13 @@
+---
+- hosts: drucker_base
+  become: yes
+
+  gather_facts: yes
+  vars_files:
+    - ../vars.yml
+  handlers:
+    - import_tasks: ../handlers.yml
+  tasks:
+    - import_tasks: ../plays/system/ssh.yml
+    - import_tasks: ../plays/system/system-setup.yml
+    - import_tasks: ../plays/system/git.yml

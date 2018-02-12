@@ -1,0 +1,122 @@
+---
+- name: "COMMON: Create config directories"
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 02775
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  with_items:
+    - "{{ drupal_root }}/config"
+    - "{{ drupal_root }}/{{ default_configuration_dir }}"
+  when: new_site.stat.exists == false
+
+- name: "COMMON: Create files directory"
+  file:
+    path: "{{ drupal_docroot }}/{{ default_site }}/files"
+    state: directory
+    mode: 02777
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Create libraries directory"
+  file:
+    path: "{{ drupal_docroot }}/libraries"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Create simpletest directory"
+  file:
+    path: "{{ drupal_docroot }}/sites/simpletest"
+    state: directory
+    mode: 02777
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  when: new_site.stat.exists == false
+
+- name: "COMMON: Make sure default site permissions are correct"
+  file:
+    path: "{{ drupal_docroot }}/{{ default_site }}"
+    mode: 0755
+  become: yes
+  become_user: "{{ user }}"
+
+- name: "COMMON: Create settings.php file"
+  command: cp {{ drupal_docroot }}/{{ default_site }}/default.settings.php {{ drupal_docroot }}/{{ default_site }}/settings.php
+  become: yes
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Create services.yml file"
+  command: cp {{ drupal_docroot }}/{{ default_site }}/default.services.yml {{ drupal_docroot }}/{{ default_site }}/services.yml
+  become: yes
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Create sites.php file"
+  command: cp {{ drupal_docroot }}/{{ examples_sites }} {{ drupal_docroot }}/{{ sites_php }}
+  become: yes
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Ensure configuration files have correct ownership"
+  file:
+    path: "{{ item }}"
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  with_items:
+    - "{{ drupal_docroot }}/{{ default_site }}/settings.php"
+    - "{{ drupal_docroot }}/{{ default_site }}/services.yml"
+    - "{{ drupal_docroot }}/{{ sites_php }}"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Add trusted_host_patterns in settings.php"
+  blockinfile:
+    dest: "{{ drupal_docroot }}/{{ default_site }}/settings.php"
+    block: |
+      $settings['trusted_host_patterns'] = [
+        '^{{ sitename }}\.{{ tld }}$',
+      ];
+    insertafter: EOF
+    marker: "# {mark} MANAGED TRUSTED_HOST_PATTERNS BLOCK"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Override default Configuration Management directory"
+  blockinfile:
+    dest: "{{ drupal_docroot }}/{{ default_site }}/settings.php"
+    block: |
+      $config_directories = [
+        CONFIG_SYNC_DIRECTORY => '{{ drupal_root }}/{{ default_configuration_dir }}',
+      ];
+    insertafter: EOF
+    marker: "# {mark} MANAGED CONFIGURATION MANAGEMENT OVERRIDE BLOCK"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Prepare settings.php for memcached support"
+  blockinfile:
+    dest: "{{ drupal_docroot }}/{{ default_site }}/settings.php"
+    block: |
+      /**
+       * drucker comes with memcached pre-configured. You simply need to install the
+       * memcache module and add the below lines to enable memcache support.
+       * DO NOT uncomment this block as it's managed by Ansible.
+       * $settings['cache']['default'] = 'cache.backend.memcache';
+       * $settings['memcache']['servers'] = ['{{ db_ip }}:11211' => 'default'];
+       */
+    insertafter: EOF
+    marker: "# {mark} MANAGED MEMCACHED BLOCK"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "COMMON: Add sites array in sites.php"
+  blockinfile:
+    dest: "{{ drupal_docroot }}/{{ sites_php }}"
+    block: |
+      $sites['{{ sitename }}.{{ tld }}'] = 'default';
+    insertafter: EOF
+    marker: "# {mark} MANAGED SITES BLOCK"
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- import_tasks: database.yml
+- import_tasks: apache-vhost.yml
+- import_tasks: ../drupal/drupal-tools.yml
+- import_tasks: drush-aliases.yml

@@ -8,4 +8,4 @@
   handlers:
     - import_tasks: handlers.yml
   tasks:
-    - import_tasks: playbooks/drupal/drupal-create-commit.yml
+    - import_tasks: plays/drupal/drupal-create-commit.yml

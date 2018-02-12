@@ -1,2 +1,0 @@
-- import_tasks: playbooks/_tests/db/db-tests.yml
-- import_tasks: playbooks/_tests/db/memcached-tests.yml

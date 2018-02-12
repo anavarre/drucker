@@ -8,4 +8,4 @@
   handlers:
     - import_tasks: handlers.yml
   tasks:
-    - import_tasks: plays/drupal/drupal-create-tag.yml
+    - import_tasks: plays/drupal/drupal-create.yml

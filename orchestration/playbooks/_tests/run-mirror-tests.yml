@@ -1,2 +1,0 @@
-- import_tasks: playbooks/_tests/proxy/mirror-tests.yml
-- import_tasks: playbooks/_tests/php/apache-common-tests.yml

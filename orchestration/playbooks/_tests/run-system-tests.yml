@@ -1,3 +1,0 @@
-- import_tasks: playbooks/_tests/system/system-setup-tests.yml
-- import_tasks: playbooks/_tests/system/git-tests.yml
-- import_tasks: playbooks/_tests/system/ssh-keys-tests.yml

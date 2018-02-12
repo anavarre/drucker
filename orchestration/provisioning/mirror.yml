@@ -1,0 +1,15 @@
+---
+- hosts: drucker_mirror
+  become: yes
+
+  gather_facts: yes
+  vars_files:
+    - ../vars.yml
+  handlers:
+    - import_tasks: ../handlers.yml
+  tasks:
+    - import_tasks: ../plays/common/apache-installation.yml
+    - import_tasks: ../plays/mirror/mirror-vhost.yml
+    - import_tasks: ../plays/common/apt-repos.yml
+    - import_tasks: ../plays/common/mirror-downloads.yml
+    - import_tasks: ../plays/mirror/mirror-setup.yml

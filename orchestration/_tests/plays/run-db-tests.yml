@@ -1,0 +1,2 @@
+- import_tasks: plays/db/db-tests.yml
+- import_tasks: plays/db/memcached-tests.yml

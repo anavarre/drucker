@@ -1,0 +1,4 @@
+---
+- import_tasks: ../app/drupal.yml
+  vars:
+    sitename: "drucker"

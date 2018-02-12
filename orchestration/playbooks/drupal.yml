@@ -1,3 +1,0 @@
-- import_tasks: playbooks/tools/drush.yml
-- import_tasks: playbooks/tools/drupal-console.yml
-- import_tasks: playbooks/drupal/drupal.yml

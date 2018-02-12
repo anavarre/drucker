@@ -139,38 +139,38 @@ run_healthcheck() {
   exit 0
 }
 
-enable_dev_mode() {
+run_app_dev() {
   # Comma-separated sitenames are split into single values for drucker to
   # get a list of sites to switch to development mode.
   for SITE in ${SITENAME//,/ }; do
-    drupal_dev_mode
+    app_dev
   done
   exit 0
 }
 
-enable_prod_mode() {
+run_app_prod() {
   # Comma-separated sitenames are split into single values for drucker to
   # get a list of sites to switch to production mode.
   for SITE in ${SITENAME//,/ }; do
-    drupal_prod_mode
+    app_prod
   done
   exit 0
 }
 
-create_sites() {
+run_app_drupal() {
   # Comma-separated sitenames are split into single values for drucker to
   # get a list of sites to create.
   for SITE in ${SITENAME//,/ }; do
-    drupal_create
+    app_drupal
   done
   exit 0
 }
 
-import_sites() {
+run_app_import() {
   # Comma-separated sitenames are split into single values for drucker to
   # get a list of sites to import.
   for SITE in ${SITENAME//,/ }; do
-    import_site
+    app_import
   done
   exit 0
 }
@@ -184,38 +184,38 @@ reinstall_sites() {
   exit 0
 }
 
-create_blt_builds() {
+run_app_blt() {
   # Comma-separated builds are split into single values for drucker to
   # get a list of BLT builds to create.
   for SITE in ${SITENAME//,/ }; do
-    blt_create
+    app_blt
   done
   exit 0
 }
 
-create_lightning_sites() {
+run_app_lightning() {
   # Comma-separated sitenames are split into single values for drucker to
   # get a list of Lightning sites to create.
   for SITE in ${SITENAME//,/ }; do
-    drupal_lightning
+    app_lightning
   done
   exit 0
 }
 
-create_reservoir_sites() {
+run_app_reservoir() {
   # Comma-separated sitenames are split into single values for drucker to
   # get a list of Reservoir sites to create.
   for SITE in ${SITENAME//,/ }; do
-    drupal_reservoir
+    app_reservoir
   done
   exit 0
 }
 
-delete_sites() {
+run_app_delete() {
   # Comma-separated sitenames are split into single values for drucker to
   # get a list of sites to delete.
   for SITE in ${SITENAME//,/ }; do
-    delete_site
+    app_delete
   done
   exit 0
 }

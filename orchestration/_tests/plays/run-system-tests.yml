@@ -1,0 +1,3 @@
+- import_tasks: plays/system/system-setup-tests.yml
+- import_tasks: plays/system/git-tests.yml
+- import_tasks: plays/system/ssh-keys-tests.yml

@@ -1,0 +1,15 @@
+---
+- hosts: drucker_web
+  become: yes
+
+  gather_facts: yes
+  vars_files:
+    - ../vars.yml
+  handlers:
+    - import_tasks: ../handlers.yml
+  tasks:
+    - import_tasks: ../plays/common/mirror-deploy.yml
+    - import_tasks: ../plays/common/apt-update.yml
+    - import_tasks: ../plays/stack.yml
+    - import_tasks: ../plays/drupal/drupal.yml
+    - import_tasks: ../plays/post-install.yml

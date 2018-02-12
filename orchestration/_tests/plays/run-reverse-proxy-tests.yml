@@ -1,0 +1,2 @@
+- import_tasks: plays/proxy/varnish-tests.yml
+- import_tasks: plays/proxy/nginx-tests.yml

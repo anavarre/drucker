@@ -13,7 +13,7 @@ download_dir: /tmp
 sudo_tty_workaround_file: /etc/sudoers.d/docker-tty-sudo-nopasswd
 
 # Source files
-source_file_dir: files
+source_file_dir: ../files
 git_completion_source_file: "{{ source_file_dir }}/.git-completion.bash"
 git_prompt_source_file: "{{ source_file_dir }}/.git-prompt.sh"
 git_config_source_file: "{{ source_file_dir }}/.gitconfig"

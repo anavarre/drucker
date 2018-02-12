@@ -1,26 +1,11 @@
 #!/usr/bin/env bash
 
 export HOST_KEY_CHECKING='export ANSIBLE_HOST_KEY_CHECKING=False'
-export PLAYBOOK="ansible-playbook -i ${DIR}/orchestration/hosts --user=${USER} ${DIR}/orchestration"
+export PLAYBOOKS="ansible-playbook -i ${DIR}/orchestration/hosts --user=${USER} ${DIR}/orchestration"
+export COMMANDS="${PLAYBOOKS}/commands"
+export PROVISIONING="${PLAYBOOKS}/provisioning"
+export TESTS="${PLAYBOOKS}/_tests"
 export EXTRA_VARS="--extra-vars ansible_sudo_pass=${USER}"
-
-# In several of the below functions, SITE is the result of SITENAME supporting
-# a comma-separated list of sites. See functions/arguments file for details.
-
-drupal_dev_mode() {
-  echo -e "${BLUE}Configuring ${SITE} docroot for development...${COLOR_ENDING}"
-  ${PLAYBOOK}/dev.yml --extra-vars "ansible_sudo_pass=${USER} dev=Y sitename=${SITE}"
-}
-
-drupal_prod_mode() {
-  echo -e "${BLUE}Configuring ${SITE} docroot for production...${COLOR_ENDING}"
-  ${PLAYBOOK}/prod.yml --extra-vars "ansible_sudo_pass=${USER} prod=Y sitename=${SITE}"
-}
-
-import_site() {
-  echo -e "${BLUE}Importing site into new docroot ${SITE}...${COLOR_ENDING}"
-  ${PLAYBOOK}/import.yml --extra-vars "ansible_sudo_pass=${USER} import=Y sitename=${SITE}"
-}
 
 user_confirmation() {
   read -p "The ${SITE} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
@@ -40,7 +25,26 @@ hosts_file() {
   echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
 }
 
-drupal_create() {
+# In several of the below functions, SITE is the result of SITENAME supporting
+# a comma-separated list of sites. See functions/arguments file for details.
+
+app_dev() {
+  echo -e "${BLUE}Configuring ${SITE} docroot for development...${COLOR_ENDING}"
+  ${COMMANDS}/app-dev.yml --extra-vars "ansible_sudo_pass=${USER} dev=Y sitename=${SITE}"
+}
+
+app_prod() {
+  echo -e "${BLUE}Configuring ${SITE} docroot for production...${COLOR_ENDING}"
+  ${COMMANDS}/app-prod.yml --extra-vars "ansible_sudo_pass=${USER} prod=Y sitename=${SITE}"
+}
+
+app_import() {
+  echo -e "${BLUE}Importing site into new docroot ${SITE}...${COLOR_ENDING}"
+  ${COMMANDS}/app-import.yml --extra-vars "ansible_sudo_pass=${USER} import=Y sitename=${SITE}"
+  hosts_file
+}
+
+app_drupal() {
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
     user_confirmation
     if [[ ${REPLY} =~ ^[Nn]$ ]]; then
@@ -48,18 +52,18 @@ drupal_create() {
     elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
       failure
     else
-      delete_site
-      drupal_create
+      app_delete
+      app_drupal
     fi
   else
     if [[ -z "${GIT_TAG}" ]] && [[ -z "${GIT_COMMIT}" ]]; then
       echo -e "${BLUE}Creating site into new ${SITE} docroot...${COLOR_ENDING}"
-      ${PLAYBOOK}/create.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE}"
+      ${COMMANDS}/app-drupal.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE}"
       hosts_file
     elif [[ -n "${GIT_TAG}" ]]; then
       if [[ " ${GIT_TAGS[*]} " == *" ${GIT_TAG} "* ]]; then
         echo -e "${BLUE}Creating Drupal ${GIT_TAG} site into new ${SITE} docroot...${COLOR_ENDING}"
-        ${PLAYBOOK}/create-tag.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_tag=${GIT_TAG}"
+        ${PLAYBOOKS}/create-tag.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_tag=${GIT_TAG}"
         hosts_file
       else
         echo -e "\n${RED}This git tag doesn't seem to exist.${COLOR_ENDING}\n"
@@ -68,7 +72,7 @@ drupal_create() {
     elif [[ -n "${GIT_COMMIT}" ]]; then
       if [[ " ${GIT_COMMITS[*]} " == *" ${GIT_COMMIT} "* ]]; then
         echo -e "${BLUE}Creating Drupal site from commit ID ${GIT_COMMIT} into new ${SITE} docroot...${COLOR_ENDING}"
-        ${PLAYBOOK}/create-commit.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_commit=${GIT_COMMIT}"
+        ${PLAYBOOKS}/create-commit.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_commit=${GIT_COMMIT}"
         hosts_file
       else
         echo -e "\n${RED}This git commit doesn't seem to exist. Remember to use a short hash.${COLOR_ENDING}\n"
@@ -78,9 +82,8 @@ drupal_create() {
   fi
 }
 
-blt_create() {
-  echo "Installing BLT on PHP 7.2 is currently broken due to an incompatibility with Lightning."
-  echo "Wait until Drupal 8.5.0 is released or install drucker 0.5.8"
+app_blt() {
+  echo "Installing BLT is currently broken. Sorry!"
   exit 0
 
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
@@ -90,18 +93,18 @@ blt_create() {
     elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
       failure
     else
-      delete_site
-      create_blt_builds
+      app_delete
+      app_blt
     fi
   else
     echo -e "${BLUE}Provisioning BLT into new ${SITE} docroot...${COLOR_ENDING}"
-    ${PLAYBOOK}/blt-create.yml --extra-vars "ansible_sudo_pass=${USER} blt=Y sitename=${SITE}"
+    ${COMMANDS}/app-blt.yml --extra-vars "ansible_sudo_pass=${USER} blt=Y sitename=${SITE}"
     hosts_file
   fi
 }
 
-drupal_lightning() {
-  if [[ $(docker exec -u "${USER}" -it "${WEB_CONTAINER}" /bin/cat /var/run/php/php_version) == 7.2 ]]; then
+app_lightning() {
+  if [[ $(docker exec -u "${USER}" -it "${WEB_CONTAINER}" /bin/cat /etc/php/php_version) == 7.2 ]]; then
     echo "Installing Lightning on PHP 7.2 is currently broken."
     echo "Please switch to PHP 7.1 instead with 'drucker php:7.1'"
     exit 0
@@ -114,17 +117,17 @@ drupal_lightning() {
     elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
       failure
     else
-      delete_site
-      drupal_lightning
+      app_delete
+      app_lightning
     fi
   else
     echo -e "${BLUE}Installing Lightning site into new ${SITE} docroot...${COLOR_ENDING}"
-    ${PLAYBOOK}/drupal-lightning.yml --extra-vars "ansible_sudo_pass=${USER} lightning=Y sitename=${SITE}"
+    ${COMMANDS}/app-lightning.yml --extra-vars "ansible_sudo_pass=${USER} lightning=Y sitename=${SITE}"
     hosts_file
   fi
 }
 
-drupal_reservoir() {
+app_reservoir() {
   echo "Installing Reservoir on PHP 7.2 is currently broken."
   echo "Wait until Drupal 8.5.0 is released or install drucker 0.5.8"
   exit 0
@@ -136,109 +139,109 @@ drupal_reservoir() {
     elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
       failure
     else
-      delete_site
-      drupal_reservoir
+      app_delete
+      app_reservoir
     fi
   else
     echo -e "${BLUE}Installing Reservoir site into new ${SITE} docroot...${COLOR_ENDING}"
-    ${PLAYBOOK}/drupal-reservoir.yml --extra-vars "ansible_sudo_pass=${USER} reservoir=Y sitename=${SITE}"
+    ${COMMANDS}/app-reservoir.yml --extra-vars "ansible_sudo_pass=${USER} reservoir=Y sitename=${SITE}"
     hosts_file
   fi
 }
 
-delete_site() {
+app_delete() {
   echo -e "${BLUE}Deleting docroot ${SITE}...${COLOR_ENDING}"
-  ${PLAYBOOK}/delete.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y sitename=${SITE}"
+  ${COMMANDS}/app-delete.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y sitename=${SITE}"
   echo -e "${GREEN}Remember to remove the ${SITE}.local entry from your local /etc/hosts file!${COLOR_ENDING}"
 }
 
 set_previous_php_version() {
   echo -e "${BLUE}Switch to ${PREVIOUS_PHP}...${COLOR_ENDING}"
-  ${PLAYBOOK}/previous-php.yml --extra-vars "ansible_sudo_pass=${USER}"
+  ${COMMANDS}/previous-php.yml --extra-vars "ansible_sudo_pass=${USER}"
 }
 
 set_default_php_version() {
   echo -e "${BLUE}Switch to ${DEFAULT_PHP}...${COLOR_ENDING}"
-  ${PLAYBOOK}/default-php.yml --extra-vars "ansible_sudo_pass=${USER}"
+  ${COMMANDS}/default-php.yml --extra-vars "ansible_sudo_pass=${USER}"
 }
 
 run_tests() {
   echo -e "${BLUE}Running the system test suite...${COLOR_ENDING}"
 
   ${HOST_KEY_CHECKING}
-  ${PLAYBOOK}/system-tests.yml ${EXTRA_VARS}
+  ${TESTS}/system-tests.yml ${EXTRA_VARS}
 
   echo -e "${BLUE}Running the mirror test suite...${COLOR_ENDING}"
 
   ${HOST_KEY_CHECKING}
-  ${PLAYBOOK}/mirror-tests.yml ${EXTRA_VARS}
+  ${TESTS}/mirror-tests.yml ${EXTRA_VARS}
 
   echo -e "${BLUE}Running the reverse proxy test suite...${COLOR_ENDING}"
 
   ${HOST_KEY_CHECKING}
-  ${PLAYBOOK}/reverse-proxy-tests.yml ${EXTRA_VARS}
+  ${TESTS}/reverse-proxy-tests.yml ${EXTRA_VARS}
 
   echo -e "${BLUE}Running the database test suite...${COLOR_ENDING}"
 
   ${HOST_KEY_CHECKING}
-  ${PLAYBOOK}/db-tests.yml ${EXTRA_VARS}
+  ${TESTS}/db-tests.yml ${EXTRA_VARS}
 
   echo -e "${BLUE}Running the search test suite...${COLOR_ENDING}"
 
   ${HOST_KEY_CHECKING}
-  ${PLAYBOOK}/search-tests.yml ${EXTRA_VARS}
+  ${TESTS}/search-tests.yml ${EXTRA_VARS}
 
   echo -e "${BLUE}Running the web test suite...${COLOR_ENDING}"
 
   ${HOST_KEY_CHECKING}
-  ${PLAYBOOK}/web-tests.yml ${EXTRA_VARS}
+  ${TESTS}/web-tests.yml ${EXTRA_VARS}
 }
 
 run_base_container_orchestration() {
   echo -e "${BLUE}Running ${BASE_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
   ${HOST_KEY_CHECKING}
-  ${PLAYBOOK}/base.yml ${EXTRA_VARS}
+  ${PROVISIONING}/base.yml ${EXTRA_VARS}
 }
 
 run_mirror_container_orchestration() {
   echo -e "${BLUE}Running ${MIRROR_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
   ${HOST_KEY_CHECKING}
-  ${PLAYBOOK}/mirror.yml ${EXTRA_VARS}
+  ${PROVISIONING}/mirror.yml ${EXTRA_VARS}
 }
 
 run_reverse_proxy_container_orchestration() {
   echo -e "${BLUE}Running ${REVERSE_PROXY_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
   ${HOST_KEY_CHECKING}
-  ${PLAYBOOK}/reverse_proxy.yml ${EXTRA_VARS}
+  ${PROVISIONING}/reverse_proxy.yml ${EXTRA_VARS}
 }
 
 run_ssh_container_orchestration() {
   echo -e "${BLUE}Running SSH orchestration on the container...${COLOR_ENDING}"
 
   ${HOST_KEY_CHECKING}
-  ${PLAYBOOK}/ssh.yml ${EXTRA_VARS}
+  ${PROVISIONING}/ssh.yml ${EXTRA_VARS}
 }
 
 run_web_container_orchestration() {
   echo -e "${BLUE}Running ${WEB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
   ${HOST_KEY_CHECKING}
-  ${PLAYBOOK}/web.yml ${EXTRA_VARS}
+  ${PROVISIONING}/web.yml ${EXTRA_VARS}
 }
 
 run_db_container_orchestration() {
   echo -e "${BLUE}Running ${DB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
   ${HOST_KEY_CHECKING}
-  ${PLAYBOOK}/db.yml ${EXTRA_VARS}
+  ${PROVISIONING}/db.yml ${EXTRA_VARS}
 }
 
 run_search_container_orchestration() {
   echo -e "${BLUE}Running ${SEARCH_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
   ${HOST_KEY_CHECKING}
-  ${PLAYBOOK}/search.yml ${EXTRA_VARS}
+  ${PROVISIONING}/search.yml ${EXTRA_VARS}
 }

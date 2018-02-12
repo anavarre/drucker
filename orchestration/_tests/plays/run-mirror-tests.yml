@@ -1,0 +1,2 @@
+- import_tasks: plays/proxy/mirror-tests.yml
+- import_tasks: plays/php/apache-common-tests.yml
