@@ -69,3 +69,5 @@
     content: "{{ previous_php_version }}"
     dest: "{{ default_php_version_file }}"
   when: previous_phpfpm_is_started.changed
+
+- import_tasks: previous_php_ini.yml
