@@ -89,7 +89,7 @@
   register: drush_yml_check
   changed_when: drush_yml_check.stat.exists == false
 
-- name: Deploy drush.yml file"
+- name: Deploy drush.yml file
   copy:
     src: "{{ drush_yml_source_file }}"
     dest: "{{ drush_dir }}"

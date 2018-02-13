@@ -143,7 +143,7 @@ This will prevent SSH strict host key checking from getting in the way, since _d
 Simply run `drucker` if you have a bash alias, or invoke the `drucker.sh` script directly.
 
 ```
-$ ./drucker.sh
+$ ./path/to/drucker.sh
 Enter path to SSH public key [/home/<username>/.ssh/id_rsa.pub]:
 Where should we store drucker sites locally? [/var/www/html]:
 Where should we store drucker databases locally? [/var/lib/mysql]:
@@ -160,7 +160,7 @@ $ git update-index --assume-unchanged config
 Should you want to stop doing so, just type:
 
 ```
-git update-index --no-assume-unchanged config
+$ git update-index --no-assume-unchanged config
 ```
 
 ### <a name="passwords"></a>Passwords:
