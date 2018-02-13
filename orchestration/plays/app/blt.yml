@@ -8,7 +8,7 @@
 # We're using the shell command here, because using the composer command leaves
 # us with missing vendor dependencies, for some reason.
 - name: "BLT: Create build (this can take a while)"
-  shell: composer create-project acquia/blt-project:9.1.x-dev --no-interaction {{ sitename }}
+  shell: composer create-project --no-interaction acquia/blt-project:9.x-dev {{ sitename }}
   args:
     chdir: "{{ webroot }}"
   become: yes
@@ -60,6 +60,14 @@
   when: new_site.stat.exists == false
 
 - import_tasks: ../common/drush-aliases.yml
+
+- name: "BLT: Set up Behat tests"
+  command: "{{ blt_command }} setup:behat"
+  args:
+    chdir: "{{ drupal_root }}"
+  become: yes
+  become_user: "{{ user }}"
+  when: new_site.stat.exists == false
 
 - name: "BLT: Install Drupal (Lightning) and finish setup"
   command: "{{ blt_command }} setup"
