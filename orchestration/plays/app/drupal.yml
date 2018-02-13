@@ -31,6 +31,13 @@
   command: mv {{ drupal_root }}/composer-template.json {{ drupal_root }}/composer.json
   when: new_site.stat.exists == false
 
+- name: "APP: Pin Drupal version to specific Git tag"
+  replace:
+    dest: "{{ drupal_root }}/composer.json"
+    regexp: '^(.*)"drupal/core": "\^8.6"(.*)$'
+    replace: '\1"drupal/core": "{{ git_tag }}"\2'
+  when: new_site.stat.exists == false and git_tag is defined
+
 - name: "APP: Install vendor dependencies from composer.json file (this can take a while)"
   composer:
     command: install

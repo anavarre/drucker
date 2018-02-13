@@ -13,14 +13,13 @@ usage() {
 cat <<EOF
 
 ${ORANGE_HELP}Usage:${COLOR_ENDING_HELP}
-  drucker [command] [site,...] [git_ref]
+  drucker [command] [site,...] [git_tag]
 
   The [site,...] argument is only valid for the following commands:
     app:[drupal,lightning,reservoir,blt]
     app:[delete,import,dev,prod]
 
-  The [git_ref] argument is only valid for the following commands:
-    app:[drupal,lightning,reservoir,blt]
+  The [git_tag] argument is only valid for the app:drupal command.
 
  ${ORANGE_HELP}containers${COLOR_ENDING_HELP}
   ${GREEN_HELP}containers:health${COLOR_ENDING_HELP}   Runs a service healthcheck

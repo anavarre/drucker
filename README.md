@@ -176,14 +176,13 @@ $ drucker help
 drucker version dev:ba964ca
 
 Usage:
-  drucker [command] [site,...] [git_ref]
+  drucker [command] [site,...] [git_tag]
 
   The [site,...] argument is only valid for the following commands:
     app:[drupal,lightning,reservoir,blt]
     app:[delete,import,dev,prod]
 
-  The [git_ref] argument is only valid for the following commands:
-    app:[drupal,lightning,reservoir,blt]
+  The [git_tag] argument is only valid for the app:drupal command.
 
  containers
   containers:health   Runs a service healthcheck

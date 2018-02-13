@@ -56,28 +56,14 @@ app_drupal() {
       app_drupal
     fi
   else
-    if [[ -z "${GIT_TAG}" ]] && [[ -z "${GIT_COMMIT}" ]]; then
+    if [[ -z "${GIT_TAG}" ]]; then
       echo -e "${BLUE}Creating site into new ${SITE} docroot...${COLOR_ENDING}"
       ${COMMANDS}/app-drupal.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE}"
       hosts_file
     elif [[ -n "${GIT_TAG}" ]]; then
-      if [[ " ${GIT_TAGS[*]} " == *" ${GIT_TAG} "* ]]; then
-        echo -e "${BLUE}Creating Drupal ${GIT_TAG} site into new ${SITE} docroot...${COLOR_ENDING}"
-        ${PLAYBOOKS}/create-tag.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_tag=${GIT_TAG}"
-        hosts_file
-      else
-        echo -e "\n${RED}This git tag doesn't seem to exist.${COLOR_ENDING}\n"
-        drucker_usage
-      fi
-    elif [[ -n "${GIT_COMMIT}" ]]; then
-      if [[ " ${GIT_COMMITS[*]} " == *" ${GIT_COMMIT} "* ]]; then
-        echo -e "${BLUE}Creating Drupal site from commit ID ${GIT_COMMIT} into new ${SITE} docroot...${COLOR_ENDING}"
-        ${PLAYBOOKS}/create-commit.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_commit=${GIT_COMMIT}"
-        hosts_file
-      else
-        echo -e "\n${RED}This git commit doesn't seem to exist. Remember to use a short hash.${COLOR_ENDING}\n"
-        drucker_usage
-      fi
+      echo -e "${BLUE}Creating Drupal ${GIT_TAG} site into new ${SITE} docroot...${COLOR_ENDING}"
+      ${COMMANDS}/app-drupal.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_tag=${GIT_TAG}"
+      hosts_file
     fi
   fi
 }

@@ -15,13 +15,12 @@ source "${DIR}/config"
 
 export COMMAND=$1
 export SITENAME=$2
+
 # Force lowercase on sitename(s).
 export SITENAME=$(echo "$SITENAME" | tr '[:upper:]' '[:lower:]')
 
 if [[ $3 = *.* ]]; then
   export GIT_TAG=$3
-else
-  export GIT_COMMIT=$3
 fi
 
 # Custom user configuration.
