@@ -297,6 +297,8 @@ drupal_root: "{{ webroot }}/{{ sitename }}"
 drupal_docroot: "{{ drupal_root }}/docroot"
 blt_command: ./vendor/acquia/blt/bin/blt
 blt_local_settings: "{{ drupal_docroot }}/sites/default/settings/local.settings.php"
+blt_behat_local_yml: "{{ drupal_root }}/tests/behat/local.yml"
+blt_behat_local_drush_yml: "{{ drupal_docroot }}/sites/default/local.drush.yml"
 libraries_dir: "{{ drupal_docroot }}/libraries"
 deployed_settings_php: "{{ drupal_docroot }}/{{ default_site }}/settings.php"
 services_yml_template: "{{ drupal_docroot }}/{{ default_site }}/default.services.yml"

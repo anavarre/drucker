@@ -69,12 +69,26 @@
   become_user: "{{ user }}"
   when: new_site.stat.exists == false
 
+- name: "BLT: Set behat base_url value"
+  replace:
+    dest: "{{ blt_behat_local_yml }}"
+    regexp: '^(.*)local.blt.com(.*)$'
+    replace: '\1{{ sitename }}.{{ tld }}\2'
+  when: new_site.stat.exists == false
+
 - name: "BLT: Install Drupal (Lightning) and finish setup"
   command: "{{ blt_command }} setup"
   args:
     chdir: "{{ drupal_root }}"
   become: yes
   become_user: "{{ user }}"
+  when: new_site.stat.exists == false
+
+- name: "BLT: Set Drush URI"
+  replace:
+    dest: "{{ blt_behat_local_drush_yml }}"
+    regexp: '^(.*)local.blted8.com(.*)$'
+    replace: '\1{{ sitename }}.{{ tld }}\2'
   when: new_site.stat.exists == false
 
 - import_tasks: ../common/apache-vhost.yml
