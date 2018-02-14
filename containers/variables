@@ -10,7 +10,7 @@ export ORANGE_HELP=$(printf '\033[38;5;178m')
 export COLOR_ENDING="\033[0m"
 export COLOR_ENDING_HELP=$(printf '\033[0m')
 
-export DRUCKER_VERSION="0.6.3"
+export DRUCKER_VERSION="dev"
 export USER="drucker"
 export TLD="local"
 
