@@ -93,7 +93,6 @@ app_blt() {
 }
 
 app_lightning() {
-  set -x
   if [[ $(docker exec -u "${USER}" -it "${WEB_CONTAINER}" /bin/cat /etc/php/default_php_version) == ${DEFAULT_PHP} ]]; then
     echo "Installing Lightning on PHP ${DEFAULT_PHP} is currently broken."
     echo "Please switch to PHP ${PREVIOUS_PHP} instead with 'drucker php:${PREVIOUS_PHP}'"
