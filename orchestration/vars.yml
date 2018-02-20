@@ -23,6 +23,7 @@ phpunit_source_file: "{{ source_file_dir }}/phpunit.xml"
 gitignore_source_file: "{{ source_file_dir }}/.gitignore"
 composer_json_source_file: "{{ source_file_dir }}/composer.json"
 composer_json_template_file: "{{ source_file_dir }}/composer-template.json"
+composer_json_dev_template_file: "{{ source_file_dir }}/composer-dev-template.json"
 nginx_template_source_file: "{{ source_file_dir }}/nginx-template.conf"
 varnish_conf_source_file: "{{ source_file_dir }}/varnish"
 varnish_default_vcl_source_file: "{{ source_file_dir }}/default.vcl"
@@ -295,6 +296,8 @@ default_configuration_dir: config/default
 drupal_head: 8.6.x
 drupal_root: "{{ webroot }}/{{ sitename }}"
 drupal_docroot: "{{ drupal_root }}/docroot"
+drupal_composer_json: "{{ drupal_root }}/composer.json"
+drupal_composer_lock: "{{ drupal_root }}/composer.lock"
 blt_command: ./vendor/acquia/blt/bin/blt
 blt_local_settings: "{{ drupal_docroot }}/sites/default/settings/local.settings.php"
 blt_behat_local_yml: "{{ drupal_root }}/tests/behat/local.yml"

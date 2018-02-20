@@ -21,19 +21,15 @@
 - name: "APP: Deploy default composer.json template"
   copy:
     src: "{{ composer_json_template_file }}"
-    dest: "{{ drupal_root }}"
+    dest: "{{ drupal_composer_json }}"
     mode: 0644
   become: yes
   become_user: "{{ user }}"
   when: new_site.stat.exists == false
 
-- name: "APP: Rename composer-template.json filename"
-  command: mv {{ drupal_root }}/composer-template.json {{ drupal_root }}/composer.json
-  when: new_site.stat.exists == false
-
 - name: "APP: Pin Drupal version to specific Git tag"
   replace:
-    dest: "{{ drupal_root }}/composer.json"
+    dest: "{{ drupal_composer_json }}"
     regexp: '^(.*)"drupal/core": "\^8.6"(.*)$'
     replace: '\1"drupal/core": "{{ git_tag }}"\2'
   when: new_site.stat.exists == false and git_tag is defined

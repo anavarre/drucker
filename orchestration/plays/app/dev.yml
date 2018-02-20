@@ -74,6 +74,29 @@
 - name: "DEV: Enable the Testing module"
   command: drush --root={{ drupal_root }} pm-enable simpletest
 
+- name: "DEV: Delete composer.lock file"
+  file:
+    path: "{{ drupal_composer_lock }}"
+    state: absent
+    force: yes
+
+- name: "DEV: Deploy composer.json dev template"
+  copy:
+    src: "{{ composer_json_dev_template_file }}"
+    dest: "{{ drupal_composer_json }}"
+    mode: 0644
+  become: yes
+  become_user: "{{ user }}"
+
+# We're using the shell command here, because using the composer command leaves us
+# with missing vendor dependencies, for some reason.
+- name: "DEV: Install require-dev vendor dependencies (this can take a while)"
+  shell: composer install
+  args:
+    chdir: "{{ drupal_root }}"
+  become: yes
+  become_user: "{{ user }}"
+
 - name: "DEV: Rebuild Drupal cache"
   command: drush --root={{ drupal_root }} cache-rebuild
   when: turn_on_twig_debugging.changed

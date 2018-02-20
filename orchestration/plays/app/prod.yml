@@ -46,6 +46,29 @@
   command: drush --root={{ drupal_root }} pm-uninstall -y simpletest
   when: testing_module_check.stdout == "Enabled"
 
+- name: "PROD: Delete composer.lock file"
+  file:
+    path: "{{ drupal_composer_lock }}"
+    state: absent
+    force: yes
+
+- name: "PROD: Deploy composer.json template"
+  copy:
+    src: "{{ composer_json_template_file }}"
+    dest: "{{ drupal_composer_json }}"
+    mode: 0644
+  become: yes
+  become_user: "{{ user }}"
+
+# We're using the shell command here, because using the composer command leaves us
+# with missing vendor dependencies, for some reason.
+- name: "PROD: Remove require-dev vendor dependencies (this can take a while)"
+  shell: composer install
+  args:
+    chdir: "{{ drupal_root }}"
+  become: yes
+  become_user: "{{ user }}"
+
 - name: "PROD: Rebuild Drupal cache"
   command: drush --root={{ drupal_root }} cache-rebuild
   when: turn_off_twig_debugging.changed
