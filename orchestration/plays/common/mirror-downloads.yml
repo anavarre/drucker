@@ -303,6 +303,23 @@
   when: mcstat_mirror_archive_file_check.stat.exists == false
 
 # phpMyAdmin
+- name: Check if the phpMyAdmin version file exists
+  stat:
+    path: "{{ phpmyadmin_version_file }}"
+  register: phpmyadmin_version_file_check
+  changed_when: phpmyadmin_version_file_check.stat.exists == false
+
+- name: Write phpMyAdmin version to file
+  copy:
+    content: "{{ phpmyadmin_stable_release }}"
+    dest: "{{ phpmyadmin_version_file }}"
+  when: phpmyadmin_version_file_check.stat.exists == false
+
+- name: Store phpMyAdmin version variable
+  shell: cat {{ phpmyadmin_version_file }}
+  register: phpmyadmin_read_version
+  changed_when: phpmyadmin_version_file_check.stat.exists == false
+
 - name: Check if phpMyAdmin archive exists
   stat:
     path: "{{ phpmyadmin_mirror_archive_file_path }}"
@@ -318,7 +335,13 @@
   until: "'OK' in pma_get_url_result.msg"
   retries: 3
   delay: 10
-  when: pma_mirror_archive_file_path_check.stat.exists == false
+  when: pma_mirror_archive_file_path_check.stat.exists == false or phpmyadmin_read_version.stdout != phpmyadmin_stable_release
+
+- name: Write new phpMyAdmin version to file
+  copy:
+    content: "{{ phpmyadmin_stable_release }}"
+    dest: "{{ phpmyadmin_version_file }}"
+  when: pma_get_url_result.changed
 
 # adminer
 - name: Check if adminer file exists
