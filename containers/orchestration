@@ -69,12 +69,6 @@ app_drupal() {
 }
 
 app_blt() {
-  if [[ $(docker exec -u "${USER}" -it "${WEB_CONTAINER}" /bin/cat /etc/php/default_php_version) == 7.2 ]]; then
-    echo "Installing BLT/Lightning on PHP 7.2 is currently broken."
-    echo "Please switch to PHP 7.1 instead with 'drucker php:7.1'"
-    exit 0
-  fi
-
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
     user_confirmation
     if [[ ${REPLY} =~ ^[Nn]$ ]]; then
@@ -93,12 +87,6 @@ app_blt() {
 }
 
 app_lightning() {
-  if [[ $(docker exec -u "${USER}" -it "${WEB_CONTAINER}" /bin/cat /etc/php/default_php_version) == ${DEFAULT_PHP} ]]; then
-    echo "Installing Lightning on PHP ${DEFAULT_PHP} is currently broken."
-    echo "Please switch to PHP ${PREVIOUS_PHP} instead with 'drucker php:${PREVIOUS_PHP}'"
-    exit 0
-  fi
-
   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
     user_confirmation
     if [[ ${REPLY} =~ ^[Nn]$ ]]; then
