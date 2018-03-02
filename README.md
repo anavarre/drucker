@@ -74,23 +74,23 @@ _drucker_ ships with the following software stack:
 | PHP-FPM             | 7.1 or 7.2            | APT, via [ppa:ondrej/php](https://deb.sury.org/)      |
 | APCu                | 5.1.8 or higher       | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
 | Coder               | 8.2.11                | [drupal/coder](https://packagist.org/packages/drupal/coder) (Packagist)      |
-| Code Sniffer        | 2.6.1                 | [squizlabs/PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) (Github)      |
-| PHP-CS-Fixer        | 2.10.3                | [FriendsOfPHP/PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (Github)      |
+| Code Sniffer        | 2.6.1                 | [squizlabs/PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) (Github)              |
+| PHP-CS-Fixer        | 2.10.3                | [FriendsOfPHP/PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (Github)              |
 | phpmd               | 2.6.0                 | [PHPMD](https://phpmd.org/) (official site)      |
-| PECL uploadprogress | master                | [ php/pecl-php-uploadprogress](https://github.com/php/pecl-php-uploadprogress)  (Github)     |
-| PECL YAML           | 2.0.0                 | [php/pecl-file_formats-yaml](https://github.com/php/pecl-file_formats-yaml) (Github)      |
+| PECL uploadprogress | master                | [ php/pecl-php-uploadprogress](https://github.com/php/pecl-php-uploadprogress)  (Github)              |
+| PECL YAML           | 2.0.0                 | [php/pecl-file_formats-yaml](https://github.com/php/pecl-file_formats-yaml) (Github)              |
 | LibYAML             | 0.1.7                 | [PyYAML](http://pyyaml.org/) (official site)     |
 | Xdebug              | 2.6.0                 | [Xdebug](https://xdebug.org/) (official site)     |
-| Tideways Profiler   | 4.1.5                 | [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension)  (Github)     |
+| Tideways Profiler   | 4.1.5                 | [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension)  (Github)  |
 | phantomjs           | 2.1.1                 | [ariya/phantomjs](https://bitbucket.org/ariya/phantomjs/) (Bitbucket)     |
 | Drupal              | 8.6.x                 | [Drupal](https://www.drupal.org/project/drupal) (official site)     |
 | Drush               | ^9.0                  | [Drush](https://packagist.org/packages/drush/drush) (Packagist)      |
-| Drush Launcher      | 0.4.2                 | [Drush Launcher](https://github.com/drush-ops/drush-launcher) (Github)      
-| Drupal Console      | ~1.0                  | [hechoendrupal/drupal-console-launcher](https://github.com/hechoendrupal/drupal-console-launcher) (Github)      |
+| Drush Launcher      | 0.5.1                 | [Drush Launcher](https://github.com/drush-ops/drush-launcher) (Github)
+| Drupal Console      | ~1.0                  | [hechoendrupal/drupal-console-launcher](https://github.com/hechoendrupal/drupal-console-launcher) (Github)|
 | Composer            | 1.6.2                 | [Composer](https://getcomposer.org) (official site)     |
 | Apache Solr         | 7.0.1                 | [Solr](https://lucene.apache.org/solr/) (official site) |
 | OpenJDK             | 1.8.0_121 or higher   | APT, via debian-backports |
-| bash-git-prompt     | 2.7.1                 | [magicmonty/bash-git-prompt](https://github.com/magicmonty/bash-git-prompt) (Github)      |
+| bash-git-prompt     | 2.7.1                 | [magicmonty/bash-git-prompt](https://github.com/magicmonty/bash-git-prompt) (Github)              |
 
 ## <a name="installation"></a>Installation
 
