@@ -17,6 +17,7 @@ create_search_container_from_base_image() {
   --net "${NETWORK}" \
   --ip "${SEARCH_IP}" \
   -d -p "${HOST_SEARCH_PORT}":"${SEARCH_PORT}" \
+  -p "${HOST_SSH_PORT}":"${SSH_PORT}" \
   "${BASE_IMAGE}" bash
 
   configure_search_container_ssh_access
@@ -31,6 +32,7 @@ create_search_container_from_search_image() {
   --net "${NETWORK}" \
   --ip "${SEARCH_IP}" \
   -d -p "${HOST_SEARCH_PORT}":"${SEARCH_PORT}" \
+  -p "${HOST_SEARCH_SSH_PORT}":"${SSH_PORT}" \
   "${SEARCH_IMAGE}" bash
 
   configure_search_container_ssh_access

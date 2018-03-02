@@ -35,6 +35,7 @@ create_web_container_from_base_image() {
   --net "${NETWORK}" \
   --ip "${WEB_IP}" \
   -d -p "${HOST_WEB_PORT}":"${WEB_PORT}" \
+  -p "${HOST_SSH_PORT}":"${SSH_PORT}" \
   -p "${HOST_TCP_PORT_MAPPER_WEB}":"${TCP_PORT_MAPPER_WEB}" \
   -v "${HOST_HTML_PATH}":"${CONTAINER_HTML_PATH}" \
   --volumes-from "${DB_CONTAINER}" \
@@ -55,6 +56,7 @@ create_web_container_from_web_image() {
   --net "${NETWORK}" \
   --ip "${WEB_IP}" \
   -d -p "${HOST_WEB_PORT}":"${WEB_PORT}" \
+  -p "${HOST_SSH_PORT}":"${SSH_PORT}" \
   -p "${HOST_TCP_PORT_MAPPER_WEB}":"${TCP_PORT_MAPPER_WEB}" \
   -v "${HOST_HTML_PATH}":"${CONTAINER_HTML_PATH}" \
   --volumes-from "${DB_CONTAINER}" \

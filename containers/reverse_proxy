@@ -15,6 +15,7 @@ create_reverse_proxy_container_from_base_image() {
   --net "${NETWORK}" \
   --ip "${REVERSE_PROXY_IP}" \
   -d -p "${REVERSE_PROXY_HOST_PORT}":"${REVERSE_PROXY_PORT}" \
+  -p "${HOST_SSH_PORT}":"${SSH_PORT}" \
   "${BASE_IMAGE}" bash
 
   configure_reverse_proxy_ssh_access
