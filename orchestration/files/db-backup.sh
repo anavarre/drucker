@@ -11,7 +11,7 @@ NOW=$(date +"%Y-%m-%d_%R")
 
 DBS="$(${MYSQL} -h ${HOST} -u ${CREDS} -p${CREDS} -Bse "${QUERY}")"
 for DB in ${DBS}
-do
-  FILE=${BACKUP_DIR}/${DB}_${NOW}.gz
-  ${MYSQLDUMP} -h ${HOST} -u ${CREDS} -p${CREDS} ${DB} | ${GZIP} -9 > ${FILE}
+  do
+    FILE=${BACKUP_DIR}/${DB}_${NOW}.gz
+    ${MYSQLDUMP} -h ${HOST} -u ${CREDS} -p${CREDS} ${DB} | ${GZIP} -9 > ${FILE}
 done
