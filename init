@@ -64,6 +64,7 @@ drucker_argument() {
         validation
         usage
       else
+        check_containers_status
         run_app_drupal
       fi
       ;;
@@ -73,6 +74,7 @@ drucker_argument() {
         validation
         usage
       else
+        check_containers_status
         run_app_lightning
       fi
       ;;
@@ -82,6 +84,7 @@ drucker_argument() {
         validation
         usage
       else
+        check_containers_status
         run_app_reservoir
       fi
       ;;
@@ -90,6 +93,7 @@ drucker_argument() {
         validation
         usage
       else
+        check_containers_status
         run_app_blt
       fi
       ;;
@@ -97,6 +101,7 @@ drucker_argument() {
       if [[ "${COMMAND}" == "app:delete" ]] && [[ -z ${SITENAME} ]]; then
         usage
       else
+        check_containers_status
         run_app_delete
       fi
       ;;
@@ -105,6 +110,7 @@ drucker_argument() {
         validation
         usage
       else
+        check_containers_status
         run_app_import
       fi
       ;;
@@ -112,6 +118,7 @@ drucker_argument() {
       if [[ "${COMMAND}" == "app:dev" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         usage
       else
+        check_containers_status
         run_app_dev
       fi
       ;;
@@ -119,17 +126,20 @@ drucker_argument() {
       if [[ "${COMMAND}" == "app:prod" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         usage
       else
+        check_containers_status
         run_app_prod
       fi
       ;;
       php:7.1)
       if [[ "${COMMAND}" == "php:7.1" ]]; then
+        check_containers_status
         set_previous_php_version
         exit 0
       fi
       ;;
       php:7.2)
       if [[ "${COMMAND}" == "php:7.2" ]]; then
+        check_containers_status
         set_default_php_version
         exit 0
       fi
@@ -143,6 +153,7 @@ drucker_argument() {
         usage
         exit 0
       else
+        check_containers_status
         run_tests
         exit 0
       fi

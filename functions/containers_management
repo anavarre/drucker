@@ -78,12 +78,21 @@ stop_containers() {
 restart_containers() {
   mapfile -t CONTAINERS_TO_RESTART < <( docker ps -a | grep 'Up' | grep 'drucker_' | awk '{print $NF}' )
   if [[ -z "${CONTAINERS_TO_RESTART}" ]]; then
-    echo -e "drucker containers should be started before being restarted.\n"
-    echo "Run: drucker containers:start"
+    echo -e "\n${RED}You cannot restart containers that are stopped!\n${COLOR_ENDING}"
+    echo -e "Run ${GREEN}drucker containers:start\n${COLOR_ENDING}"
     exit 0
   else
     stop_containers
     start_containers
   fi
   exit 0
+}
+
+check_containers_status() {
+  mapfile -t CONTAINERS_STATUS < <( docker ps -a | grep 'Up' | grep 'drucker_' | awk '{print $NF}' )
+  if [[ -z "${CONTAINERS_STATUS}" ]]; then
+    echo -e "\n${RED}You cannot run this command when containers are stopped!\n${COLOR_ENDING}"
+    echo -e "Run ${GREEN}drucker containers:start\n${COLOR_ENDING}"
+    exit 0
+  fi
 }
