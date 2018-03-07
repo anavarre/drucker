@@ -258,7 +258,7 @@ db_backup_path: "{{ user_programs_path }}/db-backup.sh"
 
 # phpMyAdmin
 phpmyadmin_version_file: "{{ mirror_archives_dir }}/phpmyadmin-version"
-phpmyadmin_stable_release: 4.7.8
+phpmyadmin_stable_release: 4.7.9
 phpmyadmin_archive_filename: phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
 phpmyadmin_download_link: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_stable_release }}/{{ phpmyadmin_archive_filename }}
 phpmyadmin_mirror_download_link: http://{{ mirror_host }}/{{ phpmyadmin_archive_filename }}
