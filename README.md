@@ -75,7 +75,7 @@ _drucker_ ships with the following software stack:
 | APCu                | 5.1.8 or higher       | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
 | Coder               | 8.2.11                | [drupal/coder](https://packagist.org/packages/drupal/coder) (Packagist)      |
 | Code Sniffer        | 2.6.1                 | [squizlabs/PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) (Github)              |
-| PHP-CS-Fixer        | 2.10.3                | [FriendsOfPHP/PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (Github)              |
+| PHP-CS-Fixer        | 2.10.4                | [FriendsOfPHP/PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (Github)              |
 | phpmd               | 2.6.0                 | [PHPMD](https://phpmd.org/) (official site)      |
 | PECL uploadprogress | master                | [ php/pecl-php-uploadprogress](https://github.com/php/pecl-php-uploadprogress)  (Github)              |
 | PECL YAML           | 2.0.0                 | [php/pecl-file_formats-yaml](https://github.com/php/pecl-file_formats-yaml) (Github)              |
@@ -85,7 +85,7 @@ _drucker_ ships with the following software stack:
 | phantomjs           | 2.1.1                 | [ariya/phantomjs](https://bitbucket.org/ariya/phantomjs/) (Bitbucket)     |
 | Drupal              | 8.6.x                 | [Drupal](https://www.drupal.org/project/drupal) (official site)     |
 | Drush               | ^9.0                  | [Drush](https://packagist.org/packages/drush/drush) (Packagist)      |
-| Drush Launcher      | 0.5.1                 | [Drush Launcher](https://github.com/drush-ops/drush-launcher) (Github)
+| Drush Launcher      | 0.6.0                 | [Drush Launcher](https://github.com/drush-ops/drush-launcher) (Github)
 | Drupal Console      | ~1.0                  | [hechoendrupal/drupal-console-launcher](https://github.com/hechoendrupal/drupal-console-launcher) (Github)|
 | Composer            | 1.6.2                 | [Composer](https://getcomposer.org) (official site)     |
 | Apache Solr         | 7.0.1                 | [Solr](https://lucene.apache.org/solr/) (official site) |
