@@ -202,6 +202,15 @@ run_app_lightning() {
   exit 0
 }
 
+run_app_commerce() {
+  # Comma-separated sitenames are split into single values for drucker to
+  # get a list of Drupal Commerce sites to create.
+  for SITE in ${SITENAME//,/ }; do
+    app_commerce
+  done
+  exit 0
+}
+
 run_app_reservoir() {
   # Comma-separated sitenames are split into single values for drucker to
   # get a list of Reservoir sites to create.

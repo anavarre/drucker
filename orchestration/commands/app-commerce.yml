@@ -1,0 +1,11 @@
+---
+- hosts: drucker_web
+  become: yes
+
+  gather_facts: yes
+  vars_files:
+    - ../vars.yml
+  handlers:
+    - import_tasks: ../handlers.yml
+  tasks:
+    - import_tasks: ../plays/app/commerce.yml

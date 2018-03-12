@@ -1,0 +1,99 @@
+---
+- name: "COMMERCE: Check if new site exists"
+  stat:
+    path: "{{ drupal_root }}"
+  register: new_site
+  ignore_errors: True
+
+- name: "COMMERCE: Check if new database exists"
+  stat:
+    path: "{{ db_data }}/{{ sitename }}"
+  register: new_db
+
+# We're using the shell command here, because using the composer command leaves us
+# with missing vendor dependencies, for some reason.
+- name: "COMMERCE: Create project with vendor dependencies (this can take a while)"
+  shell: cd {{ webroot }} && composer create-project drupalcommerce/project-base {{ sitename }} --stability dev
+  become: yes
+  become_user: "{{ user }}"
+
+- import_tasks: ../common/drupal-common.yml
+
+- name: "COMMERCE: Install Drupal"
+  command: drush --root={{ drupal_docroot }} site-install commerce install_configure_form.enable_update_status_module=NULL -qy --db-url=mysql://{{ db_creds }}:{{ db_creds }}@{{ db_ip }}:{{ db_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}
+  become: yes
+  become_user: "{{ user }}"
+  when: new_alias.stat.exists == false
+
+- name: "COMMERCE: Check if phpunit.xml file exists"
+  stat:
+    path: "{{ drupal_docroot }}/core/phpunit.xml"
+  register: commerce_phpunit
+
+- name: "COMMERCE: Deploy phpunit.xml file"
+  copy:
+    src: "{{ phpunit_source_file }}"
+    dest: "{{ drupal_docroot }}/core/"
+    mode: 0644
+  become: yes
+  become_user: "{{ user }}"
+  when: commerce_phpunit.stat.exists == false
+
+- name: "COMMERCE: Modify phpunit.xml file"
+  replace:
+    dest: "{{ drupal_docroot }}/core/phpunit.xml"
+    regexp: '^(.*)SITENAME(.*)$'
+    replace: '\1{{ sitename }}\2'
+  when: commerce_phpunit.stat.exists == false
+
+- name: "COMMERCE: Make sure we're down one level for the PHPUnit path"
+  replace:
+    dest: "{{ drupal_docroot }}/core/phpunit.xml"
+    regexp: '^(.*){{ drupal_root }}(.*)$'
+    replace: '\1{{ drupal_root }}/docroot\2'
+  when: commerce_phpunit.stat.exists == false
+
+- name: "COMMERCE: Check if .gitignore exists"
+  stat:
+    path: "{{ drupal_root }}/.gitignore"
+  register: commerce_gitignore
+  ignore_errors: True
+
+- name: "COMMERCE: Create .gitignore file"
+  copy:
+    src: "{{ gitignore_source_file }}"
+    dest: "{{ drupal_root }}"
+    mode: 0644
+  become: yes
+  become_user: "{{ user }}"
+  when: commerce_gitignore.stat.exists == false
+
+- name: "COMMERCE: Check if Git repository exists"
+  stat:
+    path: "{{ drupal_root }}/.git"
+  register: commerce_git_repo
+  ignore_errors: True
+
+- name: "COMMERCE: Initialize Git repository"
+  shell: git -C {{ drupal_root }} init
+  args:
+    warn: no
+  register: initial_commit
+  become: yes
+  become_user: "{{ user }}"
+  when: commerce_git_repo.stat.exists == false
+
+- name: "COMMERCE: Add all new files under version control"
+  shell: git -C {{ drupal_root }} add --all . && git -C {{ drupal_root }} commit -m "Initial commit"
+  become: yes
+  become_user: "{{ user }}"
+  when: commerce_git_repo.stat.exists == false
+
+- name: "COMMERCE: Make sure files dir ownership is correct"
+  file:
+    path: "{{ drupal_root }}/{{ default_site }}/files"
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+    state: directory
+    recurse: yes
+  when: new_site.stat.exists == false or new_db.stat.exists == false

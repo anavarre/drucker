@@ -39,9 +39,9 @@ app_prod() {
 }
 
 app_import() {
-  echo -e "${BLUE}Importing site into new docroot ${SITE}...${COLOR_ENDING}"
-  ${COMMANDS}/app-import.yml --extra-vars "ansible_sudo_pass=${USER} import=Y sitename=${SITE}"
-  hosts_file
+    echo -e "${BLUE}Importing site into new docroot ${SITE}...${COLOR_ENDING}"
+    ${COMMANDS}/app-import.yml --extra-vars "ansible_sudo_pass=${USER} import=Y sitename=${SITE}"
+    hosts_file
 }
 
 app_drupal() {

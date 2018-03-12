@@ -26,6 +26,7 @@ drucker_argument() {
        [[ "${COMMAND}" != "containers:restart" ]] && \
        [[ "${COMMAND}" != "app:drupal" ]] && \
        [[ "${COMMAND}" != "app:lightning" ]] && \
+       [[ "${COMMAND}" != "app:commerce" ]] && \
        [[ "${COMMAND}" != "app:reservoir" ]] && \
        [[ "${COMMAND}" != "app:blt" ]] && \
        [[ "${COMMAND}" != "app:delete" ]] && \
@@ -76,6 +77,15 @@ drucker_argument() {
       else
         check_containers_status
         run_app_lightning
+      fi
+      ;;
+      app:commerce)
+      if [[ "${COMMAND}" == "app:commerce" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+        validation
+        usage
+      else
+        check_containers_status
+        run_app_commerce
       fi
       ;;
       app:reservoir)

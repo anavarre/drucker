@@ -22,7 +22,7 @@ ${ORANGE_HELP}Usage:${COLOR_ENDING_HELP}
   The [git_tag] argument is only valid for the app:drupal command.
 
  ${ORANGE_HELP}containers${COLOR_ENDING_HELP}
-  ${GREEN_HELP}containers:health${COLOR_ENDING_HELP}   Runs a service healthcheck
+  ${GREEN_HELP}containers:health${COLOR_ENDING_HELP}   Runs a services health check
   ${GREEN_HELP}containers:start${COLOR_ENDING_HELP}    Starts all drucker containers
   ${GREEN_HELP}containers:stop${COLOR_ENDING_HELP}     Stops all drucker containers
   ${GREEN_HELP}containers:restart${COLOR_ENDING_HELP}  Restarts all drucker containers
@@ -30,6 +30,7 @@ ${ORANGE_HELP}Usage:${COLOR_ENDING_HELP}
  ${ORANGE_HELP}app${COLOR_ENDING_HELP}
   ${GREEN_HELP}app:drupal${COLOR_ENDING_HELP}          Spins up a ready-to-use Drupal install
   ${GREEN_HELP}app:lightning${COLOR_ENDING_HELP}       Spins up a ready-to-use Lightning install
+  ${GREEN_HELP}app:commerce${COLOR_ENDING_HELP}        Spins up a ready-to-use Drupal Commerce install
   ${GREEN_HELP}app:reservoir${COLOR_ENDING_HELP}       Spins up a ready-to-use Reservoir install
   ${GREEN_HELP}app:blt${COLOR_ENDING_HELP}             Spins up a ready-to-use BLT build
   ${GREEN_HELP}app:delete${COLOR_ENDING_HELP}          Deletes an arbitrary docroot

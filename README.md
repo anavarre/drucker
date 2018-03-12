@@ -185,7 +185,7 @@ Usage:
   The [git_tag] argument is only valid for the app:drupal command.
 
  containers
-  containers:health   Runs a service healthcheck
+  containers:health   Runs a services health check
   containers:start    Starts all drucker containers
   containers:stop     Stops all drucker containers
   containers:restart  Restarts all drucker containers
@@ -193,6 +193,7 @@ Usage:
  app
   app:drupal          Spins up a ready-to-use Drupal install
   app:lightning       Spins up a ready-to-use Lightning install
+  app:commerce        Spins up a ready-to-use Drupal Commerce install
   app:reservoir       Spins up a ready-to-use Reservoir install
   app:blt             Spins up a ready-to-use BLT build
   app:delete          Deletes an arbitrary docroot
