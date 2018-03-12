@@ -39,9 +39,21 @@ app_prod() {
 }
 
 app_import() {
-  echo -e "${BLUE}Importing site into new docroot ${SITE}...${COLOR_ENDING}"
-  ${COMMANDS}/app-import.yml --extra-vars "ansible_sudo_pass=${USER} import=Y sitename=${SITE}"
-  hosts_file
+  if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
+    user_confirmation
+    if [[ ${REPLY} =~ ^[Nn]$ ]]; then
+      cancellation
+    elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
+      failure
+    else
+      app_delete
+      app_import
+    fi
+  else
+    echo -e "${BLUE}Importing site into new docroot ${SITE}...${COLOR_ENDING}"
+    ${COMMANDS}/app-import.yml --extra-vars "ansible_sudo_pass=${USER} import=Y sitename=${SITE}"
+    hosts_file
+  fi
 }
 
 app_drupal() {
