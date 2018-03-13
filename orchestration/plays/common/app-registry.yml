@@ -1,0 +1,30 @@
+---
+- name: "APP REGISTRY: Check if app registry file exists"
+  stat:
+    path: "{{ app_registry }}"
+  register: app_registry_file
+  ignore_errors: True
+
+- name: "APP REGISTRY: Create app registry file"
+  copy:
+    content: ""
+    dest: "{{ app_registry }}"
+    force: no
+    mode: 02444
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  when: app_registry_file.stat.exists == false
+
+- name: "APP REGISTRY: Register app"
+  lineinfile:
+    dest: "{{ app_registry }}"
+    line: "{{ sitename}} ({{ app }})"
+  when: app != "delete"
+
+- name: "APP REGISTRY: Unregister app"
+  lineinfile:
+    dest: "{{ app_registry }}"
+    regexp: '^{{ sitename}}'
+    line: "{{ sitename}} ({{ app }})"
+    state: absent
+  when: app == "delete"
