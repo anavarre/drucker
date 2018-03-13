@@ -56,3 +56,5 @@
     path: "{{ drush_alias_path }}/{{ sitename }}.{{ drush_alias_extension }}"
     state: absent
   when: sitename_alias.stat.exists == true
+
+- import_tasks: ../common/app-registry.yml

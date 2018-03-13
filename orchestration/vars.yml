@@ -322,6 +322,7 @@ simpletest_dir: "{{ drupal_docroot }}/sites/simpletest"
 phpunit_xml: "{{ drupal_docroot }}/core/phpunit.xml"
 examples_sites: sites/example.sites.php
 sites_php: sites/sites.php
+app_registry: "{{ webroot }}/.app-registry"
 
 # Import
 drush_alias_extension: site.yml

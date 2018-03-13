@@ -24,6 +24,7 @@ drucker_argument() {
        [[ "${COMMAND}" != "containers:start" ]] && \
        [[ "${COMMAND}" != "containers:stop" ]] && \
        [[ "${COMMAND}" != "containers:restart" ]] && \
+       [[ "${COMMAND}" != "app:list" ]] && \
        [[ "${COMMAND}" != "app:drupal" ]] && \
        [[ "${COMMAND}" != "app:lightning" ]] && \
        [[ "${COMMAND}" != "app:reservoir" ]] && \
@@ -57,6 +58,11 @@ drucker_argument() {
       containers:restart)
       if [[ "${COMMAND}" == "containers:restart" ]]; then
         restart_containers
+      fi
+      ;;
+      app:list)
+      if [[ "${COMMAND}" == "app:list" ]]; then
+        run_app_list
       fi
       ;;
       app:drupal)
