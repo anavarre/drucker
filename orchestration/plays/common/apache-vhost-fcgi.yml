@@ -1,5 +1,5 @@
 ---
-- name: Store PHP version variable
+- name: "COMMON: Store PHP version variable"
   shell: cat {{ default_php_version_file }}
   register: phpfcgi_read_version
 
