@@ -97,3 +97,5 @@
     state: directory
     recurse: yes
   when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- import_tasks: ../common/app-registry.yml

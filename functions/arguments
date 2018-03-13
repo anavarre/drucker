@@ -157,6 +157,11 @@ run_app_prod() {
   exit 0
 }
 
+run_app_list() {
+  docker exec -it ${WEB_CONTAINER} cat ${CONTAINER_HTML_PATH}/.app-registry
+  exit 0
+}
+
 run_app_drupal() {
   # Comma-separated sitenames are split into single values for drucker to
   # get a list of sites to create.

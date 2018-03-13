@@ -30,90 +30,50 @@ hosts_file() {
 
 app_dev() {
   echo -e "${BLUE}Configuring ${SITE} docroot for development...${COLOR_ENDING}"
-  ${COMMANDS}/app-dev.yml --extra-vars "ansible_sudo_pass=${USER} dev=Y sitename=${SITE}"
+  ${COMMANDS}/app-dev.yml --extra-vars "ansible_sudo_pass=${USER} app=dev sitename=${SITE}"
 }
 
 app_prod() {
   echo -e "${BLUE}Configuring ${SITE} docroot for production...${COLOR_ENDING}"
-  ${COMMANDS}/app-prod.yml --extra-vars "ansible_sudo_pass=${USER} prod=Y sitename=${SITE}"
+  ${COMMANDS}/app-prod.yml --extra-vars "ansible_sudo_pass=${USER} app=prod sitename=${SITE}"
 }
 
 app_import() {
-  if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
-    user_confirmation
-    if [[ ${REPLY} =~ ^[Nn]$ ]]; then
-      cancellation
-    elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
-      failure
-    else
-      app_delete
-      app_import
-    fi
-  else
-    echo -e "${BLUE}Importing site into new docroot ${SITE}...${COLOR_ENDING}"
-    ${COMMANDS}/app-import.yml --extra-vars "ansible_sudo_pass=${USER} import=Y sitename=${SITE}"
-    hosts_file
-  fi
+  app_delete
+
+  echo -e "${BLUE}Importing app into new docroot ${SITE}...${COLOR_ENDING}"
+  ${COMMANDS}/app-import.yml --extra-vars "ansible_sudo_pass=${USER} app=import sitename=${SITE}"
+  hosts_file
 }
 
 app_drupal() {
-  if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
-    user_confirmation
-    if [[ ${REPLY} =~ ^[Nn]$ ]]; then
-      cancellation
-    elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
-      failure
-    else
-      app_delete
-      app_drupal
-    fi
-  else
-    if [[ -z "${GIT_TAG}" ]]; then
-      echo -e "${BLUE}Creating site into new ${SITE} docroot...${COLOR_ENDING}"
-      ${COMMANDS}/app-drupal.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE}"
-      hosts_file
-    elif [[ -n "${GIT_TAG}" ]]; then
-      echo -e "${BLUE}Creating Drupal ${GIT_TAG} site into new ${SITE} docroot...${COLOR_ENDING}"
-      ${COMMANDS}/app-drupal.yml --extra-vars "ansible_sudo_pass=${USER} create=Y sitename=${SITE} git_tag=${GIT_TAG}"
-      hosts_file
-    fi
+  app_delete
+
+  if [[ -z "${GIT_TAG}" ]]; then
+    echo -e "${BLUE}Installing Drupal into new ${SITE} docroot...${COLOR_ENDING}"
+    ${COMMANDS}/app-drupal.yml --extra-vars "ansible_sudo_pass=${USER} app=Drupal sitename=${SITE}"
+    hosts_file
+  elif [[ -n "${GIT_TAG}" ]]; then
+    echo -e "${BLUE}Installing Drupal ${GIT_TAG} into new ${SITE} docroot...${COLOR_ENDING}"
+    ${COMMANDS}/app-drupal.yml --extra-vars "ansible_sudo_pass=${USER} app=Drupal sitename=${SITE} git_tag=${GIT_TAG}"
+    hosts_file
   fi
 }
 
 app_blt() {
-  if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
-    user_confirmation
-    if [[ ${REPLY} =~ ^[Nn]$ ]]; then
-      cancellation
-    elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
-      failure
-    else
-      app_delete
-      app_blt
-    fi
-  else
-    echo -e "${BLUE}Provisioning BLT into new ${SITE} docroot...${COLOR_ENDING}"
-    ${COMMANDS}/app-blt.yml --extra-vars "ansible_sudo_pass=${USER} blt=Y sitename=${SITE}"
-    hosts_file
-  fi
+  app_delete
+
+  echo -e "${BLUE}Installing BLT into new ${SITE} docroot...${COLOR_ENDING}"
+  ${COMMANDS}/app-blt.yml --extra-vars "ansible_sudo_pass=${USER} app=blt sitename=${SITE}"
+  hosts_file
 }
 
 app_lightning() {
-  if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
-    user_confirmation
-    if [[ ${REPLY} =~ ^[Nn]$ ]]; then
-      cancellation
-    elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
-      failure
-    else
-      app_delete
-      app_lightning
-    fi
-  else
-    echo -e "${BLUE}Installing Lightning site into new ${SITE} docroot...${COLOR_ENDING}"
-    ${COMMANDS}/app-lightning.yml --extra-vars "ansible_sudo_pass=${USER} lightning=Y sitename=${SITE}"
-    hosts_file
-  fi
+  app_delete
+
+  echo -e "${BLUE}Installing Lightning into new ${SITE} docroot...${COLOR_ENDING}"
+  ${COMMANDS}/app-lightning.yml --extra-vars "ansible_sudo_pass=${USER} app=lightning sitename=${SITE}"
+  hosts_file
 }
 
 app_reservoir() {
@@ -121,21 +81,11 @@ app_reservoir() {
   echo "Wait until Drupal 8.5.0 is released or install drucker 0.5.8"
   exit 0
 
-  if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
-    user_confirmation
-    if [[ ${REPLY} =~ ^[Nn]$ ]]; then
-      cancellation
-    elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
-      failure
-    else
-      app_delete
-      app_reservoir
-    fi
-  else
-    echo -e "${BLUE}Installing Reservoir site into new ${SITE} docroot...${COLOR_ENDING}"
-    ${COMMANDS}/app-reservoir.yml --extra-vars "ansible_sudo_pass=${USER} reservoir=Y sitename=${SITE}"
-    hosts_file
-  fi
+  app_delete
+
+  echo -e "${BLUE}Installing Reservoir into new ${SITE} docroot...${COLOR_ENDING}"
+  ${COMMANDS}/app-reservoir.yml --extra-vars "ansible_sudo_pass=${USER} app=reservoir sitename=${SITE}"
+  hosts_file
 }
 
 app_delete() {
@@ -146,8 +96,8 @@ app_delete() {
     elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
       failure
     else
-      echo -e "${BLUE}Deleting docroot ${SITE}...${COLOR_ENDING}"
-      ${COMMANDS}/app-delete.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y sitename=${SITE}"
+      echo -e "${BLUE}Deleting ${SITE} docroot...${COLOR_ENDING}"
+      ${COMMANDS}/app-delete.yml --extra-vars "ansible_sudo_pass=${USER} app=delete sitename=${SITE}"
       echo -e "${GREEN}Remember to remove the ${SITE}.local entry from your local /etc/hosts file!${COLOR_ENDING}"
     fi
   fi

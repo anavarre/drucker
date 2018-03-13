@@ -92,3 +92,4 @@
   when: new_site.stat.exists == false
 
 - import_tasks: ../common/apache-vhost.yml
+- import_tasks: ../common/app-registry.yml
