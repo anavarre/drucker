@@ -139,9 +139,18 @@ app_reservoir() {
 }
 
 app_delete() {
-  echo -e "${BLUE}Deleting docroot ${SITE}...${COLOR_ENDING}"
-  ${COMMANDS}/app-delete.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y sitename=${SITE}"
-  echo -e "${GREEN}Remember to remove the ${SITE}.local entry from your local /etc/hosts file!${COLOR_ENDING}"
+  if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
+    user_confirmation
+    if [[ ${REPLY} =~ ^[Nn]$ ]]; then
+      cancellation
+    elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
+      failure
+    else
+      echo -e "${BLUE}Deleting docroot ${SITE}...${COLOR_ENDING}"
+      ${COMMANDS}/app-delete.yml --extra-vars "ansible_sudo_pass=${USER} delete=Y sitename=${SITE}"
+      echo -e "${GREEN}Remember to remove the ${SITE}.local entry from your local /etc/hosts file!${COLOR_ENDING}"
+    fi
+  fi
 }
 
 set_previous_php_version() {
