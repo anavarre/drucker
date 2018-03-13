@@ -69,21 +69,11 @@ app_blt() {
 }
 
 app_lightning() {
-  if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
-    user_confirmation
-    if [[ ${REPLY} =~ ^[Nn]$ ]]; then
-      cancellation
-    elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
-      failure
-    else
-      app_delete
-      app_lightning
-    fi
-  else
-    echo -e "${BLUE}Installing Lightning site into new ${SITE} docroot...${COLOR_ENDING}"
-    ${COMMANDS}/app-lightning.yml --extra-vars "ansible_sudo_pass=${USER} lightning=Y sitename=${SITE}"
-    hosts_file
-  fi
+  app_delete
+
+  echo -e "${BLUE}Installing Lightning into new ${SITE} docroot...${COLOR_ENDING}"
+  ${COMMANDS}/app-lightning.yml --extra-vars "ansible_sudo_pass=${USER} app=lightning sitename=${SITE}"
+  hosts_file
 }
 
 app_reservoir() {
