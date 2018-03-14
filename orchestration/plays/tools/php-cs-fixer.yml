@@ -1,16 +1,16 @@
 ---
-- name: Check if PHP-CS-Fixer is installed
+- name: "PHP-CS-FIXER: Check if software is installed"
   stat:
     path: "{{ php_cs_fixer_binary }}"
   register: php_cs_fixer
 
-- name: Check PHP-CS-Fixer version
+- name: "PHP-CS-FIXER: Check version"
   shell: php-cs-fixer --version | awk '{print $4}'
   register: php_cs_fixer_version
   when: php_cs_fixer.stat.exists == true
   changed_when: php_cs_fixer_version.stdout != php_cs_fixer_stable_release
 
-- name: Copy latest PHP-CS-Fixer release from mirror
+- name: "PHP-CS-FIXER: Copy latest release from mirror"
   get_url:
     url: "{{ php_cs_fixer_mirror_download_link }}"
     dest: "{{ download_dir }}"
@@ -22,10 +22,10 @@
   delay: 10
   when: php_cs_fixer.stat.exists == false or php_cs_fixer_version.stdout != php_cs_fixer_stable_release
 
-- name: Rename PHP-CS-Fixer PHAR file
+- name: "PHP-CS-FIXER: Rename PHAR file"
   command: mv {{ php_cs_fixer_temp_phar }} {{ php_cs_fixer_temp_path }}
   when: php_cs_fixer.stat.exists == false or php_cs_fixer_version.stdout != php_cs_fixer_stable_release
 
-- name: Install PHP-CS-Fixer globally
+- name: "PHP-CS-FIXER: Install globally"
   command: mv {{ php_cs_fixer_temp_path }} {{ user_programs_path }}
   when: php_cs_fixer.stat.exists == false or php_cs_fixer_version.stdout != php_cs_fixer_stable_release

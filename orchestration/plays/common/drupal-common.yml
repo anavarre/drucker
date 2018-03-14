@@ -1,5 +1,5 @@
 ---
-- name: "COMMON: Create config directories"
+- name: "DRUPAL: Create config directories"
   file:
     path: "{{ item }}"
     state: directory
@@ -11,7 +11,7 @@
     - "{{ drupal_root }}/{{ default_configuration_dir }}"
   when: new_site.stat.exists == false
 
-- name: "COMMON: Create files directory"
+- name: "DRUPAL: Create files directory"
   file:
     path: "{{ drupal_docroot }}/{{ default_site }}/files"
     state: directory
@@ -20,7 +20,7 @@
     group: "{{ apache_user }}"
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
-- name: "COMMON: Create libraries directory"
+- name: "DRUPAL: Create libraries directory"
   file:
     path: "{{ drupal_docroot }}/libraries"
     state: directory
@@ -28,7 +28,7 @@
     group: "{{ apache_user }}"
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
-- name: "COMMON: Create simpletest directory"
+- name: "DRUPAL: Create simpletest directory"
   file:
     path: "{{ drupal_docroot }}/sites/simpletest"
     state: directory
@@ -37,29 +37,29 @@
     group: "{{ apache_user }}"
   when: new_site.stat.exists == false
 
-- name: "COMMON: Make sure default site permissions are correct"
+- name: "DRUPAL: Make sure default site permissions are correct"
   file:
     path: "{{ drupal_docroot }}/{{ default_site }}"
     mode: 0755
   become: yes
   become_user: "{{ user }}"
 
-- name: "COMMON: Create settings.php file"
+- name: "DRUPAL: Create settings.php file"
   command: cp {{ drupal_docroot }}/{{ default_site }}/default.settings.php {{ drupal_docroot }}/{{ default_site }}/settings.php
   become: yes
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
-- name: "COMMON: Create services.yml file"
+- name: "DRUPAL: Create services.yml file"
   command: cp {{ drupal_docroot }}/{{ default_site }}/default.services.yml {{ drupal_docroot }}/{{ default_site }}/services.yml
   become: yes
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
-- name: "COMMON: Create sites.php file"
+- name: "DRUPAL: Create sites.php file"
   command: cp {{ drupal_docroot }}/{{ examples_sites }} {{ drupal_docroot }}/{{ sites_php }}
   become: yes
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
-- name: "COMMON: Ensure configuration files have correct ownership"
+- name: "DRUPAL: Ensure configuration files have correct ownership"
   file:
     path: "{{ item }}"
     owner: "{{ user }}"
@@ -70,7 +70,7 @@
     - "{{ drupal_docroot }}/{{ sites_php }}"
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
-- name: "COMMON: Add trusted_host_patterns in settings.php"
+- name: "DRUPAL: Add trusted_host_patterns in settings.php"
   blockinfile:
     dest: "{{ drupal_docroot }}/{{ default_site }}/settings.php"
     block: |
@@ -81,7 +81,7 @@
     marker: "# {mark} MANAGED TRUSTED_HOST_PATTERNS BLOCK"
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
-- name: "COMMON: Override default Configuration Management directory"
+- name: "DRUPAL: Override default Configuration Management directory"
   blockinfile:
     dest: "{{ drupal_docroot }}/{{ default_site }}/settings.php"
     block: |
@@ -92,7 +92,7 @@
     marker: "# {mark} MANAGED CONFIGURATION MANAGEMENT OVERRIDE BLOCK"
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
-- name: "COMMON: Prepare settings.php for memcached support"
+- name: "DRUPAL: Prepare settings.php for memcached support"
   blockinfile:
     dest: "{{ drupal_docroot }}/{{ default_site }}/settings.php"
     block: |
@@ -107,7 +107,7 @@
     marker: "# {mark} MANAGED MEMCACHED BLOCK"
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
-- name: "COMMON: Add sites array in sites.php"
+- name: "DRUPAL: Add sites array in sites.php"
   blockinfile:
     dest: "{{ drupal_docroot }}/{{ sites_php }}"
     block: |

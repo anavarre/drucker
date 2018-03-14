@@ -1,15 +1,15 @@
 ---
-- name: Check if Tideways PHP Profiler is installed
+- name: "TIDEWAYS: Check if the extension is installed"
   stat:
     path: "{{ tideways_extension_path }}"
   register: tideways
 
-- name: Check if Tideways can be updated
+- name: "TIDEWAYS: Check if the extension can be updated"
   shell: php -c {{ default_php_ini }} -i | grep 'tideways' | grep -o '{{ tideways_stable_release }}' || echo 'update'
   register: tideways_version_check
   changed_when: tideways_version_check.stdout == "update"
 
-- name: Copy latest Tideways release from mirror
+- name: "TIDEWAYS: Copy latest release from mirror"
   get_url:
     url: "{{ tideways_mirror_download_link }}"
     dest: "{{ download_dir }}"
@@ -20,14 +20,14 @@
   delay: 10
   when: tideways.stat.exists == false or tideways_version_check.stdout != tideways_stable_release
 
-- name: Extract Tideways files
+- name: "TIDEWAYS: Extract files"
   unarchive:
     src: "{{ tideways_archive }}"
     dest: "{{ download_dir }}"
     copy: no
   when: tideways.stat.exists == false or tideways_version_check.stdout != tideways_stable_release
 
-- name: Compile Tideways
+- name: "TIDEWAYS: Compile extension"
   command: "{{ item }} chdir={{ tideways_temp_dir }}"
   with_items:
     - /usr/bin/phpize
@@ -37,35 +37,35 @@
   register: compile_tideways
   when: tideways.stat.exists == false or tideways_version_check.stdout != tideways_stable_release
 
-- name: Copy compiled Tideways extension
+- name: "TIDEWAYS: Copy compiled extension"
   command: cp {{ tideways_temp_dir }}/modules/{{ tideways_extension_name }} {{ default_php_extensions }}
   when: tideways.stat.exists == false or tideways_version_check.stdout != tideways_stable_release
 
-- name: Make sure permissions are correct
+- name: "TIDEWAYS: Make sure permissions are correct"
   file:
     path: "{{ tideways_extension_path }}"
     mode: 0644
   when: tideways.stat.exists == false or tideways_version_check.stdout != tideways_stable_release
 
-- name: Delete Tideways temporary directory
+- name: "TIDEWAYS: Delete temporary directory"
   file:
     path: "{{ tideways_temp_dir }}"
     state: absent
   when: tideways.stat.exists == false or tideways_version_check.stdout != tideways_stable_release
 
-- name: Check Tideways config in php.ini
+- name: "TIDEWAYS: Check config in php.ini"
   shell: grep -o "{{ tideways_extension_name }}" {{ default_php_ini }} || echo "absent"
   register: tideways_config
   changed_when: tideways_config == "absent"
 
-- name: Create Tideways output directory
+- name: "TIDEWAYS: Create output directory"
   file:
     path: "{{ tideways_output_dir }}"
     state: directory
     mode: 0777
   when: tideways_config.stdout == "absent"
 
-- name: Configure Tideways in php.ini
+- name: "TIDEWAYS: Configure extension in php.ini"
   blockinfile:
     dest: "{{ default_php_ini }}"
     block: |
@@ -74,13 +74,13 @@
     marker: ; {mark} MANAGED TIDEWAYS BLOCK
   when: tideways_config.stdout == "absent"
 
-- name: Ensure Apache is restarted
+- name: "TIDEWAYS: Ensure Apache is restarted to load the extension"
   service:
     name: apache2
     enabled: yes
     state: restarted
 
-- name: Ensure PHP-FPM is restarted
+- name: "TIDEWAYS: Ensure PHP-FPM is restarted to load the extension"
   service:
     name: php{{ default_php_version }}-fpm
     enabled: yes

@@ -1,5 +1,6 @@
 - import_tasks: common/permissions.yml
 - import_tasks: common/apache-installation.yml
+- import_tasks: common/drucker-config.yml
 - import_tasks: php/php.yml
 - import_tasks: php/pecl-uploadprogress.yml
 - import_tasks: php/libyaml.yml

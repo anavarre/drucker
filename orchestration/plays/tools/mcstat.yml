@@ -1,16 +1,16 @@
 ---
-- name: Check if mcstat is installed
+- name: "MCSTAT: Check if software is installed"
   stat:
     path: "{{ mcstat_binary }}"
   register: mcstat_check
   ignore_errors: True
 
-- name: Check if mcstat archive exists
+- name: "MCSTAT: Check if archive exists"
   stat:
     path: "{{ mcstat_archive_file }}"
   register: mcstat_archive
 
-- name: Copy latest mcstat release from mirror
+- name: "MCSTAT: Copy latest release from mirror"
   get_url:
     url: "{{ mcstat_mirror_download_link }}"
     dest: "{{ download_dir }}"
@@ -21,14 +21,14 @@
   delay: 10
   when: mcstat_check.stat.exists == false and mcstat_archive.stat.exists == false
 
-- name: Extract mcstat files
+- name: "MCSTAT: Extract files"
   unarchive:
     src: "{{ mcstat_archive_path }}"
     dest: "{{ user_programs_path }}"
     copy: no
   when: mcstat_check.stat.exists == false and mcstat_archive.stat.exists == false
 
-- name: Create mcstat symlink
+- name: "MCSTAT: Create symlink"
   file:
     src: "{{ mcstat_unarchived_directory }}/mcstat"
     dest: "{{ mcstat_binary }}"

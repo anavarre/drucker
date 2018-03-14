@@ -1,59 +1,59 @@
 ---
-- name: Check if PHP is installed
+- name: "PHP: Check if PHP is installed"
   stat:
     path: "{{ default_php_ini }}"
   register: phpfpm_is_installed
 
-- name: Add deb.sury.org GPG signature
+- name: "PHP: Add deb.sury.org GPG signature"
   apt_key:
     url: "{{ sury_gpg }}"
     state: present
   when: phpfpm_is_installed.stat.exists == false
 
-- name: Add deb.sury.org repository
+- name: "PHP: Add deb.sury.org repository"
   apt_repository:
     repo: "{{ sury_deb }}"
     state: present
   when: phpfpm_is_installed.stat.exists == false
 
-- name: Update APT cache
+- name: "PHP: Update APT cache to load new repository"
   apt:
     update_cache: yes
   when: phpfpm_is_installed.stat.exists == false
 
 - import_tasks: default-php.yml
 
-- name: Check if php7 module is enabled
+- name: "PHP: Check if php7 module is enabled"
   stat:
     path: "{{ apache_php_mod }}"
   register: php7_module
 
-- name: Disable php7 module
+- name: "PHP: Disable php7 module"
   apache2_module:
     state: absent
     name: php7
   notify: Restart PHP-FPM
   when: php7_module.stat.exists == true
 
-- name: Check if proxy_fcgi module is enabled
+- name: "PHP: Check if proxy_fcgi module is enabled"
   stat:
     path: "{{ apache_proxy_fcgi_mod }}"
   register: proxy_fcgi_module
 
 # php-fpm Fast-CGI support
-- name: Enable proxy_fcgi module
+- name: "PHP: Enable proxy_fcgi module"
   apache2_module:
     state: present
     name: proxy_fcgi
   notify: Restart PHP-FPM
   when: proxy_fcgi_module.stat.exists == false
 
-- name: Check if PHP FPM is started
+- name: "PHP: Check if PHP FPM is started"
   shell: pgrep php-fpm || echo 'down'
   register: check_phpfpm_up
   changed_when: check_phpfpm_up.stdout == "down"
 
-- name: Ensure PHP FPM is started
+- name: "PHP: Ensure PHP FPM is started"
   command: /etc/init.d/php{{ default_php_version }}-fpm start
   become: yes
   when: check_phpfpm_up.stdout == "down"

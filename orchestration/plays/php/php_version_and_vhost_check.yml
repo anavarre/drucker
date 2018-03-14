@@ -1,8 +1,8 @@
 ---
-- name: Store PHP version variable
+- name: "PHP: Store PHP version variable"
   shell: cat {{ default_php_version_file }}
   register: php_read_version
 
-- name: Retrieve existing vHosts
+- name: "APACHE: Retrieve existing vHosts"
   shell: ls {{ sites_available }}/*.conf | grep -Ev '(000-default|default-ssl.conf)' || echo 'no vHost'
   register: apache_vhosts_list

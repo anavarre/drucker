@@ -1,5 +1,5 @@
 ---
-- name: "COMMON: Ensure database is wiped before installing"
+- name: "MYSQL: Ensure database is wiped before installing"
   mysql_db:
     login_user: "{{ db_creds }}"
     login_password: "{{ db_creds }}"
@@ -10,7 +10,7 @@
     state: absent
   when: new_site.stat.exists == false
 
-- name: "COMMON: Create new database"
+- name: "MYSQL: Create new database"
   mysql_db:
     login_user: "{{ db_creds }}"
     login_password: "{{ db_creds }}"

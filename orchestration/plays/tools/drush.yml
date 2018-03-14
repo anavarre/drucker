@@ -1,18 +1,18 @@
 ---
 # Drush Launcher
-- name: "DRUSH: Check if Drush launcher is installed"
+- name: "DRUSH: Check if Launcher is installed"
   stat:
     path: "{{ drush_launcher }}"
   register: drush_launcher
   changed_when: drush_launcher.stat.exists == false
 
-- name: "DRUSH: Check if Drush launcher needs to be updated"
+- name: "DRUSH: Check if Launcher needs to be updated"
   shell: drush --version| head -n1 | awk '{print $NF}'
   register: drush_launcher_stable_release_check
   when: drush_launcher.stat.exists == true
   changed_when: drush_launcher_stable_release_check.stdout != drush_launcher_stable_release
 
-- name: "DRUSH: Copy latest Drush launcher release from mirror"
+- name: "DRUSH: Copy latest Launcher release from mirror"
   get_url:
     url: "{{ drush_launcher_mirror_download_link }}"
     dest: "{{ user_programs_path }}"
@@ -24,7 +24,7 @@
   delay: 10
   when: drush_launcher.stat.exists == false or drush_launcher_stable_release_check.stdout != drush_launcher_stable_release
 
-- name: "DRUSH: Rename Drush launcher PHAR file"
+- name: "DRUSH: Rename Launcher PHAR file"
   command: mv {{ user_programs_path }}/{{ drush_launcher_archive_file }} {{ user_programs_path }}/drush
   when: drush_launcher.stat.exists == false or drush_launcher_stable_release_check.stdout != drush_launcher_stable_release
 
@@ -42,7 +42,7 @@
     state: link
   when: global_drush_check.stat.exists == false
 
-- name: "DRUSH: Make sure the Drush Launcher falls back to the global Drush"
+- name: "DRUSH: Make sure the Launcher falls back to the global Drush"
   blockinfile:
     dest: "{{ bashrc }}"
     block: |
@@ -50,13 +50,13 @@
     insertafter: EOF
     marker: "# {mark} MANAGED DRUSH LAUNCHER FALLBACK BLOCK"
 
-- name: "DRUSH: Check if Drush etc directory exists"
+- name: "DRUSH: Check if Drush's etc directory exists"
   stat:
     path: "{{ drush_etc_path }}"
   register: drush_etc_check
   changed_when: drush_etc_check.stat.exists == false
 
-- name: "DRUSH: Create Drush etc directory"
+- name: "DRUSH: Create Drush's etc directory"
   file:
     path: "{{ drush_etc_path }}"
     state: directory

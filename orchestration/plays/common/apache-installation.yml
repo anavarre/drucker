@@ -1,11 +1,11 @@
 ---
-- name: Check if Apache is installed
+- name: "APACHE: Check if server is installed"
   stat:
     path: "{{ apache_security_conf }}"
   register: apache
   ignore_errors: True
 
-- name: Install Apache and web tools
+- name: "APACHE: Install server and web tools"
   package:
     name: "{{ item }}"
     state: present
@@ -15,7 +15,7 @@
     - goaccess
   when: apache.stat.exists == false
 
-- name: Enable required Apache modules
+- name: "APACHE: Enable required modules"
   apache2_module:
     name: "{{ item }}"
     state: present
@@ -25,68 +25,33 @@
     - proxy_http
   when: apache.stat.exists == false
 
-- name: Ensure APACHE_RUN_USER is set to the expected user
+- name: "APACHE: Ensure APACHE_RUN_USER is set to the expected user"
   lineinfile:
     dest: "{{ apache_envvars }}"
     regexp: "export APACHE_RUN_USER=www-data"
     line: "export APACHE_RUN_USER={{ user }}"
   when: apache.stat.exists == false
 
-- name: Fix the POODLE SSL v3 vulnerability
+- name: "APACHE: Fix the POODLE SSL v3 vulnerability"
   lineinfile:
     dest: "{{ apache_ssl_mod }}"
     regexp: "SSLProtocol all"
     line: "\tSSLProtocol all -SSLv2 -SSLv3"
   when: apache.stat.exists == false
 
-- name: Delete default vHost
+- name: "APACHE: Delete default vHost"
   file:
     path: "{{ default_vhost }}"
     state: absent
   when: apache.stat.exists == false
 
-- name: Delete default vHost symlink
+- name: "APACHE: Delete default vHost symlink"
   file:
     path: "{{ default_vhost }}"
     state: absent
   when: apache.stat.exists == false
 
-- name: Check if import directories exist
-  stat:
-    path: "{{ item }}"
-  with_items:
-    - "{{ import_dir }}"
-    - "{{ archives_dir }}"
-  register: import_directories
-  ignore_errors: True
-
-- name: Create import directories
-  file:
-    path: "{{ item }}"
-    state: directory
-    mode: 0755
-    owner: "{{ user }}"
-    group: "{{ apache_user }}"
-  with_items:
-    - "{{ import_dir }}"
-    - "{{ archives_dir }}"
-  when: import_directories.results[0]['item'] or import_directories.results[1]['item']
-
-- name: Check if README file exists
-  stat:
-    path: "{{ imported_readme }}"
-  register: readme_import
-
-- name: Deploy README file
-  copy:
-    src: "{{ readme_import_source_file }}"
-    dest: "{{ imported_readme }}"
-    mode: 0644
-    owner: "{{ user }}"
-    group: "{{ apache_user }}"
-  when: readme_import.stat.exists == false
-
-- name: Ensure Apache is started
+- name: "APACHE: Ensure Apache is started"
   service:
     name: apache2
     enabled: yes

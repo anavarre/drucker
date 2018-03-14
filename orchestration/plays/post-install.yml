@@ -1,20 +1,20 @@
-- name: Check if all hostnames are configured
+- name: "POST-INSTALL: Check if all hostnames are configured"
   shell: grep -E '({{ phpmyadmin_hostname }}.{{ tld }}|{{ adminer_hostname }}.{{ tld }})' {{ hosts_file }} || echo "absent"
   register: additional_hostnames
   changed_when: additional_hostnames.stdout == "absent"
 
-- name: Make sure the web container can reach all hostnames
+- name: "POST-INSTALL: Make sure the web container can reach all hostnames"
   shell: echo "{{ web_ip }}    {{ item }}.{{ tld }}" >> {{ hosts_file }}
   with_items:
   - "{{ phpmyadmin_hostname }}"
   - "{{ adminer_hostname }}"
   when: additional_hostnames.stdout == "absent"
 
-- name: Check if Solr hostname is configured
+- name: "POST-INSTALL: Check if Solr hostname is configured"
   shell: grep -o "{{ search_ip }}" {{ hosts_file }} || echo "absent"
   register: search_hostname
   changed_when: search_hostname.stdout == "absent"
 
-- name: Make sure Drupal can talk to the Solr backend
+- name: "POST-INSTALL: Make sure Drupal can talk to the Solr backend"
   shell: echo "{{ search_ip }}    search.{{ tld }}" >> {{ hosts_file }}
   when: search_hostname.stdout == "absent"

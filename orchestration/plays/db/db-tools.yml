@@ -1,11 +1,11 @@
 ---
-- name: Install libmemcached-tools package
+- name: "MEMCACHED: Install libmemcached-tools package"
   package:
     # Provides memcstat.
     name: libmemcached-tools
     state: present
 
-- name: Ensure we can manage remote MySQL databases
+- name: "MYSQL: Ensure we can manage remote MySQL databases"
   package:
     name: "{{ item }}"
     state: present
