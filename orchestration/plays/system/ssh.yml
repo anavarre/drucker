@@ -1,5 +1,5 @@
 ---
-- name: "SSH Hardening"
+- name: "SSH: Enforce hardening"
   lineinfile:
     dest: "{{ sshd_config }}"
     regexp: "{{ item.regexp }}"
@@ -16,19 +16,19 @@
     }
   notify: Restart SSH
 
-- name: Check if Docker-specific sudo TTY workaround file exists
+- name: "SSH: Check if Docker-specific sudo TTY workaround file exists"
   stat:
     path: "{{ sudo_tty_workaround_file }}"
   register: sudo_tty_workaround
 
-- name: Create Docker-specific sudo TTY workaround file
+- name: "SSH: Create Docker-specific sudo TTY workaround file"
   file:
     path: "{{ sudo_tty_workaround_file }}"
     state: touch
     mode: 0440
   when: sudo_tty_workaround.stat.exists == false
 
-- name: Prevent requiring a password for sudo
+- name: "SSH: Prevent requiring a password for sudo"
   lineinfile:
     dest: "{{ sudo_tty_workaround_file }}"
     line: "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL"

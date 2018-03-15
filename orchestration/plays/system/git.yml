@@ -1,10 +1,10 @@
 ---
-- name: Check if .git-completion.bash exists
+- name: "GIT: Check if .git-completion.bash exists"
   stat:
     path: "{{ git_completion }}"
   register: git_completion
 
-- name: Deploy .git-completion.bash
+- name: "GIT: Deploy .git-completion.bash"
   copy:
     src: "{{ git_completion_source_file }}"
     dest: "{{ home }}"
@@ -15,12 +15,12 @@
   become_user: "{{ user }}"
   when: git_completion.stat.exists == false
 
-- name: Check if .git-prompt.sh exists
+- name: "GIT: Check if .git-prompt.sh exists"
   stat:
     path: "{{ git_prompt }}"
   register: git_prompt
 
-- name: Deploy .git-prompt.sh
+- name: "GIT: Deploy .git-prompt.sh"
   copy:
     src: "{{ git_prompt_source_file }}"
     dest: "{{ home }}"
@@ -31,12 +31,12 @@
   become_user: "{{ user }}"
   when: git_prompt.stat.exists == false
 
-- name: Check if .gitconfig exists
+- name: "GIT: Check if .gitconfig exists"
   stat:
     path: "{{ git_config }}"
   register: git_config
 
-- name: Deploy .gitconfig
+- name: "GIT: Deploy .gitconfig"
   copy:
     src: "{{ git_config_source_file }}"
     dest: "{{ home }}"
@@ -47,12 +47,12 @@
   become_user: "{{ user }}"
   when: git_config.stat.exists == false
 
-- name: Check if global .gitignore file exists
+- name: "GIT: Check if global .gitignore file exists"
   stat:
     path: "{{ global_gitignore }}"
   register: global_gitignore
 
-- name: Deploy global .gitignore file
+- name: "GIT: Deploy global .gitignore file"
   copy:
     src: "{{ global_gitignore_source_file }}"
     dest: "{{ home }}/.gitignore"
@@ -63,17 +63,17 @@
   become_user: "{{ user }}"
   when: global_gitignore.stat.exists == false
 
-- name: Check if bash-git-prompt archive exists
+- name: "GIT: Check if bash-git-prompt archive exists"
   stat:
     path: "{{ bash_git_prompt_archive_path }}"
   register: bash_git_prompt_archive
 
-- name: Check if bash-git-prompt can be updated
+- name: "GIT: Check if bash-git-prompt can be updated"
   shell: ls {{ bash_git_prompt_archive_path }} | grep -o "{{ bash_git_prompt_stable_version }}" || echo "outdated"
   register: bash_git_prompt_update
   changed_when: bash_git_prompt_update.stdout != bash_git_prompt_stable_version
 
-- name: Download .bash-git-prompt archive
+- name: "GIT: Download .bash-git-prompt archive"
   get_url:
     url: "{{ bash_git_prompt_download_link }}"
     dest: "{{ download_dir }}"
@@ -84,7 +84,7 @@
   delay: 10
   when: bash_git_prompt_archive.stat.exists == false or bash_git_prompt_update.stdout != bash_git_prompt_stable_version
 
-- name: Extract bash-git-prompt files
+- name: "GIT: Extract bash-git-prompt files"
   unarchive:
     src: "{{ bash_git_prompt_archive_path }}"
     dest: "{{ download_dir }}"
@@ -93,21 +93,21 @@
   become_user: "{{ user }}"
   when: bash_git_prompt_archive.stat.exists == false or bash_git_prompt_update.stdout != bash_git_prompt_stable_version
 
-- name: Delete outdated .bash-git-prompt directory
+- name: "GIT: Delete outdated .bash-git-prompt directory"
   file:
     path: "{{ bash_git_prompt }}"
     state: absent
   when: bash_git_prompt_update.stdout != bash_git_prompt_stable_version
 
-- name: Rename and move bash-git-prompt directory
+- name: "GIT: Rename and move bash-git-prompt directory"
   command: mv {{ bash_git_prompt_temp_path }} {{ bash_git_prompt }}
   when: bash_git_prompt_archive.stat.exists == false or bash_git_prompt_update.stdout != bash_git_prompt_stable_version
 
-- name: Check if .bashrc needs to be customized
+- name: "GIT: Check if .bashrc needs to be customized"
   shell: grep -o "MANAGED GIT BLOCK" {{ bashrc }} || echo "absent"
   register: git_bashrc
 
-- name: Customize .bashrc
+- name: "GIT: Customize .bashrc"
   blockinfile:
     dest: "{{ bashrc }}"
     block: |
