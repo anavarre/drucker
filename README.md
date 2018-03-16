@@ -191,6 +191,7 @@ Usage:
   containers:restart  Restarts all drucker containers
 
  app
+  app:list            Lists all deployed apps
   app:drupal          Spins up a ready-to-use Drupal install
   app:lightning       Spins up a ready-to-use Lightning install
   app:reservoir       Spins up a ready-to-use Reservoir install

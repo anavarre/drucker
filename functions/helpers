@@ -28,6 +28,7 @@ ${ORANGE_HELP}Usage:${COLOR_ENDING_HELP}
   ${GREEN_HELP}containers:restart${COLOR_ENDING_HELP}  Restarts all drucker containers
 
  ${ORANGE_HELP}app${COLOR_ENDING_HELP}
+  ${GREEN_HELP}app:list${COLOR_ENDING_HELP}            Lists all deployed apps
   ${GREEN_HELP}app:drupal${COLOR_ENDING_HELP}          Spins up a ready-to-use Drupal install
   ${GREEN_HELP}app:lightning${COLOR_ENDING_HELP}       Spins up a ready-to-use Lightning install
   ${GREEN_HELP}app:reservoir${COLOR_ENDING_HELP}       Spins up a ready-to-use Reservoir install
