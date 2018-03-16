@@ -1,11 +1,11 @@
 ---
-- name: Check if Varnish has been installed
+- name: "VARNISH: Check if server is installed"
   stat:
     path: "{{ varnish_config }}"
   register: varnish
   ignore_errors: True
 
-- name: Install Varnish
+- name: "VARNISH: Install server"
   package:
     name: "{{ item }}"
     state: present
@@ -14,21 +14,21 @@
     - varnish
   when: varnish.stat.exists == false
 
-- name: Deploy Varnish template
+- name: "VARNISH: Deploy configuration template"
   copy:
     src: "{{ varnish_conf_source_file }}"
     dest: /etc/default/
     mode: 0644
   when: varnish.stat.exists == false
 
-- name: "Deploy Varnish's default VCL template"
+- name: "VARNISH: Deploy default VCL template"
   copy:
     src: "{{ varnish_default_vcl_source_file}}"
     dest: "{{ varnish_default_path }}"
     mode: 0644
   when: varnish.stat.exists == false
 
-- name: Ensure Varnish is started
+- name: "VARNISH: Ensure server is started"
   service:
     name: varnish
     enabled: yes

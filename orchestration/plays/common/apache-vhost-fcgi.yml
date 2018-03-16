@@ -1,9 +1,9 @@
 ---
-- name: Store PHP version variable
+- name: "PHP: Store PHP version variable"
   shell: cat {{ default_php_version_file }}
   register: phpfcgi_read_version
 
-- name: "COMMON: Add support for php-fpm Fast-CGI"
+- name: "PHP: Add support for php-fpm Fast-CGI"
   blockinfile:
     dest: "{{ sites_available }}/{{ sitename }}.conf"
     block: |6

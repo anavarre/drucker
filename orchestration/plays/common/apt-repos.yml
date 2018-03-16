@@ -1,17 +1,17 @@
 ---
-- name: Check if deb.sury.org repository exists
+- name: "PHP: Check if deb.sury.org repository exists"
   stat:
     path: "{{ sury_repo }}"
   register: sury_repo_check
   changed_when: sury_repo_check.stat.exists == false
 
-- name: Add deb.sury.org GPG signature
+- name: "PHP: Add deb.sury.org GPG signature"
   apt_key:
     url: "{{ sury_gpg }}"
     state: present
   when: sury_repo_check.stat.exists == false
 
-- name: Add deb.sury.org repository
+- name: "PHP: Add deb.sury.org repository"
   apt_repository:
     repo: "{{ sury_deb }}"
     state: present

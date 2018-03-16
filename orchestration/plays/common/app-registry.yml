@@ -19,7 +19,7 @@
   lineinfile:
     dest: "{{ app_registry }}"
     line: "{{ sitename}} ({{ app }})"
-  when: app != "delete"
+  when: app is defined and app != "delete"
 
 - name: "APP REGISTRY: Unregister app"
   lineinfile:
@@ -27,4 +27,4 @@
     regexp: '^{{ sitename}}'
     line: "{{ sitename}} ({{ app }})"
     state: absent
-  when: app == "delete"
+  when: app is defined and app == "delete"

@@ -1,15 +1,15 @@
 ---
-- name: Check if MariaDB is installed
+- name: "MYSQL: Check if server is installed"
   stat:
     path: "{{ db_config }}"
   register: mariadb
   ignore_errors: True
 
-- name: Clean up MariaDB data directory
+- name: "MYSQL: Clean up data directory"
   shell: rm -Rf {{ db_data }}/* warn=False
   when: mariadb.stat.exists == false
 
-- name: Install MariaDB and utilities
+- name: "MYSQL: Install server and utilities"
   package:
     name: "{{ item }}"
     state: installed
@@ -19,7 +19,7 @@
     - python-mysqldb
   when: mariadb.stat.exists == false
 
-- name: Set innodb_file_per_table
+- name: "MYSQL: Set innodb_file_per_table"
   blockinfile:
     dest: "{{ db_config }}"
     block: |
@@ -28,19 +28,19 @@
     marker: "# {mark} MANAGED INNODB BLOCK"
   when: mariadb.stat.exists == false
 
-- name: Check if MariaDB is configured to allow remote access
+- name: "MYSQL: Check if server is configured to allow remote access"
   shell: grep -o "0.0.0.0" {{ db_config }} || echo "denied"
   register: db_config_remote_access
   changed_when: db_config_remote_access == "denied"
 
-- name: Configure MariaDB to allow remote access
+- name: "MYSQL: Configure server to allow remote access"
   replace:
     dest: "{{ db_config }}"
     regexp: '^(.*)127.0.0.1(.*)$'
     replace: '\1 0.0.0.0\2'
   when: db_config_remote_access.stdout == "denied"
 
-- name: Start MariaDB server
+- name: "MYSQL: Start server"
   service:
     name: "{{ item }}"
     state: started
@@ -49,7 +49,7 @@
     - mysql
   when: mariadb.stat.exists == false
 
-- name: Set MariaDB root user password
+- name: "MYSQL: Set root user password"
   mysql_user:
     login_user: "{{ db_creds }}"
     login_password: "{{ db_creds }}"
@@ -59,13 +59,13 @@
     state: present
   when: mariadb.stat.exists == false
 
-- name: Ensure MySQL is started
+- name: "MYSQL: Ensure server is started"
   service:
     name: mysql
     enabled: yes
     state: started
 
-- name: Grant remote user access to all databases
+- name: "MYSQL: Grant remote user access to all databases"
   mysql_user:
     login_user: "{{ db_creds }}"
     login_password: "{{ db_creds }}"
@@ -76,7 +76,7 @@
     host: "{{ web_ip }}"
     state: present
 
-- name: Ensure MySQL is restarted
+- name: "MYSQL: Ensure server is restarted"
   service:
     name: mysql
     enabled: yes

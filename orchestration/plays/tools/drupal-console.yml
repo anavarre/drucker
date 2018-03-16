@@ -1,18 +1,18 @@
 ---
 # Drupal Console Launcher
-- name: Check if Drupal Console Launcher is installed
+- name: "DRUPAL CONSOLE: Check if Launcher is installed"
   stat:
     path: "{{ drupal_console_binary }}"
   register: drupal_console_launcher
   changed_when: drupal_console_launcher.stat.exists == false
 
-- name: Check Drupal Console Launcher version
+- name: "DRUPAL CONSOLE: Check Launcher version"
   shell: drupal --version | head -n1 | awk '{print $NF}'
   register: drupal_console_launcher_check
   when: drupal_console_launcher.stat.exists == true
   changed_when: drupal_console_launcher_check.stdout != drupal_console_launcher_stable_release
 
-- name: Copy latest Drupal Console Launcher release from mirror
+- name: "DRUPAL CONSOLE: Copy latest Launcher release from mirror"
   get_url:
     url: "{{ drupal_console_mirror_download_link }}"
     dest: "{{ drupal_console_binary }}"
@@ -25,7 +25,7 @@
   delay: 10
   when: drupal_console_launcher.stat.exists == false or drupal_console_launcher_check.stdout != drupal_console_launcher_stable_release
 
-- name: Update Drupal Console Launcher
+- name: "DRUPAL CONSOLE: Update Launcher"
   command: drupal self-update
   become: yes
   when: drupal_console_launcher.stat.exists == true and drupal_console_launcher_check.stdout != drupal_console_launcher_stable_release

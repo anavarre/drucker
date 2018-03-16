@@ -1,27 +1,27 @@
 ---
-- name: Check if Code Sniffer phpcs is globally installed
+- name: "CODE SNIFFER: Check if phpcs is globally installed"
   stat:
     path: "{{ phpcs_binary }}"
   register: phpcs
 
-- name: Check if CodeSniffer phpcbf is globally installed
+- name: "CODE SNIFFER: Check if phpcbf is globally installed"
   stat:
     path: "{{ phpcbf_binary }}"
   register: phpcbf
 
-- name: Check phpcs version
+- name: "CODE SNIFFER: Check phpcs version"
   shell: phpcs --version | awk '{print $3}'
   register: phpcs_version
   when: phpcs.stat.exists == true
   changed_when: phpcs_version.stdout != phpcs_stable_release
 
-- name: Check phpcbf version
+- name: "CODE SNIFFER: Check phpcbf version"
   shell: phpcbf --version | awk '{print $3}'
   register: phpcbf_version
   when: phpcbf.stat.exists == true
   changed_when: phpcbf_version.stdout != phpcbf_stable_release
 
-- name: Copy latest phpcs release from mirror
+- name: "CODE SNIFFER: Copy latest phpcs release from mirror"
   get_url:
     url: "{{ phpcs_mirror_download_link }}"
     dest: "{{ download_dir }}"
@@ -33,15 +33,15 @@
   delay: 10
   when: phpcs.stat.exists == false or phpcs_version.stdout != phpcs_stable_release
 
-- name: Rename phpcs PHAR file
+- name: "CODE SNIFFER: Rename phpcs PHAR file"
   command: mv {{ phpcs_temp_phar }} {{ phpcs_temp_path }}
   when: phpcs.stat.exists == false or phpcs_version.stdout != phpcs_stable_release
 
-- name: Install phpcs globally
+- name: "CODE SNIFFER: Install phpcs globally"
   command: mv {{ phpcs_temp_path }} {{ user_programs_path }}
   when: phpcs.stat.exists == false or phpcs_version.stdout != phpcs_stable_release
 
-- name: Copy latest phpcbf release from mirror
+- name: "CODE SNIFFER: Copy latest phpcbf release from mirror"
   get_url:
     url: "{{ phpcbf_mirror_download_link }}"
     dest: "{{ download_dir }}"
@@ -53,10 +53,10 @@
   delay: 10
   when: phpcbf.stat.exists == false or phpcbf_version.stdout != phpcbf_stable_release
 
-- name: Rename phpcbf PHAR file
+- name: "CODE SNIFFER: Rename phpcbf PHAR file"
   command: mv {{ phpcbf_temp_phar }} {{ phpcbf_temp_path }}
   when: phpcbf.stat.exists == false or phpcbf_version.stdout != phpcbf_stable_release
 
-- name: Install phpcbf globally
+- name: "CODE SNIFFER: Install phpcbf globally"
   command: mv {{ phpcbf_temp_path }} {{ user_programs_path }}
   when: phpcbf.stat.exists == false or phpcbf_version.stdout != phpcbf_stable_release

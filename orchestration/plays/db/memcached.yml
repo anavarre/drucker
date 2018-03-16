@@ -1,16 +1,16 @@
 ---
-- name: Install memcached
+- name: "MEMCACHED: Install software"
   package:
     name: "{{ item }}"
     state: installed
   with_items:
     - memcached
 
-- name: Check if memcached is started
+- name: "MEMCACHED: Check if daemon is started"
   shell: pgrep memcached || echo "not started"
   register: memcached_status
   changed_when: memcached_status.stdout == "not started"
 
-- name: Start the memcached daemon
+- name: "MEMCACHED: Start the daemon"
   command: memcached -d -u nobody -m 64 -p 11211 127.0.0.1
   when: memcached_status.stdout == "not started"

@@ -1,0 +1,35 @@
+---
+- name: "DRUCKER: Check if import directories exist"
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - "{{ import_dir }}"
+    - "{{ archives_dir }}"
+  register: import_directories
+  ignore_errors: True
+
+- name: "DRUCKER Create import directories"
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  with_items:
+    - "{{ import_dir }}"
+    - "{{ archives_dir }}"
+  when: import_directories.results[0]['item'] or import_directories.results[1]['item']
+
+- name: "DRUCKER: Check if README file exists"
+  stat:
+    path: "{{ imported_readme }}"
+  register: readme_import
+
+- name: "DRUCKER: Deploy README file"
+  copy:
+    src: "{{ readme_import_source_file }}"
+    dest: "{{ imported_readme }}"
+    mode: 0644
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  when: readme_import.stat.exists == false

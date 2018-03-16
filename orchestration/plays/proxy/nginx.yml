@@ -1,11 +1,11 @@
 ---
-- name: Check if nginx is installed
+- name: "NGINX: Check if server is installed"
   stat:
     path: "{{ nginx_conf }}"
   register: nginx
   ignore_errors: True
 
-- name: Install nginx
+- name: "NGINX: Install server"
   package:
     name: "{{ item }}"
     state: present
@@ -14,79 +14,79 @@
     - nginx
   when: nginx.stat.exists == false
 
-- name: Check if default nginx site exists
+- name: "NGINX: Check if default site exists"
   stat:
     path: "{{ nginx_default_site }}"
   register: nginx_default
   ignore_errors: True
 
-- name: Delete default nginx site
+- name: "NGINX: Delete default site"
   file:
     path: "{{ nginx_default_site }}"
     state: absent
   when: nginx_default.stat.exists == true
 
-- name: Check if default nginx site configuration exists
+- name: "NGINX: Check if default site configuration exists"
   stat:
     path: "{{ nginx_default_conf }}"
   register: nginx_default_configuration
   ignore_errors: True
 
-- name: Delete default nginx site configuration
+- name: "NGINX: Delete default site configuration"
   file:
     path: "{{ nginx_default_conf }}"
     state: absent
   when: nginx_default_configuration.stat.exists == true
 
-- name: Check if nginx drucker host exists
+- name: "NGINX: Check if drucker host exists"
   stat:
     path: "{{ drucker_nginx_vhost }}"
   register: nginx_drucker_host
   ignore_errors: True
 
-- name: Deploy nginx template
+- name: "NGINX: Deploy template"
   copy:
     src: "{{ nginx_template_source_file }}"
     dest: "{{ nginx_conf_dir }}"
     mode: 0644
   when: nginx_drucker_host.stat.exists == false
 
-- name: Rename nginx template
+- name: "NGINX: Rename template"
   command: mv {{ nginx_default_template }} {{ drucker_nginx_vhost }}
   when: nginx_drucker_host.stat.exists == false
 
-- name: Modify nginx proxy_pass
+- name: "NGINX: Modify proxy_pass"
   replace:
     dest: "{{ drucker_nginx_vhost }}"
     regexp: '^(.*)proxy_pass http://0.0.0.0:{{ reverse_proxy_port }};(.*)$'
     replace: '\1proxy_pass http://{{ web_ip }}:{{ reverse_proxy_port }};\2'
   when: nginx_drucker_host.stat.exists == false
 
-- name: Increase client_max_body_size
+- name: "NGINX: Increase client_max_body_size"
   lineinfile:
     dest: "{{ nginx_conf }}"
     insertafter: '^(.*)sendfile on;(.*)$'
     line: "        client_max_body_size  {{ client_max_body_size }};"
 
-- name: Support fake SSL
+- name: "NGINX: Support fake SSL"
   copy:
     src: "{{ ssl_source_dir }}"
     dest: "{{ nginx_conf_dir }}"
     mode: 0755
   when: nginx_drucker_host.stat.exists == false
 
-- name: Ensure nginx starts on boot
+- name: "NGINX: Ensure server starts on boot"
   service:
     name: nginx
     enabled: yes
   when: nginx_drucker_host.stat.exists == false
 
-- name: Check if nginx is started
+- name: "NGINX: Check if server is started"
   shell: pgrep nginx || echo 'down'
   register: check_nginx_up
   changed_when: check_nginx_up.stdout == "down"
 
-- name: Ensure nginx is started
+- name: "NGINX: Ensure server is started"
   command: /etc/init.d/nginx start
   become: yes
   when: check_nginx_up.stdout == "down"

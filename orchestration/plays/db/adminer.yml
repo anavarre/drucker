@@ -1,17 +1,17 @@
 ---
-- name: Check if adminer is installed
+- name: "ADMINER: Check if software is installed"
   stat:
     path: "{{ adminer_index }}"
   register: adminer
   ignore_errors: True
 
-- name: Check adminer version
+- name: "ADMINER: Check version"
   shell: grep -o "version {{ adminer_stable_release }}" {{ adminer_index }} || echo "update"
   register: adminer_release
   when: adminer.stat.exists == true
   changed_when: adminer_release == "update"
 
-- name: Create adminer directory
+- name: "ADMINER: Create adminer directory"
   file:
     path: "{{ adminer_root }}"
     state: directory
@@ -20,7 +20,7 @@
     group: "{{ apache_user }}"
   when: adminer.stat.exists == false
 
-- name: Copy latest adminer release from mirror
+- name: "ADMINER: Copy latest release from mirror"
   get_url:
     url: "{{ adminer_mirror_download_link }}"
     dest: "{{ adminer_root }}"
@@ -31,35 +31,35 @@
   delay: 10
   when: adminer.stat.exists == false or adminer_release.stdout == "update"
 
-- name: Rename adminer file
+- name: "ADMINER: Rename file"
   command: mv {{ adminer_root }}/adminer-{{ adminer_stable_release }}-en.php {{ adminer_index }}
   when: adminer.stat.exists == false or adminer_release.stdout == "update"
 
-- name: Ensure adminer permissions are correct
+- name: "ADMINER: Ensure permissions are correct"
   file:
     path: "{{ adminer_index }}"
     owner: "{{ user }}"
     group: "{{ apache_user }}"
   when: adminer.stat.exists == false or adminer_release.stdout == "update"
 
-- name: Check if adminer vHost exists
+- name: "ADMINER: Check if vHost exists"
   stat:
     path: "{{ adminer_vhost }}"
   register: adminer_conf
   ignore_errors: True
 
-- name: Deploy default vHost template
+- name: "ADMINER: Deploy default vHost template"
   copy:
     src: "{{ source_file_dir}}/apache-template.conf"
     dest: "{{ sites_available }}"
     mode: 0644
   when: adminer_conf.stat.exists == false
 
-- name: Rename default vHost template
+- name: "ADMINER: Rename default vHost template"
   command: mv {{ vhost_template }} {{ adminer_available_vhost }}
   when: adminer_conf.stat.exists == false
 
-- name: "Add support for php-fpm Fast-CGI"
+- name: "ADMINER: Add support for php-fpm Fast-CGI"
   blockinfile:
     dest: "{{ adminer_available_vhost }}"
     block: |6
@@ -68,21 +68,21 @@
     marker: "# {mark} MANAGED PHP-FPM FAST-CGI BLOCK"
   when: adminer_conf.stat.exists == false
 
-- name: Modify adminer vHost 1/2
+- name: "ADMINER: Modify vHost 1/2"
   replace:
     dest: "{{ adminer_available_vhost }}"
     regexp: '^(.*)SITENAME\/docroot(.*)$'
     replace: '\1adminer\2'
   when: adminer_conf.stat.exists == false
 
-- name: Modify adminer vHost 2/2
+- name: "ADMINER: Modify vHost 2/2"
   replace:
     dest: "{{ adminer_available_vhost }}"
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1adminer\2'
   when: adminer_conf.stat.exists == false
 
-- name: Enable adminer vHost
+- name: "ADMINER: Enable vHost"
   file:
     src: ../sites-available/adminer.conf
     dest: "{{ adminer_vhost }}"

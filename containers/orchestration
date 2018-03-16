@@ -78,7 +78,6 @@ app_lightning() {
 
 app_reservoir() {
   echo "Installing Reservoir on PHP ${DEFAULT_PHP} is currently broken."
-  echo "Wait until Drupal 8.5.0 is released or install drucker 0.5.8"
   exit 0
 
   app_delete

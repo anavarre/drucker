@@ -1,30 +1,30 @@
 ---
-- name: Check if MySQL backup directory exists
+- name: "MYSQL: Check if backup directory exists"
   stat:
     path: "{{ db_backup_dir }}"
   register: backup_dir
   changed_when: backup_dir.stat.exists == false
 
-- name: Create MySQL backup directory
+- name: "MYSQL: Create backup directory"
   file:
     path: "{{ db_backup_dir }}"
     state: directory
   when: backup_dir.stat.exists == false
 
-- name: Check if MySQL backup script exists
+- name: "MYSQL: Check if backup script exists"
   stat:
     path: "{{ db_backup_path }}"
   register: mysql_backup_check
   changed_when: mysql_backup_check.stat.exists == false
 
-- name: Deploy MySQL backup script
+- name: "MYSQL: Deploy backup script"
   copy:
     src: "{{ db_backup_source_file }}"
     dest: "{{ user_programs_path }}"
     mode: 0755
   when: mysql_backup_check.stat.exists == false
 
-- name: Schedule periodic MySQL backups
+- name: "MYSQL: Schedule periodic backups"
   cron:
     name: "Hourly MySQL backup for all databases"
     job: "{{ db_backup_path }}"
@@ -32,7 +32,7 @@
     minute: "02"
     state: present
 
-- name: Schedule periodic MySQL backup cleanup
+- name: "MYSQL: Schedule periodic backup cleanup"
   cron:
     name: "Clean up MySQL backups every 3 hours"
     job: /usr/bin/find {{ db_backup_dir }} -mmin +180 -name "*.gz" -exec rm -f {} \;
@@ -40,7 +40,7 @@
     minute: "05"
     state: present
 
-- name: Restart cron
+- name: "MYSQL: Restart cron to take into account new crontab"
   service:
     name: cron
     enabled: yes

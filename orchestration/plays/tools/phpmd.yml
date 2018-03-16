@@ -1,16 +1,16 @@
 ---
-- name: Check if phpmd is installed
+- name: "PHPMD: Check if software is installed"
   stat:
     path: "{{ phpmd_binary }}"
   register: phpmd
 
-- name: Check if phpmd needs to be updated
+- name: "PHPMD: Check if software needs to be updated"
   shell: phpmd --version | awk '{print $NF}'
   register: phpmd_stable_release_check
   when: phpmd.stat.exists == true
   changed_when: phpmd_stable_release_check.stdout != phpmd_stable_version
 
-- name: Copy latest phpmd release from mirror
+- name: "PHPMD: Copy latest release from mirror"
   get_url:
     url: "{{ phpmd_mirror_download_link }}"
     dest: "{{ phpmd_binary }}"
@@ -23,12 +23,12 @@
   delay: 10
   when: phpmd.stat.exists == false or phpmd_stable_release_check.stdout != phpmd_stable_version
 
-- name: Check if phpmd bash alias exists
+- name: "PHPMD: Check if bash alias exists"
   shell: grep -o 'MANAGED PHPMD BLOCK' {{ bashrc }} || echo "absent"
   register: phpmd_alias
   changed_when: phpmd_alias == "absent"
 
-- name: Add phpmd alias
+- name: "PHPMD: Add alias"
   blockinfile:
     dest: "{{ bashrc }}"
     block: |

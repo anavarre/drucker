@@ -1,24 +1,24 @@
 ---
-- name: Check if mirror archives directory exists
+- name: "MIRROR: Check if mirror archives directory exists"
   stat:
     path: "{{ mirror_archives_dir }}"
   register: mirror_archives_dir_check
   changed_when: mirror_archives_dir_check.stat.exists == false
 
-- name: Create archives directory
+- name: "MIRROR: Create archives directory"
   file:
     path: "{{ mirror_archives_dir }}"
     state: directory
   when: mirror_archives_dir_check.stat.exists == false
 
 # Apache Solr
-- name: Check if Apache Solr archive exists
+- name: "MIRROR: Check if Apache Solr archive exists"
   stat:
     path: "{{ solr_mirror_archive_path }}"
   register: solr_mirror_archive_path_check
   changed_when: solr_mirror_archive_path_check.stat.exists == false
 
-- name: Download latest Apache Solr archive (this can take a while...)
+- name: "MIRROR: Download latest Apache Solr archive (this can take a while...)"
   get_url:
     url: "{{ solr_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -30,13 +30,13 @@
   when: solr_mirror_archive_path_check.stat.exists == false
 
 # PECL Upload Progress
-- name: Check if PECL uploadprogress archive exists
+- name: "MIRROR: Check if PECL uploadprogress archive exists"
   stat:
     path: "{{ uploadprogress_mirror_archive_path }}"
   register: uploadprogress_mirror_archive_path_check
   changed_when: uploadprogress_mirror_archive_path_check.stat.exists == false
 
-- name: Download latest PECL uploadprogress release
+- name: "MIRROR: Download latest PECL uploadprogress release"
   get_url:
     url: "{{ uploadprogress_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -48,13 +48,13 @@
   when: uploadprogress_mirror_archive_path_check.stat.exists == false
 
 # LibYAML
-- name: Check if the LibYAML C parser archive exists
+- name: "MIRROR: Check if the LibYAML C parser archive exists"
   stat:
     path: "{{ libyaml_mirror_archive_path }}"
   register: libyaml_archive_check
   changed_when: libyaml_archive_check.stat.exists == false
 
-- name: Download latest LibYAML release
+- name: "MIRROR: Download latest LibYAML release"
   get_url:
     url: "{{ libyaml_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -66,13 +66,13 @@
   when: libyaml_archive_check.stat.exists == false
 
 # PECL YAML
-- name: Check if the PECL YAML archive exists
+- name: "MIRROR: Check if the PECL YAML archive exists"
   stat:
     path: "{{ pecl_yaml_mirror_archive_path }}"
   register: pecl_yaml_archive_check
   changed_when: pecl_yaml_archive_check.stat.exists == false
 
-- name: Download latest PECL YAML release
+- name: "MIRROR: Download latest PECL YAML release"
   get_url:
     url: "{{ pecl_yaml_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -84,13 +84,13 @@
   when: pecl_yaml_archive_check.stat.exists == false
 
 # Drupal Console
-- name: Check if the Drupal Console Launcher PHAR file exists
+- name: "MIRROR: Check if the Drupal Console Launcher PHAR file exists"
   stat:
     path: "{{ drupal_console_mirror_archive_path }}"
   register: drupal_console_mirror_archive_path_check
   changed_when: drupal_console_mirror_archive_path_check.stat.exists == false
 
-- name: Download Drupal Console Launcher PHAR file
+- name: "MIRROR: Download Drupal Console Launcher PHAR file"
   get_url:
     url: "{{ drupal_console_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -103,36 +103,36 @@
   when: drupal_console_mirror_archive_path_check.stat.exists == false
 
 # Xdebug
-- name: Check if the Xdebug version file exists
+- name: "MIRROR: Check if the Xdebug version file exists"
   stat:
     path: "{{ xdebug_version_file }}"
   register: xdebug_version_file_check
   changed_when: xdebug_version_file_check.stat.exists == false
 
-- name: Write Xdebug version to file
+- name: "MIRROR: Write Xdebug version to file"
   copy:
     content: "{{ xdebug_stable_release }}"
     dest: "{{ xdebug_version_file }}"
   when: xdebug_version_file_check.stat.exists == false
 
-- name: Store Xdebug version variable
+- name: "MIRROR: Store Xdebug version variable"
   shell: cat {{ xdebug_version_file }}
   register: xdebug_read_version
   changed_when: xdebug_version_file_check.stat.exists == false
 
-- name: Check if the Xdebug archive exists
+- name: "MIRROR: Check if the Xdebug archive exists"
   stat:
     path: "{{ xdebug_mirror_archive_path }}"
   register: xdebug_mirror_archive_path_check
   changed_when: xdebug_mirror_archive_path_check.stat.exists == false
 
-- name: Check if Xdebug can be updated
+- name: "MIRROR: Check if Xdebug can be updated"
   shell: ls {{ xdebug_mirror_archive_path }} | grep -o {{ xdebug_stable_release }} || echo "absent"
   register: xdebug_update
   when: xdebug_mirror_archive_path_check.stat.exists == true
   changed_when: xdebug_update.stdout == "absent"
 
-- name: Download latest Xdebug release
+- name: "MIRROR: Download latest Xdebug release"
   get_url:
     url: "{{ xdebug_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -143,20 +143,20 @@
   delay: 10
   when: xdebug_mirror_archive_path_check.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
 
-- name: Write new Xdebug version to file
+- name: "MIRROR: Write new Xdebug version to file"
   copy:
     content: "{{ xdebug_stable_release }}"
     dest: "{{ xdebug_version_file }}"
   when: xdebug_get_url_result.changed
 
 # Tideways
-- name: Check if the Tideways archive exists
+- name: "MIRROR: Check if the Tideways archive exists"
   stat:
     path: "{{ tideways_mirror_archive_path }}"
   register: tideways_mirror_archive_path_check
   changed_when: tideways_mirror_archive_path_check.stat.exists == false
 
-- name: Download latest Tideways release
+- name: "MIRROR: Download latest Tideways release"
   get_url:
     url: "{{ tideways_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -168,13 +168,13 @@
   when: tideways_mirror_archive_path_check.stat.exists == false
 
 # PhantomJS
-- name: Check if the PhantomJS archive exists
+- name: "MIRROR: Check if the PhantomJS archive exists"
   stat:
     path: "{{ phantomjs_mirror_archive_path }}"
   register: phantomjs_mirror_archive_path_check
   changed_when: phantomjs_mirror_archive_path_check.stat.exists == false
 
-- name: Download latest PhantomJS release
+- name: "MIRROR: Download latest PhantomJS release"
   get_url:
     url: "{{ phantomjs_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -186,13 +186,13 @@
   when: phantomjs_mirror_archive_path_check.stat.exists == false
 
 # CodeSniffer
-- name: Check if the phpcs PHAR file exists
+- name: "MIRROR: Check if the phpcs PHAR file exists"
   stat:
     path: "{{ phpcs_mirror_archive_path }}"
   register: phpcs_mirror_archive_path_check
   changed_when: phpcs_mirror_archive_path_check.stat.exists == false
 
-- name: Download phpcs PHAR file
+- name: "MIRROR: Download phpcs PHAR file"
   get_url:
     url: "{{ phpcs_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -204,13 +204,13 @@
   delay: 10
   when: phpcs_mirror_archive_path_check.stat.exists == false
 
-- name: Check if the phpcbf PHAR file exists
+- name: "MIRROR: Check if the phpcbf PHAR file exists"
   stat:
     path: "{{ phpcbf_mirror_archive_path }}"
   register: phpcbf_mirror_archive_path_check
   changed_when: phpcbf_mirror_archive_path_check.stat.exists == false
 
-- name: Download phpcbf PHAR file
+- name: "MIRROR: Download phpcbf PHAR file"
   get_url:
     url: "{{ phpcbf_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -223,30 +223,30 @@
   when: phpcbf_mirror_archive_path_check.stat.exists == false
 
 # PHP-CS-Fixer
-- name: Check if the PHP-CS-Fixer version file exists
+- name: "MIRROR: Check if the PHP-CS-Fixer version file exists"
   stat:
     path: "{{ php_cs_fixer_version_file }}"
   register: php_cs_fixer_version_file_check
   changed_when: php_cs_fixer_version_file_check.stat.exists == false
 
-- name: Write PHP-CS-Fixer version to file
+- name: "MIRROR: Write PHP-CS-Fixer version to file"
   copy:
     content: "{{ php_cs_fixer_stable_release }}"
     dest: "{{ php_cs_fixer_version_file }}"
   when: php_cs_fixer_version_file_check.stat.exists == false
 
-- name: Store PHP-CS-Fixer version variable
+- name: "MIRROR: Store PHP-CS-Fixer version variable"
   shell: cat {{ php_cs_fixer_version_file }}
   register: php_cs_fixer_read_version
   changed_when: php_cs_fixer_version_file_check.stat.exists == false
 
-- name: Check if the PHP-CS-Fixer PHAR file exists
+- name: "MIRROR: Check if the PHP-CS-Fixer PHAR file exists"
   stat:
     path: "{{ php_cs_fixer_mirror_archive_file }}"
   register: php_cs_fixer_mirror_archive_file_check
   changed_when: php_cs_fixer_mirror_archive_file_check.stat.exists == false
 
-- name: Download PHP-CS-Fixer PHAR file
+- name: "MIRROR: Download PHP-CS-Fixer PHAR file"
   get_url:
     url: "{{ php_cs_fixer_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -258,20 +258,20 @@
   delay: 10
   when: php_cs_fixer_mirror_archive_file_check.stat.exists == false or php_cs_fixer_read_version.stdout != php_cs_fixer_stable_release
 
-- name: Write new PHP-CS-Fixer version to file
+- name: "MIRROR: Write new PHP-CS-Fixer version to file"
   copy:
     content: "{{ php_cs_fixer_stable_release }}"
     dest: "{{ php_cs_fixer_version_file }}"
   when: php_cs_fixer_get_url_result.changed
 
 # PHPmd
-- name: Check if the phpmd PHAR file exists
+- name: "MIRROR: Check if the phpmd PHAR file exists"
   stat:
     path: "{{ phpmd_mirror_archive_file }}"
   register: phpmd_mirror_archive_file_check
   changed_when: phpmd_mirror_archive_file_check.stat.exists == false
 
-- name: Download phpmd PHAR file
+- name: "MIRROR: Download phpmd PHAR file"
   get_url:
     url: "{{ phpmd_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -285,13 +285,13 @@
   when: phpmd_mirror_archive_file_check.stat.exists == false
 
 # mcstat
-- name: Check if mcstat archive exists
+- name: "MIRROR: Check if mcstat archive exists"
   stat:
     path: "{{ mcstat_mirror_archive_file }}"
   register: mcstat_mirror_archive_file_check
   changed_when: mcstat_mirror_archive_file_check.stat.exists == false
 
-- name: Download latest mcstat release
+- name: "MIRROR: Download latest mcstat release"
   get_url:
     url: "{{ mcstat_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -303,30 +303,30 @@
   when: mcstat_mirror_archive_file_check.stat.exists == false
 
 # phpMyAdmin
-- name: Check if the phpMyAdmin version file exists
+- name: "MIRROR: Check if the phpMyAdmin version file exists"
   stat:
     path: "{{ phpmyadmin_version_file }}"
   register: phpmyadmin_version_file_check
   changed_when: phpmyadmin_version_file_check.stat.exists == false
 
-- name: Write phpMyAdmin version to file
+- name: "MIRROR: Write phpMyAdmin version to file"
   copy:
     content: "{{ phpmyadmin_stable_release }}"
     dest: "{{ phpmyadmin_version_file }}"
   when: phpmyadmin_version_file_check.stat.exists == false
 
-- name: Store phpMyAdmin version variable
+- name: "MIRROR: Store phpMyAdmin version variable"
   shell: cat {{ phpmyadmin_version_file }}
   register: phpmyadmin_read_version
   changed_when: phpmyadmin_version_file_check.stat.exists == false
 
-- name: Check if phpMyAdmin archive exists
+- name: "MIRROR: Check if phpMyAdmin archive exists"
   stat:
     path: "{{ phpmyadmin_mirror_archive_file_path }}"
   register: pma_mirror_archive_file_path_check
   changed_when: pma_mirror_archive_file_path_check.stat.exists == false
 
-- name: Download latest phpMyAdmin release
+- name: "MIRROR: Download latest phpMyAdmin release"
   get_url:
     url: "{{ phpmyadmin_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -337,20 +337,20 @@
   delay: 10
   when: pma_mirror_archive_file_path_check.stat.exists == false or phpmyadmin_read_version.stdout != phpmyadmin_stable_release
 
-- name: Write new phpMyAdmin version to file
+- name: "MIRROR: Write new phpMyAdmin version to file"
   copy:
     content: "{{ phpmyadmin_stable_release }}"
     dest: "{{ phpmyadmin_version_file }}"
   when: pma_get_url_result.changed
 
 # adminer
-- name: Check if adminer file exists
+- name: "MIRROR: Check if adminer file exists"
   stat:
     path: "{{ adminer_mirror_filepath }}"
   register: adminer_mirror_filepath_check
   changed_when: adminer_mirror_filepath_check.stat.exists == false
 
-- name: Download latest adminer release
+- name: "MIRROR: Download latest adminer release"
   get_url:
     url: "{{ adminer_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -361,31 +361,31 @@
   delay: 10
   when: adminer_mirror_filepath_check.stat.exists == false
 
-# Drush launcher
-- name: Check if the Drush Launcher version file exists
+# Drush Launcher
+- name: "MIRROR: Check if the Drush Launcher version file exists"
   stat:
     path: "{{ drush_launcher_version_file }}"
   register: drush_launcher_version_file_check
   changed_when: drush_launcher_version_file_check.stat.exists == false
 
-- name: Write the Drush Launcher version to file
+- name: "MIRROR: Write the Drush Launcher version to file"
   copy:
     content: "{{ drush_launcher_stable_release }}"
     dest: "{{ drush_launcher_version_file }}"
   when: drush_launcher_version_file_check.stat.exists == false
 
-- name: Store the Drush Launcher version variable
+- name: "MIRROR: Store the Drush Launcher version variable"
   shell: cat {{ drush_launcher_version_file }}
   register: drush_launcher_read_version
   changed_when: drush_launcher_version_file_check.stat.exists == false
 
-- name: Check if the Drush launcher PHAR file exists
+- name: "MIRROR: Check if the Drush launcher PHAR file exists"
   stat:
     path: "{{ drush_launcher_mirror_filepath }}"
   register: drush_launcher_mirror_filepath_check
   changed_when: drush_launcher_mirror_filepath_check.stat.exists == false
 
-- name: Download latest Drush launcher PHAR release
+- name: "MIRROR: Download latest Drush launcher PHAR release"
   get_url:
     url: "{{ drush_launcher_download_link }}"
     dest: "{{ mirror_archives_dir }}"
@@ -396,7 +396,7 @@
   delay: 10
   when: drush_launcher_mirror_filepath_check.stat.exists == false or drush_launcher_read_version.stdout != drush_launcher_stable_release
 
-- name: Write new Drush Launcher version to file
+- name: "MIRROR: Write new Drush Launcher version to file"
   copy:
     content: "{{ drush_launcher_stable_release }}"
     dest: "{{ drush_launcher_version_file }}"

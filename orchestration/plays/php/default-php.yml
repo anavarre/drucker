@@ -1,10 +1,10 @@
 ---
-- name: Check if PHP {{ default_php_version }} is installed
+- name: "PHP: Check if PHP {{ default_php_version }} is installed"
   stat:
     path: "{{ default_php_ini }}"
   register: default_phpfpm
 
-- name: Install PHP {{ default_php_version }} core packages
+- name: "PHP: Install PHP {{ default_php_version }} core packages"
   package:
     name: "{{ item }}"
     state: installed
@@ -15,18 +15,18 @@
     - php{{ default_php_version }}-dev
   when: default_phpfpm.stat.exists == false
 
-- name: Check if the PHP version file exists
+- name: "PHP: Check if the version file exists"
   stat:
     path: "{{ default_php_version_file }}"
   register: php_version_file_check
 
-- name: Write default PHP version to file
+- name: "PHP: Write default PHP version to file"
   copy:
     content: "{{ default_php_version }}"
     dest: "{{ default_php_version_file }}"
   when: php_version_file_check.stat.exists == false
 
-- name: Install PHP {{ default_php_version }} extensions
+- name: "PHP: Install PHP {{ default_php_version }} extensions"
   package:
     name: "{{ item }}"
     state: installed
@@ -44,7 +44,7 @@
     - php{{ default_php_version }}-sqlite3
   when: default_phpfpm.stat.exists == false
 
-- name: Ensure PHP {{ default_php_version }} extensions directory exists
+- name: "PHP: Ensure PHP {{ default_php_version }} extensions directory exists"
   file:
     path: "{{ default_php_extensions }}"
     state: directory
@@ -52,7 +52,7 @@
 
 - import_tasks: php_version_and_vhost_check.yml
 
-- name: Update PHP FPM version in vHosts
+- name: "PHP: Update PHP FPM version in vHosts"
   replace:
     dest: "{{ item }}"
     regexp: '^(.*)php{{ php_read_version.stdout }}-fpm.sock(.*)$'
@@ -61,21 +61,21 @@
     - "{{ apache_vhosts_list.stdout_lines }}"
   when: apache_vhosts_list.stdout != 'no vHost'
 
-- name: Switch PHP CLI version
+- name: "PHP: Switch PHP CLI version"
   command: update-alternatives --set php /usr/bin/php{{ default_php_version }}
 
 - import_tasks: phpfpm_process_check.yml
 
-- name: Start PHP {{ default_php_version }} FPM
+- name: "PHP: Start PHP {{ default_php_version }} FPM"
   command: /etc/init.d/php{{ default_php_version }}-fpm start
   when: default_php_version != php_read_version.stdout or phpfpm_is_started.stdout == 'stopped'
 
-- name: Ensure PHP {{ default_php_version }} is started
+- name: "PHP: Ensure PHP {{ default_php_version }} is started"
   shell: pgrep -ln php-fpm | awk '{print $NF}'
   register: default_phpfpm_is_started
   notify: Restart Apache
 
-- name: Write new PHP version to file
+- name: "PHP: Write new version to file"
   copy:
     content: "{{ default_php_version }}"
     dest: "{{ default_php_version_file }}"

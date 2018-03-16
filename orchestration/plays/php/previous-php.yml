@@ -1,10 +1,10 @@
 ---
-- name: Check if PHP {{ previous_php_version}} is installed
+- name: "PHP: Check if PHP {{ previous_php_version}} is installed"
   stat:
     path: "{{ previous_php_ini }}"
   register: previous_phpfpm
 
-- name: Install PHP {{ previous_php_version}} core packages
+- name: "PHP: Install PHP {{ previous_php_version}} core packages"
   package:
     name: "{{ item }}"
     state: installed
@@ -15,7 +15,7 @@
     - php{{ previous_php_version }}-dev
   when: previous_phpfpm.stat.exists == false
 
-- name: Install PHP {{ previous_php_version}} extensions
+- name: "PHP: Install PHP {{ previous_php_version}} extensions"
   package:
     name: "{{ item }}"
     state: installed
@@ -33,7 +33,7 @@
     - php{{ previous_php_version }}-sqlite3
   when: previous_phpfpm.stat.exists == false
 
-- name: Ensure PHP {{ previous_php_version }} extensions directory exists
+- name: "PHP: Ensure PHP {{ previous_php_version }} extensions directory exists"
   file:
     path: "{{ previous_php_extensions }}"
     state: directory
@@ -41,7 +41,7 @@
 
 - import_tasks: php_version_and_vhost_check.yml
 
-- name: Update PHP FPM version in vHosts
+- name: "PHP: Update PHP FPM version in vHosts"
   replace:
     dest: "{{ item }}"
     regexp: '^(.*)php{{ php_read_version.stdout }}-fpm.sock(.*)$'
@@ -50,21 +50,21 @@
     - "{{ apache_vhosts_list.stdout_lines }}"
   when: apache_vhosts_list.stdout != 'no vHost'
 
-- name: Switch PHP CLI version
+- name: "PHP: Switch PHP CLI version"
   command: update-alternatives --set php /usr/bin/php{{ previous_php_version }}
 
 - import_tasks: phpfpm_process_check.yml
 
-- name: Start PHP {{ previous_php_version}} FPM
+- name: "PHP: Start PHP {{ previous_php_version}} FPM"
   command: /etc/init.d/php{{ previous_php_version }}-fpm start
   when: previous_php_version != php_read_version.stdout or phpfpm_is_started.stdout == 'stopped'
 
-- name: Ensure PHP {{ previous_php_version}} FPM is started
+- name: "PHP: Ensure PHP {{ previous_php_version}} FPM is started"
   shell: pgrep -ln php-fpm | awk '{print $NF}'
   register: previous_phpfpm_is_started
   notify: Restart Apache
 
-- name: Write new PHP version to file
+- name: "PHP: Write new PHP version to file"
   copy:
     content: "{{ previous_php_version }}"
     dest: "{{ default_php_version_file }}"

@@ -1,21 +1,21 @@
 ---
-- name: Check if phantomjs is installed
+- name: "PHANTOMJS: Check if software is installed"
   stat:
     path: "{{ phantomjs_binary }}"
   register: phantomjs
 
-- name: Check if phantomjs can be updated
+- name: "PHANTOMJS: Check if software can be updated"
   command: phantomjs --version
   register: phantomjs_update
   when: phantomjs.stat.exists == true
   changed_when: phantomjs_update.stdout != phantomjs_stable_version
 
-- name: Check if phantomjs archive exists
+- name: "PHANTOMJS: Check if archive exists"
   stat:
     path: phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2
   register: phantomjs_archive
 
-- name: Copy latest phantomjs release from mirror
+- name: "PHANTOMJS: Copy latest release from mirror"
   get_url:
     url: "{{ phantomjs_mirror_download_link }}"
     dest: "{{ download_dir }}"
@@ -26,30 +26,30 @@
   delay: 10
   when: phantomjs.stat.exists == false or phantomjs_update.stdout != phantomjs_stable_version and phantomjs_archive.stat.exists == false
 
-- name: Extract phantomjs files
+- name: "PHANTOMJS: Extract files"
   unarchive:
     src: "{{ phantomjs_archive_path }}"
     dest: "{{ download_dir }}"
     copy: no
   when: phantomjs.stat.exists == false or phantomjs_update.stdout != phantomjs_stable_version
 
-- name: Delete outdated phantomjs executable
+- name: "PHANTOMJS: Delete outdated executable"
   file:
     path: "{{ phantomjs_binary }}"
     state: absent
   when: phantomjs.stat.exists == true and phantomjs_update.stdout != phantomjs_stable_version
 
-- name: Install phantomjs globally
+- name: "PHANTOMJS: Install software globally"
   command: mv {{ phantomjs_temp_path }}/bin/phantomjs {{ user_programs_path }}
   when: phantomjs.stat.exists == false or phantomjs_update.stdout != phantomjs_stable_version
 
-- name: Make phantomjs executable
+- name: "PHANTOMJS: Make binary executable"
   file:
     path: "{{ phantomjs_binary }}"
     mode: 0755
   when: phantomjs.stat.exists == false or phantomjs_update.stdout != phantomjs_stable_version
 
-- name: Delete phantomjs temporary directory
+- name: "PHANTOMJS: Delete temporary directory"
   file:
     path: "{{ item }}"
     state: absent

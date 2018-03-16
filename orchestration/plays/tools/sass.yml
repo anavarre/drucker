@@ -1,5 +1,5 @@
 ---
-- name: Install compass (Sass)
+- name: "SASS: Install compass"
   package:
     name: "{{ item }}"
     state: present

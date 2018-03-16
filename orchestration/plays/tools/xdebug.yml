@@ -1,16 +1,16 @@
 ---
-- name: Check if Xdebug is installed
+- name: "XDEBUG: Check if the extension is installed"
   stat:
     path: "{{ xdebug_extension_path }}"
   register: xdebug
 
-- name: Check if Xdebug can be updated
+- name: "XDEBUG: Check if the extension can be updated"
   shell: ls {{ xdebug_archive_path }} | grep -o {{ xdebug_stable_release }} || echo "absent"
   register: xdebug_update
   when: xdebug.stat.exists == true
   changed_when: xdebug_update.stdout == "absent"
 
-- name: Copy latest Xdebug release from mirror
+- name: "XDEBUG: Copy latest release from mirror"
   get_url:
     url: "{{ xdebug_mirror_download_link }}"
     dest: "{{ download_dir }}"
@@ -21,14 +21,14 @@
   delay: 10
   when: xdebug.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
 
-- name: Extract Xdebug files
+- name: "XDEBUG: Extract files"
   unarchive:
     src: "{{ xdebug_archive_path }}"
     dest: "{{ download_dir }}"
     copy: no
   when: xdebug.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
 
-- name: Compile Xdebug
+- name: "XDEBUG: Compile the extension"
   command: "{{ item }} chdir={{ xdebug_unarchived_path }}"
   with_items:
     - /usr/bin/phpize
@@ -37,28 +37,28 @@
   register: compile_xdebug
   when: xdebug.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
 
-- name: Copy compiled Xdebug extension
+- name: "XDEBUG: Copy compiled extension"
   command: cp {{ xdebug_unarchived_path }}/modules/{{ xdebug_extension_name }} {{ default_php_extensions }}
   when: xdebug.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
 
-- name: Make sure permissions are correct
+- name: "XDEBUG: Make sure permissions are correct"
   file:
     path: "{{ xdebug_extension_path }}"
     mode: 0644
   when: xdebug.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
 
-- name: Delete Xdebug temporary directory
+- name: "XDEBUG: Delete temporary directory"
   file:
     path: "{{ xdebug_unarchived_path }}"
     state: absent
   when: xdebug.stat.exists == false or xdebug_update.stdout != xdebug_stable_release
 
-- name: Check Xdebug config in php.ini
+- name: "XDEBUG: Check config in php.ini"
   shell: grep -o "{{ xdebug_extension_name }}" {{ default_php_ini }} || echo "absent"
   register: xdebug_config
   changed_when: xdebug_config.stdout == "absent"
 
-- name: Configure Xdebug in php.ini
+- name: "XDEBUG: Configure extension in php.ini"
   blockinfile:
     dest: "{{ default_php_ini }}"
     block: |

@@ -1,5 +1,5 @@
 ---
-- name: Clean up system packages
+- name: "SYSTEM: Clean up system packages"
   package:
     name: "{{ item }}"
     state: absent
@@ -7,23 +7,23 @@
   with_items:
   - vim-tiny
 
-- name: Deploy sources.list template with contrib and non-free repositories
+- name: "SYSTEM: Deploy sources.list template with contrib and non-free repositories"
   copy:
     src: "{{ sources_list_source_file }}"
     dest: "{{ sources_list }}"
     mode: 0644
 
-- name: Add Debian codename to sources.list template
+- name: "SYSTEM: Add Debian codename to sources.list template"
   replace:
     dest: "{{ sources_list }}"
     regexp: '^(.*)CODENAME(.*)$'
     replace: '\1{{ codename }}\2'
 
-- name: Refresh APT
+- name: "SYSTEM: Refresh APT"
   apt:
     update_cache: yes
 
-- name: Install system packages
+- name: "SYSTEM: Install system packages"
   package:
     name: "{{ item }}"
     state: present
@@ -68,13 +68,13 @@
   # suddenly messed up, e.g. in a tmux session.
   - xterm
 
-- name: Ensure NTP is running
+- name: "SYSTEM: Ensure NTP is running"
   service:
     name: ntp
     state: started
     enabled: yes
 
-- name: Deploy .bash_aliases
+- name: "SYSTEM: Deploy .bash_aliases"
   copy:
     src: "{{ bash_aliases_source_file}}"
     dest: "{{ home }}"
@@ -84,7 +84,7 @@
   become: yes
   become_user: "{{ user }}"
 
-- name: Add www-data group to drucker account
+- name: "SYSTEM: Add www-data group to drucker account"
   user:
     name: "{{ user }}"
     groups: "{{ apache_user}}"

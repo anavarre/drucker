@@ -1,16 +1,16 @@
 ---
-- name: Check if Composer is installed
+- name: "COMPOSER: Check if software is installed"
   stat:
     path: "{{ composer_binary }}"
   register: composer
 
-- name: Check Composer version
+- name: "COMPOSER: Check version"
   shell: composer --version | awk '{print $3}'
   register: composer_stable_release_check
   when: composer.stat.exists == true
   changed_when: composer_stable_release_check.stdout != composer_stable_release
 
-- name: Install Composer globally
+- name: "COMPOSER: Install globally"
   get_url:
     url: "{{ composer_download_link }}"
     dest: "{{ composer_binary }}"
@@ -22,30 +22,30 @@
   delay: 10
   when: composer.stat.exists == false or composer_stable_release_check.stdout != composer_stable_release
 
-- name: Make Composer executable
+- name: "COMPOSER: Make executable"
   file:
     path: "{{ composer_binary }}"
     mode: 0755
   when: composer.stat.exists == false or composer_stable_release_check.stdout != composer_stable_release
 
-- name: Check if composer is in PATH
+- name: "COMPOSER: Check if software is in PATH"
   shell: grep -o "export PATH=\"\$PATH:\$HOME/.composer/vendor/bin\"" {{ bashrc }} || echo "absent"
   register: composer_path
   changed_when: composer_path.stdout == "absent"
 
-- name: Add composer to PATH
+- name: "COMPOSER: Add software to PATH"
   lineinfile:
     dest: "{{ bashrc }}"
     line: export PATH="$PATH:$HOME/.composer/vendor/bin"
     insertafter: EOF
   when: composer_path.stdout == 'absent'
 
-- name: Check if .composer directory exists
+- name: "COMPOSER: Check if .composer directory exists"
   stat:
     path: "{{ composer_dir_path }}"
   register: composer_directory
 
-- name: Create .composer directory
+- name: "COMPOSER: Create .composer directory"
   file:
     path: "{{ composer_dir_path }}"
     state: directory
@@ -54,12 +54,12 @@
     recurse: yes
   when: composer_directory.stat.exists == false
 
-- name: Check if composer.json file exists
+- name: "COMPOSER: Check if composer.json file exists"
   stat:
     path: "{{ composer_json_path }}"
   register: composer_json
 
-- name: Deploy default composer.json file
+- name: "COMPOSER: Deploy default composer.json file"
   copy:
     src: "{{ composer_json_source_file }}"
     dest: "{{ composer_dir_path }}"
@@ -68,14 +68,14 @@
   become_user: "{{ user }}"
   when: composer_json.stat.exists == false
 
-- name: Make sure permissions are correct for the .composer directory
+- name: "COMPOSER: Make sure permissions are correct for the .composer directory"
   file:
     path: "{{ composer_dir_path }}"
     owner: "{{ user }}"
     group: "{{ user }}"
     recurse: yes
 
-- name: Install Composer packages
+- name: "COMPOSER: Install packages"
   composer:
     command: install
     arguments: --prefer-dist

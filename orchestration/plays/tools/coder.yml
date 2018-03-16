@@ -1,10 +1,10 @@
 ---
-- name: Check if Coder is installed
+- name: "CODER: Check if software is installed"
   stat:
     path: "{{ coder_binary }}"
   register: coder
 
-- name: Install Coder
+- name: "CODER: Install software"
   composer:
     command: require
     arguments: "{{ coder_composer_package }} {{ coder_stable_release }}"
@@ -13,12 +13,12 @@
   become_user: "{{ user }}"
   when: coder.stat.exists == false
 
-- name: Check if Coder is up-to-date
+- name: "CODER: Check if software is up-to-date"
   shell: grep -o "{{ coder_stable_release }}" {{ composer_dir_path }}/composer.json || echo "outdated"
   register: coder_stable_release_check
   changed_when: coder_stable_release_check.stdout != coder_stable_release
 
-- name: Update Coder
+- name: "CODER: Update software"
   composer:
     command: require
     arguments: "{{ coder_composer_package }} {{ coder_stable_release }}"
@@ -27,12 +27,12 @@
   become_user: "{{ user }}"
   when: coder.stat.exists == true and coder_stable_release_check.stdout != coder_stable_release
 
-- name: Check if Coder bash aliases exist
+- name: "CODER: Check if bash aliases exist"
   shell: grep -o 'MANAGED CODE SNIFFER BLOCK' {{ bashrc }} || echo "absent"
   register: coder_aliases
   changed_when: coder_aliases == "absent"
 
-- name: Add Code Sniffer aliases
+- name: "CODER: Add Code Sniffer aliases"
   blockinfile:
     dest: "{{ bashrc }}"
     block: |
@@ -43,6 +43,6 @@
     marker: "# {mark} MANAGED CODE SNIFFER BLOCK"
   when: coder_aliases.stdout == 'absent'
 
-- name: Register Drupal and DrupalPractice with PHPCS
+- name: "CODER: Register Drupal and DrupalPractice with PHPCS"
   command: phpcs --config-set installed_paths {{ codesniffer_binary }}
   when: coder.stat.exists == false

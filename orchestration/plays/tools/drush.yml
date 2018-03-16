@@ -1,18 +1,18 @@
 ---
 # Drush Launcher
-- name: Check if Drush launcher is installed
+- name: "DRUSH: Check if Launcher is installed"
   stat:
     path: "{{ drush_launcher }}"
   register: drush_launcher
   changed_when: drush_launcher.stat.exists == false
 
-- name: Check if Drush launcher needs to be updated
+- name: "DRUSH: Check if Launcher needs to be updated"
   shell: drush --version| head -n1 | awk '{print $NF}'
   register: drush_launcher_stable_release_check
   when: drush_launcher.stat.exists == true
   changed_when: drush_launcher_stable_release_check.stdout != drush_launcher_stable_release
 
-- name: Copy latest Drush launcher release from mirror
+- name: "DRUSH: Copy latest Launcher release from mirror"
   get_url:
     url: "{{ drush_launcher_mirror_download_link }}"
     dest: "{{ user_programs_path }}"
@@ -24,25 +24,25 @@
   delay: 10
   when: drush_launcher.stat.exists == false or drush_launcher_stable_release_check.stdout != drush_launcher_stable_release
 
-- name: Rename Drush launcher PHAR file
+- name: "DRUSH: Rename Launcher PHAR file"
   command: mv {{ user_programs_path }}/{{ drush_launcher_archive_file }} {{ user_programs_path }}/drush
   when: drush_launcher.stat.exists == false or drush_launcher_stable_release_check.stdout != drush_launcher_stable_release
 
 # Drush (installed globally)
-- name: Check if the global Drush is installed
+- name: "DRUSH: Check if the global Drush is installed"
   stat:
     path: "{{ global_drush }}"
   register: global_drush_check
   changed_when: global_drush_check.stat.exists == false
 
-- name: "Copy global-drush to $PATH"
+- name: "DRUSH: Copy global-drush to $PATH"
   file:
     src: "{{ composer_dir_path }}/vendor/drush/drush/drush"
     dest: "{{ global_drush }}"
     state: link
   when: global_drush_check.stat.exists == false
 
-- name: "Make sure the Drush Launcher falls back to the global Drush"
+- name: "DRUSH: Make sure the Launcher falls back to the global Drush"
   blockinfile:
     dest: "{{ bashrc }}"
     block: |
@@ -50,31 +50,31 @@
     insertafter: EOF
     marker: "# {mark} MANAGED DRUSH LAUNCHER FALLBACK BLOCK"
 
-- name: Check if Drush etc directory exists
+- name: "DRUSH: Check if Drush's etc directory exists"
   stat:
     path: "{{ drush_etc_path }}"
   register: drush_etc_check
   changed_when: drush_etc_check.stat.exists == false
 
-- name: Create Drush etc directory
+- name: "DRUSH: Create Drush's etc directory"
   file:
     path: "{{ drush_etc_path }}"
     state: directory
   when: drush_etc_check.stat.exists == false
 
-- name: Check if sites-aliases directory exists
+- name: "DRUSH: Check if sites-aliases directory exists"
   stat:
     path: "{{ drush_alias_path }}"
   register: site_alias_check
   changed_when: site_alias_check.stat.exists == false
 
-- name: Create site-aliases directory
+- name: "DRUSH: Create site-aliases directory"
   file:
     path: "{{ drush_alias_path }}"
     state: directory
   when: site_alias_check.stat.exists == false
 
-- name: Create .drush directory
+- name: "DRUSH: Create .drush directory"
   file:
     path: "{{ drush_dir }}"
     state: directory
@@ -83,13 +83,13 @@
     group: "{{ user }}"
   when: site_alias_check.stat.exists == false
 
-- name: Check if drush.yml file exists
+- name: "DRUSH: Check if drush.yml file exists"
   stat:
     path: "{{ drush_yml_source_file }}"
   register: drush_yml_check
   changed_when: drush_yml_check.stat.exists == false
 
-- name: Deploy drush.yml file
+- name: "DRUSH: Deploy drush.yml file"
   copy:
     src: "{{ drush_yml_source_file }}"
     dest: "{{ drush_dir }}"

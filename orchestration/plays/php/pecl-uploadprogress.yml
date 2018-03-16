@@ -1,11 +1,11 @@
 ---
 # See https://www.drupal.org/node/1561866 for improvements.
-- name: Check if PECL uploadprogress is installed
+- name: "PECL UPLOADPROGRESS: Check if the extension is installed"
   stat:
     path: "{{ uploadprogress_extension_path }}"
   register: uploadprogress
 
-- name: Copy latest PECL uploadprogress release from mirror
+- name: "PECL UPLOADPROGRESS: Copy latest release from mirror"
   get_url:
     url: "{{ uploadprogress_mirror_download_link }}"
     dest: "{{ download_dir }}"
@@ -16,14 +16,14 @@
   delay: 10
   when: uploadprogress.stat.exists == false
 
-- name: Extract PECL uploadprogress files
+- name: "PECL UPLOADPROGRESS: Extract files"
   unarchive:
     src: "{{ uploadprogress_archive }}"
     dest: "{{ download_dir }}"
     copy: no
   when: uploadprogress.stat.exists == false
 
-- name: Compile PECL uploadprogress
+- name: "PECL UPLOADPROGRESS: Compile extension"
   command: "{{ item }} chdir={{ uploadprogress_temp_path }}"
   with_items:
     - /usr/bin/phpize
@@ -32,40 +32,40 @@
     - /usr/bin/make install
   when: uploadprogress.stat.exists == false
 
-- name: Copy compiled PECL uploadprogress extension
+- name: "PECL UPLOADPROGRESS: Copy compiled extension"
   command: cp {{ uploadprogress_temp_path }}/modules/{{ uploadprogress_extension_name }} {{ default_php_extensions }}
   when: uploadprogress.stat.exists == false
 
-- name: Make sure permissions are correct
+- name: "PECL UPLOADPROGRESS: Make sure permissions are correct"
   file:
     path: "{{ uploadprogress_extension_path }}"
     mode: 0644
   when: uploadprogress.stat.exists == false
 
-- name: Delete PECL uploadprogress temporary directory
+- name: "PECL UPLOADPROGRESS: Delete temporary directory"
   file:
     path: "{{ uploadprogress_temp_path }}"
     state: absent
   when: uploadprogress.stat.exists == false
 
-- name: Check PECL uploadprogress config in php.ini
+- name: "PECL UPLOADPROGRESS: Check config in php.ini"
   shell: grep -o "{{ uploadprogress_extension_name }}" {{ default_php_ini }} || echo "absent"
   register: uploadprogress_config
   changed_when: uploadprogress_config.stdout == "absent"
 
-- name: Configure PECL uploadprogress in php.ini
+- name: "PECL UPLOADPROGRESS: Configure extension in php.ini"
   lineinfile:
     dest: "{{ default_php_ini }}"
     line: "extension={{ uploadprogress_extension_path }}"
   when: uploadprogress_config.stdout == "absent"
 
-- name: Ensure Apache is restarted
+- name: "APACHE: Ensure Apache is restarted to load the extension"
   service:
     name: apache2
     enabled: yes
     state: restarted
 
-- name: Ensure PHP-FPM is restarted
+- name: "PHP: Ensure PHP-FPM is restarted to load the extension"
   service:
     name: php{{ default_php_version }}-fpm
     enabled: yes

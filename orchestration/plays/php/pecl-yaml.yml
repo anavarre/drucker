@@ -1,11 +1,11 @@
 ---
 # See change record: https://www.drupal.org/node/2769555
-- name: Check if the PECL YAML extension is installed
+- name: "PECL YAML: Check if the extension is installed"
   stat:
     path: "{{ pecl_yaml_extension_path }}"
   register: pecl_yaml_extension_check
 
-- name: Copy latest PECL YAML release from mirror
+- name: "PECL YAML: Copy latest release from mirror"
   get_url:
     url: "{{ pecl_yaml_mirror_download_link }}"
     dest: "{{ download_dir }}"
@@ -16,14 +16,14 @@
   delay: 10
   when: pecl_yaml_extension_check.stat.exists == false
 
-- name: Extract PECL YAML files
+- name: "PECL YAML: Extract files"
   unarchive:
     src: "{{ pecl_yaml_archive }}"
     dest: "{{ download_dir }}"
     copy: no
   when: pecl_yaml_extension_check.stat.exists == false
 
-- name: Compile PECL YAML
+- name: "PECL YAML: Compile extension"
   command: "{{ item }} chdir={{ pecl_yaml_temp_path }}"
   with_items:
     - /usr/bin/phpize
@@ -32,40 +32,40 @@
     - /usr/bin/make install
   when: pecl_yaml_extension_check.stat.exists == false
 
-- name: Copy compiled PECL YAML extension
+- name: "PECL YAML: Copy compiled extension"
   command: cp {{ pecl_yaml_temp_path }}/modules/{{ pecl_yaml_extension_name }} {{ default_php_extensions }}
   when: pecl_yaml_extension_check.stat.exists == false
 
-- name: Make sure permissions are correct
+- name: "PECL YAML: Make sure permissions are correct"
   file:
     path: "{{ pecl_yaml_extension_path }}"
     mode: 0644
   when: pecl_yaml_extension_check.stat.exists == false
 
-- name: Delete PECL YAML temporary directory
+- name: "PECL YAML: Delete temporary directory"
   file:
     path: "{{ pecl_yaml_temp_path }}"
     state: absent
   when: pecl_yaml_extension_check.stat.exists == false
 
-- name: Check PECL YAML config in php.ini
+- name: "PECL YAML: Check config in php.ini"
   shell: grep -o "{{ pecl_yaml_extension_name }}" {{ default_php_ini }} || echo "absent"
   register: pecl_yaml_config
   changed_when: pecl_yaml_config.stdout == "absent"
 
-- name: Configure PECL YAML in php.ini
+- name: "PECL YAML: Configure extension in php.ini"
   lineinfile:
     dest: "{{ default_php_ini }}"
     line: "extension={{ pecl_yaml_extension_path }}"
   when: pecl_yaml_config.stdout == "absent"
 
-- name: Ensure Apache is restarted
+- name: "PECL YAML: Ensure Apache is restarted to load the extension"
   service:
     name: apache2
     enabled: yes
     state: restarted
 
-- name: Ensure PHP-FPM is restarted
+- name: "PECL YAML: Ensure PHP-FPM is restarted to load the extension"
   service:
     name: php{{ default_php_version }}-fpm
     enabled: yes

@@ -1,28 +1,28 @@
 ---
-- name: Check if apt.conf exists
+- name: "MIRROR: Check if apt.conf exists"
   stat:
     path: "{{ mirror_apt_conf_file }}"
   register: apt_conf_exists
 
-- name: Deploy apt.conf file
+- name: "MIRROR: Deploy apt.conf file"
   copy:
     src: "{{ mirror_source_file }}"
     dest: /etc/apt
     mode: 0644
   when: apt_conf_exists.stat.exists == false
 
-- name: Update apt.conf file with expected values
+- name: "MIRROR: Update apt.conf file with expected values"
   replace:
     dest: "{{ mirror_apt_conf_file }}"
     regexp: '^(.*)HOST:PORT(.*)$'
     replace: '\1{{ mirror_host }}:{{ mirror_port }}\2'
   when: apt_conf_exists.stat.exists == false
 
-- name: Check if the APT mirror hostname is configured
+- name: "MIRROR: Check if the APT mirror hostname is configured"
   shell: grep -o "{{ mirror_ip }}" {{ hosts_file }} || echo "absent"
   register: mirror_hostname
   changed_when: mirror_hostname.stdout == "absent"
 
-- name: Make sure the container can talk to the APT mirror proxy
+- name: "MIRROR: Make sure the container can talk to the APT mirror proxy"
   shell: echo "{{ mirror_ip }}    {{ mirror_host }}" >> {{ hosts_file }}
   when: mirror_hostname.stdout == "absent"

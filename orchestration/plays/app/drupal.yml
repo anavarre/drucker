@@ -1,16 +1,16 @@
 ---
-- name: "APP: Check if new site exists"
+- name: "DRUPAL: Check if new site exists"
   stat:
     path: "{{ drupal_root }}"
   register: new_site
   ignore_errors: True
 
-- name: "APP: Check if new database exists"
+- name: "DRUPAL: Check if new database exists"
   stat:
     path: "{{ db_data }}/{{ sitename }}"
   register: new_db
 
-- name: "APP: Create new site architecture"
+- name: "DRUPAL: Create new site architecture"
   file:
     path: "{{ drupal_root }}"
     state: directory
@@ -18,7 +18,7 @@
   become_user: "{{ user }}"
   when: new_site.stat.exists == false
 
-- name: "APP: Deploy default composer.json template"
+- name: "DRUPAL: Deploy default composer.json template"
   copy:
     src: "{{ composer_json_template_file }}"
     dest: "{{ drupal_composer_json }}"
@@ -27,14 +27,14 @@
   become_user: "{{ user }}"
   when: new_site.stat.exists == false
 
-- name: "APP: Pin Drupal version to specific Git tag"
+- name: "DRUPAL: Pin Drupal version to specific Git tag"
   replace:
     dest: "{{ drupal_composer_json }}"
     regexp: '^(.*)"drupal/core": "\^8.6"(.*)$'
     replace: '\1"drupal/core": "{{ git_tag }}"\2'
   when: new_site.stat.exists == false and git_tag is defined
 
-- name: "APP: Install vendor dependencies from composer.json file (this can take a while)"
+- name: "DRUPAL: Install vendor dependencies from composer.json file (this can take a while)"
   composer:
     command: install
     working_dir: "{{ drupal_root }}"
@@ -43,18 +43,18 @@
 
 - import_tasks: ../common/drupal-common.yml
 
-- name: "APP: Install Drupal"
+- name: "DRUPAL: Install Drupal"
   command: drush --root={{ drupal_root }} site-install standard install_configure_form.enable_update_status_module=NULL -qy --db-url=mysql://{{ db_creds }}:{{ db_creds }}@{{ db_ip }}:{{ db_port }}/{{ sitename }} --site-name={{ sitename }} --site-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }} --account-name={{ drupal_creds }} --account-pass={{ drupal_creds }} --account-mail={{ drupal_creds }}@{{ sitename }}.{{ tld }}
   become: yes
   become_user: "{{ user }}"
   when: new_alias.stat.exists == false
 
-- name: "APP: Check if phpunit.xml file exists"
+- name: "DRUPAL: Check if phpunit.xml file exists"
   stat:
     path: "{{ drupal_docroot }}/core/phpunit.xml"
   register: phpunit_check
 
-- name: "APP: Deploy phpunit.xml file"
+- name: "DRUPAL: Deploy phpunit.xml file"
   copy:
     src: "{{ phpunit_source_file }}"
     dest: "{{ drupal_docroot }}/core/"
@@ -63,20 +63,20 @@
   become_user: "{{ user }}"
   when: phpunit_check.stat.exists == false
 
-- name: "APP: Modify phpunit.xml file"
+- name: "DRUPAL: Modify phpunit.xml file"
   replace:
     dest: "{{ drupal_docroot }}/core/phpunit.xml"
     regexp: '^(.*)SITENAME(.*)$'
     replace: '\1{{ sitename }}\2'
   when: phpunit_check.stat.exists == false
 
-- name: "APP: Check if .gitignore exists"
+- name: "DRUPAL: Check if .gitignore exists"
   stat:
     path: "{{ drupal_root }}/.gitignore"
   register: gitignore_check
   ignore_errors: True
 
-- name: "APP: Create .gitignore file"
+- name: "DRUPAL: Create .gitignore file"
   copy:
     src: "{{ gitignore_source_file }}"
     dest: "{{ drupal_root }}"
@@ -85,7 +85,7 @@
   become_user: "{{ user }}"
   when: gitignore_check.stat.exists == false
 
-- name: "APP: Initialize Git repository"
+- name: "DRUPAL: Initialize Git repository"
   shell: git -C {{ drupal_root }} init
   args:
     warn: no
@@ -94,16 +94,26 @@
   become_user: "{{ user }}"
   when: gitignore_check.stat.exists == false
 
-- name: "APP: Add all new files under version control"
+- name: "DRUPAL: Add all new files under version control"
   shell: git -C {{ drupal_root }} add --all . && git -C {{ drupal_root }} commit -m "Initial commit"
   become: yes
   become_user: "{{ user }}"
   when: gitignore_check.stat.exists == false
 
-- name: "APP: Make sure files dir ownership is correct"
+- name: "DRUPAL: Make sure files dir ownership is correct"
   file:
     path: "{{ drupal_docroot }}/{{ default_site }}/files"
     owner: "{{ user }}"
     group: "{{ apache_user }}"
     recurse: yes
   when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "DRUPAL: Make sure files dir ownership is correct"
+  file:
+    path: "{{ drupal_docroot }}/{{ default_site }}/files"
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+    recurse: yes
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- import_tasks: ../common/app-registry.yml
