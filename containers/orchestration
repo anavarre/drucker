@@ -99,6 +99,8 @@ app_delete() {
       ${COMMANDS}/app-delete.yml --extra-vars "ansible_sudo_pass=${USER} app=delete sitename=${SITE}"
       echo -e "${GREEN}Remember to remove the ${SITE}.local entry from your local /etc/hosts file!${COLOR_ENDING}"
     fi
+  else
+    echo "This app doesn't exist."
   fi
 }
 
