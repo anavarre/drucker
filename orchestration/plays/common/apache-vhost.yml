@@ -34,3 +34,19 @@
   register: test
   notify: Reload Apache
   when: new_vhost_check.stat.exists == false
+
+# Docker provides the container with a custom /etc/hosts file so we have to hack
+# our way through modifying it.
+- name: "SYSTEM: Copy hosts file"
+  command: cp {{ hosts_file }} {{ tmp_hosts_file }}
+  when: new_vhost_check.stat.exists == false
+
+- name: "SYSTEM: Add new entry"
+  lineinfile:
+    dest: "{{ tmp_hosts_file }}"
+    line: "{{  web_ip }}\t{{ sitename }}.{{ tld }}"
+  when: new_vhost_check.stat.exists == false
+
+- name: "SYSTEM: Replace hosts file"
+  command: cp {{ tmp_hosts_file }} {{ hosts_file }}
+  when: new_vhost_check.stat.exists == false

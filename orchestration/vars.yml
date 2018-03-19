@@ -4,6 +4,7 @@ codename: stretch
 tld: local
 home: /home/{{ user }}
 hosts_file: /etc/hosts
+tmp_hosts_file: /tmp/hosts
 user_programs_path: /usr/local/bin
 sources_list: /etc/apt/sources.list
 sources_list_d: "{{ sources_list }}.d"

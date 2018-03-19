@@ -46,6 +46,32 @@
     - "{{ sitename }}-error.log"
   when: apache_conf.stat.exists == true
 
+- name: "DELETE: Delete Apache log files"
+  file:
+    path: "{{ log_dir }}/{{ item }}"
+    state: absent
+  with_items:
+    - "{{ sitename }}-access.log"
+    - "{{ sitename }}-error.log"
+  when: apache_conf.stat.exists == true
+
+# Docker provides the container with a custom /etc/hosts file so we have to hack
+# our way through modifying it.
+- name: "DELETE: Copy hosts file"
+  command: cp {{ hosts_file }} {{ tmp_hosts_file }}
+  when: apache_conf.stat.exists == true
+
+- name: "DELETE: Remove hosts entry"
+  lineinfile:
+    dest: "{{ tmp_hosts_file }}"
+    line: "{{  web_ip }}\t{{ sitename }}.{{ tld }}"
+    state: absent
+  when: apache_conf.stat.exists == true
+
+- name: "DELETE: Replace hosts file"
+  command: cp {{ tmp_hosts_file }} {{ hosts_file }}
+  when: apache_conf.stat.exists == true
+
 - name: "DELETE: Check if Drush alias exist"
   stat:
     path: "{{ drush_alias_path }}/{{ sitename }}.{{ drush_alias_extension }}"
