@@ -64,7 +64,7 @@ app_blt() {
   app_delete
 
   echo -e "${BLUE}Installing BLT into new ${SITE} docroot...${COLOR_ENDING}"
-  ${COMMANDS}/app-blt.yml --extra-vars "ansible_sudo_pass=${USER} app=blt sitename=${SITE}"
+  ${COMMANDS}/app-blt.yml --extra-vars "ansible_sudo_pass=${USER} app=BLT sitename=${SITE}"
   hosts_file
 }
 
@@ -72,7 +72,7 @@ app_lightning() {
   app_delete
 
   echo -e "${BLUE}Installing Lightning into new ${SITE} docroot...${COLOR_ENDING}"
-  ${COMMANDS}/app-lightning.yml --extra-vars "ansible_sudo_pass=${USER} app=lightning sitename=${SITE}"
+  ${COMMANDS}/app-lightning.yml --extra-vars "ansible_sudo_pass=${USER} app=Lightning sitename=${SITE}"
   hosts_file
 }
 
@@ -83,7 +83,7 @@ app_reservoir() {
   app_delete
 
   echo -e "${BLUE}Installing Reservoir into new ${SITE} docroot...${COLOR_ENDING}"
-  ${COMMANDS}/app-reservoir.yml --extra-vars "ansible_sudo_pass=${USER} app=reservoir sitename=${SITE}"
+  ${COMMANDS}/app-reservoir.yml --extra-vars "ansible_sudo_pass=${USER} app=Reservoir sitename=${SITE}"
   hosts_file
 }
 
