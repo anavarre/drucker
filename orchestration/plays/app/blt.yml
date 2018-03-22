@@ -91,5 +91,11 @@
     replace: '\1{{ sitename }}.{{ tld }}\2'
   when: new_site.stat.exists == false
 
+- name: "BLT: Set BLT URI"
+  replace:
+    dest: "{{ webroot }}/{{ sitename }}/blt/blt.yml"
+    regexp: '^(.*)local.\${project.machine_name}.com(.*)$'
+    replace: '\1${project.machine_name}.local\2'
+
 - import_tasks: ../common/apache-vhost.yml
 - import_tasks: ../common/app-registry.yml
