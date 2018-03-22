@@ -57,3 +57,12 @@
     - "{{ phantomjs_temp_path }}"
     - "{{ phantomjs_archive_path }}"
   when: phantomjs.stat.exists == false or phantomjs_update.stdout != phantomjs_stable_version
+
+# At some point we should think about transitioning over to Chromium's web
+# driver. PhantomJS would thus no longer be needed.
+- name: "SYSTEM: Install Chromium's web driver"
+  package:
+    name: chromium-driver
+    state: installed
+    force: yes
+  when: phantomjs.stat.exists == false
