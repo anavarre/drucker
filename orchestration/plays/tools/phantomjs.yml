@@ -65,4 +65,3 @@
     name: chromium-driver
     state: installed
     force: yes
-  when: phantomjs.stat.exists == false
