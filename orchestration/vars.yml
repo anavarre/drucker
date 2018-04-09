@@ -405,7 +405,7 @@ solr_mirror_download_link: http://{{ mirror_host }}/{{ solr_mirror_archive_file 
 solr_archive_file: "{{ solr_unarchived_directory }}.zip"
 solr_archive_path: "{{ download_dir }}/{{ solr_archive_file }}"
 solr_mirror_archive_path: "{{ mirror_archives_dir }}/{{ solr_archive_file }}"
-solr_download_link: https://www-us.apache.org/dist/lucene/solr/{{ solr_version }}/{{ solr_archive_file }}
+solr_download_link: http://archive.apache.org/dist/lucene/solr/{{ solr_version }}/{{ solr_archive_file }}
 solr_port: 8983
 solr_core: "{{ user }}"
 solr_configuration_path: /opt/solr/server/solr/{{ solr_core }}/conf
