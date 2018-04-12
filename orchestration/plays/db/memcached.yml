@@ -2,7 +2,7 @@
 - name: "MEMCACHED: Install software"
   package:
     name: "{{ item }}"
-    state: installed
+    state: present
   with_items:
     - memcached
 

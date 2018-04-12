@@ -8,7 +8,7 @@
 - name: "APT-CACHER-NG: Install APT cache mirror"
   package:
     name: apt-cacher-ng
-    state: installed
+    state: present
     force: yes
   when: mirror_cache_dir_check.stat.exists == false
 

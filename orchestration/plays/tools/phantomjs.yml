@@ -63,5 +63,5 @@
 - name: "SYSTEM: Install Chromium's web driver"
   package:
     name: chromium-driver
-    state: installed
+    state: present
     force: yes

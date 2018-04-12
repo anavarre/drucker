@@ -7,7 +7,7 @@
 - name: "PHP: Install PHP {{ default_php_version }} core packages"
   package:
     name: "{{ item }}"
-    state: installed
+    state: present
   with_items:
     - php{{ default_php_version }}-fpm
     - php{{ default_php_version }}-cli
@@ -29,7 +29,7 @@
 - name: "PHP: Install PHP {{ default_php_version }} extensions"
   package:
     name: "{{ item }}"
-    state: installed
+    state: present
   with_items:
     - php-imagick
     - php-memcached

@@ -12,7 +12,7 @@
 - name: "MYSQL: Install server and utilities"
   package:
     name: "{{ item }}"
-    state: installed
+    state: present
     force: yes
   with_items:
     - mariadb-server
