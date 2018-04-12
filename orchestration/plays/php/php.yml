@@ -8,6 +8,7 @@
   apt_key:
     url: "{{ sury_gpg }}"
     state: present
+    validate_certs: no
   when: phpfpm_is_installed.stat.exists == false
 
 - name: "PHP: Add deb.sury.org repository"

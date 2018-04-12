@@ -36,6 +36,8 @@
   # See https://github.com/ansible/ansible/issues/22673
   - aptitude
   - ack-grep
+  # Can be removed in Debian 10.
+  # See https://packages.debian.org/buster/apt-transport-https
   - apt-transport-https
   - curl
   # Provides dig command.
