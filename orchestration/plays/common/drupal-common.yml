@@ -59,6 +59,46 @@
   become: yes
   when: new_site.stat.exists == false or new_db.stat.exists == false
 
+- name: "DRUPAL: Create phpunit.xml file"
+  command: cp {{ phpunit_xml }}.dist {{ phpunit_xml }}
+  become: yes
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "DRUPAL: Set PHPUnit SimpleTest base URL"
+  replace:
+    dest: "{{ phpunit_xml }}"
+    regexp: '^(.*)"SIMPLETEST_BASE_URL" value=""(.*)$'
+    replace: '\1"SIMPLETEST_BASE_URL" value="http://{{ sitename }}.local"\2'
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "DRUPAL: Set PHPUnit SimpleTest DB value"
+  replace:
+    dest: "{{ phpunit_xml }}"
+    regexp: '^(.*)"SIMPLETEST_DB" value=""(.*)$'
+    replace: '\1"SIMPLETEST_DB" value="mysql://{{ db_creds }}:{{ db_creds }}@localhost/{{ sitename }}"\2'
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "DRUPAL: Set PHPUnit SimpleTest DB value"
+  replace:
+    dest: "{{ phpunit_xml }}"
+    regexp: '^(.*)"BROWSERTEST_OUTPUT_DIRECTORY" value=""(.*)$'
+    replace: '\1"BROWSERTEST_OUTPUT_DIRECTORY" value="/var/www/html/{{ sitename }}/docroot/sites/simpletest"\2'
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "DRUPAL: Prepare phpunit.xml file for HTML result printer"
+  replace:
+    dest: "{{ phpunit_xml }}"
+    regexp: '^(.*)beStrictAboutChangesToGlobalState="true">(.*)$'
+    replace: '\1beStrictAboutChangesToGlobalState="true"\2'
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
+- name: "DRUPAL: Configure phpunit.xml for HTML result printer (CLI only)"
+  lineinfile:
+    dest: "{{ phpunit_xml }}"
+    line: "\t printerClass=\"\\Drupal\\Tests\\Listeners\\HtmlOutputPrinter\">"
+    insertafter: '^(.*)beStrictAboutChangesToGlobalState(.*)$'
+  when: new_site.stat.exists == false or new_db.stat.exists == false
+
 - name: "DRUPAL: Ensure configuration files have correct ownership"
   file:
     path: "{{ item }}"

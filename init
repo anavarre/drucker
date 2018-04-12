@@ -42,7 +42,7 @@ drucker_argument() {
   else
     case "$COMMAND" in
       containers:health)
-      run_healthcheck
+        run_healthcheck
       ;;
       containers:start)
       if [[ "${COMMAND}" == "containers:start" ]]; then

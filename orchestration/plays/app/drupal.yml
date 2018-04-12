@@ -49,27 +49,6 @@
   become_user: "{{ user }}"
   when: new_alias.stat.exists == false
 
-- name: "DRUPAL: Check if phpunit.xml file exists"
-  stat:
-    path: "{{ drupal_docroot }}/core/phpunit.xml"
-  register: phpunit_check
-
-- name: "DRUPAL: Deploy phpunit.xml file"
-  copy:
-    src: "{{ phpunit_source_file }}"
-    dest: "{{ drupal_docroot }}/core/"
-    mode: 0644
-  become: yes
-  become_user: "{{ user }}"
-  when: phpunit_check.stat.exists == false
-
-- name: "DRUPAL: Modify phpunit.xml file"
-  replace:
-    dest: "{{ drupal_docroot }}/core/phpunit.xml"
-    regexp: '^(.*)SITENAME(.*)$'
-    replace: '\1{{ sitename }}\2'
-  when: phpunit_check.stat.exists == false
-
 - name: "DRUPAL: Check if .gitignore exists"
   stat:
     path: "{{ drupal_root }}/.gitignore"
