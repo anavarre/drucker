@@ -25,6 +25,15 @@
   changed_when: mariadb_innodb_setting.stdout == "missing"
   failed_when: mariadb_innodb_setting.stdout == "missing"
 
+- set_fact:
+    db_dir_expected_ownership: "mysql:mysql"
+
+- name: "TEST: The database directory should have correct ownership"
+  shell: stat -c %U:%G {{ db_data }}
+  register: db_dir_ownership
+  changed_when: db_dir_ownership.stdout != db_dir_expected_ownership
+  failed_when: db_dir_ownership.stdout != db_dir_expected_ownership
+
 - name: "TEST: Check if MariaDB backup cron job exists"
   shell: crontab -l | grep -o "{{ db_backup_path }}" || echo "missing"
   register: mariadb_backup_cron
