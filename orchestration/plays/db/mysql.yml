@@ -6,7 +6,8 @@
   ignore_errors: True
 
 - name: "MYSQL: Clean up data directory"
-  shell: rm -Rf {{ db_data }}/* warn=False
+  shell: rm -Rf {{ db_data }}/*
+    warn: False
   when: mariadb.stat.exists == false
 
 - name: "MYSQL: Install server and utilities"
@@ -39,6 +40,14 @@
     regexp: '^(.*)127.0.0.1(.*)$'
     replace: '\1 0.0.0.0\2'
   when: db_config_remote_access.stdout == "denied"
+
+- name: "MYSQL: Set correct permissions and ownership"
+  file:
+    path: "{{ db_data }}"
+    owner: mysql
+    group: mysql
+    mode: 0755
+  when: mariadb.stat.exists == false
 
 - name: "MYSQL: Start server"
   service:
