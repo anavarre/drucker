@@ -183,7 +183,7 @@ pecl_yaml_archive: "{{ pecl_yaml_temp_path }}.tar.gz"
 pecl_yaml_mirror_archive_path: "{{ mirror_archives_dir }}/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}.tar.gz"
 
 # Tideways
-tideways_stable_release: 4.1.5
+tideways_stable_release: 4.1.6
 tideways_github_project_name: php-xhprof-extension
 tideways_download_link: https://github.com/tideways/{{ tideways_github_project_name }}/archive/v{{ tideways_stable_release }}.tar.gz
 tideways_archive_file: "{{ tideways_github_project_name }}-{{ tideways_stable_release }}.tar.gz"
@@ -259,7 +259,7 @@ db_backup_path: "{{ user_programs_path }}/db-backup.sh"
 
 # phpMyAdmin
 phpmyadmin_version_file: "{{ mirror_archives_dir }}/phpmyadmin-version"
-phpmyadmin_stable_release: 4.8.0
+phpmyadmin_stable_release: 4.8.0.1
 phpmyadmin_archive_filename: phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
 phpmyadmin_download_link: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_stable_release }}/{{ phpmyadmin_archive_filename }}
 phpmyadmin_mirror_download_link: http://{{ mirror_host }}/{{ phpmyadmin_archive_filename }}

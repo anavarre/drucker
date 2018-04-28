@@ -69,7 +69,7 @@ _drucker_ ships with the following software stack:
 | MariaDB             | 10.1.26 or higher     | APT               |
 | memcached           | 3.0.4                 | APT, via [ppa:ondrej/php](https://deb.sury.org/)       |
 | mcstat              | 1.1.0                 | [webbj74/mcstat](https://github.com/webbj74/mcstat) (Github)      |
-| phpMyAdmin          | 4.8.0                 | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
+| phpMyAdmin          | 4.8.0.1               | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
 | adminer             | 4.6.2                 | [vrana/adminer](https://github.com/vrana/adminer) (Github)      |
 | PHP-FPM             | 7.1 or 7.2            | APT, via [ppa:ondrej/php](https://deb.sury.org/)      |
 | APCu                | 5.1.8 or higher       | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
@@ -81,7 +81,7 @@ _drucker_ ships with the following software stack:
 | PECL YAML           | 2.0.0                 | [php/pecl-file_formats-yaml](https://github.com/php/pecl-file_formats-yaml) (Github)              |
 | LibYAML             | 0.1.7                 | [PyYAML](http://pyyaml.org/) (official site)     |
 | Xdebug              | 2.6.0                 | [Xdebug](https://xdebug.org/) (official site)     |
-| Tideways Profiler   | 4.1.5                 | [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension)  (Github)  |
+| Tideways Profiler   | 4.1.6                 | [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension)  (Github)  |
 | phantomjs           | 2.1.1                 | [ariya/phantomjs](https://bitbucket.org/ariya/phantomjs/) (Bitbucket)     |
 | Drupal              | 8.6.x                 | [Drupal](https://www.drupal.org/project/drupal) (official site)     |
 | Drush               | ^9.0                  | [Drush](https://packagist.org/packages/drush/drush) (Packagist)      |
