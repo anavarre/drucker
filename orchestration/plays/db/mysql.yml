@@ -41,13 +41,14 @@
     replace: '\1 0.0.0.0\2'
   when: db_config_remote_access.stdout == "denied"
 
+# Permissions can randomly be messed up so we're fixing them every time we get
+# the chance.
 - name: "MYSQL: Set correct permissions and ownership"
   file:
     path: "{{ db_data }}"
     owner: mysql
     group: mysql
     mode: 0755
-  when: mariadb.stat.exists == false
 
 - name: "MYSQL: Start server"
   service:
