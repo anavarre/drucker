@@ -19,54 +19,6 @@
   become_user: "{{ user }}"
   when: settings_local.stat.exists == false
 
-# See https://www.drupal.org/project/drupal/issues/2687711
-- name: "DEV: Check if profiles directory exists"
-  stat:
-    path: "{{ drupal_docroot }}/profiles"
-  register: profiles_dir
-  ignore_errors: True
-
-- name: "DEV: Create profiles directory"
-  file:
-    path: "{{ drupal_docroot }}/profiles"
-    state: directory
-    mode: 02755
-    owner: "{{ user }}"
-    group: "{{ apache_user }}"
-  when: profiles_dir.stat.exists == false
-
-# See https://www.drupal.org/project/drupal/issues/2687711
-- name: "DEV: Check if the modules directory exists"
-  stat:
-    path: "{{ drupal_docroot }}/modules"
-  register: modules_dir
-  ignore_errors: True
-
-- name: "DEV: Create modules directory"
-  file:
-    path: "{{ drupal_docroot }}/modules"
-    state: directory
-    mode: 02755
-    owner: "{{ user }}"
-    group: "{{ apache_user }}"
-  when: modules_dir.stat.exists == false
-
-# See https://www.drupal.org/project/drupal/issues/2687711
-- name: "DEV: Check if the themes directory exists"
-  stat:
-    path: "{{ drupal_docroot }}/themes"
-  register: themes_dir
-  ignore_errors: True
-
-- name: "DEV: Create themes directory"
-  file:
-    path: "{{ drupal_docroot }}/themes"
-    state: directory
-    mode: 02755
-    owner: "{{ user }}"
-    group: "{{ apache_user }}"
-  when: themes_dir.stat.exists == false
-
 - name: "DEV: Check if cache bins have been disabled"
   shell: grep -o "\$settings\['cache'\]\['bins'\]" {{ deployed_settings_local_php }} || echo "absent"
   register: cache_bins

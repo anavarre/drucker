@@ -7,7 +7,8 @@
 
 - name: "MYSQL: Clean up data directory"
   shell: rm -Rf {{ db_data }}/*
-    warn: False
+  args:
+    warn: no
   when: mariadb.stat.exists == false
 
 - name: "MYSQL: Install server and utilities"
