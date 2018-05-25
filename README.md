@@ -72,7 +72,7 @@ _drucker_ ships with the following software stack:
 | phpMyAdmin          | 4.8.0.1               | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
 | adminer             | 4.6.2                 | [vrana/adminer](https://github.com/vrana/adminer) (Github)      |
 | PHP-FPM             | 7.1 or 7.2            | APT, via [ppa:ondrej/php](https://deb.sury.org/)      |
-| APCu                | 5.1.8 or higher       | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
+| APCu                | 5.1.11 or higher      | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
 | Coder               | 8.2.11                | [drupal/coder](https://packagist.org/packages/drupal/coder) (Packagist)      |
 | Code Sniffer        | 2.6.1                 | [squizlabs/PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) (Github)              |
 | PHP-CS-Fixer        | 2.10.5                | [FriendsOfPHP/PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (Github)              |
