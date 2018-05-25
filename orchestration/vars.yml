@@ -349,7 +349,7 @@ drush_launcher: "{{ user_programs_path }}/drush"
 
 # Drush
 global_drush: "{{ user_programs_path }}/global-drush"
-global_drush_stable_release: 9.2.3
+global_drush_stable_release: 9.3.0
 drush_yml_source_file: "{{ source_file_dir }}/drush.yml"
 drush_alias_template_file: drush.{{ drush_alias_extension }}
 drush_alias_source_file: "{{ source_file_dir }}/{{ drush_alias_template_file }}"
