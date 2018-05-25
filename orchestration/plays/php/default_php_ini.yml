@@ -48,6 +48,13 @@
     line: "opcache.max_accelerated_files={{ opcache_max_accelerated_files }}"
   when: default_phpfpm.stat.exists == false
 
+- name: "PHP: Turn off Zend assertions"
+  replace:
+    dest: "{{ default_php_ini }}"
+    regexp: '^(.*)zend.assertions = 1(.*)$'
+    replace: '\1zend.assertions = -1\2'
+  when: default_phpfpm.stat.exists == false
+
 - name: "PHP: Add default timezone"
   lineinfile:
     dest: "{{ default_php_ini_cli }}"
