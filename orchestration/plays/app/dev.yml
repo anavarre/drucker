@@ -111,5 +111,11 @@
     dest: "{{ default_php_ini }}"
     regexp: '^(.*)zend.assertions = -1(.*)$'
     replace: '\1zend.assertions = 1\2'
-  notify: Restart Apache
   when: zend_assertions_enable.stdout != "on"
+
+- name: "DEV: Display all errors"
+  replace:
+    dest: "{{ default_php_ini }}"
+    regexp: '^(.*)display_errors = Off(.*)$'
+    replace: '\1display_errors = On\2'
+  notify: Restart Apache
