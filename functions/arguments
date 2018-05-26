@@ -34,6 +34,7 @@ phpfpm_check() {
 mysql_check() {
   if [[ -z $(docker exec -it ${CONTAINER} pgrep mysqld | head -1) ]]; then
     echo -e "${RED}!!! MySQL is down.${COLOR_ENDING} Starting..."
+    docker exec -t ${CONTAINER} chown ${MYSQL_DIR_OWNERSHIP}:${MYSQL_DIR_OWNERSHIP} ${CONTAINER_DB_PATH} > /dev/null 2>&1
     docker exec -t ${CONTAINER} mysqld& > /dev/null 2>&1
     sleep 1
   else

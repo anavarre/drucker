@@ -101,3 +101,6 @@ export PREVIOUS_PHP="7.1"
 export GIT_EXECUTABLE="/usr/bin/git"
 export DRUPAL_REPO="/var/www/repo/drupal"
 export DRUPAL_VERSION="8.5.x"
+
+# Misc
+export MYSQL_DIR_OWNERSHIP="mysql"
