@@ -59,6 +59,8 @@ start_containers() {
       start_services
     done
   fi
+
+  run_healthcheck
   exit 0
 }
 
