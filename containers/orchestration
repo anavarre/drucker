@@ -29,13 +29,33 @@ hosts_file() {
 # a comma-separated list of sites. See functions/arguments file for details.
 
 app_dev() {
-  echo -e "${BLUE}Configuring ${SITE} docroot for development...${COLOR_ENDING}"
-  ${COMMANDS}/app-dev.yml --extra-vars "ansible_sudo_pass=${USER} app=dev sitename=${SITE}"
+
+  IDENTIFY_DRUPAL_TYPE=$(grep "${SITE}" "${CONTAINER_HTML_PATH}/.app-registry" | awk '{print $NF}' | tr --d '()')
+
+  if [[ ${IDENTIFY_DRUPAL_TYPE} == 'BLT' ]]; then
+    echo 'The app:dev command is not currently compatible with BLT. Exiting...'
+    exit 0
+  elif [[ ${IDENTIFY_DRUPAL_TYPE} == '' ]]; then
+    echo 'Could not identify the application type. Exiting...'
+  else
+    echo -e "${BLUE}Configuring ${SITE} docroot for development...${COLOR_ENDING}"
+    ${COMMANDS}/app-dev.yml --extra-vars "ansible_sudo_pass=${USER} app=dev sitename=${SITE}"
+  fi
 }
 
 app_prod() {
-  echo -e "${BLUE}Configuring ${SITE} docroot for production...${COLOR_ENDING}"
-  ${COMMANDS}/app-prod.yml --extra-vars "ansible_sudo_pass=${USER} app=prod sitename=${SITE}"
+
+  IDENTIFY_DRUPAL_TYPE=$(grep "${SITE}" "${CONTAINER_HTML_PATH}/.app-registry" | awk '{print $NF}' | tr --d '()')
+
+  if [[ ${IDENTIFY_DRUPAL_TYPE} == 'BLT' ]]; then
+    echo 'The app:prod command is not currently compatible with BLT. Exiting...'
+    exit 0
+  elif [[ ${IDENTIFY_DRUPAL_TYPE} == '' ]]; then
+    echo 'Could not identify the application type. Exiting...'
+  else
+    echo -e "${BLUE}Configuring ${SITE} docroot for production...${COLOR_ENDING}"
+    ${COMMANDS}/app-prod.yml --extra-vars "ansible_sudo_pass=${USER} app=prod sitename=${SITE}"  fi
+  fi
 }
 
 app_import() {
