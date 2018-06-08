@@ -136,3 +136,5 @@
     insertafter: EOF
     marker: "# {mark} MANAGED REMOTE MYSQL CONNECTION BLOCK"
   when: default_settings.stat.exists == true
+
+- import_tasks: ../common/app-registry.yml

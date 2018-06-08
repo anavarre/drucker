@@ -66,7 +66,16 @@ app_import() {
   app_delete
 
   echo -e "${BLUE}Importing app into new docroot ${SITE}...${COLOR_ENDING}"
-  ${COMMANDS}/app-import.yml --extra-vars "ansible_sudo_pass=${USER} app=import sitename=${SITE}"
+
+  if [[ -d "${CONTAINER_IMPORT_PATH}/${SITE}/blt" ]]; then
+    APP_DETECTED='BLT'
+  elif [[ -f "${CONTAINER_IMPORT_PATH}/${SITE}/vendor/bin/lightning" ]]; then
+    APP_DETECTED='Lightning'
+  else
+    APP_DETECTED='Drupal'
+  fi
+
+  ${COMMANDS}/app-import.yml --extra-vars "ansible_sudo_pass=${USER} app=${APP_DETECTED} sitename=${SITE}"
   hosts_file
 }
 

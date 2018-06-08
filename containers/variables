@@ -104,3 +104,4 @@ export DRUPAL_VERSION="8.5.x"
 
 # Misc
 export MYSQL_DIR_OWNERSHIP="mysql"
+export CONTAINER_IMPORT_PATH="/var/www/html/import"
