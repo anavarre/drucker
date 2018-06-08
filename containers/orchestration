@@ -8,7 +8,11 @@ export TESTS="${PLAYBOOKS}/_tests"
 export EXTRA_VARS="--extra-vars ansible_sudo_pass=${USER}"
 
 user_confirmation() {
-  read -p "The ${SITE} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
+  if [[ "${COMMAND}" == "app:delete" ]]; then
+    read -p "You're about to delete the ${SITE} app. Are you sure? [Y/n] "
+  else
+    read -p "The ${SITE} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
+  fi
 }
 
 cancellation() {
