@@ -69,7 +69,7 @@ _drucker_ ships with the following software stack:
 | MariaDB             | 10.1.26 or higher     | APT               |
 | memcached           | 3.0.4                 | APT, via [ppa:ondrej/php](https://deb.sury.org/)       |
 | mcstat              | 1.1.0                 | [webbj74/mcstat](https://github.com/webbj74/mcstat) (Github)      |
-| phpMyAdmin          | 4.8.1                 | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
+| phpMyAdmin          | 4.8.2                 | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
 | adminer             | 4.6.2                 | [vrana/adminer](https://github.com/vrana/adminer) (Github)      |
 | PHP-FPM             | 7.1 or 7.2            | APT, via [ppa:ondrej/php](https://deb.sury.org/)      |
 | APCu                | 5.1.11 or higher      | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
