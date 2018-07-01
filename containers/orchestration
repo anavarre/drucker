@@ -58,7 +58,7 @@ app_prod() {
     echo 'Could not identify the application type. Exiting...'
   else
     echo -e "${BLUE}Configuring ${SITE} docroot for production...${COLOR_ENDING}"
-    ${COMMANDS}/app-prod.yml --extra-vars "ansible_sudo_pass=${USER} app=prod sitename=${SITE}"  fi
+    ${COMMANDS}/app-prod.yml --extra-vars "ansible_sudo_pass=${USER} app=prod sitename=${SITE}"
   fi
 }
 
