@@ -1,20 +1,25 @@
 #!/usr/bin/env bash
 
-check_software_requirements() {
-  if [[ -z $(docker --version) ]]; then
-    echo -e "${RED}You need to install Docker before running this script.${COLOR_ENDING}"
+check_docker_install() {
+  if [[ -z $(command -v docker) ]]; then
+    echo -e "${RED}You need to install Docker before running drucker.${COLOR_ENDING}"
     exit 0
   fi
+}
 
-  if [[ -z $(ansible --version) ]]; then
-    echo -e "${RED}You need to install Ansible before running this script.${COLOR_ENDING}"
+check_ansible_version() {
+  if [[ -z $(command -v ansible) ]]; then
+    echo -e "${RED}You need to install Ansible before running drucker.${COLOR_ENDING}"
     exit 0
-  fi
-
-  if [[ "$(ansible --version | head -n1 | awk '{print $2}' | cut -c -3)" < "2.4" ]]; then
+  elif [[ "$(ansible --version | head -n1 | awk '{print $2}' | cut -c -3)" < "2.4" ]]; then
     echo -e "${RED}Ansible 2.4 or later is required to run drucker.${COLOR_ENDING}"
     exit 0
   fi
+}
+
+check_software_requirements() {
+  check_docker_install
+  check_ansible_version
 }
 
 check_hosts_file() {
