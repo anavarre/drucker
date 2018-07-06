@@ -7,9 +7,7 @@ source "${DIR}/init"
 load_function_files
 load_container_files
 
-check_software_requirements
-check_hosts_file
-check_ssh_config_file
+$(command -v python3) containers/requirements.py
 
 source "${DIR}/config"
 
