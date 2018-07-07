@@ -7,7 +7,7 @@ source "${DIR}/init"
 load_function_files
 load_container_files
 
-$(command -v python3) containers/requirements.py
+$(command -v python3) app/requirements.py
 
 source "${DIR}/config"
 
@@ -22,9 +22,7 @@ if [[ $3 = *.* ]]; then
 fi
 
 # Custom user configuration.
-set_local_ssh_path
-set_local_html_path
-set_local_db_path
+$(command -v python3) app/local_setup.py
 
 # Are we running drucker with a CLI argument?
 drucker_argument

@@ -3,7 +3,7 @@
 import sys
 import shutil
 import subprocess
-import variables
+import variables as v
 
 def check_minimum_python_version():
     """A recent version of Python is required"""
@@ -14,7 +14,7 @@ def check_minimum_python_version():
 def check_required_executables():
     """Both Docker and Ansible need to be installed"""
 
-    for executable in variables.executables:
+    for executable in v.executables:
         if not shutil.which(executable):
             print("%s is required to run this application." % (executable).title())
             exit()
@@ -33,14 +33,14 @@ def check_minimum_ansible_version():
 def check_hosts_file():
     """The local hosts file must be correctly configured"""
 
-    hosts_file_ip_addresses = [variables.reverse_proxy_ip,
-                               variables.search_ip,
-                               variables.mirror_ip]
+    hosts_file_ip_addresses = [v.reverse_proxy_ip,
+                               v.search_ip,
+                               v.mirror_ip]
 
     for hosts_file_ip_address in hosts_file_ip_addresses:
-        if hosts_file_ip_address not in open(variables.hosts).read():
+        if hosts_file_ip_address not in open(v.hosts).read():
             print("A correctly configured local %s file\
- is required to run this application." % (variables.hosts))
+ is required to run this application." % (v.hosts))
 
             hosts_file_suggestion = """
 You should add the below entries:
@@ -48,10 +48,10 @@ You should add the below entries:
 %s    %s
 %s   search.local
 %s   mirror.local
-""" % (variables.reverse_proxy_ip,
-       variables.domains,
-       variables.search_ip,
-       variables.mirror_ip)
+""" % (v.reverse_proxy_ip,
+       v.domains,
+       v.search_ip,
+       v.mirror_ip)
 
             print(hosts_file_suggestion)
             exit()
@@ -59,17 +59,17 @@ You should add the below entries:
 def check_ssh_config_file():
     """The SSH config file must be correctly configured"""
 
-    ssh_config_ip_addresses = [variables.base_container_ip,
-                               variables.reverse_proxy_ip,
-                               variables.web_ip,
-                               variables.db_ip,
-                               variables.search_ip,
-                               variables.mirror_ip]
+    ssh_config_ip_addresses = [v.base_container_ip,
+                               v.reverse_proxy_ip,
+                               v.web_ip,
+                               v.db_ip,
+                               v.search_ip,
+                               v.mirror_ip]
 
     for ssh_config_ip_address in ssh_config_ip_addresses:
-        if ssh_config_ip_address not in open(variables.ssh_config).read():
+        if ssh_config_ip_address not in open(v.ssh_config).read():
             print("A correctly configured %s file is required\
- to run this application." % (variables.ssh_config))
+ to run this application." % (v.ssh_config))
 
             ssh_config_suggestion = """
 You should add the below configuration:
@@ -78,12 +78,12 @@ Host %s %s %s %s %s %s
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
   LogLevel=error
-""" % (variables.base_container_ip,
-       variables.reverse_proxy_ip,
-       variables.web_ip,
-       variables.db_ip,
-       variables.search_ip,
-       variables.mirror_ip)
+""" % (v.base_container_ip,
+       v.reverse_proxy_ip,
+       v.web_ip,
+       v.db_ip,
+       v.search_ip,
+       v.mirror_ip)
 
             print(ssh_config_suggestion)
             exit()

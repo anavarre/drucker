@@ -2,7 +2,7 @@
 
 load_function_files() {
   FUNCTION_DIR="functions"
-  FUNCTION_FILES="local_setup containers_management helpers arguments"
+  FUNCTION_FILES="containers_management helpers arguments"
 
   for FUNCTION_FILE in ${FUNCTION_FILES} ; do
     source "${DIR}/${FUNCTION_DIR}/${FUNCTION_FILE}"
