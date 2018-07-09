@@ -17,7 +17,8 @@ RUN apt-get install -y \
     ssh \
     python-simplejson \
     unzip \
-    sudo
+    sudo \
+    vim
 
 # Create a drucker sudoer.
 RUN adduser -q --disabled-password --gecos '' "$USER" \

@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
 
-export TMP_KEY="/tmp/authorized_keys"
-export AUTH_KEY="/home/${USER}/.ssh/authorized_keys"
-export CHOWN_SSH="chown -R ${USER}:${USER} /home/${USER}/.ssh"
+# export TMP_KEY="/tmp/authorized_keys"
+# export AUTH_KEY="/home/${USER}/.ssh/authorized_keys"
+# export CHOWN_SSH="chown -R ${USER}:${USER} /home/${USER}/.ssh"
 
-configure_base_container_ssh_access() {
-  cat "${PUBKEY}" > "${TMP_KEY}"
+# configure_base_container_ssh_access() {
+#   cat "${PUBKEY}" > "${TMP_KEY}"
 
-  docker cp "${TMP_KEY}" "${BASE_CONTAINER}":"${AUTH_KEY}"
-  docker exec -it "${BASE_CONTAINER}" ${CHOWN_SSH}
+#   docker cp "${TMP_KEY}" "${BASE_CONTAINER}":"${AUTH_KEY}"
+#   docker exec -it "${BASE_CONTAINER}" ${CHOWN_SSH}
 
-  rm "${TMP_KEY}"
-}
+#   rm "${TMP_KEY}"
+# }
+
+$(command -v python3) ${DIR}/app/ssh.py
 
 configure_mirror_ssh_access() {
   cat "${PUBKEY}" > "${TMP_KEY}"

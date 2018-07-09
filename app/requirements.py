@@ -1,34 +1,34 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """All requirements must be met before running orchestration"""
 import sys
 import shutil
-import subprocess
+import subprocess as s
+import colorful as c
 import variables as v
 
 def check_minimum_python_version():
     """A recent version of Python is required"""
     if sys.version_info[0] < 3:
-        print("Python 3 or higher is required to run this application.")
-        exit()
+        print(c.red("Python 3 or higher is required to run this application."))
+        sys.exit()
 
 def check_required_executables():
     """Both Docker and Ansible need to be installed"""
-
     for executable in v.executables:
         if not shutil.which(executable):
-            print("%s is required to run this application." % (executable).title())
-            exit()
+            print(c.red("%s is required to run this application." % (executable).title()))
+            sys.exit()
 
 def check_minimum_ansible_version():
     """A recent version of Ansible is required"""
     find_version = "ansible --version | head -n1 | awk '{print $2}' | cut -c -3"
-    return_version = subprocess.run(find_version,
-                                    stdout=subprocess.PIPE,
-                                    shell=True).stdout.decode('utf-8')
+    return_version = s.run(find_version,
+                           stdout=s.PIPE,
+                           shell=True).stdout.decode('utf-8')
 
     if return_version < "2.4":
-        print("Ansible 2.4 or later is required to run this application.")
-        exit()
+        print(c.red("Ansible 2.4 or later is required to run this application."))
+        sys.exit()
 
 def check_hosts_file():
     """The local hosts file must be correctly configured"""
@@ -54,7 +54,7 @@ You should add the below entries:
        v.mirror_ip)
 
             print(hosts_file_suggestion)
-            exit()
+            sys.exit()
 
 def check_ssh_config_file():
     """The SSH config file must be correctly configured"""
@@ -86,7 +86,7 @@ Host %s %s %s %s %s %s
        v.mirror_ip)
 
             print(ssh_config_suggestion)
-            exit()
+            sys.exit()
 
 check_minimum_python_version()
 check_required_executables()

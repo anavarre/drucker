@@ -1,6 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Edit the config file to accommodate for local user preferences"""
 import variables as v
+import colorful as c
 
 def replace_string(file, old_string, new_string):
     """Allows to easily replace a string in a file"""
@@ -19,7 +20,7 @@ def set_local_ssh_path():
         elif os.path.isfile(pubkey):
             replace_string(v.default_config, v.key_placeholder, pubkey)
         else:
-            print("This filepath doesn't exist. Please try again.")
+            print(c.red("This filepath doesn't exist. Please try again."))
             set_local_ssh_path()
 
 def set_local_html_path():
@@ -32,7 +33,7 @@ def set_local_html_path():
         elif os.path.isfile(host_html_path):
             replace_string(v.default_config, v.html_placeholder, host_html_path)
         else:
-            print("This filepath doesn't exist. Please try again.")
+            print(c.red("This filepath doesn't exist. Please try again."))
             set_local_html_path()
 
 def set_local_db_path():
@@ -45,7 +46,7 @@ def set_local_db_path():
         elif os.path.isfile(host_db_path):
             replace_string(v.default_config, v.db_placeholder, host_db_path)
         else:
-            print("This filepath doesn't exist. Please try again.")
+            print(c.red("This filepath doesn't exist. Please try again."))
             set_local_db_path()
 
 set_local_ssh_path()

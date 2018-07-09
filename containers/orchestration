@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 
-export HOST_KEY_CHECKING='export ANSIBLE_HOST_KEY_CHECKING=False'
-export PLAYBOOKS="ansible-playbook -i ${DIR}/orchestration/hosts --user=${USER} ${DIR}/orchestration"
 export COMMANDS="${PLAYBOOKS}/commands"
-export PROVISIONING="${PLAYBOOKS}/provisioning"
 export TESTS="${PLAYBOOKS}/_tests"
-export EXTRA_VARS="--extra-vars ansible_sudo_pass=${USER}"
 
 user_confirmation() {
   if [[ "${COMMAND}" == "app:delete" ]]; then
@@ -185,12 +181,12 @@ run_tests() {
   ${TESTS}/web-tests.yml ${EXTRA_VARS}
 }
 
-run_base_container_orchestration() {
-  echo -e "${BLUE}Running ${BASE_CONTAINER} orchestration on the container...${COLOR_ENDING}"
+# run_base_container_orchestration() {
+#   echo -e "${BLUE}Running ${BASE_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ${HOST_KEY_CHECKING}
-  ${PROVISIONING}/base.yml ${EXTRA_VARS}
-}
+#   ${HOST_KEY_CHECKING}
+#   ${PROVISIONING}/base.yml ${EXTRA_VARS}
+# }
 
 run_mirror_container_orchestration() {
   echo -e "${BLUE}Running ${MIRROR_CONTAINER} orchestration on the container...${COLOR_ENDING}"

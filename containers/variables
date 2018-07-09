@@ -62,19 +62,16 @@ export DB_HOSTNAME="db.${TLD}"
 export SEARCH_HOSTNAME="search.${TLD}"
 
 # Images
-export DISTRO_IMAGE="debian:stretch"
 export SOLR_IMAGE="solr:latest"
 export CUSTOM_SOLR_IMAGE="${USER}:solr"
 export SEARCH_IMAGE="${USER}:search"
-export INIT_IMAGE="${USER}:init"
-export BASE_IMAGE="${USER}:base"
 export MIRROR_IMAGE="${USER}:mirror"
 export REVERSE_PROXY_IMAGE="${USER}:reverse_proxy"
 export WEB_IMAGE="${USER}:web"
 export DB_IMAGE="${USER}:db"
 
 # Containers
-export BASE_CONTAINER="${USER}_base"
+#export BASE_CONTAINER="${USER}_base"
 export WEB_CONTAINER="${USER}_web"
 WEB_CONTAINER_EXISTS=$(docker ps -a | grep -o "${WEB_CONTAINER}")
 export WEB_CONTAINER_EXISTS

@@ -1,4 +1,18 @@
 ---
+# Docker is supposed to copy over the local /etc/resolv.conf file. Sometimes it
+# fails, so we have to hack our way through modifying it.
+- name: "Copy DNS settings"
+  command: cp /etc/resolv.conf /tmp/resolv.conf
+
+- name: "Update DNS settings"
+  lineinfile:
+    dest: /tmp/resolv.conf
+    line: "nameserver 1.1.1.1"
+    state: present
+
+- name: "Replace DNS settings"
+  command: cp /tmp/resolv.conf /etc/resolv.conf
+
 - name: "SYSTEM: Clean up system packages"
   package:
     name: "{{ item }}"

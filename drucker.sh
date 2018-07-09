@@ -7,7 +7,7 @@ source "${DIR}/init"
 load_function_files
 load_container_files
 
-$(command -v python3) app/requirements.py
+$(command -v python3) ${DIR}/app/requirements.py
 
 source "${DIR}/config"
 
@@ -22,20 +22,21 @@ if [[ $3 = *.* ]]; then
 fi
 
 # Custom user configuration.
-$(command -v python3) app/local_setup.py
+$(command -v python3) ${DIR}/app/local_setup.py
 
 # Are we running drucker with a CLI argument?
 drucker_argument
 
-# drucker initialization.
-create_custom_bridge_network
-pull_base_image_from_docker_hub
-build_init_image
+# # drucker initialization.
+$(command -v python3) ${DIR}/app/init.py
+
 # Container provisioning and orchestration.
-provision_base_container
-provision_mirror_container
-provision_reverse_proxy_container
-provision_db_container
-provision_search_container
-provision_web_container
-allow_web_to_db_ssh_access
+# provision_base_container
+$(command -v python3) ${DIR}/app/base.py
+exit 0
+# provision_mirror_container
+# provision_reverse_proxy_container
+# provision_db_container
+# provision_search_container
+# provision_web_container
+# allow_web_to_db_ssh_access
