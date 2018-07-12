@@ -160,10 +160,10 @@ run_tests() {
   ${HOST_KEY_CHECKING}
   ${TESTS}/mirror-tests.yml ${EXTRA_VARS}
 
-  echo -e "${BLUE}Running the reverse proxy test suite...${COLOR_ENDING}"
+  echo -e "${BLUE}Running the edge test suite...${COLOR_ENDING}"
 
   ${HOST_KEY_CHECKING}
-  ${TESTS}/reverse-proxy-tests.yml ${EXTRA_VARS}
+  ${TESTS}/edge-tests.yml ${EXTRA_VARS}
 
   echo -e "${BLUE}Running the database test suite...${COLOR_ENDING}"
 

@@ -35,10 +35,10 @@ drucker_argument
 $(command -v python3) ${DIR}/app/init.py
 
 # Container provisioning and orchestration.
-# $(command -v python3) ${DIR}/app/base.py
-# $(command -v python3) ${DIR}/app/mirror.py
+$(command -v python3) ${DIR}/app/base.py
+$(command -v python3) ${DIR}/app/mirror.py
 $(command -v python3) ${DIR}/app/edge.py
 $(command -v python3) ${DIR}/app/db.py
-# provision_search_container
+$(command -v python3) ${DIR}/app/search.py
 # provision_web_container
 # allow_web_to_db_ssh_access

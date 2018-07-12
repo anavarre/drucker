@@ -10,5 +10,5 @@
   tasks:
     - import_tasks: ../plays/common/mirror-deploy.yml
     - import_tasks: ../plays/common/apt-update.yml
-    - import_tasks: ../plays/proxy/varnish.yml
-    - import_tasks: ../plays/proxy/nginx.yml
+    - import_tasks: ../plays/edge/varnish.yml
+    - import_tasks: ../plays/edge/nginx.yml
