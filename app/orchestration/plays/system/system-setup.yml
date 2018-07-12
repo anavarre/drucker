@@ -1,17 +1,17 @@
 ---
 # Docker is supposed to copy over the local /etc/resolv.conf file. Sometimes it
 # fails, so we have to hack our way through modifying it.
-- name: "Copy DNS settings"
-  command: cp /etc/resolv.conf /tmp/resolv.conf
+- name: "SYSTEM: Copy DNS settings"
+  command: "cp {{ resolvconf_path }} {{ tmp_resolvconf_path }}"
 
-- name: "Update DNS settings"
+- name: "SYSTEM: Update DNS settings"
   lineinfile:
-    dest: /tmp/resolv.conf
-    line: "nameserver 1.1.1.1"
+    dest: "{{ tmp_resolvconf_path }}"
+    line: "nameserver {{ nameserver }}"
     state: present
 
-- name: "Replace DNS settings"
-  command: cp /tmp/resolv.conf /etc/resolv.conf
+- name: "SYSTEM: Replace DNS settings"
+  command: "cp {{ tmp_resolvconf_path }} {{ resolvconf_path}}"
 
 - name: "SYSTEM: Clean up system packages"
   package:

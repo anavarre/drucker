@@ -62,6 +62,9 @@ id_rsa: "{{ home }}/.ssh/id_rsa"
 id_rsa_pub: "{{ home }}/.ssh/id_rsa.pub"
 
 # Networking
+nameserver: 1.1.1.1
+resolvconf_path: /etc/resolv.conf
+tmp_resolvconf_path: "{{ download_dir }}/resolv.conf"
 gateway_ip: 203.0.113.254
 mirror_ip: 203.0.113.50
 web_ip: 203.0.113.10

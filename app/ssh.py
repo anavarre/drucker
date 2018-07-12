@@ -1,24 +1,70 @@
 #!/usr/bin/env python3
-import variables as v
+"""Manages SSH access on containers"""
+
 import subprocess as s
+import variables as v
 
-def configure_base_container_ssh_access():
-    """Configure SSH access on base container"""
-    tmp_key     = "/tmp/authorized_keys"
-    auth_key    = "/home/%s/.ssh/authorized_keys" % (v.app)
-    chown_ssh   = "chown -R %s:%s /home/%s/.ssh" % (v.app, v.app, v.app)
-    store_key   = "cat %s > %s" % (v.default_pubkey, tmp_key)
+TMP_KEY = "/tmp/authorized_keys"
 
-    # Create temporary SSH key.
+def create_tmp_key():
+    """Create temporary SSH key under /tmp"""
+    store_key = "cat %s > %s" % (v.DEFAULT_PUBKEY, TMP_KEY)
     s.getoutput(store_key)
 
-    # Copy temporary SSH key to host.
-    copy_key = "docker cp %s %s:%s" % (tmp_key, v.base_container, auth_key)
+def copy_tmp_key(container):
+    """Copy temporary SSH key to container"""
+    auth_key = "/home/%s/.ssh/authorized_keys" % (v.APP)
+    copy_key = "docker cp %s %s:%s" % (TMP_KEY, container, auth_key)
     s.getoutput(copy_key)
 
-    # Set correct permissions for .ssh directory.
-    ssh_dir_perms = "docker exec -it %s %s" % (v.base_container, chown_ssh)
+def set_ssh_dir_perms(container):
+    """Set correct permissions for .ssh directory"""
+    chown_ssh = "chown -R %s:%s /home/%s/.ssh" % (v.APP, v.APP, v.APP)
+    ssh_dir_perms = "docker exec -it %s %s" % (container, chown_ssh)
     s.getoutput(ssh_dir_perms)
 
-    # Remove temporary SSH key.
-    s.getoutput("rm %s" % (tmp_key))
+def remove_tmp_key():
+    """Remove temporary SSH key"""
+    s.getoutput("rm %s" % (TMP_KEY))
+
+def configure_ssh_base():
+    """Configure SSH access on base container"""
+    create_tmp_key()
+    copy_tmp_key(v.BASE_CONTAINER)
+    set_ssh_dir_perms(v.BASE_CONTAINER)
+    remove_tmp_key()
+
+def configure_ssh_mirror():
+    """Configure SSH access on mirror container"""
+    create_tmp_key()
+    copy_tmp_key(v.MIRROR_CONTAINER)
+    set_ssh_dir_perms(v.MIRROR_CONTAINER)
+    remove_tmp_key()
+
+def configure_ssh_reverse_proxy():
+    """Configure SSH access on reverse proxy container"""
+    create_tmp_key()
+    copy_tmp_key(v.REVERSE_PROXY_CONTAINER)
+    set_ssh_dir_perms(v.REVERSE_PROXY_CONTAINER)
+    remove_tmp_key()
+
+def configure_ssh_web():
+    """Configure SSH access on web container"""
+    create_tmp_key()
+    copy_tmp_key(v.WEB_CONTAINER)
+    set_ssh_dir_perms(v.WEB_CONTAINER)
+    remove_tmp_key()
+
+def configure_ssh_db():
+    """Configure SSH access on database container"""
+    create_tmp_key()
+    copy_tmp_key(v.DB_CONTAINER)
+    set_ssh_dir_perms(v.DB_CONTAINER)
+    remove_tmp_key()
+
+def configure_ssh_search():
+    """Configure SSH access on search container"""
+    create_tmp_key()
+    copy_tmp_key(v.SEARCH_CONTAINER)
+    set_ssh_dir_perms(v.SEARCH_CONTAINER)
+    remove_tmp_key()

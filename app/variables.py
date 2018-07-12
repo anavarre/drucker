@@ -1,58 +1,92 @@
 #!/usr/bin/env python3
+"""Common variables used across the app"""
+
 import os
 from pathlib import Path
 
-app      = "drucker"
-app_root = os.path.dirname(os.path.dirname( __file__ ))
-app_dir  = app_root + "/app"
-home     = str(Path.home())
+APP = "drucker"
+APP_ROOT = os.path.dirname(os.path.dirname(__file__))
+APP_DIR = "%s/app" % (APP_ROOT)
+HOME = str(Path.home())
 
-executables = ["docker", "ansible"]
-domains     = "drucker.local phpmyadmin.local adminer.local\
+EXECUTABLES = ["docker", "ansible"]
+DOMAINS = "drucker.local phpmyadmin.local adminer.local\
  lightning.local reservoir.local blt.local"
-hosts       = "/etc/hosts"
+HOSTS = "/etc/hosts"
 
 # SSH
-ssh_config  = "%s/.ssh/config" % (home)
+SSH_CONFIG = "%s/.ssh/config" % (HOME)
 
 # IP addresses
-base_container_ip = "203.0.113.99"
-reverse_proxy_ip  = "203.0.113.2"
-web_ip            = "203.0.113.10"
-db_ip             = "203.0.113.12"
-search_ip         = "203.0.113.13"
-mirror_ip         = "203.0.113.50"
+BASE_IP = "203.0.113.99"
+MIRROR_IP = "203.0.113.50"
+REVERSE_PROXY_IP = "203.0.113.2"
+DB_IP = "203.0.113.12"
+WEB_IP = "203.0.113.10"
+SEARCH_IP = "203.0.113.13"
 
 # config file
-default_config    = app_root + "/config"
-default_pubkey    = "%s/.ssh/id_rsa.pub" % (home)
-default_html_path = "/var/www/html"
-default_db_path   = "/var/lib/mysql"
-key_placeholder   = "key_path"
-html_placeholder  = "html_path"
-db_placeholder    = "db_path"
+DEFAULT_CONFIG = APP_ROOT + "/config"
+DEFAULT_PUBKEY = "%s/.ssh/id_rsa.pub" % (HOME)
+DEFAULT_HTML_PATH = "/var/www/html"
+DEFAULT_DB_PATH = "/var/lib/mysql"
+KEY_PLACEHOLDER = "key_path"
+HTML_PLACEHOLDER = "html_path"
+DB_PLACEHOLDER = "db_path"
 
 # Docker networking
-subnet        = "203.0.113.0/24"
-gateway       = "203.0.113.254"
-check_bridge  = "docker network ls | awk '{print $2}' | grep '%s'" % (app)
-create_bridge = "docker network create --subnet \"%s\" --gateway \"%s\" \"%s\"" % (subnet, gateway, app)
+SUBNET = "203.0.113.0/24"
+GATEWAY = "203.0.113.254"
+CHECK_BRIDGE = "docker network ls | awk '{print $2}' | grep '%s'" % (APP)
+CREATE_BRIDGE = '''
+docker network create --subnet \"%s\" --gateway \"%s\" \"%s\"
+''' % (SUBNET, GATEWAY, APP)
 
 # Docker images
-distro_image        = "debian:stretch"
-init_image          = "%s:init" % (app)
-base_image          = "%s:base" % (app)
-search_image        = "%s:search" % (app)
-check_distro_image  = "docker images | awk '{print $1\":\"$2}' | grep \"%s\"" % (distro_image)
-check_base_image    = "docker images | awk '{print $1\":\"$2}' | grep \"%s\"" % (base_image)
-check_init_image    = "docker images | awk '{print $1\":\"$2}' | grep \"%s\"" % (init_image)
-check_search_image  = "docker images | awk '{print $1\":\"$2}' | grep \"%s\"" % (search_image)
-update_distro_image = "docker images | awk '{print $1\":\"$2}' | grep \"%s\" | xargs -L1 docker pull" % (distro_image)
-pull_distro_image   = "docker pull %s" % (distro_image)
-init_image_deletion = "docker rmi \"%s\" > /dev/null 2>&1" % (init_image)
+DISTRO_IMAGE = "debian:stretch"
+INIT_IMAGE = "%s:init" % (APP)
+BASE_IMAGE = "%s:base" % (APP)
+MIRROR_IMAGE = "%s:mirror" % (APP)
+REVERSE_PROXY_IMAGE = "%s:reverse_proxy" % (APP)
+DB_IMAGE = "%s:db" % (APP)
+WEB_IMAGE = "%s:web" % (APP)
+SEARCH_IMAGE = "%s:search" % (APP)
+CHECK_DISTRO_IMAGE = "docker images | awk '{print $1\":\"$2}' | grep \"%s\"" % (DISTRO_IMAGE)
+CHECK_INIT_IMAGE = "docker images | awk '{print $1\":\"$2}' | grep %s" % (INIT_IMAGE)
+CHECK_BASE_IMAGE = "docker images | awk '{print $1\":\"$2}' | grep %s" % (BASE_IMAGE)
+CHECK_SEARCH_IMAGE = "docker images | awk '{print $1\":\"$2}' | grep \"%s\"" % (SEARCH_IMAGE)
+UPDATE_DISTRO_IMAGE = '''
+docker images | awk '{print $1\":\"$2}' | grep \"%s\" | xargs -L1 docker pull
+''' % (DISTRO_IMAGE)
+PULL_DISTRO_IMAGE = "docker pull %s" % (DISTRO_IMAGE)
 
 # Docker containers
-base_container          = "%s_base" % (app)
-check_base_container    = "docker ps -a | grep -o \"%s\"" % (base_container)
-create_base_container   = "docker run -d --name %s -it --net %s --ip %s %s bash" % (base_container, app, base_container_ip, init_image)
-base_container_deletion = "docker rm -f \"%s\" > /dev/null 2>&1" % (app)
+BASE_CONTAINER = "%s_base" % (APP)
+MIRROR_CONTAINER = "%s_mirror" % (APP)
+REVERSE_PROXY_CONTAINER = "%s_reverse_proxy" % (APP)
+DB_CONTAINER = "%s_db" % (APP)
+WEB_CONTAINER = "%s_web" % (APP)
+SEARCH_CONTAINER = "%s_search" % (APP)
+
+# Hostnames
+TLD = "local"
+MIRROR_HOSTNAME = "mirror.%s" % (TLD)
+REVERSE_PROXY_HOSTNAME = "reverse_proxy.%s" % (TLD)
+WEB_HOSTNAME = "web.%s" % (TLD)
+DB_HOSTNAME = "db.%s" % (TLD)
+SEARCH_HOSTNAME = "search.%s" % (TLD)
+
+# Ports
+HOST_REVERSE_PROXY_PORT = "81"
+MIRROR_PORT = "3142"
+REVERSE_PROXY_PORT = "80"
+HOST_WEB_PORT = "8180"
+HOST_DB_PORT = "3307"
+HOST_SEARCH_PORT = "8984"
+WEB_PORT = "8080"
+DB_PORT = "3306"
+SEARCH_PORT = "8983"
+HOST_TCP_PORT_MAPPER_WEB = "2047"
+TCP_PORT_MAPPER_WEB = "2049"
+HOST_TCP_PORT_MAPPER_DB = "2051"
+TCP_PORT_MAPPER_DB = "2052"

@@ -188,44 +188,44 @@ run_tests() {
 #   ${PROVISIONING}/base.yml ${EXTRA_VARS}
 # }
 
-run_mirror_container_orchestration() {
-  echo -e "${BLUE}Running ${MIRROR_CONTAINER} orchestration on the container...${COLOR_ENDING}"
+# run_mirror_container_orchestration() {
+#   echo -e "${BLUE}Running ${MIRROR_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ${HOST_KEY_CHECKING}
-  ${PROVISIONING}/mirror.yml ${EXTRA_VARS}
-}
+#   ${HOST_KEY_CHECKING}
+#   ${PROVISIONING}/mirror.yml ${EXTRA_VARS}
+# }
 
-run_reverse_proxy_container_orchestration() {
-  echo -e "${BLUE}Running ${REVERSE_PROXY_CONTAINER} orchestration on the container...${COLOR_ENDING}"
+# run_reverse_proxy_container_orchestration() {
+#   echo -e "${BLUE}Running ${REVERSE_PROXY_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ${HOST_KEY_CHECKING}
-  ${PROVISIONING}/reverse_proxy.yml ${EXTRA_VARS}
-}
+#   ${HOST_KEY_CHECKING}
+#   ${PROVISIONING}/reverse_proxy.yml ${EXTRA_VARS}
+# }
 
-run_ssh_container_orchestration() {
-  echo -e "${BLUE}Running SSH orchestration on the container...${COLOR_ENDING}"
+# run_ssh_container_orchestration() {
+#   echo -e "${BLUE}Running SSH orchestration on the container...${COLOR_ENDING}"
 
-  ${HOST_KEY_CHECKING}
-  ${PROVISIONING}/ssh.yml ${EXTRA_VARS}
-}
+#   ${HOST_KEY_CHECKING}
+#   ${PROVISIONING}/ssh.yml ${EXTRA_VARS}
+# }
 
-run_web_container_orchestration() {
-  echo -e "${BLUE}Running ${WEB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
+# run_web_container_orchestration() {
+#   echo -e "${BLUE}Running ${WEB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ${HOST_KEY_CHECKING}
-  ${PROVISIONING}/web.yml ${EXTRA_VARS}
-}
+#   ${HOST_KEY_CHECKING}
+#   ${PROVISIONING}/web.yml ${EXTRA_VARS}
+# }
 
-run_db_container_orchestration() {
-  echo -e "${BLUE}Running ${DB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
+# run_db_container_orchestration() {
+#   echo -e "${BLUE}Running ${DB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ${HOST_KEY_CHECKING}
-  ${PROVISIONING}/db.yml ${EXTRA_VARS}
-}
+#   ${HOST_KEY_CHECKING}
+#   ${PROVISIONING}/db.yml ${EXTRA_VARS}
+# }
 
-run_search_container_orchestration() {
-  echo -e "${BLUE}Running ${SEARCH_CONTAINER} orchestration on the container...${COLOR_ENDING}"
+# run_search_container_orchestration() {
+#   echo -e "${BLUE}Running ${SEARCH_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
-  ${HOST_KEY_CHECKING}
-  ${PROVISIONING}/search.yml ${EXTRA_VARS}
-}
+#   ${HOST_KEY_CHECKING}
+#   ${PROVISIONING}/search.yml ${EXTRA_VARS}
+# }

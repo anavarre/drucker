@@ -1,17 +1,42 @@
 #!/usr/bin/env python3
-import variables as v
-import colorful as c
+"""Manages orchestration for all containers"""
+
 import subprocess as s
+import colorful as c
+import variables as v
 
-playbooks         = "ansible-playbook -i %s/orchestration/hosts --user=%s %s/orchestration" % (v.app_dir, v.app, v.app_dir)
-host_key_checking = "export ANSIBLE_HOST_KEY_CHECKING=False"
-provisioning      = "%s/provisioning" % (playbooks)
+def run_orchestration(container, shortname):
+    """Parent function to manage container orchestration"""
+    print(c.blue("Running %s orchestration on the container..." % (container)))
+    s.getoutput("export ANSIBLE_HOST_KEY_CHECKING=False")
+    s.run('''
+    ansible-playbook -i %s/orchestration/hosts --user=%s %s/orchestration/provisioning/%s.yml --extra-vars ansible_sudo_pass=%s
+    ''' % (v.APP_DIR, v.APP, v.APP_DIR, shortname, v.APP), shell=True)
 
-def run_base_container_orchestration():
+def run_base_orchestration():
     """Run orchestration on base container"""
-    base_container_orchestration = "%s/base.yml --extra-vars ansible_sudo_pass=%s" % (provisioning, v.app)
+    run_orchestration(v.BASE_CONTAINER, "base")
 
-    print(c.blue("Running %s orchestration on the container..." % (v.base_container)))
+def run_mirror_orchestration():
+    """Run orchestration on mirror container"""
+    run_orchestration(v.MIRROR_CONTAINER, "mirror")
 
-    s.getoutput(host_key_checking)
-    s.run(base_container_orchestration, shell=True)
+def run_reverse_proxy_orchestration():
+    """Run orchestration on reverse proxy container"""
+    run_orchestration(v.REVERSE_PROXY_CONTAINER, "reverse_proxy")
+
+def run_db_orchestration():
+    """Run orchestration on database container"""
+    run_orchestration(v.DB_CONTAINER, "db")
+
+def run_web_orchestration():
+    """Run orchestration on web container"""
+    run_orchestration(v.WEB_CONTAINER, "web")
+
+def run_search_orchestration():
+    """Run orchestration on search container"""
+    run_orchestration(v.SEARCH_CONTAINER, "search")
+
+def run_ssh_orchestration():
+    """Run SSH orchestration"""
+    run_orchestration("SSH", "ssh")

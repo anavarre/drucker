@@ -1,52 +1,57 @@
 #!/usr/bin/env python3
-import colorful as c
+"""Manages the base image and container"""
+
 import subprocess as s
-import variables as v
+from datetime import date
+import colorful as c
 import ssh
 import orchestration as o
-from datetime import date
+import variables as v
 
-# Get the current path to the ansible.cfg override.
-# CONTAINERS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# export ANSIBLE_CONFIG="${CONTAINERS_DIR}/ansible.cfg"
-
-def create_base_container_from_init_image():
+def create_base_container():
     """Create base container from init image"""
-    print(c.blue("Spinning up %s container with ID:" % (v.base_container)))
-    s.run(v.create_base_container, shell=True)
+    print(c.blue("Spinning up %s container with ID:" % (v.BASE_CONTAINER)))
+    s.run('''
+    docker run -d --name %s -it --net %s --ip %s %s bash
+    ''' % (v.BASE_CONTAINER,
+           v.APP,
+           v.BASE_IP,
+           v.INIT_IMAGE), shell=True)
 
-    ssh.configure_base_container_ssh_access()
-    o.run_base_container_orchestration()
+    ssh.configure_ssh_base()
+    o.run_base_orchestration()
 
-def create_base_image_from_base_container():
+def create_base_image():
     """Create base image from base container"""
-    today = str(date.today())
-    commit_base_image   = "docker commit -m \"%s on %s\" %s %s" % (v.base_container, today, v.base_container, v.base_image)
-
-    print(c.blue("Committing %s image from %s container..." % (v.base_image, v.base_container)))
-    s.run(commit_base_image, shell=True)
+    print(c.blue("Committing %s image from %s container..." % (v.BASE_IMAGE, v.BASE_CONTAINER)))
+    s.run("docker commit -m \"%s on %s\" %s %s" % (v.BASE_CONTAINER,
+                                                   str(date.today()),
+                                                   v.BASE_CONTAINER,
+                                                   v.BASE_IMAGE), shell=True)
 
 def delete_base_container():
     """Delete base container"""
-    s.getoutput(v.base_container_deletion)
+    print(c.blue("Deleting %s container..." % (v.BASE_CONTAINER)))
+    s.getoutput("docker rm -f %s > /dev/null 2>&1" % (v.BASE_CONTAINER))
 
 def delete_init_image():
     """Delete init image"""
-    s.getoutput(v.init_image_deletion)
+    print(c.blue("Deleting %s image..." % (v.INIT_IMAGE)))
+    s.getoutput("docker rmi %s > /dev/null 2>&1" % (v.INIT_IMAGE))
 
 def provision_base_container():
     """Set up base container from init image"""
-    if s.getoutput(v.check_base_image):
-        print(c.green("%s image already exists." % (v.base_image)))
+    if s.getoutput(v.CHECK_BASE_IMAGE):
+        print(c.green("%s image already exists." % (v.BASE_IMAGE)))
 
-        if s.getoutput(v.check_init_image):
-         delete_init_image()
+        if s.getoutput(v.CHECK_INIT_IMAGE):
+            delete_init_image()
     else:
-        if s.getoutput(v.check_base_container):
+        if s.getoutput("docker ps -a | grep -o \"%s\"" % (v.BASE_CONTAINER)):
             delete_base_container()
         else:
-            create_base_container_from_init_image()
-            create_base_image_from_base_container()
+            create_base_container()
+            create_base_image()
             delete_base_container()
             delete_init_image()
 
