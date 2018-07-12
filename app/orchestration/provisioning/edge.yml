@@ -1,5 +1,5 @@
 ---
-- hosts: drucker_reverse_proxy
+- hosts: drucker_edge
   become: yes
 
   gather_facts: yes

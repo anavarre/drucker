@@ -21,9 +21,9 @@ def run_mirror_orchestration():
     """Run orchestration on mirror container"""
     run_orchestration(v.MIRROR_CONTAINER, "mirror")
 
-def run_reverse_proxy_orchestration():
-    """Run orchestration on reverse proxy container"""
-    run_orchestration(v.REVERSE_PROXY_CONTAINER, "reverse_proxy")
+def run_edge_orchestration():
+    """Run orchestration on edge container"""
+    run_orchestration(v.EDGE_CONTAINER, "edge")
 
 def run_db_orchestration():
     """Run orchestration on database container"""

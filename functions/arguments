@@ -125,7 +125,7 @@ run_healthcheck() {
       memcached_check
     fi
 
-    if [[ "${CONTAINER}" == "drucker_reverse_proxy" ]]; then
+    if [[ "${CONTAINER}" == "drucker_edge" ]]; then
       echo -e "${BLUE}Checking services for ${CONTAINER}${COLOR_ENDING}"
       varnish_check
       nginx_check

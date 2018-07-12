@@ -4,7 +4,7 @@
 [drucker_mirror]
 203.0.113.50
 
-[drucker_reverse_proxy]
+[drucker_edge]
 203.0.113.2
 
 [drucker_web]

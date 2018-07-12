@@ -380,7 +380,7 @@ varnish_source: 4.1
 varnish_gpg_key: https://repo.varnish-cache.org/GPG-key.txt
 varnish_deb: deb https://repo.varnish-cache.org/debian/ {{ codename }} varnish-{{ varnish_source }}
 varnish_stable_release: 4.0.2.1
-reverse_proxy_port: 80
+edge_port: 80
 varnish_config: /etc/default/varnish
 varnish_default_path: /etc/varnish
 varnish_default_vcl: "{{ varnish_default_path }}/default.vcl"

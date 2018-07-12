@@ -19,7 +19,7 @@ start_drucker_db_services() {
   sleep 1
 }
 
-start_drucker_reverse_proxy_services() {
+start_drucker_edge_services() {
   docker exec -it ${CONTAINER_TO_START} service varnish start > /dev/null 2>&1
   sleep 1
   docker exec -it ${CONTAINER_TO_START} service nginx start > /dev/null 2>&1
@@ -40,8 +40,8 @@ start_services() {
     start_drucker_web_services
   elif [[ "${CONTAINER_TO_START}" == "drucker_db" ]]; then
     start_drucker_db_services
-  elif [[ "${CONTAINER_TO_START}" == "drucker_reverse_proxy" ]]; then
-    start_drucker_reverse_proxy_services
+  elif [[ "${CONTAINER_TO_START}" == "drucker_edge" ]]; then
+    start_drucker_edge_services
   elif [[ "${CONTAINER_TO_START}" == "drucker_mirror" ]]; then
     start_drucker_mirror_services
   fi

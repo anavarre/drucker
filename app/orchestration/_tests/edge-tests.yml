@@ -1,6 +1,6 @@
 ---
 # Invoked via run_tests() in containers/orchestration.
-- hosts: drucker_reverse_proxy
+- hosts: drucker_edge
   become: yes
 
   gather_facts: yes
@@ -9,4 +9,4 @@
   handlers:
     - import_tasks: ../handlers.yml
   tasks:
-    - import_tasks: plays/run-reverse-proxy-tests.yml
+    - import_tasks: plays/run-edge-tests.yml

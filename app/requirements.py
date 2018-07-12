@@ -34,7 +34,7 @@ def check_ansible_version():
 def check_hosts_file():
     """The local hosts file must be correctly configured"""
 
-    hosts_file_ips = [v.REVERSE_PROXY_IP,
+    hosts_file_ips = [v.EDGE_IP,
                       v.SEARCH_IP,
                       v.MIRROR_IP]
 
@@ -49,7 +49,7 @@ You should add the below entries:
 %s    %s
 %s   search.local
 %s   mirror.local
-""" % (v.REVERSE_PROXY_IP,
+""" % (v.EDGE_IP,
        v.DOMAINS,
        v.SEARCH_IP,
        v.MIRROR_IP)
@@ -61,7 +61,7 @@ def check_ssh_config_file():
     """The SSH config file must be correctly configured"""
 
     ssh_config_ips = [v.BASE_IP,
-                      v.REVERSE_PROXY_IP,
+                      v.EDGE_IP,
                       v.WEB_IP,
                       v.DB_IP,
                       v.SEARCH_IP,
@@ -80,7 +80,7 @@ Host %s %s %s %s %s %s
   UserKnownHostsFile=/dev/null
   LogLevel=error
 """ % (v.BASE_IP,
-       v.REVERSE_PROXY_IP,
+       v.EDGE_IP,
        v.WEB_IP,
        v.DB_IP,
        v.SEARCH_IP,

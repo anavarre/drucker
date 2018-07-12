@@ -20,7 +20,7 @@ SSH_CONFIG = "%s/.ssh/config" % (HOME)
 # IP addresses
 BASE_IP = "203.0.113.99"
 MIRROR_IP = "203.0.113.50"
-REVERSE_PROXY_IP = "203.0.113.2"
+EDGE_IP = "203.0.113.2"
 DB_IP = "203.0.113.12"
 WEB_IP = "203.0.113.10"
 SEARCH_IP = "203.0.113.13"
@@ -47,7 +47,7 @@ DISTRO_IMAGE = "debian:stretch"
 INIT_IMAGE = "%s:init" % (APP)
 BASE_IMAGE = "%s:base" % (APP)
 MIRROR_IMAGE = "%s:mirror" % (APP)
-REVERSE_PROXY_IMAGE = "%s:reverse_proxy" % (APP)
+EDGE_IMAGE = "%s:edge" % (APP)
 DB_IMAGE = "%s:db" % (APP)
 WEB_IMAGE = "%s:web" % (APP)
 SEARCH_IMAGE = "%s:search" % (APP)
@@ -63,7 +63,7 @@ PULL_DISTRO_IMAGE = "docker pull %s" % (DISTRO_IMAGE)
 # Docker containers
 BASE_CONTAINER = "%s_base" % (APP)
 MIRROR_CONTAINER = "%s_mirror" % (APP)
-REVERSE_PROXY_CONTAINER = "%s_reverse_proxy" % (APP)
+EDGE_CONTAINER = "%s_edge" % (APP)
 DB_CONTAINER = "%s_db" % (APP)
 WEB_CONTAINER = "%s_web" % (APP)
 SEARCH_CONTAINER = "%s_search" % (APP)
@@ -71,15 +71,15 @@ SEARCH_CONTAINER = "%s_search" % (APP)
 # Hostnames
 TLD = "local"
 MIRROR_HOSTNAME = "mirror.%s" % (TLD)
-REVERSE_PROXY_HOSTNAME = "reverse_proxy.%s" % (TLD)
+EDGE_HOSTNAME = "edge.%s" % (TLD)
 WEB_HOSTNAME = "web.%s" % (TLD)
 DB_HOSTNAME = "db.%s" % (TLD)
 SEARCH_HOSTNAME = "search.%s" % (TLD)
 
 # Ports
-HOST_REVERSE_PROXY_PORT = "81"
+HOST_EDGE_PORT = "81"
 MIRROR_PORT = "3142"
-REVERSE_PROXY_PORT = "80"
+EDGE_PORT = "80"
 HOST_WEB_PORT = "8180"
 HOST_DB_PORT = "3307"
 HOST_SEARCH_PORT = "8984"

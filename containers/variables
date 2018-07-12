@@ -34,7 +34,7 @@ export SOLR_IMAGE="solr:latest"
 export CUSTOM_SOLR_IMAGE="${USER}:solr"
 export SEARCH_IMAGE="${USER}:search"
 export MIRROR_IMAGE="${USER}:mirror"
-export REVERSE_PROXY_IMAGE="${USER}:reverse_proxy"
+export EDGE_IMAGE="${USER}:EDGE"
 export WEB_IMAGE="${USER}:web"
 export DB_IMAGE="${USER}:db"
 
@@ -43,14 +43,14 @@ WEB_CONTAINER_EXISTS=$(docker ps -a | grep -o "${WEB_CONTAINER}")
 export WEB_CONTAINER_EXISTS
 DB_CONTAINER_EXISTS=$(docker ps -a | grep -o "${DB_CONTAINER}")
 export DB_CONTAINER_EXISTS
-export REVERSE_PROXY_CONTAINER_EXISTS
-REVERSE_PROXY_CONTAINER_EXISTS=$(docker ps -a | grep -o "${REVERSE_PROXY_CONTAINER}")
+export EDGE_CONTAINER_EXISTS
+EDGE_CONTAINER_EXISTS=$(docker ps -a | grep -o "${EDGE_CONTAINER}")
 SEARCH_CONTAINER_EXISTS=$(docker ps -a | grep -o "${SEARCH_CONTAINER}")
 export SEARCH_CONTAINER_EXISTS
 
 # Services
 export WEB_SERVICES="apache2 mysql"
-export REVERSE_PROXY_SERVICES="nginx varnish"
+export EDGE_SERVICES="nginx varnish"
 export DEFAULT_PHP="7.2"
 export PREVIOUS_PHP="7.1"
 

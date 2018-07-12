@@ -195,11 +195,11 @@ run_tests() {
 #   ${PROVISIONING}/mirror.yml ${EXTRA_VARS}
 # }
 
-# run_reverse_proxy_container_orchestration() {
-#   echo -e "${BLUE}Running ${REVERSE_PROXY_CONTAINER} orchestration on the container...${COLOR_ENDING}"
+# run_edge_container_orchestration() {
+#   echo -e "${BLUE}Running ${EDGE_CONTAINER} orchestration on the container...${COLOR_ENDING}"
 
 #   ${HOST_KEY_CHECKING}
-#   ${PROVISIONING}/reverse_proxy.yml ${EXTRA_VARS}
+#   ${PROVISIONING}/edge.yml ${EXTRA_VARS}
 # }
 
 # run_ssh_container_orchestration() {

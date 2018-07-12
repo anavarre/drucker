@@ -41,11 +41,11 @@ def configure_ssh_mirror():
     set_ssh_dir_perms(v.MIRROR_CONTAINER)
     remove_tmp_key()
 
-def configure_ssh_reverse_proxy():
-    """Configure SSH access on reverse proxy container"""
+def configure_ssh_edge():
+    """Configure SSH access on edge container"""
     create_tmp_key()
-    copy_tmp_key(v.REVERSE_PROXY_CONTAINER)
-    set_ssh_dir_perms(v.REVERSE_PROXY_CONTAINER)
+    copy_tmp_key(v.EDGE_CONTAINER)
+    set_ssh_dir_perms(v.EDGE_CONTAINER)
     remove_tmp_key()
 
 def configure_ssh_web():

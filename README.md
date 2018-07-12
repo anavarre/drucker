@@ -28,7 +28,7 @@ _drucker_ is an opinionated [Docker](https://www.docker.com)-based [Drupal](http
 _drucker_ runs on 5 containers:
 
 * `drucker_mirror` (`203.0.113.50`): APT mirror. Listens on port 3142. Allows for speedy reinstallation.
-* `drucker_reverse_proxy` (`203.0.113.2`): Varnish listens on port 80 and sends traffic to the Apache backend via nginx on port 8080).
+* `drucker_edge` (`203.0.113.2`): Varnish listens on port 80 and sends traffic to the Apache backend via nginx on port 8080).
 * `drucker_web` (`203.0.113.10`): Apache listens on port 80 and receives traffic from nginx.
 * `drucker_db` (`203.0.113.12`): MySQL listens on port 3306 and allows the stack to act as a multi-tier environment.
 * `drucker_search` (`203.0.113.13`): Apache Solr listens on port 8983.

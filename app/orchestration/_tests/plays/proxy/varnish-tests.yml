@@ -17,7 +17,7 @@
   changed_when: varnish_packages == ''
 
 - name: "TEST: Varnish should listen on port 80"
-  shell: grep -o "{{ reverse_proxy_port }}" {{ varnish_config }} ||  || echo "wrong port"
+  shell: grep -o "{{ edge_port }}" {{ varnish_config }} ||  || echo "wrong port"
   register: varnish_port_check
   changed_when: varnish_port_check.stdout == "wrong port"
   failed_when: varnish_port_check.stdout == "wrong port"
