@@ -27,7 +27,7 @@ def create_base2mirror_container():
 
 def create_mirror_container():
     """Create mirror container from mirror image"""
-    print(c.blue("Spinning up ${MIRROR_CONTAINER} container with ID:"))
+    print(c.blue("Spinning up %s container with ID:" % (v.MIRROR_CONTAINER)))
 
     s.run("docker run --privileged=true\
           --name %s -it -h %s --net %s --ip %s\
@@ -35,7 +35,7 @@ def create_mirror_container():
                          v.MIRROR_HOSTNAME,
                          v.APP,
                          v.MIRROR_IP,
-                         v.BASE_IMAGE), shell=True)
+                         v.MIRROR_IMAGE), shell=True)
 
     ssh.configure_ssh_mirror()
     o.run_mirror_orchestration()

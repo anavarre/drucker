@@ -37,7 +37,7 @@ $(command -v python3) ${DIR}/app/init.py
 # Container provisioning and orchestration.
 $(command -v python3) ${DIR}/app/base.py
 $(command -v python3) ${DIR}/app/mirror.py
-
+$(command -v python3) ${DIR}/app/reverse_proxy.py
 # provision_reverse_proxy_container
 # provision_db_container
 # provision_search_container

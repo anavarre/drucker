@@ -11,7 +11,7 @@ load_function_files() {
 
 load_container_files() {
   CONTAINER_DIR="containers"
-  CONTAINER_FILES="variables orchestration reverse_proxy web db search"
+  CONTAINER_FILES="variables orchestration web db search"
 
   for CONTAINER_FILE in ${CONTAINER_FILES} ; do
     source "${DIR}/${CONTAINER_DIR}/${CONTAINER_FILE}"
