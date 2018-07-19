@@ -5,6 +5,7 @@
     cache_valid_time: 86400
   register: apt_cache_check
   changed_when: apt_cache_check.cache_updated == true
+  ignore_errors: true
 
 - name: "SYSTEM: Update APT cache and upgrade the container"
   apt:

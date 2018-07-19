@@ -10,8 +10,8 @@ def run_orchestration(container, shortname):
     print(c.blue("Running %s orchestration on the container..." % (container)))
     s.getoutput("export ANSIBLE_HOST_KEY_CHECKING=False")
     s.run('''
-    ansible-playbook -i %s/orchestration/hosts --user=%s %s/orchestration/provisioning/%s.yml --extra-vars ansible_sudo_pass=%s
-    ''' % (v.APP_DIR, v.APP, v.APP_DIR, shortname, v.APP), shell=True)
+          ansible-playbook -i %s/orchestration/hosts --user=%s %s/orchestration/provisioning/%s.yml --extra-vars ansible_sudo_pass=%s
+          ''' % (v.APP_DIR, v.APP, v.APP_DIR, shortname, v.APP), shell=True)
 
 def run_base_orchestration():
     """Run orchestration on base container"""
@@ -29,10 +29,6 @@ def run_db_orchestration():
     """Run orchestration on database container"""
     run_orchestration(v.DB_CONTAINER, "db")
 
-def run_web_orchestration():
-    """Run orchestration on web container"""
-    run_orchestration(v.WEB_CONTAINER, "web")
-
 def run_search_orchestration():
     """Run orchestration on search container"""
     run_orchestration(v.SEARCH_CONTAINER, "search")
@@ -40,3 +36,7 @@ def run_search_orchestration():
 def run_ssh_orchestration():
     """Run SSH orchestration"""
     run_orchestration("SSH", "ssh")
+
+def run_web_orchestration():
+    """Run orchestration on web container"""
+    run_orchestration(v.WEB_CONTAINER, "web")

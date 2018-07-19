@@ -12,11 +12,11 @@ def create_base_container():
     """Create base container from init image"""
     print(c.blue("Spinning up %s container with ID:" % (v.BASE_CONTAINER)))
     s.run('''
-    docker run -d --name %s -it --net %s --ip %s %s bash
-    ''' % (v.BASE_CONTAINER,
-           v.APP,
-           v.BASE_IP,
-           v.INIT_IMAGE), shell=True)
+          docker run -d --name %s -it --net %s --ip %s %s bash
+          ''' % (v.BASE_CONTAINER,
+                 v.APP,
+                 v.BASE_IP,
+                 v.INIT_IMAGE), shell=True)
 
     ssh.configure_ssh_base()
     o.run_base_orchestration()

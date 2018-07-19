@@ -12,10 +12,6 @@ export COLOR_ENDING_HELP=$(printf '\033[0m')
 
 export DRUCKER_VERSION="dev"
 
-# SSH
-export RSA_DRUCKER_WEB="/tmp/id_rsa_drucker_web"
-export RSA_KEY_DEPLOYED="/tmp/rsa_key_deployed"
-
 # Search
 export SEARCH_USER="solr"
 export SEARCH_CORE="${USER}"

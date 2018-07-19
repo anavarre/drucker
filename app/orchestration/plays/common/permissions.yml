@@ -1,7 +1,13 @@
 ---
+- name: "PREP: Check if /var/www exists"
+  stat:
+    path: "{{ www_dir }}"
+  register: www_dir_exists
+
 - name: "PREP: Check /var/www permissions recursively"
   command: find "{{ www_dir }}" -not -user "{{ user }}" -o -not -group "{{ apache_user }}"
   register: var_www_permissions
+  when: www_dir_exists.stat.exists == true
   changed_when: var_www_permissions.stdout != ""
 
 - name: "PREP: Ensure /var/www has correct permissions recursively"
@@ -11,4 +17,4 @@
     group: "{{ apache_user }}"
     mode: g+s
     recurse: yes
-  when: var_www_permissions.stdout != ""
+  when: www_dir_exists.stat.exists == true and var_www_permissions.stdout != ""

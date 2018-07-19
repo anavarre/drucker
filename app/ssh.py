@@ -2,9 +2,56 @@
 """Manages SSH access on containers"""
 
 import subprocess as s
+import os
 import variables as v
 
 TMP_KEY = "/tmp/authorized_keys"
+
+def allow_ssh_access(host):
+    rsa_drucker_web = "/tmp/id_rsa_drucker_web"
+    rsa_key_deployed = "/tmp/rsa_key_deployed"
+    key = s.getoutput("cat %s" % (rsa_drucker_web))
+    key_check = s.getoutput("cat %s_check" % (rsa_drucker_web))
+
+    if not os.path.isfile(rsa_drucker_web):
+        s.run('''docker cp %s:/home/%s/.ssh/id_rsa.pub %s
+              ''' % (v.WEB_CONTAINER,
+                     v.APP,
+                     rsa_drucker_web), shell=True)
+
+        s.run('''docker exec -u %s -it %s /bin/grep -q %s /home/%s/.ssh/authorized_keys > %s
+              ''' % (v.APP,
+                     host,
+                     key,
+                     v.APP,
+                     rsa_key_deployed), shell=True)
+
+    if not s.getoutput(rsa_key_deployed):
+        s.run('''docker exec -u %s -it %s bash -c "echo '%s' >> /home/%s/.ssh/authorized_keys
+              ''' % (v.APP,
+                     host,
+                     key,
+                     v.APP), shell=True)
+    else:
+        s.run('''docker cp %s:/home/%s/.ssh/id_rsa.pub %s_check
+              ''' % (v.WEB_CONTAINER,
+                     v.APP,
+                     rsa_drucker_web), shell=True)
+
+        s.run('''docker exec -u %s -it %s /bin/grep -q %s /home/%s/.ssh/authorized_keys > %s
+              ''' % (v.APP,
+                     host,
+                     key_check,
+                     v.APP,
+                     rsa_key_deployed), shell=True)
+
+        if not s.getoutput(rsa_key_deployed) and os.path.getsize(s.getoutput(rsa_key_deployed)) != 0:
+            s.run('''docker exec -u %s -it %s bash -c "echo '%s' >> /home/%s/.ssh/authorized_keys"
+                  ''' % (v.APP,
+                         host,
+                         key_check,
+                         v.APP,
+                         rsa_key_deployed), shell=True)
 
 def create_tmp_key():
     """Create temporary SSH key under /tmp"""

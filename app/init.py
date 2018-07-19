@@ -37,6 +37,3 @@ def build_init_image():
 create_bridge_network()
 pull_base_image()
 build_init_image()
-
-#CONTAINERS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-#export ANSIBLE_CONFIG="${CONTAINERS_DIR}/ansible.cfg"
