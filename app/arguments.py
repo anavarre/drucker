@@ -5,8 +5,9 @@ import subprocess as s
 import colorful as c
 import argparse
 import variables as v
-import sys as q
+import sys
 import orchestration as o
+import containers
 
 p = argparse.ArgumentParser()
 
@@ -18,7 +19,17 @@ p.add_argument('--health',
 p.add_argument('--start',
     dest='start',
     action="store_true",
-    help='Starts all drucker containers')
+    help='Starts all containers')
+
+p.add_argument('--stop',
+    dest='stop',
+    action="store_true",
+    help='Stops all containers')
+
+p.add_argument('--restart',
+    dest='restart',
+    action="store_true",
+    help='Restarts all containers')
 
 p.add_argument('--list',
     dest='list',
@@ -37,24 +48,27 @@ p.add_argument('--version',
 
 args = p.parse_args()
 
-def containers_health():
-    print("health")
-
-def containers_start():
-    print("start")
-
 def app_list():
     s.run('''docker exec -it %s cat %s/.app-registry
           ''' % (v.WEB_CONTAINER, v.CONTAINER_HTML_PATH), shell=True)
 
 def run_tests():
+
+#       if [[ "${COMMAND}" == "tests" ]] && [[ ! -z ${SITENAME} ]]
+#         usage
+#         exit 0
+#       else
+#         check_containers_status
+#         run_tests
+#         exit 0
+
     """Runs the Ansible test suite"""
     php_version_check = s.getoutput('''docker exec -u %s -it %s /bin/cat /etc/php/default_php_version
                                     ''' % (v.APP, v.WEB_CONTAINER))
     if v.DEFAULT_PHP not in php_version_check:
         print("Tests need to be executed against the current stable PHP version")
         print("Please switch to PHP %s with 'drucker php:%s'" % (v.DEFAULT_PHP, v.DEFAULT_PHP))
-        q.exit()
+        sys.exit()
 
     for group in v.TEST_GROUPS:
         o.run_tests_orchestration(group)
@@ -69,9 +83,13 @@ def return_version():
         print("You are running tagged release " + c.orange(v.APP_VERSION))
 
 if args.health:
-    containers_health()
+    containers.health()
 elif args.start:
-    containers_start()
+    containers.start()
+elif args.stop:
+    containers.stop()
+elif args.restart:
+    containers.restart()
 elif args.list:
     app_list()
 elif args.tests:
@@ -81,10 +99,6 @@ elif args.version:
 
 # drucker_argument() {
 #   if [[ -n "${COMMAND}" ]] && \
-#        [[ "${COMMAND}" != "containers:health" ]] && \
-#        [[ "${COMMAND}" != "containers:start" ]] && \
-#        [[ "${COMMAND}" != "containers:stop" ]] && \
-#        [[ "${COMMAND}" != "containers:restart" ]] && \
 #        [[ "${COMMAND}" != "app:drupal" ]] && \
 #        [[ "${COMMAND}" != "app:lightning" ]] && \
 #        [[ "${COMMAND}" != "app:reservoir" ]] && \
@@ -95,30 +109,9 @@ elif args.version:
 #        [[ "${COMMAND}" != "app:prod" ]] && \
 #        [[ "${COMMAND}" != "php:7.1" ]] && \
 #        [[ "${COMMAND}" != "php:7.2" ]] && \
-#        [[ "${COMMAND}" != "tests" ]] && \
 #        [[ "${COMMAND}" != "help" ]]; then
 #     usage
 #   else
-#     case "$COMMAND" in
-#       containers:health)
-#         run_healthcheck
-#       ;;
-#       containers:start)
-#       if [[ "${COMMAND}" == "containers:start" ]]; then
-#         start_containers
-#       fi
-#       ;;
-#       containers:stop)
-#       if [[ "${COMMAND}" == "containers:stop" ]]; then
-#         stop_containers
-#         exit 0
-#       fi
-#       ;;
-#       containers:restart)
-#       if [[ "${COMMAND}" == "containers:restart" ]]; then
-#         restart_containers
-#       fi
-#       ;;
 #       app:drupal)
 #       if [[ "${COMMAND}" == "app:drupal" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
 #         validation
@@ -201,16 +194,6 @@ elif args.version:
 #       if [[ "${COMMAND}" == "php:7.2" ]]; then
 #         check_containers_status
 #         set_default_php_version
-#         exit 0
-#       fi
-#       ;;
-#       tests)
-#       if [[ "${COMMAND}" == "tests" ]] && [[ ! -z ${SITENAME} ]]; then
-#         usage
-#         exit 0
-#       else
-#         check_containers_status
-#         run_tests
 #         exit 0
 #       fi
 #       ;;

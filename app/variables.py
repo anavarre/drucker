@@ -70,6 +70,12 @@ DB_CONTAINER = "%s_db" % (APP)
 WEB_CONTAINER = "%s_web" % (APP)
 SEARCH_CONTAINER = "%s_search" % (APP)
 
+CONTAINERS= [MIRROR_CONTAINER,
+             EDGE_CONTAINER,
+             DB_CONTAINER,
+             WEB_CONTAINER,
+             SEARCH_CONTAINER]
+
 # Hostnames
 TLD = "local"
 MIRROR_HOSTNAME = "mirror.%s" % (TLD)
@@ -100,3 +106,6 @@ CONTAINER_HTML_PATH = "/var/www/html"
 # Services
 DEFAULT_PHP = "7.2"
 PREVIOUS_PHP = "7.1"
+
+# Database
+MYSQL_DIR_OWNERSHIP = "mysql"

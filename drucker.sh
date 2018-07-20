@@ -10,9 +10,6 @@ load_function_files
 load_container_files
 
 ${APP}/arguments.py
-
-exit 0
-
 ${APP}/requirements.py
 
 source "${DIR}/config"

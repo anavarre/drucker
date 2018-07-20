@@ -20,7 +20,6 @@ load_container_files() {
 
 drucker_argument() {
   if [[ -n "${COMMAND}" ]] && \
-       [[ "${COMMAND}" != "containers:health" ]] && \
        [[ "${COMMAND}" != "containers:start" ]] && \
        [[ "${COMMAND}" != "containers:stop" ]] && \
        [[ "${COMMAND}" != "containers:restart" ]] && \
@@ -34,14 +33,10 @@ drucker_argument() {
        [[ "${COMMAND}" != "app:prod" ]] && \
        [[ "${COMMAND}" != "php:7.1" ]] && \
        [[ "${COMMAND}" != "php:7.2" ]] && \
-       [[ "${COMMAND}" != "tests" ]] && \
        [[ "${COMMAND}" != "help" ]]; then
     usage
   else
     case "$COMMAND" in
-      containers:health)
-        run_healthcheck
-      ;;
       containers:start)
       if [[ "${COMMAND}" == "containers:start" ]]; then
         start_containers
@@ -140,16 +135,6 @@ drucker_argument() {
       if [[ "${COMMAND}" == "php:7.2" ]]; then
         check_containers_status
         set_default_php_version
-        exit 0
-      fi
-      ;;
-      tests)
-      if [[ "${COMMAND}" == "tests" ]] && [[ ! -z ${SITENAME} ]]; then
-        usage
-        exit 0
-      else
-        check_containers_status
-        run_tests
         exit 0
       fi
       ;;

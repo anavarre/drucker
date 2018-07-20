@@ -9,7 +9,6 @@ validation() {
 }
 
 usage() {
-  return_version
 cat <<EOF
 
 ${ORANGE_HELP}Usage:${COLOR_ENDING_HELP}

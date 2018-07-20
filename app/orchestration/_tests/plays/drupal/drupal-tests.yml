@@ -16,7 +16,7 @@
     - "{{ simpletest_dir }}"
     - "{{ drupal_git }}"
     - "{{ drupal_gitignore }}"
-    - "{{ db_data }}/{{ user }}"
+    # - "{{ db_data }}/{{ user }}"
     - "{{ phpunit_xml }}"
     - "{{ import_dir }}"
     - "{{ archives_dir }}"
