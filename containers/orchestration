@@ -143,89 +143,40 @@ set_default_php_version() {
   ${COMMANDS}/default-php.yml --extra-vars "ansible_sudo_pass=${USER}"
 }
 
-run_tests() {
-  if [[ $(docker exec -u "${USER}" -it "${WEB_CONTAINER}" /bin/cat /etc/php/default_php_version) != ${DEFAULT_PHP} ]]; then
-    echo "Tests need to be executed against the current stable PHP version"
-    echo "Please switch to PHP ${DEFAULT_PHP} with 'drucker php:${DEFAULT_PHP}'"
-    exit 0
-  fi
+# run_tests() {
+#   if [[ $(docker exec -u "${USER}" -it "${WEB_CONTAINER}" /bin/cat /etc/php/default_php_version) != ${DEFAULT_PHP} ]]; then
+#     echo "Tests need to be executed against the current stable PHP version"
+#     echo "Please switch to PHP ${DEFAULT_PHP} with 'drucker php:${DEFAULT_PHP}'"
+#     exit 0
+#   fi
 
-  echo -e "${BLUE}Running the system test suite...${COLOR_ENDING}"
-
-  ${HOST_KEY_CHECKING}
-  ${TESTS}/system-tests.yml ${EXTRA_VARS}
-
-  echo -e "${BLUE}Running the mirror test suite...${COLOR_ENDING}"
-
-  ${HOST_KEY_CHECKING}
-  ${TESTS}/mirror-tests.yml ${EXTRA_VARS}
-
-  echo -e "${BLUE}Running the edge test suite...${COLOR_ENDING}"
-
-  ${HOST_KEY_CHECKING}
-  ${TESTS}/edge-tests.yml ${EXTRA_VARS}
-
-  echo -e "${BLUE}Running the database test suite...${COLOR_ENDING}"
-
-  ${HOST_KEY_CHECKING}
-  ${TESTS}/db-tests.yml ${EXTRA_VARS}
-
-  echo -e "${BLUE}Running the search test suite...${COLOR_ENDING}"
-
-  ${HOST_KEY_CHECKING}
-  ${TESTS}/search-tests.yml ${EXTRA_VARS}
-
-  echo -e "${BLUE}Running the web test suite...${COLOR_ENDING}"
-
-  ${HOST_KEY_CHECKING}
-  ${TESTS}/web-tests.yml ${EXTRA_VARS}
-}
-
-# run_base_container_orchestration() {
-#   echo -e "${BLUE}Running ${BASE_CONTAINER} orchestration on the container...${COLOR_ENDING}"
+#   echo -e "${BLUE}Running the system test suite...${COLOR_ENDING}"
 
 #   ${HOST_KEY_CHECKING}
-#   ${PROVISIONING}/base.yml ${EXTRA_VARS}
-# }
+#   ${TESTS}/system-tests.yml ${EXTRA_VARS}
 
-# run_mirror_container_orchestration() {
-#   echo -e "${BLUE}Running ${MIRROR_CONTAINER} orchestration on the container...${COLOR_ENDING}"
+#   echo -e "${BLUE}Running the mirror test suite...${COLOR_ENDING}"
 
 #   ${HOST_KEY_CHECKING}
-#   ${PROVISIONING}/mirror.yml ${EXTRA_VARS}
-# }
+#   ${TESTS}/mirror-tests.yml ${EXTRA_VARS}
 
-# run_edge_container_orchestration() {
-#   echo -e "${BLUE}Running ${EDGE_CONTAINER} orchestration on the container...${COLOR_ENDING}"
+#   echo -e "${BLUE}Running the edge test suite...${COLOR_ENDING}"
 
 #   ${HOST_KEY_CHECKING}
-#   ${PROVISIONING}/edge.yml ${EXTRA_VARS}
-# }
+#   ${TESTS}/edge-tests.yml ${EXTRA_VARS}
 
-# run_ssh_container_orchestration() {
-#   echo -e "${BLUE}Running SSH orchestration on the container...${COLOR_ENDING}"
+#   echo -e "${BLUE}Running the database test suite...${COLOR_ENDING}"
 
 #   ${HOST_KEY_CHECKING}
-#   ${PROVISIONING}/ssh.yml ${EXTRA_VARS}
-# }
+#   ${TESTS}/db-tests.yml ${EXTRA_VARS}
 
-# run_web_container_orchestration() {
-#   echo -e "${BLUE}Running ${WEB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
+#   echo -e "${BLUE}Running the search test suite...${COLOR_ENDING}"
 
 #   ${HOST_KEY_CHECKING}
-#   ${PROVISIONING}/web.yml ${EXTRA_VARS}
-# }
+#   ${TESTS}/search-tests.yml ${EXTRA_VARS}
 
-# run_db_container_orchestration() {
-#   echo -e "${BLUE}Running ${DB_CONTAINER} orchestration on the container...${COLOR_ENDING}"
+#   echo -e "${BLUE}Running the web test suite...${COLOR_ENDING}"
 
 #   ${HOST_KEY_CHECKING}
-#   ${PROVISIONING}/db.yml ${EXTRA_VARS}
-# }
-
-# run_search_container_orchestration() {
-#   echo -e "${BLUE}Running ${SEARCH_CONTAINER} orchestration on the container...${COLOR_ENDING}"
-
-#   ${HOST_KEY_CHECKING}
-#   ${PROVISIONING}/search.yml ${EXTRA_VARS}
+#   ${TESTS}/web-tests.yml ${EXTRA_VARS}
 # }

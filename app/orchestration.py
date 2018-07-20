@@ -13,6 +13,14 @@ def run_orchestration(container, shortname):
           ansible-playbook -i %s/orchestration/hosts --user=%s %s/orchestration/provisioning/%s.yml --extra-vars ansible_sudo_pass=%s
           ''' % (v.APP_DIR, v.APP, v.APP_DIR, shortname, v.APP), shell=True)
 
+def run_tests_orchestration(shortname):
+    """Parent function to manage running the test suite"""
+    print(c.blue("Running the %s test suite..." % (shortname)))
+    s.getoutput("export ANSIBLE_HOST_KEY_CHECKING=False")
+    s.run('''
+          ansible-playbook -i %s/orchestration/hosts --user=%s %s/orchestration/_tests/%s-tests.yml --extra-vars ansible_sudo_pass=%s
+          ''' % (v.APP_DIR, v.APP, v.APP_DIR, shortname, v.APP), shell=True)
+
 def run_base_orchestration():
     """Run orchestration on base container"""
     run_orchestration(v.BASE_CONTAINER, "base")

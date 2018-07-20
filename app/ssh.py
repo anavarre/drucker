@@ -8,6 +8,7 @@ import variables as v
 TMP_KEY = "/tmp/authorized_keys"
 
 def allow_ssh_access(host):
+    """Allows to set up SSH access from the Web container to any other"""
     rsa_drucker_web = "/tmp/id_rsa_drucker_web"
     rsa_key_deployed = "/tmp/rsa_key_deployed"
     key = s.getoutput("cat %s" % (rsa_drucker_web))
@@ -45,13 +46,14 @@ def allow_ssh_access(host):
                      v.APP,
                      rsa_key_deployed), shell=True)
 
-        if not s.getoutput(rsa_key_deployed) and os.path.getsize(s.getoutput(rsa_key_deployed)) != 0:
+        if (not s.getoutput(rsa_key_deployed) and
+                os.path.getsize(s.getoutput(rsa_key_deployed)) != 0):
+
             s.run('''docker exec -u %s -it %s bash -c "echo '%s' >> /home/%s/.ssh/authorized_keys"
                   ''' % (v.APP,
                          host,
                          key_check,
-                         v.APP,
-                         rsa_key_deployed), shell=True)
+                         v.APP), shell=True)
 
 def create_tmp_key():
     """Create temporary SSH key under /tmp"""

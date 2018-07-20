@@ -10,15 +10,9 @@ export ORANGE_HELP=$(printf '\033[38;5;178m')
 export COLOR_ENDING="\033[0m"
 export COLOR_ENDING_HELP=$(printf '\033[0m')
 
-export DRUCKER_VERSION="dev"
-
 # Search
 export SEARCH_USER="solr"
 export SEARCH_CORE="${USER}"
-
-# Volume mappings
-export CONTAINER_DB_PATH="/var/lib/mysql"
-export CONTAINER_HTML_PATH="/var/www/html"
 
 # Networking
 export NETWORK="${USER}"

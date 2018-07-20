@@ -24,7 +24,6 @@ drucker_argument() {
        [[ "${COMMAND}" != "containers:start" ]] && \
        [[ "${COMMAND}" != "containers:stop" ]] && \
        [[ "${COMMAND}" != "containers:restart" ]] && \
-       [[ "${COMMAND}" != "app:list" ]] && \
        [[ "${COMMAND}" != "app:drupal" ]] && \
        [[ "${COMMAND}" != "app:lightning" ]] && \
        [[ "${COMMAND}" != "app:reservoir" ]] && \
@@ -35,7 +34,6 @@ drucker_argument() {
        [[ "${COMMAND}" != "app:prod" ]] && \
        [[ "${COMMAND}" != "php:7.1" ]] && \
        [[ "${COMMAND}" != "php:7.2" ]] && \
-       [[ "${COMMAND}" != "version" ]] && \
        [[ "${COMMAND}" != "tests" ]] && \
        [[ "${COMMAND}" != "help" ]]; then
     usage
@@ -58,11 +56,6 @@ drucker_argument() {
       containers:restart)
       if [[ "${COMMAND}" == "containers:restart" ]]; then
         restart_containers
-      fi
-      ;;
-      app:list)
-      if [[ "${COMMAND}" == "app:list" ]]; then
-        run_app_list
       fi
       ;;
       app:drupal)
@@ -149,10 +142,6 @@ drucker_argument() {
         set_default_php_version
         exit 0
       fi
-      ;;
-      version)
-      return_version
-      exit 0
       ;;
       tests)
       if [[ "${COMMAND}" == "tests" ]] && [[ ! -z ${SITENAME} ]]; then

@@ -3,11 +3,17 @@
 # Invoke the script from anywhere (e.g .bashrc alias)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+APP="`command -v python3` ${DIR}/app"
+
 source "${DIR}/init"
 load_function_files
 load_container_files
 
-$(command -v python3) ${DIR}/app/requirements.py
+${APP}/arguments.py
+
+exit 0
+
+${APP}/requirements.py
 
 source "${DIR}/config"
 
@@ -22,7 +28,7 @@ if [[ $3 = *.* ]]; then
 fi
 
 # Custom user configuration.
-$(command -v python3) ${DIR}/app/local_setup.py
+${APP}/local_setup.py
 
 
 #$(command -v python3) ${DIR}/app/ssh.py
@@ -32,12 +38,11 @@ $(command -v python3) ${DIR}/app/local_setup.py
 drucker_argument
 
 # # drucker initialization.
-$(command -v python3) ${DIR}/app/init.py
-
+${APP}/init.py
 # Container provisioning and orchestration.
-# $(command -v python3) ${DIR}/app/base.py
-# $(command -v python3) ${DIR}/app/mirror.py
-# $(command -v python3) ${DIR}/app/edge.py
-# $(command -v python3) ${DIR}/app/db.py
-# $(command -v python3) ${DIR}/app/search.py
-$(command -v python3) ${DIR}/app/web.py
+${APP}/base.py
+${APP}/mirror.py
+${APP}/edge.py
+${APP}/db.py
+${APP}/search.py
+${APP}/web.py

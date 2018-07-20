@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 
 APP = "drucker"
+APP_VERSION="dev"
 APP_ROOT = os.path.dirname(os.path.dirname(__file__))
 APP_DIR = "%s/app" % (APP_ROOT)
 HOME = str(Path.home())
@@ -13,6 +14,7 @@ EXECUTABLES = ["docker", "ansible"]
 DOMAINS = "drucker.local phpmyadmin.local adminer.local\
  lightning.local reservoir.local blt.local"
 HOSTS = "/etc/hosts"
+TEST_GROUPS = ["system", "mirror", "edge", "db", "search", "web"]
 
 # SSH
 SSH_CONFIG = "%s/.ssh/config" % (HOME)
@@ -90,3 +92,11 @@ HOST_TCP_PORT_MAPPER_WEB = "2047"
 TCP_PORT_MAPPER_WEB = "2049"
 HOST_TCP_PORT_MAPPER_DB = "2051"
 TCP_PORT_MAPPER_DB = "2052"
+
+# Volume mappings
+CONTAINER_DB_PATH = "/var/lib/mysql"
+CONTAINER_HTML_PATH = "/var/www/html"
+
+# Services
+DEFAULT_PHP = "7.2"
+PREVIOUS_PHP = "7.1"
