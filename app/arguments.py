@@ -53,7 +53,6 @@ p.add_argument('--version',
 
 args = p.parse_args()
 
-
 def return_version():
     """Returns either the latest commit hash or tagged release"""
     latest_commit= s.getoutput("cd %s && git rev-parse --short HEAD" % (v.APP_ROOT))

@@ -7,6 +7,7 @@ import variables as v
 import orchestration as o
 import os
 import containers
+import click
 
 def run_orchestration(container, shortname):
     """Parent function to manage container orchestration"""
@@ -95,22 +96,6 @@ def app_list():
 #   exit 0
 # }
 
-def user_confirmation():
-    # if "${COMMAND}" == "app:delete":
-    input("You're about to delete the %s app. Are you sure? [Y/n] " % (v.APP))
-    # else:
-    # read -p "The ${SITE} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
-
-def cancellation():
-    """Cancels a user action"""
-    print(c.green("Back to the comfort zone. Aborting..."))
-    sys.exit()
-
-def failure():
-    """Quits when the user-entered input doesn't meet the requirements"""
-    print(c.red("Sorry, the only accepted input characters are [Yy/Nn]. Aborting..."))
-    sys.exit
-
 def hosts_file():
     """Prompts the user with modifying their /etc/hosts file"""
     print(c.green("Remember to add the %s.local entry to your local /etc/hosts file!"))
@@ -120,33 +105,14 @@ def app_delete():
     """Deletes an arbitrary docroot"""
     """TODO: actually enforce arbitrary docroots through positional arguments"""
     if os.path.isdir("%s/%s" % (v.CONTAINER_HTML_PATH, v.APP)):
-        print("OK")
-        user_confirmation
-    #   if [[ ${REPLY} =~ ^[Nn]$ ]]; then
-    #     # cancellation
-    #   elif [[ ! ${REPLY} =~ ^[Yy]$ ]]:
-    #     # failure
+        if click.confirm("The %s docroot already exists. Should we overwrite the codebase, files and database?" % (v.APP), default=True):
+            print(c.blue("Deleting %s docroot..." % (v.APP)))
+            s.run('''ansible-playbook -i %s/orchestration/hosts\
+                     --user=%s %s/orchestration/commands/app-delete.yml\
+                     --extra-vars "ansible_sudo_pass=%s app=delete sitename=%s"
+                  ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP, v.APP), shell=True)
+            print(c.green("Remember to remove the %s.local entry from your local /etc/hosts file!" % (v.APP)))
+        else:
+           print(c.green("Back to the comfort zone. Aborting..."))
     else:
-        print("NOK")
-    #     print(c.blue("Deleting % docroot..." % (BLABLA)))
-    #     ${COMMANDS}/app-delete.yml --extra-vars "ansible_sudo_pass=${USER} app=delete sitename=${SITE}"
-    #     print(c.green("Remember to remove the %s.local entry from your local /etc/hosts file!"))
-    # else
-    #   print("This app doesn't exist.")
-
-# app_delete() {
-#   if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
-#     user_confirmation
-#     if [[ ${REPLY} =~ ^[Nn]$ ]]; then
-#       cancellation
-#     elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
-#       failure
-#     else
-#       echo -e "${BLUE}Deleting ${SITE} docroot...${COLOR_ENDING}"
-#       ${COMMANDS}/app-delete.yml --extra-vars "ansible_sudo_pass=${USER} app=delete sitename=${SITE}"
-#       echo -e "${GREEN}Remember to remove the ${SITE}.local entry from your local /etc/hosts file!${COLOR_ENDING}"
-#     fi
-#   else
-#     echo "This app doesn't exist."
-#   fi
-# }
+        print("This app doesn't exist.")
