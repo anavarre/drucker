@@ -1,53 +1,5 @@
 #!/usr/bin/env bash
 
-container_status() {
-  mapfile -t CONTAINERS_STATUS < <( docker ps -a | grep 'drucker_' | awk '{print $9}' )
-  for STATUS in ${CONTAINERS_STATUS[@]}; do
-    if [[ " ${STATUS[*]} " == *" Exited "* ]]; then
-      echo 'All containers need to be started to run the health check.'
-      echo 'Run drucker containers:start'
-      exit 0
-    fi
-  done
-}
-
-run_healthcheck() {
-  container_status
-  mapfile -t CONTAINERS < <( docker ps | grep 'drucker_' | awk '{print $NF}' )
-
-  for CONTAINER in ${CONTAINERS[@]}; do
-    if [[ "${CONTAINER}" == "drucker_web" ]]; then
-      echo -e "${BLUE}Checking services for ${CONTAINER}${COLOR_ENDING}"
-      apache_check
-      phpfpm_check
-    fi
-
-    if [[ "${CONTAINER}" == "drucker_search" ]]; then
-      echo -e "${BLUE}Checking services for ${CONTAINER}${COLOR_ENDING}"
-      solr_check
-    fi
-
-    if [[ "${CONTAINER}" == "drucker_db" ]]; then
-      echo -e "${BLUE}Checking services for ${CONTAINER}${COLOR_ENDING}"
-      mysql_check
-      memcached_check
-    fi
-
-    if [[ "${CONTAINER}" == "drucker_edge" ]]; then
-      echo -e "${BLUE}Checking services for ${CONTAINER}${COLOR_ENDING}"
-      varnish_check
-      nginx_check
-    fi
-
-    if [[ "${CONTAINER}" == "drucker_mirror" ]]; then
-      echo -e "${BLUE}Checking services for ${CONTAINER}${COLOR_ENDING}"
-      apache_check
-      aptcacherng_check
-    fi
-  done
-  exit 0
-}
-
 run_app_dev() {
   # Comma-separated sitenames are split into single values for drucker to
   # get a list of sites to switch to development mode.
@@ -116,15 +68,6 @@ run_app_reservoir() {
   # get a list of Reservoir sites to create.
   for SITE in ${SITENAME//,/ }; do
     app_reservoir
-  done
-  exit 0
-}
-
-run_app_delete() {
-  # Comma-separated sitenames are split into single values for drucker to
-  # get a list of sites to delete.
-  for SITE in ${SITENAME//,/ }; do
-    app_delete
   done
   exit 0
 }

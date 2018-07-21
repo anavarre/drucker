@@ -102,6 +102,7 @@ TCP_PORT_MAPPER_DB = "2052"
 # Volume mappings
 CONTAINER_DB_PATH = "/var/lib/mysql"
 CONTAINER_HTML_PATH = "/var/www/html"
+HOST_HTML_PATH = CONTAINER_HTML_PATH
 
 # Services
 DEFAULT_PHP = "7.2"

@@ -36,6 +36,11 @@ p.add_argument('--list',
     action="store_true",
     help='Lists all deployed apps')
 
+p.add_argument('--delete',
+    dest='delete',
+    action="store_true",
+    help='Deletes an arbitrary docroot')
+
 p.add_argument('--tests',
     dest='tests',
     action="store_true",
@@ -48,30 +53,6 @@ p.add_argument('--version',
 
 args = p.parse_args()
 
-def app_list():
-    s.run('''docker exec -it %s cat %s/.app-registry
-          ''' % (v.WEB_CONTAINER, v.CONTAINER_HTML_PATH), shell=True)
-
-def run_tests():
-
-#       if [[ "${COMMAND}" == "tests" ]] && [[ ! -z ${SITENAME} ]]
-#         usage
-#         exit 0
-#       else
-#         check_containers_status
-#         run_tests
-#         exit 0
-
-    """Runs the Ansible test suite"""
-    php_version_check = s.getoutput('''docker exec -u %s -it %s /bin/cat /etc/php/default_php_version
-                                    ''' % (v.APP, v.WEB_CONTAINER))
-    if v.DEFAULT_PHP not in php_version_check:
-        print("Tests need to be executed against the current stable PHP version")
-        print("Please switch to PHP %s with 'drucker php:%s'" % (v.DEFAULT_PHP, v.DEFAULT_PHP))
-        sys.exit()
-
-    for group in v.TEST_GROUPS:
-        o.run_tests_orchestration(group)
 
 def return_version():
     """Returns either the latest commit hash or tagged release"""
@@ -91,116 +72,10 @@ elif args.stop:
 elif args.restart:
     containers.restart()
 elif args.list:
-    app_list()
+    o.app_list()
+elif args.delete:
+    o.app_delete()
 elif args.tests:
-    run_tests()
+    o.run_tests()
 elif args.version:
     return_version()
-
-# drucker_argument() {
-#   if [[ -n "${COMMAND}" ]] && \
-#        [[ "${COMMAND}" != "app:drupal" ]] && \
-#        [[ "${COMMAND}" != "app:lightning" ]] && \
-#        [[ "${COMMAND}" != "app:reservoir" ]] && \
-#        [[ "${COMMAND}" != "app:blt" ]] && \
-#        [[ "${COMMAND}" != "app:delete" ]] && \
-#        [[ "${COMMAND}" != "app:import" ]] && \
-#        [[ "${COMMAND}" != "app:dev" ]] && \
-#        [[ "${COMMAND}" != "app:prod" ]] && \
-#        [[ "${COMMAND}" != "php:7.1" ]] && \
-#        [[ "${COMMAND}" != "php:7.2" ]] && \
-#        [[ "${COMMAND}" != "help" ]]; then
-#     usage
-#   else
-#       app:drupal)
-#       if [[ "${COMMAND}" == "app:drupal" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
-#         validation
-#         usage
-#       else
-#         check_containers_status
-#         run_app_drupal
-#       fi
-#       ;;
-#       app:lightning)
-#       # See validation() for details.
-#       if [[ "${COMMAND}" == "app:lightning" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
-#         validation
-#         usage
-#       else
-#         check_containers_status
-#         run_app_lightning
-#       fi
-#       ;;
-#       app:reservoir)
-#       # See validation() for details.
-#       if [[ "${COMMAND}" == "app:reservoir" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
-#         validation
-#         usage
-#       else
-#         check_containers_status
-#         run_app_reservoir
-#       fi
-#       ;;
-#       app:blt)
-#       if [[ "${COMMAND}" == "app:blt" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
-#         validation
-#         usage
-#       else
-#         check_containers_status
-#         run_app_blt
-#       fi
-#       ;;
-#       app:delete)
-#       if [[ "${COMMAND}" == "app:delete" ]] && [[ -z ${SITENAME} ]]; then
-#         usage
-#       else
-#         check_containers_status
-#         run_app_delete
-#       fi
-#       ;;
-#       app:import)
-#       if [[ "${COMMAND}" == "app:import" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
-#         validation
-#         usage
-#       else
-#         check_containers_status
-#         run_app_import
-#       fi
-#       ;;
-#       app:dev)
-#       if [[ "${COMMAND}" == "app:dev" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
-#         usage
-#       else
-#         check_containers_status
-#         run_app_dev
-#       fi
-#       ;;
-#       app:prod)
-#       if [[ "${COMMAND}" == "app:prod" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
-#         usage
-#       else
-#         check_containers_status
-#         run_app_prod
-#       fi
-#       ;;
-#       php:7.1)
-#       if [[ "${COMMAND}" == "php:7.1" ]]; then
-#         check_containers_status
-#         set_previous_php_version
-#         exit 0
-#       fi
-#       ;;
-#       php:7.2)
-#       if [[ "${COMMAND}" == "php:7.2" ]]; then
-#         check_containers_status
-#         set_default_php_version
-#         exit 0
-#       fi
-#       ;;
-#       help)
-#       usage
-#       exit 0
-#       ;;
-#     esac
-#   fi
-# }

@@ -3,28 +3,6 @@
 export COMMANDS="${PLAYBOOKS}/commands"
 export TESTS="${PLAYBOOKS}/_tests"
 
-user_confirmation() {
-  if [[ "${COMMAND}" == "app:delete" ]]; then
-    read -p "You're about to delete the ${SITE} app. Are you sure? [Y/n] "
-  else
-    read -p "The ${SITE} docroot already exists. Should we overwrite the codebase, files and database? [Y/n] "
-  fi
-}
-
-cancellation() {
-  echo -e "${GREEN}Back to the comfort zone. Aborting.${COLOR_ENDING}"
-  exit 0
-}
-
-failure() {
-  echo "Sorry, the only accepted input characters are [Yy/Nn]. Aborting..."
-  exit 0
-}
-
-hosts_file() {
-  echo -e "${GREEN}Remember to add the ${SITE}.local entry to your local /etc/hosts file!${COLOR_ENDING}"
-}
-
 # In several of the below functions, SITE is the result of SITENAME supporting
 # a comma-separated list of sites. See functions/arguments file for details.
 
@@ -116,23 +94,6 @@ app_reservoir() {
   hosts_file
 }
 
-app_delete() {
-  if [[ -d ${LOCAL_HTML_PATH}/${SITE} ]]; then
-    user_confirmation
-    if [[ ${REPLY} =~ ^[Nn]$ ]]; then
-      cancellation
-    elif [[ ! ${REPLY} =~ ^[Yy]$ ]]; then
-      failure
-    else
-      echo -e "${BLUE}Deleting ${SITE} docroot...${COLOR_ENDING}"
-      ${COMMANDS}/app-delete.yml --extra-vars "ansible_sudo_pass=${USER} app=delete sitename=${SITE}"
-      echo -e "${GREEN}Remember to remove the ${SITE}.local entry from your local /etc/hosts file!${COLOR_ENDING}"
-    fi
-  else
-    echo "This app doesn't exist."
-  fi
-}
-
 set_previous_php_version() {
   echo -e "${BLUE}Switch to ${PREVIOUS_PHP}...${COLOR_ENDING}"
   ${COMMANDS}/previous-php.yml --extra-vars "ansible_sudo_pass=${USER}"
@@ -141,42 +102,4 @@ set_previous_php_version() {
 set_default_php_version() {
   echo -e "${BLUE}Switch to ${DEFAULT_PHP}...${COLOR_ENDING}"
   ${COMMANDS}/default-php.yml --extra-vars "ansible_sudo_pass=${USER}"
-}
-
-run_tests() {
-  if [[ $(docker exec -u "${USER}" -it "${WEB_CONTAINER}" /bin/cat /etc/php/default_php_version) != ${DEFAULT_PHP} ]]; then
-    echo "Tests need to be executed against the current stable PHP version"
-    echo "Please switch to PHP ${DEFAULT_PHP} with 'drucker php:${DEFAULT_PHP}'"
-    exit 0
-  fi
-
-  echo -e "${BLUE}Running the system test suite...${COLOR_ENDING}"
-
-  ${HOST_KEY_CHECKING}
-  ${TESTS}/system-tests.yml ${EXTRA_VARS}
-
-  echo -e "${BLUE}Running the mirror test suite...${COLOR_ENDING}"
-
-  ${HOST_KEY_CHECKING}
-  ${TESTS}/mirror-tests.yml ${EXTRA_VARS}
-
-  echo -e "${BLUE}Running the edge test suite...${COLOR_ENDING}"
-
-  ${HOST_KEY_CHECKING}
-  ${TESTS}/edge-tests.yml ${EXTRA_VARS}
-
-  echo -e "${BLUE}Running the database test suite...${COLOR_ENDING}"
-
-  ${HOST_KEY_CHECKING}
-  ${TESTS}/db-tests.yml ${EXTRA_VARS}
-
-  echo -e "${BLUE}Running the search test suite...${COLOR_ENDING}"
-
-  ${HOST_KEY_CHECKING}
-  ${TESTS}/search-tests.yml ${EXTRA_VARS}
-
-  echo -e "${BLUE}Running the web test suite...${COLOR_ENDING}"
-
-  ${HOST_KEY_CHECKING}
-  ${TESTS}/web-tests.yml ${EXTRA_VARS}
 }

@@ -39,8 +39,7 @@ def memcached(container):
 
 def solr(container):
     """Starts Apache Solr if it's down"""
-    if not s.getoutput('''docker exec -it %s ps -ef | grep -m1 solr | awk '{print $1}')
-                       ''' % (container)):
+    if not s.getoutput("docker exec -it %s pgrep java" % (container)):
         print(c.red("!!! Apache Solr is down.") + " Starting...")
         s.getoutput('''docker exec -it -u solr %s /opt/solr/bin/solr start
                     ''' % (container))

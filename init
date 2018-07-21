@@ -2,7 +2,7 @@
 
 load_function_files() {
   FUNCTION_DIR="functions"
-  FUNCTION_FILES="containers_management helpers arguments"
+  FUNCTION_FILES="helpers arguments"
 
   for FUNCTION_FILE in ${FUNCTION_FILES} ; do
     source "${DIR}/${FUNCTION_DIR}/${FUNCTION_FILE}"
@@ -20,14 +20,10 @@ load_container_files() {
 
 drucker_argument() {
   if [[ -n "${COMMAND}" ]] && \
-       [[ "${COMMAND}" != "containers:start" ]] && \
-       [[ "${COMMAND}" != "containers:stop" ]] && \
-       [[ "${COMMAND}" != "containers:restart" ]] && \
        [[ "${COMMAND}" != "app:drupal" ]] && \
        [[ "${COMMAND}" != "app:lightning" ]] && \
        [[ "${COMMAND}" != "app:reservoir" ]] && \
        [[ "${COMMAND}" != "app:blt" ]] && \
-       [[ "${COMMAND}" != "app:delete" ]] && \
        [[ "${COMMAND}" != "app:import" ]] && \
        [[ "${COMMAND}" != "app:dev" ]] && \
        [[ "${COMMAND}" != "app:prod" ]] && \
@@ -37,22 +33,6 @@ drucker_argument() {
     usage
   else
     case "$COMMAND" in
-      containers:start)
-      if [[ "${COMMAND}" == "containers:start" ]]; then
-        start_containers
-      fi
-      ;;
-      containers:stop)
-      if [[ "${COMMAND}" == "containers:stop" ]]; then
-        stop_containers
-        exit 0
-      fi
-      ;;
-      containers:restart)
-      if [[ "${COMMAND}" == "containers:restart" ]]; then
-        restart_containers
-      fi
-      ;;
       app:drupal)
       if [[ "${COMMAND}" == "app:drupal" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
         validation
@@ -89,14 +69,6 @@ drucker_argument() {
       else
         check_containers_status
         run_app_blt
-      fi
-      ;;
-      app:delete)
-      if [[ "${COMMAND}" == "app:delete" ]] && [[ -z ${SITENAME} ]]; then
-        usage
-      else
-        check_containers_status
-        run_app_delete
       fi
       ;;
       app:import)

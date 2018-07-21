@@ -29,22 +29,25 @@ def create_base2web_container():
     o.run_web_orchestration()
 
 def create_web_container():
-    """Create web container from web image"""
+    """Creates web container from web image"""
     print(c.blue("Spinning up %s container with ID:" % (v.WEB_CONTAINER)))
 
     s.run("docker run --privileged=true\
           --name %s -it -h %s --net %s --ip %s\
-          -d %s bash" % (v.WEB_CONTAINER,
-                         v.WEB_HOSTNAME,
-                         v.APP,
-                         v.WEB_IP,
-                         v.WEB_IMAGE), shell=True)
+          -d -v %s:%s --volumes-from %s %s bash" % (v.WEB_CONTAINER,
+                                                    v.WEB_HOSTNAME,
+                                                    v.APP,
+                                                    v.WEB_IP,
+                                                    v.HOST_HTML_PATH,
+                                                    v.CONTAINER_HTML_PATH,
+                                                    v.DB_CONTAINER,
+                                                    v.WEB_IMAGE), shell=True)
 
     ssh.configure_ssh_web()
     o.run_web_orchestration()
 
 def create_web_image():
-    """Create web image from web container"""
+    """Creates web image from web container"""
     print(c.blue("Committing %s image from %s container..." % (v.WEB_IMAGE,
                                                                v.WEB_CONTAINER)))
 
@@ -58,11 +61,11 @@ def create_web_image():
     create_web_container()
 
 def start_web_container():
-    """Start web container"""
-    s.getoutput("docker start %s > /dev/null 2>&1" % (v.WEB_CONTAINER))
+    """Starts web container"""
+    s.getoutput("docker start %s" % (v.WEB_CONTAINER))
 
 def provision_web_container():
-    """Provision web container"""
+    """Provisions web container"""
     if s.getoutput("docker ps -a | grep -o %s" % (v.WEB_CONTAINER)):
         print(c.green("%s container already exists." % (v.WEB_CONTAINER)))
 
