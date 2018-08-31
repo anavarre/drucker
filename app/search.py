@@ -67,7 +67,7 @@ def provision_search_container():
             o.run_search_orchestration()
         else:
             print(c.blue("Starting %s container..." % (v.SEARCH_CONTAINER)))
-            start_search_containre()
+            start_search_container()
             o.run_search_orchestration()
     else:
         if s.getoutput("docker images | awk '{print $1\":\"$2}' | grep %s" % (v.SEARCH_IMAGE)):
