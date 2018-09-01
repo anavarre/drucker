@@ -18,102 +18,102 @@ load_container_files() {
   done
 }
 
-drucker_argument() {
-  if [[ -n "${COMMAND}" ]] && \
-       [[ "${COMMAND}" != "app:drupal" ]] && \
-       [[ "${COMMAND}" != "app:lightning" ]] && \
-       [[ "${COMMAND}" != "app:reservoir" ]] && \
-       [[ "${COMMAND}" != "app:blt" ]] && \
-       [[ "${COMMAND}" != "app:import" ]] && \
-       [[ "${COMMAND}" != "app:dev" ]] && \
-       [[ "${COMMAND}" != "app:prod" ]] && \
-       [[ "${COMMAND}" != "php:7.1" ]] && \
-       [[ "${COMMAND}" != "php:7.2" ]] && \
-       [[ "${COMMAND}" != "help" ]]; then
-    usage
-  else
-    case "$COMMAND" in
-      app:drupal)
-      if [[ "${COMMAND}" == "app:drupal" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
-        validation
-        usage
-      else
-        check_containers_status
-        run_app_drupal
-      fi
-      ;;
-      app:lightning)
-      # See validation() for details.
-      if [[ "${COMMAND}" == "app:lightning" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
-        validation
-        usage
-      else
-        check_containers_status
-        run_app_lightning
-      fi
-      ;;
-      app:reservoir)
-      # See validation() for details.
-      if [[ "${COMMAND}" == "app:reservoir" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
-        validation
-        usage
-      else
-        check_containers_status
-        run_app_reservoir
-      fi
-      ;;
-      app:blt)
-      if [[ "${COMMAND}" == "app:blt" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
-        validation
-        usage
-      else
-        check_containers_status
-        run_app_blt
-      fi
-      ;;
-      app:import)
-      if [[ "${COMMAND}" == "app:import" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
-        validation
-        usage
-      else
-        check_containers_status
-        run_app_import
-      fi
-      ;;
-      app:dev)
-      if [[ "${COMMAND}" == "app:dev" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
-        usage
-      else
-        check_containers_status
-        run_app_dev
-      fi
-      ;;
-      app:prod)
-      if [[ "${COMMAND}" == "app:prod" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
-        usage
-      else
-        check_containers_status
-        run_app_prod
-      fi
-      ;;
-      php:7.1)
-      if [[ "${COMMAND}" == "php:7.1" ]]; then
-        check_containers_status
-        set_previous_php_version
-        exit 0
-      fi
-      ;;
-      php:7.2)
-      if [[ "${COMMAND}" == "php:7.2" ]]; then
-        check_containers_status
-        set_default_php_version
-        exit 0
-      fi
-      ;;
-      help)
-      usage
-      exit 0
-      ;;
-    esac
-  fi
-}
+# drucker_argument() {
+#   if [[ -n "${COMMAND}" ]] && \
+#        [[ "${COMMAND}" != "app:drupal" ]] && \
+#        [[ "${COMMAND}" != "app:lightning" ]] && \
+#        [[ "${COMMAND}" != "app:reservoir" ]] && \
+#        [[ "${COMMAND}" != "app:blt" ]] && \
+#        [[ "${COMMAND}" != "app:import" ]] && \
+#        [[ "${COMMAND}" != "app:dev" ]] && \
+#        [[ "${COMMAND}" != "app:prod" ]] && \
+#        [[ "${COMMAND}" != "php:7.1" ]] && \
+#        [[ "${COMMAND}" != "php:7.2" ]] && \
+#        [[ "${COMMAND}" != "help" ]]; then
+#     usage
+#   else
+#     case "$COMMAND" in
+#       app:drupal)
+#       if [[ "${COMMAND}" == "app:drupal" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+#         validation
+#         usage
+#       else
+#         check_containers_status
+#         run_app_drupal
+#       fi
+#       ;;
+#       app:lightning)
+#       # See validation() for details.
+#       if [[ "${COMMAND}" == "app:lightning" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+#         validation
+#         usage
+#       else
+#         check_containers_status
+#         run_app_lightning
+#       fi
+#       ;;
+#       app:reservoir)
+#       # See validation() for details.
+#       if [[ "${COMMAND}" == "app:reservoir" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+#         validation
+#         usage
+#       else
+#         check_containers_status
+#         run_app_reservoir
+#       fi
+#       ;;
+#       app:blt)
+#       if [[ "${COMMAND}" == "app:blt" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+#         validation
+#         usage
+#       else
+#         check_containers_status
+#         run_app_blt
+#       fi
+#       ;;
+#       app:import)
+#       if [[ "${COMMAND}" == "app:import" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+#         validation
+#         usage
+#       else
+#         check_containers_status
+#         run_app_import
+#       fi
+#       ;;
+#       app:dev)
+#       if [[ "${COMMAND}" == "app:dev" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+#         usage
+#       else
+#         check_containers_status
+#         run_app_dev
+#       fi
+#       ;;
+#       app:prod)
+#       if [[ "${COMMAND}" == "app:prod" ]] && [[ -z ${SITENAME} ]] || [[ ! ${SITENAME} =~ [^[:digit:]] ]]; then
+#         usage
+#       else
+#         check_containers_status
+#         run_app_prod
+#       fi
+#       ;;
+#       php:7.1)
+#       if [[ "${COMMAND}" == "php:7.1" ]]; then
+#         check_containers_status
+#         set_previous_php_version
+#         exit 0
+#       fi
+#       ;;
+#       php:7.2)
+#       if [[ "${COMMAND}" == "php:7.2" ]]; then
+#         check_containers_status
+#         set_default_php_version
+#         exit 0
+#       fi
+#       ;;
+#       help)
+#       usage
+#       exit 0
+#       ;;
+#     esac
+#   fi
+# }
