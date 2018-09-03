@@ -37,6 +37,21 @@ def parser():
     parser.add_argument('--restart', dest='restart', action="store_true",
                         help='Restarts all containers')
 
+    parser.add_argument('--php7.2', dest='php72', action="store_true",
+                        help='Sets the PHP version to 7.2')
+
+    parser.add_argument('--php7.1', dest='php71', action="store_true",
+                        help='Sets the PHP version to 7.1')
+
+    parser.add_argument('--drupal', dest='drupal', action="store_true",
+                        help='Spins up a ready-to-use Drupal install')
+
+    parser.add_argument('--lightning', dest='lightning', action="store_true",
+                        help='Spins up a ready-to-use Lightning install')
+
+    parser.add_argument('--blt', dest='blt', action="store_true",
+                        help='Spins up a ready-to-use BLT build')
+
     parser.add_argument('--delete', dest='delete', action="store_true",
                         help='Deletes an arbitrary docroot')
 
@@ -59,8 +74,18 @@ def parser():
         containers.stop()
     elif args.restart:
         containers.restart()
+    elif args.php72:
+        containers.set_default_php_version()
+    elif args.php71:
+        containers.set_previous_php_version()
     elif args.list:
         o.app_list()
+    elif args.drupal:
+        o.app_drupal(args.app)
+    elif args.lightning:
+        o.app_lightning(args.app)
+    elif args.blt:
+        o.app_blt(args.app)
     elif args.delete:
         o.app_delete(args.app)
     elif args.tests:

@@ -178,11 +178,32 @@ $ git update-index --no-assume-unchanged config
 For more advanced `drucker` usage, you can pass several CLI parameters:
 
 ```
-$ drucker help
-drucker version dev:ba964ca
+$ drucker --help
+usage: arguments.py [-h] [--health] [--start] [--stop] [--restart] [--php7.2]
+[--php7.1] [--drupal] [--lightning] [--blt] [--delete]
+[--version] [--list] [--tests]
+[app]
+positional arguments:
+app          Targets an arbitrary app
+optional arguments:
+-h, --help   show this help message and exit
+--health     Runs a service healthcheck
+--start      Starts all containers
+--stop       Stops all containers
+--restart    Restarts all containers
+--php7.2     Sets the PHP version to 7.2
+--php7.1     Sets the PHP version to 7.1
+--drupal     Spins up a ready-to-use Drupal install
+--lightning  Spins up a ready-to-use Lightning install
+--blt        Spins up a ready-to-use BLT build
+--delete     Deletes an arbitrary docroot
+--version    Returns the drucker version
+--list       Lists all deployed apps
+--tests      Runs the Ansible test suite
 
-Usage:
-  drucker [command] [site,...] [git_tag]
+---
+
+drucker version dev:ba964ca
 
   The [site,...] argument is only valid for the following commands:
     app:[drupal,lightning,reservoir,blt]
@@ -197,21 +218,13 @@ Usage:
   containers:restart  Restarts all drucker containers
 
  app
-  app:list            Lists all deployed apps
-  app:drupal          Spins up a ready-to-use Drupal install
-  app:lightning       Spins up a ready-to-use Lightning install
   app:reservoir       Spins up a ready-to-use Reservoir install
-  app:blt             Spins up a ready-to-use BLT build
-  app:delete          Deletes an arbitrary docroot
   app:import          Imports an app from the web container's import directory
   app:dev             Prepare app for development work with no caching and helper modules enabled.
   app:prod            Opinionated setup with all known performance best practices enabled.
 
  util
   php:[version]       Sets the PHP version to 7.1 or 7.2
-  version             Returns the drucker version
-  tests               Runs the Ansible test suite
-  help                Displays valid drucker commands and their use
 ```
 
 Notes:

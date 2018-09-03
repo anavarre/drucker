@@ -102,13 +102,17 @@ def app_list():
 #   exit 0
 # }
 
-def hosts_file():
+def hosts_file(app):
     """Prompts the user with modifying their /etc/hosts file"""
-    print(c.green("Remember to add the %s.local entry to your local /etc/hosts file!"))
+    print(c.green("Remember to add the %s.local entry to your local /etc/hosts file!" % (app)))
 
 
 def app_delete(app):
     """Deletes an arbitrary docroot"""
+    if not app:
+        print(c.red("This command needs a sitename to run. Aborting..."))
+        sys.exit()
+
 
     # TODO: actually enforce arbitrary docroots through positional arguments
 
@@ -119,9 +123,46 @@ def app_delete(app):
                      --user=%s %s/orchestration/commands/app-delete.yml\
                      --extra-vars "ansible_sudo_pass=%s app=delete sitename=%s"
                   ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP, app), shell=True)
-            print(c.green("Remember to remove the %s.local entry from your\
-                           local /etc/hosts file!" % (app)))
+            print(c.green("Remember to remove the %s.local entry from your local /etc/hosts file!" % (app)))
         else:
             print(c.green("Back to the comfort zone. Aborting..."))
     else:
         print("This app doesn't exist.")
+
+
+def app_drupal(app):
+    app_delete(app)
+
+  # if [[ -z "${GIT_TAG}" ]]; then
+    print(c.blue("Installing Drupal into new %s docroot..." % (app)))
+    s.run('''ansible-playbook -i %s/orchestration/hosts\
+             --user=%s %s/orchestration/commands/app-drupal.yml\
+             --extra-vars "ansible_sudo_pass=%s app=Drupal sitename=%s"
+          ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP, app), shell=True)
+    hosts_file(app)
+  # elif [[ -n "${GIT_TAG}" ]]; then
+  #   echo -e "${BLUE}Installing Drupal ${GIT_TAG} into new ${SITE} docroot...${COLOR_ENDING}"
+  #   ${COMMANDS}/app-drupal.yml --extra-vars "ansible_sudo_pass=${USER} app=Drupal sitename=${SITE} git_tag=${GIT_TAG}"
+  #   hosts_file(app)
+
+
+def app_lightning(app):
+    app_delete(app)
+
+    print(c.blue("Installing Lightning into new %s docroot..." % (app)))
+    s.run('''ansible-playbook -i %s/orchestration/hosts\
+             --user=%s %s/orchestration/commands/app-lightning.yml\
+             --extra-vars "ansible_sudo_pass=%s app=Lightning sitename=%s"
+          ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP, app), shell=True)
+    hosts_file(app)
+
+
+def app_blt(app):
+    app_delete(app)
+
+    print(c.blue("Installing BLT into new %s docroot..." % (app)))
+    s.run('''ansible-playbook -i %s/orchestration/hosts\
+             --user=%s %s/orchestration/commands/app-blt.yml\
+             --extra-vars "ansible_sudo_pass=%s app=BLT sitename=%s"
+          ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP, app), shell=True)
+    hosts_file(app)

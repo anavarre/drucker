@@ -53,36 +53,6 @@ app_import() {
   hosts_file
 }
 
-# app_drupal() {
-#   app_delete
-
-#   if [[ -z "${GIT_TAG}" ]]; then
-#     echo -e "${BLUE}Installing Drupal into new ${SITE} docroot...${COLOR_ENDING}"
-#     ${COMMANDS}/app-drupal.yml --extra-vars "ansible_sudo_pass=${USER} app=Drupal sitename=${SITE}"
-#     hosts_file
-#   elif [[ -n "${GIT_TAG}" ]]; then
-#     echo -e "${BLUE}Installing Drupal ${GIT_TAG} into new ${SITE} docroot...${COLOR_ENDING}"
-#     ${COMMANDS}/app-drupal.yml --extra-vars "ansible_sudo_pass=${USER} app=Drupal sitename=${SITE} git_tag=${GIT_TAG}"
-#     hosts_file
-#   fi
-# }
-
-app_blt() {
-  app_delete
-
-  echo -e "${BLUE}Installing BLT into new ${SITE} docroot...${COLOR_ENDING}"
-  ${COMMANDS}/app-blt.yml --extra-vars "ansible_sudo_pass=${USER} app=BLT sitename=${SITE}"
-  hosts_file
-}
-
-app_lightning() {
-  app_delete
-
-  echo -e "${BLUE}Installing Lightning into new ${SITE} docroot...${COLOR_ENDING}"
-  ${COMMANDS}/app-lightning.yml --extra-vars "ansible_sudo_pass=${USER} app=Lightning sitename=${SITE}"
-  hosts_file
-}
-
 app_reservoir() {
   echo "Installing Reservoir on PHP ${DEFAULT_PHP} is currently broken."
   exit 0
@@ -92,14 +62,4 @@ app_reservoir() {
   echo -e "${BLUE}Installing Reservoir into new ${SITE} docroot...${COLOR_ENDING}"
   ${COMMANDS}/app-reservoir.yml --extra-vars "ansible_sudo_pass=${USER} app=Reservoir sitename=${SITE}"
   hosts_file
-}
-
-set_previous_php_version() {
-  echo -e "${BLUE}Switch to ${PREVIOUS_PHP}...${COLOR_ENDING}"
-  ${COMMANDS}/previous-php.yml --extra-vars "ansible_sudo_pass=${USER}"
-}
-
-set_default_php_version() {
-  echo -e "${BLUE}Switch to ${DEFAULT_PHP}...${COLOR_ENDING}"
-  ${COMMANDS}/default-php.yml --extra-vars "ansible_sudo_pass=${USER}"
 }

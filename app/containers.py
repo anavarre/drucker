@@ -68,3 +68,19 @@ def restart():
            print(c.blue("Restarting %s container..." % (container)))
            s.getoutput("docker restart %s" % (container))
     health()
+
+
+def set_previous_php_version():
+    print(c.blue("Switch to %s..." % (v.PREVIOUS_PHP)))
+    s.run('''ansible-playbook -i %s/orchestration/hosts\
+             --user=%s %s/orchestration/commands/previous-php.yml\
+             --extra-vars "ansible_sudo_pass=%s"
+          ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP), shell=True)
+
+
+def set_default_php_version():
+    print(c.blue("Switch to %s..." % (v.DEFAULT_PHP)))
+    s.run('''ansible-playbook -i %s/orchestration/hosts\
+             --user=%s %s/orchestration/commands/default-php.yml\
+             --extra-vars "ansible_sudo_pass=%s"
+          ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP), shell=True)
