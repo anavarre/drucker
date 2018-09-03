@@ -53,19 +53,19 @@ app_import() {
   hosts_file
 }
 
-app_drupal() {
-  app_delete
+# app_drupal() {
+#   app_delete
 
-  if [[ -z "${GIT_TAG}" ]]; then
-    echo -e "${BLUE}Installing Drupal into new ${SITE} docroot...${COLOR_ENDING}"
-    ${COMMANDS}/app-drupal.yml --extra-vars "ansible_sudo_pass=${USER} app=Drupal sitename=${SITE}"
-    hosts_file
-  elif [[ -n "${GIT_TAG}" ]]; then
-    echo -e "${BLUE}Installing Drupal ${GIT_TAG} into new ${SITE} docroot...${COLOR_ENDING}"
-    ${COMMANDS}/app-drupal.yml --extra-vars "ansible_sudo_pass=${USER} app=Drupal sitename=${SITE} git_tag=${GIT_TAG}"
-    hosts_file
-  fi
-}
+#   if [[ -z "${GIT_TAG}" ]]; then
+#     echo -e "${BLUE}Installing Drupal into new ${SITE} docroot...${COLOR_ENDING}"
+#     ${COMMANDS}/app-drupal.yml --extra-vars "ansible_sudo_pass=${USER} app=Drupal sitename=${SITE}"
+#     hosts_file
+#   elif [[ -n "${GIT_TAG}" ]]; then
+#     echo -e "${BLUE}Installing Drupal ${GIT_TAG} into new ${SITE} docroot...${COLOR_ENDING}"
+#     ${COMMANDS}/app-drupal.yml --extra-vars "ansible_sudo_pass=${USER} app=Drupal sitename=${SITE} git_tag=${GIT_TAG}"
+#     hosts_file
+#   fi
+# }
 
 app_blt() {
   app_delete

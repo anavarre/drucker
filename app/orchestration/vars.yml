@@ -109,7 +109,7 @@ php_process: php-fpm{{ default_php_version }}
 sury_gpg: https://packages.sury.org/php/apt.gpg
 sury_deb: deb https://packages.sury.org/php/ {{ codename }} main
 sury_repo: "{{ sources_list_d }}/packages_sury_org_php.list"
-apcu_stable_release: 5.1.11
+apcu_stable_release: 5.1.12
 php_memcached_stable_release: 3.0.4
 # php.ini
 max_input_time: 300
@@ -155,7 +155,7 @@ composer_dir_path: "{{ home }}/.composer"
 composer_json_path: "{{ home }}/.composer/composer.json"
 
 # XDebug
-xdebug_stable_release: 2.6.0
+xdebug_stable_release: 2.6.1
 xdebug_version_file: "{{ mirror_archives_dir }}/xdebug-version"
 xdebug_archive_file: xdebug-{{ xdebug_stable_release }}.tgz
 xdebug_download_link: http://xdebug.org/files/{{ xdebug_archive_file }}
@@ -262,7 +262,7 @@ db_backup_path: "{{ user_programs_path }}/db-backup.sh"
 
 # phpMyAdmin
 phpmyadmin_version_file: "{{ mirror_archives_dir }}/phpmyadmin-version"
-phpmyadmin_stable_release: 4.8.2
+phpmyadmin_stable_release: 4.8.3
 phpmyadmin_archive_filename: phpMyAdmin-{{ phpmyadmin_stable_release }}-english.tar.gz
 phpmyadmin_download_link: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_stable_release }}/{{ phpmyadmin_archive_filename }}
 phpmyadmin_mirror_download_link: http://{{ mirror_host }}/{{ phpmyadmin_archive_filename }}
