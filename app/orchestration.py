@@ -107,12 +107,15 @@ def hosts_file(app):
     print(c.green("Remember to add the %s.local entry to your local /etc/hosts file!" % (app)))
 
 
-def app_delete(app):
-    """Deletes an arbitrary docroot"""
+def param_check(app):
+    """Determines whether a second parameter (sitename) was passed"""
     if not app:
         print(c.red("This command needs a sitename to run. Aborting..."))
         sys.exit()
 
+def app_delete(app):
+    """Deletes an arbitrary docroot"""
+    param_check(app)
 
     # TODO: actually enforce arbitrary docroots through positional arguments
 
@@ -131,6 +134,7 @@ def app_delete(app):
 
 
 def app_drupal(app):
+    """Spins up a ready-to-use Drupal install"""
     app_delete(app)
 
   # if [[ -z "${GIT_TAG}" ]]; then
@@ -147,6 +151,7 @@ def app_drupal(app):
 
 
 def app_lightning(app):
+    """Spins up a ready-to-use Lightning install"""
     app_delete(app)
 
     print(c.blue("Installing Lightning into new %s docroot..." % (app)))
@@ -158,6 +163,7 @@ def app_lightning(app):
 
 
 def app_blt(app):
+    """Spins up a ready-to-use BLT build"""
     app_delete(app)
 
     print(c.blue("Installing BLT into new %s docroot..." % (app)))
@@ -165,4 +171,61 @@ def app_blt(app):
              --user=%s %s/orchestration/commands/app-blt.yml\
              --extra-vars "ansible_sudo_pass=%s app=BLT sitename=%s"
           ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP, app), shell=True)
+    hosts_file(app)
+
+
+def app_dev(app):
+    """Prepares app for development work with no caching and helper modules enabled."""
+    param_check(app)
+
+    identify_drupal_type = s.getoutput('''grep "%s" "%s/.app-registry" |\
+                                          awk '{print $NF}' | tr --d '()'
+                                       ''' % (app, v.CONTAINER_HTML_PATH))
+
+    if "BLT" in identify_drupal_type:
+        print(c.red("This command is not currently compatible with BLT. Exiting..."))
+        sys.exit()
+    elif not identify_drupal_type:
+        print(c.red("Could not identify the application type. Exiting..."))
+    else:
+        print(c.blue("Configuring %s docroot for development..." % (app)))
+        s.run('''ansible-playbook -i %s/orchestration/hosts\
+                 --user=%s %s/orchestration/commands/app-dev.yml\
+                 --extra-vars "ansible_sudo_pass=%s app=dev sitename=%s"
+              ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP, app), shell=True)
+
+def app_prod(app):
+    """Opinionated setup with all known performance best practices enabled."""
+    identify_drupal_type = s.getoutput('''grep "%s" "%s/.app-registry" |\
+                                          awk '{print $NF}' | tr --d '()'
+                                       ''' % (app, v.CONTAINER_HTML_PATH))
+
+    if "BLT" in identify_drupal_type:
+        print(c.red("This command is not currently compatible with BLT. Exiting..."))
+        sys.exit()
+    elif not identify_drupal_type:
+        print(c.red("Could not identify the application type. Exiting..."))
+    else:
+        print(c.blue("Configuring %s docroot for production..." % (app)))
+        s.run('''ansible-playbook -i %s/orchestration/hosts\
+                 --user=%s %s/orchestration/commands/app-prod.yml\
+                 --extra-vars "ansible_sudo_pass=%s app=prod sitename=%s"
+              ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP, app), shell=True)
+
+def app_import(app):
+    """Imports an app from the web container's import directory"""
+    if not os.path.isdir("%s/%s" % (v.CONTAINER_IMPORT_PATH, app)):
+        print(c.red("The %s app doesn't exist. Aborting..." % (app)))
+        sys.exit()
+    elif os.path.isdir("%s/%s/blt" % (v.CONTAINER_IMPORT_PATH, app)):
+        app_detected = "BLT"
+    elif os.path.isdir("%s/%s/vendor/bin/lightning" % (v.CONTAINER_IMPORT_PATH, app)):
+        app_detected = "Lightning"
+    else:
+        app_detected = "Drupal"
+
+    s.run('''ansible-playbook -i %s/orchestration/hosts\
+             --user=%s %s/orchestration/commands/app-import.yml\
+             --extra-vars "ansible_sudo_pass=%s app=%s sitename=%s"
+          ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP, app_detected, app), shell=True)
     hosts_file(app)

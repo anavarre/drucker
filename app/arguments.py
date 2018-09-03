@@ -61,6 +61,15 @@ def parser():
     parser.add_argument('--list', dest='list', action="store_true",
                         help='Lists all deployed apps')
 
+    parser.add_argument('--dev', dest='dev', action="store_true",
+                        help='Prepare app for development work with no caching and helper modules enabled.')
+
+    parser.add_argument('--prod', dest='prod', action="store_true",
+                        help='Opinionated setup with all known performance best practices enabled.')
+
+    parser.add_argument('--import', dest='import_app', action="store_true",
+                        help="Imports an app from the web container's import directory")
+
     parser.add_argument('--tests', dest='tests', action="store_true",
                         help='Runs the Ansible test suite')
 
@@ -88,6 +97,12 @@ def parser():
         o.app_blt(args.app)
     elif args.delete:
         o.app_delete(args.app)
+    elif args.dev:
+        o.app_dev(args.app)
+    elif args.prod:
+        o.app_prod(args.app)
+    elif args.import_app:
+        o.app_import(args.app)
     elif args.tests:
         o.run_tests()
     elif args.version:

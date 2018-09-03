@@ -181,7 +181,7 @@ For more advanced `drucker` usage, you can pass several CLI parameters:
 $ drucker --help
 usage: arguments.py [-h] [--health] [--start] [--stop] [--restart] [--php7.2]
 [--php7.1] [--drupal] [--lightning] [--blt] [--delete]
-[--version] [--list] [--tests]
+[--version] [--list] [--dev] [--prod] [--import] [--tests]
 [app]
 positional arguments:
 app          Targets an arbitrary app
@@ -199,26 +199,12 @@ optional arguments:
 --delete     Deletes an arbitrary docroot
 --version    Returns the drucker version
 --list       Lists all deployed apps
+--dev        Prepare app for development work with no caching and helper
+modules enabled.
+--prod       Opinionated setup with all known performance best practices
+enabled.
+--import     Imports an app from the web container's import directory
 --tests      Runs the Ansible test suite
-
----
-
-drucker version dev:ba964ca
-
-  The [site,...] argument is only valid for the following commands:
-    app:[drupal,lightning,reservoir,blt]
-    app:[delete,import,dev,prod]
-
-  The [git_tag] argument is only valid for the app:drupal command.
-
- app
-  app:reservoir       Spins up a ready-to-use Reservoir install
-  app:import          Imports an app from the web container's import directory
-  app:dev             Prepare app for development work with no caching and helper modules enabled.
-  app:prod            Opinionated setup with all known performance best practices enabled.
-
- util
-  php:[version]       Sets the PHP version to 7.1 or 7.2
 ```
 
 Notes:
