@@ -211,12 +211,6 @@ drucker version dev:ba964ca
 
   The [git_tag] argument is only valid for the app:drupal command.
 
- containers
-  containers:health   Runs a service healthcheck
-  containers:start    Starts all drucker containers
-  containers:stop     Stops all drucker containers
-  containers:restart  Restarts all drucker containers
-
  app
   app:reservoir       Spins up a ready-to-use Reservoir install
   app:import          Imports an app from the web container's import directory
