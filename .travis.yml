@@ -1,0 +1,12 @@
+language: python
+python: 3.6
+dist: trusty
+sudo: required
+
+script: ./.travis/test_$t.py $a
+
+matrix:
+  fast_finish: true
+  include:
+    - env: t=python_pep8_compliancy
+      install: pip install pycodestyle pylint
