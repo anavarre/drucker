@@ -85,25 +85,6 @@ def app_list():
           ''' % (v.WEB_CONTAINER, v.CONTAINER_HTML_PATH), shell=True)
 
 
-      # app:delete)
-      # if [[ "${COMMAND}" == "app:delete" ]] && [[ -z ${SITENAME} ]]; then
-      #   usage
-      # else
-      #   check_containers_status
-      #   run_app_delete
-      # fi
-      # ;;
-
-# run_app_delete() {
-#   # Comma-separated sitenames are split into single values for drucker to
-#   # get a list of sites to delete.
-#   for SITE in ${SITENAME//,/ }; do
-#     app_delete
-#   done
-#   exit 0
-# }
-
-
 def hosts_file(app):
     """Prompts the user with modifying their /etc/hosts file"""
     print(c.green("Remember to add the %s.local entry to your local /etc/hosts file!" % (app)))
@@ -114,6 +95,7 @@ def param_check(app):
     if not app:
         print(c.red("This command needs a sitename to run. Aborting..."))
         sys.exit()
+
 
 def app_delete(app):
     """Deletes an arbitrary docroot"""
@@ -139,17 +121,17 @@ def app_drupal(app):
     """Spins up a ready-to-use Drupal install"""
     app_delete(app)
 
-  # if [[ -z "${GIT_TAG}" ]]; then
+    # if [[ -z "${GIT_TAG}" ]]; then
     print(c.blue("Installing Drupal into new %s docroot..." % (app)))
     s.run('''ansible-playbook -i %s/orchestration/hosts\
              --user=%s %s/orchestration/commands/app-drupal.yml\
              --extra-vars "ansible_sudo_pass=%s app=Drupal sitename=%s"
           ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP, app), shell=True)
     hosts_file(app)
-  # elif [[ -n "${GIT_TAG}" ]]; then
-  #   echo -e "${BLUE}Installing Drupal ${GIT_TAG} into new ${SITE} docroot...${COLOR_ENDING}"
-  #   ${COMMANDS}/app-drupal.yml --extra-vars "ansible_sudo_pass=${USER} app=Drupal sitename=${SITE} git_tag=${GIT_TAG}"
-  #   hosts_file(app)
+    # elif [[ -n "${GIT_TAG}" ]]; then
+    #     echo -e "${BLUE}Installing Drupal ${GIT_TAG} into new ${SITE} docroot...${COLOR_ENDING}"
+    #     ${COMMANDS}/app-drupal.yml --extra-vars "ansible_sudo_pass=${USER} app=Drupal sitename=${SITE} git_tag=${GIT_TAG}"
+    #     hosts_file(app)
 
 
 def app_lightning(app):

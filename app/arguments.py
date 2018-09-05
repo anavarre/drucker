@@ -2,7 +2,6 @@
 """Allows to pass arguments to the drucker command"""
 
 import subprocess as s
-import sys
 import argparse
 import colorful as c
 import variables as v
@@ -20,7 +19,7 @@ def return_version():
         print("You are running tagged release " + c.orange(v.APP_VERSION))
 
 
-def parser():
+def run_command():
     """Parses command-line arguments."""
     parser = argparse.ArgumentParser()
 
@@ -111,4 +110,4 @@ def parser():
         return_version()
 
 
-parser()
+run_command()

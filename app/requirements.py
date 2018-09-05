@@ -53,10 +53,7 @@ You should add the below entries:
 %s    %s
 %s   search.local
 %s   mirror.local
-""" % (v.EDGE_IP,
-       v.DOMAINS,
-       v.SEARCH_IP,
-       v.MIRROR_IP)
+""" % (v.EDGE_IP, v.DOMAINS, v.SEARCH_IP, v.MIRROR_IP)
 
             print(hosts_file_suggestion)
             sys.exit()
@@ -84,15 +81,11 @@ Host %s %s %s %s %s %s
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
   LogLevel=error
-""" % (v.BASE_IP,
-       v.EDGE_IP,
-       v.WEB_IP,
-       v.DB_IP,
-       v.SEARCH_IP,
-       v.MIRROR_IP)
+""" % (v.BASE_IP, v.EDGE_IP, v.WEB_IP, v.DB_IP, v.SEARCH_IP, v.MIRROR_IP)
 
             print(ssh_config_suggestion)
             sys.exit()
+
 
 check_python_version()
 check_required_executables()

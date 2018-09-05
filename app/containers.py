@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Manages containers"""
 
-import sys
 import subprocess as s
-import variables as v
 import colorful as c
+import variables as v
 import services
 
 
@@ -73,6 +72,7 @@ def restart():
 
 
 def set_previous_php_version():
+    """Sets the PHP version to the previous version"""
     print(c.blue("Switch to %s..." % (v.PREVIOUS_PHP)))
     s.run('''ansible-playbook -i %s/orchestration/hosts\
              --user=%s %s/orchestration/commands/previous-php.yml\
@@ -81,7 +81,8 @@ def set_previous_php_version():
 
 
 def set_default_php_version():
-    print(c.blue("Switch to %s..." % (v.DEFAULT_PHP)))
+    """Set the PHP version to the current stable version"""
+    print(c.blue("Switch to %s..." % (v.DEFAULT_PHP))) # pylint: disable=E1101
     s.run('''ansible-playbook -i %s/orchestration/hosts\
              --user=%s %s/orchestration/commands/default-php.yml\
              --extra-vars "ansible_sudo_pass=%s"

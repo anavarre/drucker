@@ -76,8 +76,8 @@ def provision_edge_container():
             o.run_edge_orchestration()
     else:
         if s.getoutput('''
-            docker images | awk '{print $1\":\"$2}' | grep %s
-            ''' % (v.EDGE_IMAGE)):
+                       docker images | awk '{print $1\":\"$2}' | grep %s
+                       ''' % (v.EDGE_IMAGE)):
             print(c.green("%s custom image already exists." % (v.EDGE_IMAGE)))
             create_edge_container()
         else:

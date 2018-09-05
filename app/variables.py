@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 APP = "drucker"
-APP_VERSION="dev"
+APP_VERSION = "dev"
 APP_ROOT = os.path.dirname(os.path.dirname(__file__))
 APP_DIR = "%s/app" % (APP_ROOT)
 HOME = str(Path.home())
@@ -71,11 +71,11 @@ DB_CONTAINER = "%s_db" % (APP)
 WEB_CONTAINER = "%s_web" % (APP)
 SEARCH_CONTAINER = "%s_search" % (APP)
 
-CONTAINERS= [MIRROR_CONTAINER,
-             EDGE_CONTAINER,
-             DB_CONTAINER,
-             WEB_CONTAINER,
-             SEARCH_CONTAINER]
+CONTAINERS = [MIRROR_CONTAINER,
+              EDGE_CONTAINER,
+              DB_CONTAINER,
+              WEB_CONTAINER,
+              SEARCH_CONTAINER]
 
 # Hostnames
 TLD = "local"

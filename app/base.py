@@ -60,4 +60,5 @@ def provision_base_container():
             delete_base_container()
             delete_init_image()
 
+
 provision_base_container()

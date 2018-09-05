@@ -2,8 +2,6 @@
 """Test, output and flow-control helpers."""
 import os
 import sys
-import hashlib
-import subprocess
 
 
 def banner(caller, subtext=None, char='#'):
