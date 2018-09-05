@@ -2,6 +2,8 @@
 
 # drucker: Drupal + Docker
 
+[![Build Status](https://travis-ci.com/anavarre/drucker.svg?branch=master)](https://travis-ci.com/anavarre/drucker)
+
 [![drucker demo](https://asciinema.org/a/156876.png)](https://asciinema.org/a/156876)
 
 * [Introduction](#introduction)
