@@ -8,6 +8,7 @@ import variables as v
 import ssh
 import orchestration as o
 
+
 def create_base2db_container():
     """Create database container from base image"""
     print(c.blue("Spinning up %s container with ID:" % (v.DB_CONTAINER)))
@@ -25,6 +26,7 @@ def create_base2db_container():
     ssh.configure_ssh_db()
     o.run_db_orchestration()
 
+
 def create_db_container():
     """Create database container from database image"""
     print(c.blue("Spinning up %s container with ID:" % (v.DB_CONTAINER)))
@@ -40,6 +42,7 @@ def create_db_container():
     ssh.configure_ssh_db()
     o.run_db_orchestration()
 
+
 def create_db_image():
     """Create database image from database container"""
     print(c.blue("Committing %s image from %s container..." % (v.DB_IMAGE,
@@ -54,9 +57,11 @@ def create_db_image():
     s.getoutput("docker rm -f %s > /dev/null 2>&1" % (v.DB_CONTAINER))
     create_db_container()
 
+
 def start_db_container():
     """Start database container"""
     s.getoutput("docker start %s > /dev/null 2>&1" % (v.DB_CONTAINER))
+
 
 def provision_db_container():
     """Provision database container"""
@@ -76,5 +81,6 @@ def provision_db_container():
         else:
             create_base2db_container()
             create_db_image()
+
 
 provision_db_container()

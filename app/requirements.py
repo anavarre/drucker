@@ -7,11 +7,13 @@ import subprocess as s
 import colorful as c
 import variables as v
 
+
 def check_python_version():
     """A recent version of Python is required"""
     if sys.version_info[0] < 3:
         print(c.red("Python 3 or higher is required to run this application."))
         sys.exit()
+
 
 def check_required_executables():
     """Both Docker and Ansible need to be installed"""
@@ -19,6 +21,7 @@ def check_required_executables():
         if not shutil.which(executable):
             print(c.red("%s is required to run this application." % (executable).title()))
             sys.exit()
+
 
 def check_ansible_version():
     """A recent version of Ansible is required"""
@@ -30,6 +33,7 @@ def check_ansible_version():
     if return_version < "2.4":
         print(c.red("Ansible 2.4 or later is required to run this application."))
         sys.exit()
+
 
 def check_hosts_file():
     """The local hosts file must be correctly configured"""
@@ -56,6 +60,7 @@ You should add the below entries:
 
             print(hosts_file_suggestion)
             sys.exit()
+
 
 def check_ssh_config_file():
     """The SSH config file must be correctly configured"""

@@ -5,6 +5,7 @@ import subprocess as s
 import colorful as c
 import variables as v
 
+
 def check(container, service, name):
     """Starts common services if they're down"""
     if not s.getoutput("docker exec -it %s pgrep %s | head -1" % (container, service)):

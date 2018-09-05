@@ -4,6 +4,7 @@
 import os
 from pathlib import Path
 
+
 APP = "drucker"
 APP_VERSION="dev"
 APP_ROOT = os.path.dirname(os.path.dirname(__file__))

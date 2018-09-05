@@ -9,6 +9,7 @@ import variables as v
 import orchestration as o
 import containers
 
+
 def return_version():
     """Returns either the latest commit hash or tagged release"""
     latest_commit = s.getoutput("cd %s && git rev-parse --short HEAD" % (v.APP_ROOT))
@@ -17,6 +18,7 @@ def return_version():
         print("You are running the dev version at commit " + c.orange(latest_commit))
     else:
         print("You are running tagged release " + c.orange(v.APP_VERSION))
+
 
 def parser():
     """Parses command-line arguments."""
@@ -107,5 +109,6 @@ def parser():
         o.run_tests()
     elif args.version:
         return_version()
+
 
 parser()

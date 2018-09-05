@@ -8,6 +8,7 @@ import ssh
 import orchestration as o
 import variables as v
 
+
 def create_base_container():
     """Create base container from init image"""
     print(c.blue("Spinning up %s container with ID:" % (v.BASE_CONTAINER)))
@@ -21,6 +22,7 @@ def create_base_container():
     ssh.configure_ssh_base()
     o.run_base_orchestration()
 
+
 def create_base_image():
     """Create base image from base container"""
     print(c.blue("Committing %s image from %s container..." % (v.BASE_IMAGE, v.BASE_CONTAINER)))
@@ -29,15 +31,18 @@ def create_base_image():
                                                    v.BASE_CONTAINER,
                                                    v.BASE_IMAGE), shell=True)
 
+
 def delete_base_container():
     """Delete base container"""
     print(c.blue("Deleting %s container..." % (v.BASE_CONTAINER)))
     s.getoutput("docker rm -f %s > /dev/null 2>&1" % (v.BASE_CONTAINER))
 
+
 def delete_init_image():
     """Delete init image"""
     print(c.blue("Deleting %s image..." % (v.INIT_IMAGE)))
     s.getoutput("docker rmi %s > /dev/null 2>&1" % (v.INIT_IMAGE))
+
 
 def provision_base_container():
     """Set up base container from init image"""

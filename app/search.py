@@ -8,6 +8,7 @@ import variables as v
 import ssh
 import orchestration as o
 
+
 def create_base2search_container():
     """Create search container from base image"""
     print(c.blue("Spinning up %s container with ID:" % (v.SEARCH_CONTAINER)))
@@ -25,6 +26,7 @@ def create_base2search_container():
     ssh.configure_ssh_search()
     o.run_search_orchestration()
 
+
 def create_search_container():
     """Create search container from search image"""
     print(c.blue("Spinning up %s container with ID:" % (v.SEARCH_CONTAINER)))
@@ -40,6 +42,7 @@ def create_search_container():
     ssh.configure_ssh_search()
     o.run_search_orchestration()
 
+
 def create_search_image():
     """Create search image from search container"""
     print(c.blue("Committing %s image from %s container..." % (v.SEARCH_IMAGE,
@@ -54,9 +57,11 @@ def create_search_image():
     s.getoutput("docker rm -f %s > /dev/null 2>&1" % (v.SEARCH_CONTAINER))
     create_search_container()
 
+
 def start_search_container():
     """Start search container"""
     s.getoutput("docker start %s > /dev/null 2>&1" % (v.SEARCH_CONTAINER))
+
 
 def provision_search_container():
     """Provision search container"""
@@ -76,5 +81,6 @@ def provision_search_container():
         else:
             create_base2search_container()
             create_search_image()
+
 
 provision_search_container()

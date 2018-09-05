@@ -8,6 +8,7 @@ import variables as v
 import ssh
 import orchestration as o
 
+
 def create_base2web_container():
     """Create web container from base image"""
     print(c.blue("Spinning up %s container with ID:" % (v.WEB_CONTAINER)))
@@ -28,6 +29,7 @@ def create_base2web_container():
     ssh.allow_ssh_access(v.MIRROR_CONTAINER)
     o.run_web_orchestration()
 
+
 def create_web_container():
     """Creates web container from web image"""
     print(c.blue("Spinning up %s container with ID:" % (v.WEB_CONTAINER)))
@@ -46,6 +48,7 @@ def create_web_container():
     ssh.configure_ssh_web()
     o.run_web_orchestration()
 
+
 def create_web_image():
     """Creates web image from web container"""
     print(c.blue("Committing %s image from %s container..." % (v.WEB_IMAGE,
@@ -60,9 +63,11 @@ def create_web_image():
     s.getoutput("docker rm -f %s > /dev/null 2>&1" % (v.WEB_CONTAINER))
     create_web_container()
 
+
 def start_web_container():
     """Starts web container"""
     s.getoutput("docker start %s" % (v.WEB_CONTAINER))
+
 
 def provision_web_container():
     """Provisions web container"""
@@ -82,6 +87,7 @@ def provision_web_container():
         else:
             create_base2web_container()
             create_web_image()
+
 
 provision_web_container()
 ssh.allow_ssh_access(v.DB_CONTAINER)

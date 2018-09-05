@@ -8,6 +8,7 @@ import variables as v
 import ssh
 import orchestration as o
 
+
 def create_base2edge_container():
     """Create edge container from base image"""
     print(c.blue("Spinning up %s container with ID:" % (v.EDGE_CONTAINER)))
@@ -25,6 +26,7 @@ def create_base2edge_container():
     ssh.configure_ssh_edge()
     o.run_edge_orchestration()
 
+
 def create_edge_container():
     """Create edge container from edge image"""
     print(c.blue("Spinning up %s container with ID:" % (v.EDGE_CONTAINER)))
@@ -40,6 +42,7 @@ def create_edge_container():
     ssh.configure_ssh_edge()
     o.run_edge_orchestration()
 
+
 def create_edge_image():
     """Create edge image from edge container"""
     print(c.blue("Committing %s image from %s container..." % (v.EDGE_IMAGE,
@@ -54,9 +57,11 @@ def create_edge_image():
     s.getoutput("docker rm -f %s > /dev/null 2>&1" % (v.EDGE_CONTAINER))
     create_edge_container()
 
+
 def start_edge_container():
     """Start edge container"""
     s.getoutput("docker start %s > /dev/null 2>&1" % (v.EDGE_CONTAINER))
+
 
 def provision_edge_container():
     """Provision edge container"""
@@ -78,5 +83,6 @@ def provision_edge_container():
         else:
             create_base2edge_container()
             create_edge_image()
+
 
 provision_edge_container()

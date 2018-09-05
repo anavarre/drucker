@@ -7,8 +7,8 @@ import os
 import colorful as c
 import click
 import variables as v
-
 import containers
+
 
 def run_orchestration(container, shortname):
     """Parent function to manage container orchestration."""
@@ -78,6 +78,7 @@ def run_tests():
     for group in v.TEST_GROUPS:
         run_tests_orchestration(group)
 
+
 def app_list():
     """Returns a list of installed apps."""
     s.run('''docker exec -it %s cat %s/.app-registry
@@ -101,6 +102,7 @@ def app_list():
 #   done
 #   exit 0
 # }
+
 
 def hosts_file(app):
     """Prompts the user with modifying their /etc/hosts file"""
@@ -194,6 +196,7 @@ def app_dev(app):
                  --extra-vars "ansible_sudo_pass=%s app=dev sitename=%s"
               ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP, app), shell=True)
 
+
 def app_prod(app):
     """Opinionated setup with all known performance best practices enabled."""
     identify_drupal_type = s.getoutput('''grep "%s" "%s/.app-registry" |\
@@ -211,6 +214,7 @@ def app_prod(app):
                  --user=%s %s/orchestration/commands/app-prod.yml\
                  --extra-vars "ansible_sudo_pass=%s app=prod sitename=%s"
               ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP, app), shell=True)
+
 
 def app_import(app):
     """Imports an app from the web container's import directory"""

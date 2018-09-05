@@ -5,12 +5,14 @@ import os
 import colorful as c
 import variables as v
 
+
 def replace_string(file, old_string, new_string):
     """Allows to easily replace a string in a file"""
     with open(file) as target:
         replacement = target.read().replace(old_string, new_string)
     with open(file, "w") as target:
         target.write(replacement)
+
 
 def set_local_ssh_path():
     """Write the SSH public key path to the config file"""
@@ -24,6 +26,7 @@ def set_local_ssh_path():
         else:
             print(c.red("This filepath doesn't exist. Please try again."))
             set_local_ssh_path()
+
 
 def set_local_html_path():
     """Write the local HTML path to the config file"""
@@ -39,6 +42,7 @@ def set_local_html_path():
             print(c.red("This filepath doesn't exist. Please try again."))
             set_local_html_path()
 
+
 def set_local_db_path():
     """Write the local DB path to the config file"""
     if v.DB_PLACEHOLDER in open(v.DEFAULT_CONFIG).read():
@@ -52,6 +56,7 @@ def set_local_db_path():
         else:
             print(c.red("This filepath doesn't exist. Please try again."))
             set_local_db_path()
+
 
 set_local_ssh_path()
 set_local_html_path()

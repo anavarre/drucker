@@ -7,11 +7,13 @@ import variables as v
 import colorful as c
 import services
 
+
 def status():
     """Make sure all containers are started"""
     if s.getoutput("docker ps --format=\"{{.Names}}\"  | grep -c drucker") != "5":
         print(c.red("You cannot run this command when one or more containers are stopped!"))
         start()
+
 
 def health():
     """Checks that all required services are up and running"""
@@ -42,8 +44,8 @@ def start():
     for container in v.CONTAINERS:
         if not s.getoutput('''docker ps --format=\"{{.Names}}\"  | grep %s
                            ''' % (container)):
-           print(c.blue("Starting %s container..." % (container)))
-           s.getoutput("docker start %s" % (container))
+            print(c.blue("Starting %s container..." % (container)))
+            s.getoutput("docker start %s" % (container))
         else:
             print("%s container is already started." % (container))
     health()
@@ -54,8 +56,8 @@ def stop():
     for container in v.CONTAINERS:
         if s.getoutput('''docker ps --format=\"{{.Names}}\"  | grep %s
                            ''' % (container)):
-           print(c.blue("Stopping %s container..." % (container)))
-           s.getoutput("docker stop %s" % (container))
+            print(c.blue("Stopping %s container..." % (container)))
+            s.getoutput("docker stop %s" % (container))
         else:
             print("%s container is already stopped." % (container))
 
@@ -65,8 +67,8 @@ def restart():
     for container in v.CONTAINERS:
         if s.getoutput('''docker ps --format=\"{{.Names}}\"  | grep %s
                            ''' % (container)):
-           print(c.blue("Restarting %s container..." % (container)))
-           s.getoutput("docker restart %s" % (container))
+            print(c.blue("Restarting %s container..." % (container)))
+            s.getoutput("docker restart %s" % (container))
     health()
 
 

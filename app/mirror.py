@@ -8,6 +8,7 @@ import variables as v
 import ssh
 import orchestration as o
 
+
 def create_base2mirror_container():
     """Create mirror container from base image"""
     print(c.blue("Spinning up %s container with ID:" % (v.MIRROR_CONTAINER)))
@@ -25,6 +26,7 @@ def create_base2mirror_container():
     ssh.configure_ssh_mirror()
     o.run_mirror_orchestration()
 
+
 def create_mirror_container():
     """Create mirror container from mirror image"""
     print(c.blue("Spinning up %s container with ID:" % (v.MIRROR_CONTAINER)))
@@ -40,6 +42,7 @@ def create_mirror_container():
     ssh.configure_ssh_mirror()
     o.run_mirror_orchestration()
 
+
 def create_mirror_image():
     """Create mirror image from mirror container"""
     print(c.blue("Committing %s image from %s container..." % (v.MIRROR_IMAGE,
@@ -54,9 +57,11 @@ def create_mirror_image():
     s.getoutput("docker rm -f %s > /dev/null 2>&1" % (v.MIRROR_CONTAINER))
     create_mirror_container()
 
+
 def start_mirror_container():
     """Start mirror container"""
     s.getoutput("docker start %s > /dev/null 2>&1" % (v.MIRROR_CONTAINER))
+
 
 def provision_mirror_container():
     """Provision mirror container"""
@@ -76,5 +81,6 @@ def provision_mirror_container():
         else:
             create_base2mirror_container()
             create_mirror_image()
+
 
 provision_mirror_container()
