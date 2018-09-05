@@ -25,24 +25,6 @@ def parser():
     parser.add_argument("app", nargs='?',
                         help="Targets an arbitrary app")
 
-    parser.add_argument("--health", dest="health", action="store_true",
-                        help="Runs a service healthcheck")
-
-    parser.add_argument('--start', dest='start', action="store_true",
-                        help='Starts all containers')
-
-    parser.add_argument('--stop', dest='stop', action="store_true",
-                        help='Stops all containers')
-
-    parser.add_argument('--restart', dest='restart', action="store_true",
-                        help='Restarts all containers')
-
-    parser.add_argument('--php7.2', dest='php72', action="store_true",
-                        help='Sets the PHP version to 7.2')
-
-    parser.add_argument('--php7.1', dest='php71', action="store_true",
-                        help='Sets the PHP version to 7.1')
-
     parser.add_argument('--drupal', dest='drupal', action="store_true",
                         help='Spins up a ready-to-use Drupal install')
 
@@ -51,15 +33,6 @@ def parser():
 
     parser.add_argument('--blt', dest='blt', action="store_true",
                         help='Spins up a ready-to-use BLT build')
-
-    parser.add_argument('--delete', dest='delete', action="store_true",
-                        help='Deletes an arbitrary docroot')
-
-    parser.add_argument('--version', dest='version', action="store_true",
-                        help='Returns the drucker version')
-
-    parser.add_argument('--list', dest='list', action="store_true",
-                        help='Lists all deployed apps')
 
     parser.add_argument('--dev', dest='dev', action="store_true",
                         help='Prepare app for development work with no caching and helper modules enabled.')
@@ -70,8 +43,35 @@ def parser():
     parser.add_argument('--import', dest='import_app', action="store_true",
                         help="Imports an app from the web container's import directory")
 
+    parser.add_argument('--delete', dest='delete', action="store_true",
+                        help='Deletes an arbitrary docroot')
+
+    parser.add_argument('--start', dest='start', action="store_true",
+                        help='Starts all containers')
+
+    parser.add_argument('--stop', dest='stop', action="store_true",
+                        help='Stops all containers')
+
+    parser.add_argument('--restart', dest='restart', action="store_true",
+                        help='Restarts all containers')
+
+    parser.add_argument("--health", dest="health", action="store_true",
+                        help="Runs a service healthcheck")
+
+    parser.add_argument('--php7.2', dest='php72', action="store_true",
+                        help='Sets the PHP version to 7.2')
+
+    parser.add_argument('--php7.1', dest='php71', action="store_true",
+                        help='Sets the PHP version to 7.1')
+
+    parser.add_argument('--list', dest='list', action="store_true",
+                        help='Lists all deployed apps')
+
     parser.add_argument('--tests', dest='tests', action="store_true",
                         help='Runs the Ansible test suite')
+
+    parser.add_argument('--version', dest='version', action="store_true",
+                        help='Returns the drucker version')
 
     args = parser.parse_args()
 

@@ -72,7 +72,7 @@ def run_tests():
                                     ''' % (v.APP, v.WEB_CONTAINER))
     if v.DEFAULT_PHP not in php_version_check:
         print("Tests need to be executed against the current stable PHP version")
-        print("Please switch to PHP %s with 'drucker php:%s'" % (v.DEFAULT_PHP, v.DEFAULT_PHP))
+        print("Please switch to PHP %s with 'drucker --php%s'" % (v.DEFAULT_PHP, v.DEFAULT_PHP))
         sys.exit()
 
     for group in v.TEST_GROUPS:
@@ -120,7 +120,7 @@ def app_delete(app):
     # TODO: actually enforce arbitrary docroots through positional arguments
 
     if os.path.isdir("%s/%s" % (v.CONTAINER_HTML_PATH, app)):
-        if click.confirm("The %s docroot already exists. Should we overwrite the codebase, files and database?" % (app), default=True):
+        if click.confirm("Should we overwrite the codebase, files and database?", default=True):
             print(c.blue("Deleting %s docroot..." % (app)))
             s.run('''ansible-playbook -i %s/orchestration/hosts\
                      --user=%s %s/orchestration/commands/app-delete.yml\

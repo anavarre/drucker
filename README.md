@@ -178,33 +178,34 @@ $ git update-index --no-assume-unchanged config
 For more advanced `drucker` usage, you can pass several CLI parameters:
 
 ```
-$ drucker --help
-usage: arguments.py [-h] [--health] [--start] [--stop] [--restart] [--php7.2]
-[--php7.1] [--drupal] [--lightning] [--blt] [--delete]
-[--version] [--list] [--dev] [--prod] [--import] [--tests]
+$ drucker -h
+usage: arguments.py [-h] [--drupal] [--lightning] [--blt] [--dev] [--prod]
+[--import] [--delete] [--start] [--stop] [--restart]
+[--health] [--php7.2] [--php7.1] [--list] [--tests]
+[--version]
 [app]
 positional arguments:
 app          Targets an arbitrary app
 optional arguments:
 -h, --help   show this help message and exit
---health     Runs a service healthcheck
---start      Starts all containers
---stop       Stops all containers
---restart    Restarts all containers
---php7.2     Sets the PHP version to 7.2
---php7.1     Sets the PHP version to 7.1
 --drupal     Spins up a ready-to-use Drupal install
 --lightning  Spins up a ready-to-use Lightning install
 --blt        Spins up a ready-to-use BLT build
---delete     Deletes an arbitrary docroot
---version    Returns the drucker version
---list       Lists all deployed apps
 --dev        Prepare app for development work with no caching and helper
 modules enabled.
 --prod       Opinionated setup with all known performance best practices
 enabled.
 --import     Imports an app from the web container's import directory
+--delete     Deletes an arbitrary docroot
+--start      Starts all containers
+--stop       Stops all containers
+--restart    Restarts all containers
+--health     Runs a service healthcheck
+--php7.2     Sets the PHP version to 7.2
+--php7.1     Sets the PHP version to 7.1
+--list       Lists all deployed apps
 --tests      Runs the Ansible test suite
+--version    Returns the drucker version
 ```
 
 Notes:

@@ -1,4 +1,8 @@
 ---
+- name: "GOOGLE CHROME: Download .deb package from the Google repository."
+  apt:
+    deb: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+
 - name: "PHANTOMJS: Check if software is installed"
   stat:
     path: "{{ phantomjs_binary }}"
