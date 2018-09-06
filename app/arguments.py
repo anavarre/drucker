@@ -80,16 +80,3 @@ def get_parser():
                         help='Returns the drucker version',
                         const=return_version)
     return parser
-
-
-if __name__ == '__main__':
-    PARSER = get_parser()
-    ARGS = PARSER.parse_args()
-    # Define convenience constants for UNIX exit codes so that third-party
-    # developers can use Drucker in scripts:
-    # http://tldp.org/LDP/abs/html/exitcodes.html
-    ARGS.exit_ok = 0
-    ARGS.exit_fail = 1
-    # Dispatch program execution to the chosen option and send args to it.
-    EXITCODE = ARGS.mainfunc(ARGS)
-    sys.exit(EXITCODE)
