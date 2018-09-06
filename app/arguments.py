@@ -5,22 +5,21 @@ import sys
 import argparse
 import subprocess
 import colorful
-from . import variables as vars
 from . import containers as cont
 from . import orchestration as orch
 
 
-def return_version(args):
+def return_version(drucker):
     """Returns either the latest commit hash or tagged release"""
     latest_commit = subprocess.getoutput("cd %s && git rev-parse --short HEAD"
-                                         % (vars.APP_ROOT))
-    if 'dev' in vars.APP_VERSION:
+                                         % (drucker.vars.APP_ROOT))
+    if 'dev' in drucker.vars.APP_VERSION:
         hash = colorful.orange(latest_commit)
         print("You are running the dev version at commit " + hash)
     else:
-        tag = colorful.orange(vars.APP_VERSION)
+        tag = colorful.orange(drucker.vars.APP_VERSION)
         print("You are running tagged release " + tag)
-    return args.exit_ok
+    return drucker.vars.exit_ok
 
 
 def get_parser():
