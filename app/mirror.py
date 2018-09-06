@@ -83,4 +83,6 @@ def provision_mirror_container():
             create_mirror_image()
 
 
-provision_mirror_container()
+def main():
+    """Main dispatcher called by the main drucker script."""
+    provision_mirror_container()

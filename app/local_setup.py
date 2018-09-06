@@ -58,6 +58,8 @@ def set_local_db_path():
             set_local_db_path()
 
 
-set_local_ssh_path()
-set_local_html_path()
-set_local_db_path()
+def main():
+    """Main dispatcher called by the main drucker script."""
+    set_local_ssh_path()
+    set_local_html_path()
+    set_local_db_path()

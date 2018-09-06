@@ -83,4 +83,6 @@ def provision_search_container():
             create_search_image()
 
 
-provision_search_container()
+def main():
+    """Main dispatcher called by the main drucker script."""
+    provision_search_container()

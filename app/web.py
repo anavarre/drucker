@@ -89,5 +89,7 @@ def provision_web_container():
             create_web_image()
 
 
-provision_web_container()
-ssh.allow_ssh_access(v.DB_CONTAINER)
+def main():
+    """Main dispatcher called by the main drucker script."""
+    provision_web_container()
+    ssh.allow_ssh_access(v.DB_CONTAINER)

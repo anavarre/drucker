@@ -87,8 +87,10 @@ Host %s %s %s %s %s %s
             sys.exit()
 
 
-check_python_version()
-check_required_executables()
-check_ansible_version()
-check_hosts_file()
-check_ssh_config_file()
+def main():
+    """Main dispatcher called by the main drucker script."""
+    check_python_version()
+    check_required_executables()
+    check_ansible_version()
+    check_hosts_file()
+    check_ssh_config_file()

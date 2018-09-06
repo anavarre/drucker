@@ -38,6 +38,8 @@ def build_init_image():
         s.run("docker build -t \"%s\" %s" % (v.INIT_IMAGE, v.APP_DIR), shell=True)
 
 
-create_bridge_network()
-pull_base_image()
-build_init_image()
+def main():
+    """Main dispatcher called by the main drucker script."""
+    create_bridge_network()
+    pull_base_image()
+    build_init_image()

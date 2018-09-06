@@ -84,5 +84,6 @@ def provision_edge_container():
             create_base2edge_container()
             create_edge_image()
 
-
-provision_edge_container()
+def main():
+    """Main dispatcher called by the main drucker script."""
+    provision_edge_container()

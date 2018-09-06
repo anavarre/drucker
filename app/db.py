@@ -83,4 +83,6 @@ def provision_db_container():
             create_db_image()
 
 
-provision_db_container()
+def main():
+    """Main dispatcher called by the main drucker script."""
+    provision_db_container()

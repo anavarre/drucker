@@ -61,4 +61,6 @@ def provision_base_container():
             delete_init_image()
 
 
-provision_base_container()
+def main():
+    """Main dispatcher called by the main drucker script."""
+    provision_base_container()
