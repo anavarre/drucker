@@ -63,9 +63,9 @@ def start_mirror_container():
     s.getoutput("docker start %s > /dev/null 2>&1" % (v.MIRROR_CONTAINER))
 
 
-def provision_mirror_container():
+def provision_mirror_container(drucker):
     """Provision mirror container"""
-
+    assert drucker  # TODO: Remove after porting this to use drucker object.
     if s.getoutput("docker ps -a | grep -o %s" % (v.MIRROR_CONTAINER)):
         print(c.green("%s container already exists." % (v.MIRROR_CONTAINER)))
         if s.getoutput("docker ps | grep -o %s" % (v.MIRROR_CONTAINER)):
@@ -83,6 +83,6 @@ def provision_mirror_container():
             create_mirror_image()
 
 
-def main():
+def main(drucker):
     """Main dispatcher called by the main drucker script."""
-    provision_mirror_container()
+    provision_mirror_container(drucker)

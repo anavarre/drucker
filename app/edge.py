@@ -63,8 +63,9 @@ def start_edge_container():
     s.getoutput("docker start %s > /dev/null 2>&1" % (v.EDGE_CONTAINER))
 
 
-def provision_edge_container():
+def provision_edge_container(drucker):
     """Provision edge container"""
+    assert drucker  # TODO: Remove after porting this to use drucker object.
     if s.getoutput("docker ps -a | grep -o %s" % (v.EDGE_CONTAINER)):
         print(c.green("%s container already exists." % (v.EDGE_CONTAINER)))
 
@@ -84,6 +85,6 @@ def provision_edge_container():
             create_base2edge_container()
             create_edge_image()
 
-def main():
+def main(drucker):
     """Main dispatcher called by the main drucker script."""
-    provision_edge_container()
+    provision_edge_container(drucker)

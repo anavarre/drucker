@@ -11,12 +11,13 @@ from . import variables as v
 def check_python_version():
     """A recent version of Python is required"""
     if sys.version_info[0] < 3:
-        print(c.red("Python 3 or higher is required to run this application."))
-        sys.exit()
+        raise RuntimeError(
+            "Python 3 or higher is required to run this application.")
 
 
-def check_required_executables():
+def check_required_executables(drucker):
     """Both Docker and Ansible need to be installed"""
+    assert drucker  # TODO: Remove after porting this to use drucker object.
     for executable in v.EXECUTABLES:
         if not shutil.which(executable):
             print(c.red("%s is required to run this application." % (executable).title()))
@@ -35,9 +36,9 @@ def check_ansible_version():
         sys.exit()
 
 
-def check_hosts_file():
+def check_hosts_file(drucker):
     """The local hosts file must be correctly configured"""
-
+    assert drucker  # TODO: Remove after porting this to use drucker object.
     hosts_file_ips = [v.EDGE_IP,
                       v.SEARCH_IP,
                       v.MIRROR_IP]
@@ -59,9 +60,9 @@ You should add the below entries:
             sys.exit()
 
 
-def check_ssh_config_file():
+def check_ssh_config_file(drucker):
     """The SSH config file must be correctly configured"""
-
+    assert drucker  # TODO: Remove after porting this to use drucker object.
     ssh_config_ips = [v.BASE_IP,
                       v.EDGE_IP,
                       v.WEB_IP,
@@ -87,10 +88,10 @@ Host %s %s %s %s %s %s
             sys.exit()
 
 
-def main():
+def main(drucker):
     """Main dispatcher called by the main drucker script."""
     check_python_version()
-    check_required_executables()
+    check_required_executables(drucker)
     check_ansible_version()
-    check_hosts_file()
-    check_ssh_config_file()
+    check_hosts_file(drucker)
+    check_ssh_config_file(drucker)

@@ -63,8 +63,9 @@ def start_search_container():
     s.getoutput("docker start %s > /dev/null 2>&1" % (v.SEARCH_CONTAINER))
 
 
-def provision_search_container():
+def provision_search_container(drucker):
     """Provision search container"""
+    assert drucker  # TODO: Remove after porting this to use drucker object.
     if s.getoutput("docker ps -a | grep -o %s" % (v.SEARCH_CONTAINER)):
         print(c.green("%s container already exists." % (v.SEARCH_CONTAINER)))
 
@@ -83,6 +84,6 @@ def provision_search_container():
             create_search_image()
 
 
-def main():
+def main(drucker):
     """Main dispatcher called by the main drucker script."""
-    provision_search_container()
+    provision_search_container(drucker)

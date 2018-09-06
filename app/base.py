@@ -44,8 +44,9 @@ def delete_init_image():
     s.getoutput("docker rmi %s > /dev/null 2>&1" % (v.INIT_IMAGE))
 
 
-def provision_base_container():
+def provision_base_container(drucker):
     """Set up base container from init image"""
+    assert drucker  # TODO: Remove after porting this to use drucker object.
     if s.getoutput(v.CHECK_BASE_IMAGE):
         print(c.green("%s image already exists." % (v.BASE_IMAGE)))
 
@@ -61,6 +62,6 @@ def provision_base_container():
             delete_init_image()
 
 
-def main():
+def main(drucker):
     """Main dispatcher called by the main drucker script."""
-    provision_base_container()
+    provision_base_container(drucker)

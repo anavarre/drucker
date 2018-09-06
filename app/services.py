@@ -17,7 +17,7 @@ def check(container, service, name):
 
 def phpfpm(container):
     """Starts PHP-FPM if it's down"""
-    assert len(container)  # Throw AssertionError if empty + silences pylint.
+    assert container  # TODO: Remove 'container' argument for this function.
     if not s.getoutput('''docker exec -it %s pgrep php-fpm%s | head -1
                        ''' % (v.WEB_CONTAINER,
                               v.DEFAULT_PHP)):

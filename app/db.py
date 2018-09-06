@@ -63,8 +63,9 @@ def start_db_container():
     s.getoutput("docker start %s > /dev/null 2>&1" % (v.DB_CONTAINER))
 
 
-def provision_db_container():
+def provision_db_container(drucker):
     """Provision database container"""
+    assert drucker  # TODO: Remove after porting this to use drucker object.
     if s.getoutput("docker ps -a | grep -o %s" % (v.DB_CONTAINER)):
         print(c.green("%s container already exists." % (v.DB_CONTAINER)))
 
@@ -83,6 +84,6 @@ def provision_db_container():
             create_db_image()
 
 
-def main():
+def main(drucker):
     """Main dispatcher called by the main drucker script."""
-    provision_db_container()
+    provision_db_container(drucker)

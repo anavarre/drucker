@@ -14,7 +14,7 @@ def replace_string(file, old_string, new_string):
         target.write(replacement)
 
 
-def set_local_ssh_path():
+def set_local_ssh_path(drucker):
     """Write the SSH public key path to the config file"""
     if v.KEY_PLACEHOLDER in open(v.DEFAULT_CONFIG).read():
         pubkey = input("Enter path to SSH public key (%s): " % (v.DEFAULT_PUBKEY))
@@ -25,10 +25,10 @@ def set_local_ssh_path():
             replace_string(v.DEFAULT_CONFIG, v.KEY_PLACEHOLDER, pubkey)
         else:
             print(c.red("This filepath doesn't exist. Please try again."))
-            set_local_ssh_path()
+            set_local_ssh_path(drucker)
 
 
-def set_local_html_path():
+def set_local_html_path(drucker):
     """Write the local HTML path to the config file"""
     if v.HTML_PLACEHOLDER in open(v.DEFAULT_CONFIG).read():
         host_html_path = input('''
@@ -40,10 +40,10 @@ def set_local_html_path():
             replace_string(v.DEFAULT_CONFIG, v.HTML_PLACEHOLDER, host_html_path)
         else:
             print(c.red("This filepath doesn't exist. Please try again."))
-            set_local_html_path()
+            set_local_html_path(drucker)
 
 
-def set_local_db_path():
+def set_local_db_path(drucker):
     """Write the local DB path to the config file"""
     if v.DB_PLACEHOLDER in open(v.DEFAULT_CONFIG).read():
         host_db_path = input('''
@@ -55,11 +55,11 @@ def set_local_db_path():
             replace_string(v.DEFAULT_CONFIG, v.DB_PLACEHOLDER, host_db_path)
         else:
             print(c.red("This filepath doesn't exist. Please try again."))
-            set_local_db_path()
+            set_local_db_path(drucker)
 
 
-def main():
+def main(drucker):
     """Main dispatcher called by the main drucker script."""
-    set_local_ssh_path()
-    set_local_html_path()
-    set_local_db_path()
+    set_local_ssh_path(drucker)
+    set_local_html_path(drucker)
+    set_local_db_path(drucker)

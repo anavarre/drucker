@@ -9,8 +9,9 @@ from . import variables as v
 TMP_KEY = "/tmp/authorized_keys"
 
 
-def allow_ssh_access(host):
+def allow_ssh_access(drucker, host):
     """Allows to set up SSH access from the Web container to any other"""
+    assert drucker  # TODO: Remove after porting this to use drucker object.
     rsa_drucker_web = "/tmp/id_rsa_drucker_web"
     rsa_key_deployed = "/tmp/rsa_key_deployed"
     key = s.getoutput("cat %s" % (rsa_drucker_web))
