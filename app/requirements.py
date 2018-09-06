@@ -4,7 +4,6 @@
 import sys
 import shutil
 import subprocess as s
-import colorful as c
 from . import variables as v
 
 
@@ -20,8 +19,9 @@ def check_required_executables(drucker):
     assert drucker  # TODO: Remove after porting this to use drucker object.
     for executable in v.EXECUTABLES:
         if not shutil.which(executable):
-            print(c.red("%s is required to run this application." % (executable).title()))
-            sys.exit()
+            raise RuntimeError(
+                "%s is required to run this application."
+                % (executable).title())
 
 
 def check_ansible_version():
@@ -32,32 +32,29 @@ def check_ansible_version():
                            shell=True).stdout.decode('utf-8')
 
     if return_version < "2.4":
-        print(c.red("Ansible 2.4 or later is required to run this application."))
-        sys.exit()
+        raise RuntimeError(
+            "Ansible 2.4 or later is required to run this application.")
 
 
 def check_hosts_file(drucker):
     """The local hosts file must be correctly configured"""
-    assert drucker  # TODO: Remove after porting this to use drucker object.
-    hosts_file_ips = [v.EDGE_IP,
-                      v.SEARCH_IP,
-                      v.MIRROR_IP]
-
+    hosts_file_ips = [drucker.vars.EDGE_IP,
+                      drucker.vars.SEARCH_IP,
+                      drucker.vars.MIRROR_IP]
     for hosts_file_ip in hosts_file_ips:
-        if hosts_file_ip not in open(v.HOSTS).read():
-            print("A correctly configured local %s file\
- is required to run this application." % (v.HOSTS))
-
-            hosts_file_suggestion = """
-You should add the below entries:
-
-%s    %s
-%s   search.local
-%s   mirror.local
-""" % (v.EDGE_IP, v.DOMAINS, v.SEARCH_IP, v.MIRROR_IP)
-
-            print(hosts_file_suggestion)
-            sys.exit()
+        if hosts_file_ip not in open(drucker.vars.HOSTS).read():
+            raise RuntimeError(
+                "A correctly configured local {hosts} file"
+                " is required to run this application.\n\n"
+                "You should add the below entries:\n\n"
+                "{edge_ip}    {domains}\n"
+                "{search_ip}   search.local\n"
+                "{mirror_ip}   mirror.local\n".format(
+                    hosts=drucker.vars.HOSTS,
+                    edge_ip=drucker.vars.EDGE_IP,
+                    domains=drucker.vars.DOMAINS,
+                    search_ip=drucker.vars.SEARCH_IP,
+                    mirror_ip=drucker.vars.MIRROR_IP))
 
 
 def check_ssh_config_file(drucker):
@@ -85,7 +82,7 @@ Host %s %s %s %s %s %s
 """ % (v.BASE_IP, v.EDGE_IP, v.WEB_IP, v.DB_IP, v.SEARCH_IP, v.MIRROR_IP)
 
             print(ssh_config_suggestion)
-            sys.exit()
+            sys.exit()  # TODO: Port to RuntimeError, see check_hosts_file.
 
 
 def main(drucker):
