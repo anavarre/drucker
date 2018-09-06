@@ -51,7 +51,7 @@ if __name__ == '__main__':
         if DRUCKER.dispatched_function:
             EXITCODE = DRUCKER.dispatched_function(DRUCKER)
         else:
-            EXITCODE = DRUCKER.dispatch_the_provisioner(DRUCKER)
+            EXITCODE = dispatch_the_provisioner(DRUCKER)
         sys.exit(EXITCODE)
 
     # RuntimeWarning's are fatal and stop the program (printed in yellow).
