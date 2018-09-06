@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""Drucker main dispatcher."""
+import sys
+import colorful
+import app
+
+
+def dispatch_the_provisioner(drucker):
+    """Drucker initialization, container provisioning and orchestration."""
+    app.init.main(drucker)
+    app.base.main(drucker)
+    app.mirror.main(drucker)
+    app.edge.main(drucker)
+    app.db.main(drucker)
+    app.search.main(drucker)
+    app.web.main(drucker)
+
+
+if __name__ == '__main__':
+    PARSER = app.arguments.get_parser()
+
+    # Name the argparse Namespace object 'DRUCKER'. The 'DRUCKER' object
+    # travels deep into the codebase since its passed on from here to all
+    # dispatched code. The Drucker object holds more than just CLI-arguments,
+    # making it the central backbone object of all code:
+    #
+    #  - DRUCKER.vars:
+    #      The app.variables module, for easy access everywhere.
+    #
+    #  - DRUCKER.dispatched_function:
+    #      A reference to the function object that got called during
+    #      runtime. It is 'None' when Drucker ran without CLI arguments.
+    #
+    #  - DRUCKER.app:
+    #      The 'app' argument used for orchestration functions.
+    #
+    DRUCKER = PARSER.parse_args()
+    DRUCKER.vars = app.variables
+
+    # Dispatch and execute Drucker from a central try/except block. We do this
+    # to catch all exceptions in a single place, more except blocks can be
+    # added in the future for more granular cases (e.g. 'KeyboardInterrupt').
+    # @see https://realpython.com/python-exceptions/
+    try:
+        # Make sure the app can run successfully.
+        app.requirements.main(DRUCKER)
+        app.local_setup.main(DRUCKER)
+
+        if DRUCKER.dispatched_function:
+            EXITCODE = DRUCKER.dispatched_function(DRUCKER)
+        else:
+            EXITCODE = DRUCKER.dispatch_the_provisioner(DRUCKER)
+        sys.exit(EXITCODE)
+
+    # RuntimeWarning's are fatal and stop the program (printed in yellow).
+    except RuntimeWarning as err:
+        print(colorful.yellow(err))
+        sys.exit(DRUCKER.vars.EXITCODE_FAIL)
+
+    # RuntimeError's are fatal and stop the program (printed in red).
+    except RuntimeError as err:
+        print(colorful.red(err))
+        sys.exit(DRUCKER.vars.EXITCODE_FAIL)
+
+    # Catch all uncaught exceptions and re-raise it.
+    #
+    # When this happens its by definition a software bug in Drucker. Because
+    # of this, we re-raise it using 'raise' so that the backtrace is printed
+    # and a bug report can be filed.
+    except Exception as err:
+        print("THIS UNEXPECTED ERROR OCCURED:\n%s\n" % colorful.red(err))
+        raise
