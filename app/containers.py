@@ -7,16 +7,16 @@ import variables as v
 import services
 
 
-def status():
+def status(args):
     """Make sure all containers are started"""
     if s.getoutput("docker ps --format=\"{{.Names}}\"  | grep -c drucker") != "5":
         print(c.red("You cannot run this command when one or more containers are stopped!"))
-        start()
+        start(args)
 
 
-def health():
+def health(args):
     """Checks that all required services are up and running"""
-    status()
+    status(args)
 
     print(c.blue("Checking services for %s container..." % (v.MIRROR_CONTAINER)))
     services.check(v.MIRROR_CONTAINER, "apache2", "Apache")
@@ -36,9 +36,10 @@ def health():
     print(c.blue("Checking services for %s container..." % (v.WEB_CONTAINER)))
     services.check(v.WEB_CONTAINER, "apache2", "Apache")
     services.phpfpm(v.DB_CONTAINER)
+    return args.exit_ok
 
 
-def start():
+def start(args):
     """Starts all containers"""
     for container in v.CONTAINERS:
         if not s.getoutput('''docker ps --format=\"{{.Names}}\"  | grep %s
@@ -47,10 +48,11 @@ def start():
             s.getoutput("docker start %s" % (container))
         else:
             print("%s container is already started." % (container))
-    health()
+    health(args)
+    return args.exit_ok
 
 
-def stop():
+def stop(args):
     """Stops all containers"""
     for container in v.CONTAINERS:
         if s.getoutput('''docker ps --format=\"{{.Names}}\"  | grep %s
@@ -59,31 +61,36 @@ def stop():
             s.getoutput("docker stop %s" % (container))
         else:
             print("%s container is already stopped." % (container))
+    return args.exit_ok
 
 
-def restart():
+def restart(args):
     """Restarts all containers"""
     for container in v.CONTAINERS:
         if s.getoutput('''docker ps --format=\"{{.Names}}\"  | grep %s
                            ''' % (container)):
             print(c.blue("Restarting %s container..." % (container)))
             s.getoutput("docker restart %s" % (container))
-    health()
+    health(args)
+    return args.exit_ok
 
 
-def set_previous_php_version():
+def set_previous_php_version(args):
     """Sets the PHP version to the previous version"""
     print(c.blue("Switch to %s..." % (v.PREVIOUS_PHP)))
     s.run('''ansible-playbook -i %s/orchestration/hosts\
              --user=%s %s/orchestration/commands/previous-php.yml\
              --extra-vars "ansible_sudo_pass=%s"
           ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP), shell=True)
+    return args.exit_ok
 
 
-def set_default_php_version():
+def set_default_php_version(args):
     """Set the PHP version to the current stable version"""
-    print(c.blue("Switch to %s..." % (v.DEFAULT_PHP))) # pylint: disable=E1101
+    # pylint: disable=E1101
+    print(c.blue("Switch to %s..." % (v.DEFAULT_PHP)))
     s.run('''ansible-playbook -i %s/orchestration/hosts\
              --user=%s %s/orchestration/commands/default-php.yml\
              --extra-vars "ansible_sudo_pass=%s"
           ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP), shell=True)
+    return args.exit_ok
