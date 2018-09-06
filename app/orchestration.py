@@ -119,7 +119,7 @@ def app_delete(args):
 
 def app_drupal(args):
     """Spins up a ready-to-use Drupal install"""
-    app_delete(args.app)
+    app_delete(args)
 
     # if [[ -z "${GIT_TAG}" ]]; then
     print(c.blue("Installing Drupal into new %s docroot..." % (args.app)))
