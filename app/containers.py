@@ -87,7 +87,8 @@ def set_previous_php_version(args):
 
 def set_default_php_version(args):
     """Set the PHP version to the current stable version"""
-    print(c.blue("Switch to %s..." % (v.DEFAULT_PHP))) # pylint: disable=E1101
+    # pylint: disable=E1101
+    print(c.blue("Switch to %s..." % (v.DEFAULT_PHP)))
     s.run('''ansible-playbook -i %s/orchestration/hosts\
              --user=%s %s/orchestration/commands/default-php.yml\
              --extra-vars "ansible_sudo_pass=%s"
