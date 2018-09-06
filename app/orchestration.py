@@ -90,15 +90,15 @@ def hosts_file(app):
     print(c.green("Remember to add the %s.local entry to your local /etc/hosts file!" % (app)))
 
 
-def param_check(app):
+def param_check(args):
     """Determines whether a second parameter (sitename) was passed"""
-    if not app:
+    if not args.app:
         print(c.red("This command needs a sitename to run. Aborting..."))
 
 
 def app_delete(args):
     """Deletes an arbitrary docroot"""
-    param_check(args.app)
+    param_check(args)
 
     # TODO: actually enforce arbitrary docroots through positional arguments
 
@@ -139,7 +139,7 @@ def app_drupal(args):
 
 def app_lightning(args):
     """Spins up a ready-to-use Lightning install"""
-    app_delete(args.app)
+    app_delete(args)
 
     print(c.blue("Installing Lightning into new %s docroot..." % (args.app)))
     s.run('''ansible-playbook -i %s/orchestration/hosts\
@@ -152,7 +152,7 @@ def app_lightning(args):
 
 def app_blt(args):
     """Spins up a ready-to-use BLT build"""
-    app_delete(args.app)
+    app_delete(args)
 
     print(c.blue("Installing BLT into new %s docroot..." % (args.app)))
     s.run('''ansible-playbook -i %s/orchestration/hosts\
@@ -165,7 +165,7 @@ def app_blt(args):
 
 def app_dev(args):
     """Prepares app for development work with no caching and helper modules enabled."""
-    param_check(args.app)
+    param_check(args)
 
     identify_drupal_type = s.getoutput('''grep "%s" "%s/.app-registry" |\
                                           awk '{print $NF}' | tr --d '()'
