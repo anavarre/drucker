@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Initialize app with Docker networking and init image"""
 
 import subprocess as s
 import colorful as c
-import variables as v
+from . import variables as v
 
 
 def create_bridge_network():

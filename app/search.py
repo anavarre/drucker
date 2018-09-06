@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Creates search image and container"""
 
 import subprocess as s
-from datetime import date
 import colorful as c
-import variables as v
-import ssh
-import orchestration as o
+from datetime import date
+from . import ssh
+from . import variables as v
+from . import orchestration as o
 
 
 def create_base2search_container():

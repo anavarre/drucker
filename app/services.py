@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Checks if services are correctly running in containers"""
 
 import subprocess as s
 import colorful as c
-import variables as v
+from . import variables as v
 
 
 def check(container, service, name):

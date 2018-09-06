@@ -1,10 +1,10 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Manages containers"""
 
 import subprocess as s
 import colorful as c
-import variables as v
-import services
+from . import variables as v
+from . import services
 
 
 def status(args):

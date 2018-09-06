@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Manages orchestration for all containers"""
 
 import subprocess as s
 import os
 import colorful as c
 import click
-import variables as v
-import containers
+from . import variables as v
+from . import containers
 
 
 def run_orchestration(container, shortname):

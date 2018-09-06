@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Manages the base image and container"""
 
 import subprocess as s
-from datetime import date
 import colorful as c
-import ssh
-import orchestration as o
-import variables as v
+from datetime import date
+from . import ssh
+from . import variables as v
+from . import orchestration as o
 
 
 def create_base_container():

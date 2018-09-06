@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Edit the config file to accommodate for local user preferences"""
 
 import os
 import colorful as c
-import variables as v
+from . import variables as v
 
 
 def replace_string(file, old_string, new_string):

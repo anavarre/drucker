@@ -5,9 +5,9 @@ import sys
 import argparse
 import subprocess
 import colorful
-import variables as vars
-import containers as cont
-import orchestration as orch
+from . import variables as vars
+from . import containers as cont
+from . import orchestration as orch
 
 
 def return_version(args):

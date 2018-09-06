@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Manages SSH access on containers"""
 
 import subprocess as s
 import os
-import variables as v
+from . import variables as v
 
 
 TMP_KEY = "/tmp/authorized_keys"

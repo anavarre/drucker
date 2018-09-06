@@ -1,11 +1,11 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """All requirements must be met before running orchestration"""
 
 import sys
 import shutil
 import subprocess as s
 import colorful as c
-import variables as v
+from . import variables as v
 
 
 def check_python_version():
