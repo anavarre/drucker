@@ -122,7 +122,7 @@ This will ensure you can access:
 **Recommended**: add the below bash alias entry in your `.bashrc` or `.bash_aliases` file:
 
 ```
-alias drucker='path/to/drucker/drucker.sh'
+alias drucker='path/to/drucker/drucker'
 ```
 
 Source the file (or log out and log back in) to use the alias immediately. E.g.:
@@ -148,10 +148,10 @@ This will prevent SSH strict host key checking from getting in the way, since _d
 
 ## <a name="usage"></a>Usage
 
-Simply run `drucker` if you have a bash alias, or invoke the `drucker.sh` script directly.
+Simply run `drucker` if you have a bash alias, or invoke the `drucker` script directly.
 
 ```
-$ ./path/to/drucker.sh
+$ ./path/to/drucker
 Enter path to SSH public key [/home/<username>/.ssh/id_rsa.pub]:
 Where should we store drucker sites locally? [/var/www/html]:
 Where should we store drucker databases locally? [/var/lib/mysql]:
