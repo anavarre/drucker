@@ -18,7 +18,7 @@ def return_version(drucker):
     else:
         tag = colorful.orange(drucker.vars.APP_VERSION)
         print("You are running tagged release " + tag)
-    return drucker.vars.exit_ok
+    return drucker.vars.EXITCODE_OK
 
 
 def get_parser():
