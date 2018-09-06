@@ -70,5 +70,5 @@ if __name__ == '__main__':
     # of this, we re-raise it using 'raise' so that the backtrace is printed
     # and a bug report can be filed.
     except Exception as err:
-        print("THIS UNEXPECTED ERROR OCCURED:\n%s\n" % colorful.red(err))
+        print("\nTHIS UNEXPECTED ERROR OCCURED:\n%s\n\n" % colorful.red(err))
         raise
