@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Creates edge image and container"""
 
+from datetime import date
 import subprocess as s
 import colorful as c
-from datetime import date
 from . import variables as v
 from . import ssh
 from . import orchestration as o

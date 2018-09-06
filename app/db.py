@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """Creates database image and container"""
 
+from datetime import date
 import subprocess as s
 import colorful as c
-from datetime import date
 from . import variables as v
 from . import ssh
 from . import orchestration as o

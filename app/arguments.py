@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Parsing of command line arguments passed to the drucker."""
 
-import sys
 import argparse
 import subprocess
 import colorful
@@ -14,8 +13,8 @@ def return_version(drucker):
     latest_commit = subprocess.getoutput("cd %s && git rev-parse --short HEAD"
                                          % (drucker.vars.APP_ROOT))
     if 'dev' in drucker.vars.APP_VERSION:
-        hash = colorful.orange(latest_commit)
-        print("You are running the dev version at commit " + hash)
+        commitref = colorful.orange(latest_commit)
+        print("You are running the dev version at commit " + commitref)
     else:
         tag = colorful.orange(drucker.vars.APP_VERSION)
         print("You are running tagged release " + tag)
