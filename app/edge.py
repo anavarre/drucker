@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Creates edge image and container"""
 
-import subprocess as s
 from datetime import date
+import subprocess as s
 import colorful as c
-import variables as v
-import ssh
-import orchestration as o
+from . import variables as v
+from . import ssh
+from . import orchestration as o
 
 
 def create_base2edge_container():
@@ -63,8 +63,9 @@ def start_edge_container():
     s.getoutput("docker start %s > /dev/null 2>&1" % (v.EDGE_CONTAINER))
 
 
-def provision_edge_container():
+def provision_edge_container(drucker):
     """Provision edge container"""
+    assert drucker  # TODO: Remove after porting this to use drucker object.
     if s.getoutput("docker ps -a | grep -o %s" % (v.EDGE_CONTAINER)):
         print(c.green("%s container already exists." % (v.EDGE_CONTAINER)))
 
@@ -85,4 +86,6 @@ def provision_edge_container():
             create_edge_image()
 
 
-provision_edge_container()
+def main(drucker):
+    """Main dispatcher called by the main drucker script."""
+    provision_edge_container(drucker)

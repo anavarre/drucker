@@ -1,16 +1,17 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Manages SSH access on containers"""
 
 import subprocess as s
 import os
-import variables as v
+from . import variables as v
 
 
 TMP_KEY = "/tmp/authorized_keys"
 
 
-def allow_ssh_access(host):
+def allow_ssh_access(drucker, host):
     """Allows to set up SSH access from the Web container to any other"""
+    assert drucker  # TODO: Remove after porting this to use drucker object.
     rsa_drucker_web = "/tmp/id_rsa_drucker_web"
     rsa_key_deployed = "/tmp/rsa_key_deployed"
     key = s.getoutput("cat %s" % (rsa_drucker_web))

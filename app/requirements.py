@@ -1,26 +1,27 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """All requirements must be met before running orchestration"""
 
 import sys
 import shutil
 import subprocess as s
-import colorful as c
-import variables as v
+from . import variables as v
 
 
 def check_python_version():
     """A recent version of Python is required"""
     if sys.version_info[0] < 3:
-        print(c.red("Python 3 or higher is required to run this application."))
-        sys.exit()
+        raise RuntimeError(
+            "Python 3 or higher is required to run this application.")
 
 
-def check_required_executables():
+def check_required_executables(drucker):
     """Both Docker and Ansible need to be installed"""
+    assert drucker  # TODO: Remove after porting this to use drucker object.
     for executable in v.EXECUTABLES:
         if not shutil.which(executable):
-            print(c.red("%s is required to run this application." % (executable).title()))
-            sys.exit()
+            raise RuntimeError(
+                "%s is required to run this application."
+                % (executable).title())
 
 
 def check_ansible_version():
@@ -31,37 +32,34 @@ def check_ansible_version():
                            shell=True).stdout.decode('utf-8')
 
     if return_version < "2.4":
-        print(c.red("Ansible 2.4 or later is required to run this application."))
-        sys.exit()
+        raise RuntimeError(
+            "Ansible 2.4 or later is required to run this application.")
 
 
-def check_hosts_file():
+def check_hosts_file(drucker):
     """The local hosts file must be correctly configured"""
-
-    hosts_file_ips = [v.EDGE_IP,
-                      v.SEARCH_IP,
-                      v.MIRROR_IP]
-
+    hosts_file_ips = [drucker.vars.EDGE_IP,
+                      drucker.vars.SEARCH_IP,
+                      drucker.vars.MIRROR_IP]
     for hosts_file_ip in hosts_file_ips:
-        if hosts_file_ip not in open(v.HOSTS).read():
-            print("A correctly configured local %s file\
- is required to run this application." % (v.HOSTS))
+        if hosts_file_ip not in open(drucker.vars.HOSTS).read():
+            raise RuntimeError(
+                "A correctly configured local {hosts} file"
+                " is required to run this application.\n\n"
+                "You should add the below entries:\n\n"
+                "{edge_ip}    {domains}\n"
+                "{search_ip}   search.local\n"
+                "{mirror_ip}   mirror.local\n".format(
+                    hosts=drucker.vars.HOSTS,
+                    edge_ip=drucker.vars.EDGE_IP,
+                    domains=drucker.vars.DOMAINS,
+                    search_ip=drucker.vars.SEARCH_IP,
+                    mirror_ip=drucker.vars.MIRROR_IP))
 
-            hosts_file_suggestion = """
-You should add the below entries:
 
-%s    %s
-%s   search.local
-%s   mirror.local
-""" % (v.EDGE_IP, v.DOMAINS, v.SEARCH_IP, v.MIRROR_IP)
-
-            print(hosts_file_suggestion)
-            sys.exit()
-
-
-def check_ssh_config_file():
+def check_ssh_config_file(drucker):
     """The SSH config file must be correctly configured"""
-
+    assert drucker  # TODO: Remove after porting this to use drucker object.
     ssh_config_ips = [v.BASE_IP,
                       v.EDGE_IP,
                       v.WEB_IP,
@@ -84,11 +82,13 @@ Host %s %s %s %s %s %s
 """ % (v.BASE_IP, v.EDGE_IP, v.WEB_IP, v.DB_IP, v.SEARCH_IP, v.MIRROR_IP)
 
             print(ssh_config_suggestion)
-            sys.exit()
+            sys.exit()  # TODO: Port to RuntimeError, see check_hosts_file.
 
 
-check_python_version()
-check_required_executables()
-check_ansible_version()
-check_hosts_file()
-check_ssh_config_file()
+def main(drucker):
+    """Main dispatcher called by the main drucker script."""
+    check_python_version()
+    check_required_executables(drucker)
+    check_ansible_version()
+    check_hosts_file(drucker)
+    check_ssh_config_file(drucker)

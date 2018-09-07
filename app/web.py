@@ -1,15 +1,15 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Creates web image and container"""
 
-import subprocess as s
 from datetime import date
+import subprocess as s
 import colorful as c
-import variables as v
-import ssh
-import orchestration as o
+from . import variables as v
+from . import ssh
+from . import orchestration as o
 
 
-def create_base2web_container():
+def create_base2web_container(drucker):
     """Create web container from base image"""
     print(c.blue("Spinning up %s container with ID:" % (v.WEB_CONTAINER)))
 
@@ -26,7 +26,7 @@ def create_base2web_container():
     ssh.configure_ssh_web()
     o.run_ssh_orchestration()
     # We need to set up web-to-mirror SSH access to SCP the Drupal Git repo.
-    ssh.allow_ssh_access(v.MIRROR_CONTAINER)
+    ssh.allow_ssh_access(drucker, v.MIRROR_CONTAINER)
     o.run_web_orchestration()
 
 
@@ -69,7 +69,7 @@ def start_web_container():
     s.getoutput("docker start %s" % (v.WEB_CONTAINER))
 
 
-def provision_web_container():
+def provision_web_container(drucker):
     """Provisions web container"""
     if s.getoutput("docker ps -a | grep -o %s" % (v.WEB_CONTAINER)):
         print(c.green("%s container already exists." % (v.WEB_CONTAINER)))
@@ -85,9 +85,11 @@ def provision_web_container():
             print(c.green("%s custom image already exists." % (v.WEB_IMAGE)))
             create_web_container()
         else:
-            create_base2web_container()
+            create_base2web_container(drucker)
             create_web_image()
 
 
-provision_web_container()
-ssh.allow_ssh_access(v.DB_CONTAINER)
+def main(drucker):
+    """Main dispatcher called by the main drucker script."""
+    provision_web_container(drucker)
+    ssh.allow_ssh_access(drucker, v.DB_CONTAINER)

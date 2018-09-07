@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Manages the base image and container"""
 
-import subprocess as s
 from datetime import date
+import subprocess as s
 import colorful as c
-import ssh
-import orchestration as o
-import variables as v
+from . import ssh
+from . import variables as v
+from . import orchestration as o
 
 
 def create_base_container():
@@ -44,8 +44,9 @@ def delete_init_image():
     s.getoutput("docker rmi %s > /dev/null 2>&1" % (v.INIT_IMAGE))
 
 
-def provision_base_container():
+def provision_base_container(drucker):
     """Set up base container from init image"""
+    assert drucker  # TODO: Remove after porting this to use drucker object.
     if s.getoutput(v.CHECK_BASE_IMAGE):
         print(c.green("%s image already exists." % (v.BASE_IMAGE)))
 
@@ -61,4 +62,6 @@ def provision_base_container():
             delete_init_image()
 
 
-provision_base_container()
+def main(drucker):
+    """Main dispatcher called by the main drucker script."""
+    provision_base_container(drucker)

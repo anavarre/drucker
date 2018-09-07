@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Common variables used across the app"""
 
 import os
@@ -12,6 +12,8 @@ APP_DIR = "%s/app" % (APP_ROOT)
 HOME = str(Path.home())
 
 EXECUTABLES = ["docker", "ansible"]
+EXITCODE_FAIL = 1
+EXITCODE_OK = 0
 DOMAINS = "drucker.local phpmyadmin.local adminer.local\
  lightning.local reservoir.local blt.local"
 HOSTS = "/etc/hosts"

@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Creates mirror image and container"""
 
-import subprocess as s
 from datetime import date
+import subprocess as s
 import colorful as c
-import variables as v
-import ssh
-import orchestration as o
+from . import ssh
+from . import variables as v
+from . import orchestration as o
 
 
 def create_base2mirror_container():
@@ -63,9 +63,9 @@ def start_mirror_container():
     s.getoutput("docker start %s > /dev/null 2>&1" % (v.MIRROR_CONTAINER))
 
 
-def provision_mirror_container():
+def provision_mirror_container(drucker):
     """Provision mirror container"""
-
+    assert drucker  # TODO: Remove after porting this to use drucker object.
     if s.getoutput("docker ps -a | grep -o %s" % (v.MIRROR_CONTAINER)):
         print(c.green("%s container already exists." % (v.MIRROR_CONTAINER)))
         if s.getoutput("docker ps | grep -o %s" % (v.MIRROR_CONTAINER)):
@@ -83,4 +83,6 @@ def provision_mirror_container():
             create_mirror_image()
 
 
-provision_mirror_container()
+def main(drucker):
+    """Main dispatcher called by the main drucker script."""
+    provision_mirror_container(drucker)

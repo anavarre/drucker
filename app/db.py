@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Creates database image and container"""
 
-import subprocess as s
 from datetime import date
+import subprocess as s
 import colorful as c
-import variables as v
-import ssh
-import orchestration as o
+from . import variables as v
+from . import ssh
+from . import orchestration as o
 
 
 def create_base2db_container():
@@ -63,8 +63,9 @@ def start_db_container():
     s.getoutput("docker start %s > /dev/null 2>&1" % (v.DB_CONTAINER))
 
 
-def provision_db_container():
+def provision_db_container(drucker):
     """Provision database container"""
+    assert drucker  # TODO: Remove after porting this to use drucker object.
     if s.getoutput("docker ps -a | grep -o %s" % (v.DB_CONTAINER)):
         print(c.green("%s container already exists." % (v.DB_CONTAINER)))
 
@@ -83,4 +84,6 @@ def provision_db_container():
             create_db_image()
 
 
-provision_db_container()
+def main(drucker):
+    """Main dispatcher called by the main drucker script."""
+    provision_db_container(drucker)
