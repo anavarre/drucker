@@ -4,7 +4,6 @@
 from datetime import date
 import subprocess
 import colorful
-from . import variables
 from . import ssh
 from . import orchestration as o
 
