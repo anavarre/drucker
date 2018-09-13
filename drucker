@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Drucker main dispatcher."""
+"""drucker main dispatcher."""
 import sys
 import colorful
 import app
 
 
 def dispatch_the_provisioner(drucker):
-    """Drucker initialization, container provisioning and orchestration."""
+    """drucker initialization, container provisioning and orchestration."""
     app.init.main(drucker)
     app.base.main(drucker)
     app.mirror.main(drucker)
@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     # Name the argparse Namespace object 'DRUCKER'. The 'DRUCKER' object
     # travels deep into the codebase since its passed on from here to all
-    # dispatched code. The Drucker object holds more than just CLI-arguments,
+    # dispatched code. The drucker object holds more than just CLI-arguments,
     # making it the central backbone object of all code:
     #
     #  - DRUCKER.vars:
