@@ -2,8 +2,8 @@
 """All requirements must be met before running orchestration"""
 
 import sys
+import subprocess
 import shutil
-import subprocess as s
 
 
 def check_python_version():
@@ -26,9 +26,9 @@ def check_required_executables(drucker):
 def check_ansible_version():
     """A recent version of Ansible is required"""
     find_version = "ansible --version | head -n1 | awk '{print $2}' | cut -c -3"
-    return_version = s.run(find_version,
-                           stdout=s.PIPE,
-                           shell=True).stdout.decode('utf-8')
+    return_version = subprocess.run(find_version,
+                                    stdout=subprocess.PIPE,
+                                    shell=True).stdout.decode('utf-8')
 
     if return_version < "2.4":
         raise RuntimeError(

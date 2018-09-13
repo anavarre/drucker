@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """Manages SSH access on containers"""
 
-import subprocess as s
 import os
+import subprocess
 
 
 TMP_KEY = "/tmp/authorized_keys"
@@ -13,74 +13,76 @@ def allow_ssh_access(drucker, host):
     assert drucker  # TODO: Remove after porting this to use drucker object.
     rsa_drucker_web = "/tmp/id_rsa_drucker_web"
     rsa_key_deployed = "/tmp/rsa_key_deployed"
-    key = s.getoutput("cat %s" % (rsa_drucker_web))
-    key_check = s.getoutput("cat %s_check" % (rsa_drucker_web))
+    key = subprocess.getoutput("cat %s" % (rsa_drucker_web))
+    key_check = subprocess.getoutput("cat %s_check" % (rsa_drucker_web))
 
     if not os.path.isfile(rsa_drucker_web):
-        s.run('''docker cp %s:/home/%s/.ssh/id_rsa.pub %s
-              ''' % (drucker.vars.WEB_CONTAINER,
-                     drucker.vars.APP,
-                     rsa_drucker_web), shell=True)
+        subprocess.run("docker cp %s:/home/%s/.ssh/id_rsa.pub %s"
+                       % (drucker.vars.WEB_CONTAINER,
+                          drucker.vars.APP,
+                          rsa_drucker_web), shell=True)
 
-        s.run('''docker exec -u %s -it %s /bin/grep -q %s /home/%s/.ssh/authorized_keys > %s
-              ''' % (drucker.vars.APP,
-                     host,
-                     key,
-                     drucker.vars.APP,
-                     rsa_key_deployed), shell=True)
+        subprocess.run("docker exec -u %s -it %s /bin/grep -q %s /home/%s/.ssh/authorized_keys > %s"
+                       % (drucker.vars.APP,
+                          host,
+                          key,
+                          drucker.vars.APP,
+                          rsa_key_deployed),
+                          shell=True)
 
-    if not s.getoutput(rsa_key_deployed):
-        s.run('''docker exec -u %s -it %s bash -c "echo '%s' >> /home/%s/.ssh/authorized_keys
-              ''' % (drucker.vars.APP,
-                     host,
-                     key,
-                     drucker.vars.APP), shell=True)
+    if not subprocess.getoutput(rsa_key_deployed):
+        subprocess.run('''docker exec -u %s -it %s bash -c "echo '%s' >> /home/%s/.ssh/authorized_keys
+                       ''' % (drucker.vars.APP,
+                          host,
+                          key,
+                          drucker.vars.APP),
+                          shell=True)
     else:
-        s.run('''docker cp %s:/home/%s/.ssh/id_rsa.pub %s_check
-              ''' % (drucker.vars.WEB_CONTAINER,
-                     drucker.vars.APP,
-                     rsa_drucker_web), shell=True)
+        subprocess.run("docker cp %s:/home/%s/.ssh/id_rsa.pub %s_check"
+                       % (drucker.vars.WEB_CONTAINER,
+                          drucker.vars.APP,
+                          rsa_drucker_web), shell=True)
 
-        s.run('''docker exec -u %s -it %s /bin/grep -q %s /home/%s/.ssh/authorized_keys > %s
-              ''' % (drucker.vars.APP,
-                     host,
-                     key_check,
-                     drucker.vars.APP,
-                     rsa_key_deployed), shell=True)
+        subprocess.run("docker exec -u %s -it %s /bin/grep -q %s /home/%s/.ssh/authorized_keys > %s"
+                       % (drucker.vars.APP,
+                          host,
+                          key_check,
+                          drucker.vars.APP,
+                          rsa_key_deployed), shell=True)
 
-        if (not s.getoutput(rsa_key_deployed) and
-                os.path.getsize(s.getoutput(rsa_key_deployed)) != 0):
+        if (not subprocess.getoutput(rsa_key_deployed) and
+                os.path.getsize(subprocess.getoutput(rsa_key_deployed)) != 0):
 
-            s.run('''docker exec -u %s -it %s bash -c "echo '%s' >> /home/%s/.ssh/authorized_keys"
-                  ''' % (drucker.vars.APP,
-                         host,
-                         key_check,
-                         drucker.vars.APP), shell=True)
+            subprocess.run('''docker exec -u %s -it %s bash -c "echo '%s' >> /home/%s/.ssh/authorized_keys"
+                           '''  % (drucker.vars.APP,
+                                   host,
+                                   key_check,
+                                   drucker.vars.APP), shell=True)
 
 
 def create_tmp_key():
     """Create temporary SSH key under /tmp"""
     store_key = "cat %s > %s" % (drucker.vars.DEFAULT_PUBKEY, TMP_KEY)
-    s.getoutput(store_key)
+    subprocess.getoutput(store_key)
 
 
 def copy_tmp_key(container):
     """Copy temporary SSH key to container"""
     auth_key = "/home/%s/.ssh/authorized_keys" % (drucker.vars.APP)
     copy_key = "docker cp %s %s:%s" % (TMP_KEY, container, auth_key)
-    s.getoutput(copy_key)
+    subprocess.getoutput(copy_key)
 
 
 def set_ssh_dir_perms(container):
     """Set correct permissions for .ssh directory"""
     chown_ssh = "chown -R %s:%s /home/%s/.ssh" % (drucker.vars.APP, drucker.vars.APP, drucker.vars.APP)
     ssh_dir_perms = "docker exec -it %s %s" % (container, chown_ssh)
-    s.getoutput(ssh_dir_perms)
+    subprocess.getoutput(ssh_dir_perms)
 
 
 def remove_tmp_key():
     """Remove temporary SSH key"""
-    s.getoutput("rm %s" % (TMP_KEY))
+    subprocess.getoutput("rm %s" % (TMP_KEY))
 
 
 def configure_ssh_base():

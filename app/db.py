@@ -2,7 +2,7 @@
 """Creates database image and container"""
 
 from datetime import date
-import subprocess as s
+import subprocess
 import colorful as c
 from . import ssh
 from . import orchestration as o
@@ -13,14 +13,14 @@ def create_base2db_container():
     print(c.blue("Spinning up %s container with ID:" % (drucker.vars.DB_CONTAINER)))
 
     create_base2db = '''
-    docker run --privileged=true --name %s -it -h %s --net %s --ip %s -d %s bash
-    ''' % (drucker.vars.DB_CONTAINER,
-           drucker.vars.DB_HOSTNAME,
-           drucker.vars.APP,
-           drucker.vars.DB_IP,
-           drucker.vars.BASE_IMAGE)
+                     docker run --privileged=true --name %s -it -h %s --net %s --ip %s -d %s bash
+                     ''' % (drucker.vars.DB_CONTAINER,
+                            drucker.vars.DB_HOSTNAME,
+                            drucker.vars.APP,
+                            drucker.vars.DB_IP,
+                            drucker.vars.BASE_IMAGE)
 
-    s.run(create_base2db, shell=True)
+    subprocess.run(create_base2db, shell=True)
 
     ssh.configure_ssh_db()
     o.run_db_orchestration(drucker)
@@ -30,13 +30,14 @@ def create_db_container():
     """Create database container from database image"""
     print(c.blue("Spinning up %s container with ID:" % (drucker.vars.DB_CONTAINER)))
 
-    s.run("docker run --privileged=true\
-          --name %s -it -h %s --net %s --ip %s\
-          -d %s bash" % (drucker.vars.DB_CONTAINER,
-                         drucker.vars.DB_HOSTNAME,
-                         drucker.vars.APP,
-                         drucker.vars.DB_IP,
-                         drucker.vars.DB_IMAGE), shell=True)
+    subprocess.run("docker run --privileged=true\
+                    --name %s -it -h %s --net %s --ip %s\
+                    -d %s bash" % (drucker.vars.DB_CONTAINER,
+                                   drucker.vars.DB_HOSTNAME,
+                                   drucker.vars.APP,
+                                   drucker.vars.DB_IP,
+                                   drucker.vars.DB_IMAGE),
+                                   shell=True)
 
     ssh.configure_ssh_db()
     o.run_db_orchestration(drucker)
@@ -47,35 +48,37 @@ def create_db_image():
     print(c.blue("Committing %s image from %s container..." % (drucker.vars.DB_IMAGE,
                                                                drucker.vars.DB_CONTAINER)))
 
-    s.run("docker commit -m \"%s on %s\" %s %s" % (drucker.vars.DB_CONTAINER,
-                                                   str(date.today()),
-                                                   drucker.vars.DB_CONTAINER,
-                                                   drucker.vars.DB_IMAGE), shell=True)
+    subprocess.run("docker commit -m \"%s on %s\" %s %s"
+                   % (drucker.vars.DB_CONTAINER,
+                      str(date.today()),
+                      drucker.vars.DB_CONTAINER,
+                      drucker.vars.DB_IMAGE),
+                      shell=True)
 
     print(c.blue("Deleting initial container..."))
-    s.getoutput("docker rm -f %s > /dev/null 2>&1" % (drucker.vars.DB_CONTAINER))
+    subprocess.getoutput("docker rm -f %s > /dev/null 2>&1" % (drucker.vars.DB_CONTAINER))
     create_db_container()
 
 
 def start_db_container():
     """Start database container"""
-    s.getoutput("docker start %s > /dev/null 2>&1" % (drucker.vars.DB_CONTAINER))
+    subprocess.getoutput("docker start %s > /dev/null 2>&1" % (drucker.vars.DB_CONTAINER))
 
 
 def provision_db_container(drucker):
     """Provision database container"""
     assert drucker  # TODO: Remove after porting this to use drucker object.
-    if s.getoutput("docker ps -a | grep -o %s" % (drucker.vars.DB_CONTAINER)):
+    if subprocess.getoutput("docker ps -a | grep -o %s" % (drucker.vars.DB_CONTAINER)):
         print(c.green("%s container already exists." % (drucker.vars.DB_CONTAINER)))
 
-        if s.getoutput("docker ps | grep -o %s" % (drucker.vars.DB_CONTAINER)):
+        if subprocess.getoutput("docker ps | grep -o %s" % (drucker.vars.DB_CONTAINER)):
             o.run_db_orchestration(drucker)
         else:
             print(c.blue("Starting %s container..." % (drucker.vars.DB_CONTAINER)))
             start_db_container()
             o.run_db_orchestration(drucker)
     else:
-        if s.getoutput("docker images | awk '{print $1\":\"$2}' | grep %s" % (drucker.vars.DB_IMAGE)):
+        if subprocess.getoutput("docker images | awk '{print $1\":\"$2}' | grep %s" % (drucker.vars.DB_IMAGE)):
             print(c.green("%s custom image already exists." % (drucker.vars.DB_IMAGE)))
             create_db_container()
         else:
