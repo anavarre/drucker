@@ -36,8 +36,7 @@ def create_mirror_container(drucker):
                                    drucker.vars.MIRROR_HOSTNAME,
                                    drucker.vars.APP,
                                    drucker.vars.MIRROR_IP,
-                                   drucker.vars.MIRROR_IMAGE),
-                                   shell=True)
+                                   drucker.vars.MIRROR_IMAGE), shell=True)
 
     ssh.configure_ssh_mirror(drucker)
     o.run_mirror_orchestration(drucker)
@@ -67,7 +66,6 @@ def start_mirror_container(drucker):
 
 def provision_mirror_container(drucker):
     """Provision mirror container"""
-    assert drucker  # TODO: Remove after porting this to use drucker object.
     if subprocess.getoutput("docker ps -a | grep -o %s" % (drucker.vars.MIRROR_CONTAINER)):
         print(colorful.green("%s container already exists." % (drucker.vars.MIRROR_CONTAINER)))
         if subprocess.getoutput("docker ps | grep -o %s" % (drucker.vars.MIRROR_CONTAINER)):

@@ -36,8 +36,7 @@ def create_search_container(drucker):
                                    drucker.vars.SEARCH_HOSTNAME,
                                    drucker.vars.APP,
                                    drucker.vars.SEARCH_IP,
-                                   drucker.vars.SEARCH_IMAGE),
-                                   shell=True)
+                                   drucker.vars.SEARCH_IMAGE), shell=True)
 
     ssh.configure_ssh_search(drucker)
     o.run_search_orchestration(drucker)
@@ -67,7 +66,6 @@ def start_search_container(drucker):
 
 def provision_search_container(drucker):
     """Provision search container"""
-    assert drucker  # TODO: Remove after porting this to use drucker object.
     if subprocess.getoutput("docker ps -a | grep -o %s" % (drucker.vars.SEARCH_CONTAINER)):
         print(colorful.green("%s container already exists." % (drucker.vars.SEARCH_CONTAINER)))
 

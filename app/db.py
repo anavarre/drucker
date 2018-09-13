@@ -36,8 +36,7 @@ def create_db_container(drucker):
                                    drucker.vars.DB_HOSTNAME,
                                    drucker.vars.APP,
                                    drucker.vars.DB_IP,
-                                   drucker.vars.DB_IMAGE),
-                                   shell=True)
+                                   drucker.vars.DB_IMAGE), shell=True)
 
     ssh.configure_ssh_db(drucker)
     o.run_db_orchestration(drucker)
@@ -53,8 +52,7 @@ def create_db_image(drucker):
                    % (drucker.vars.DB_CONTAINER,
                       str(date.today()),
                       drucker.vars.DB_CONTAINER,
-                      drucker.vars.DB_IMAGE),
-                      shell=True)
+                      drucker.vars.DB_IMAGE), shell=True)
 
     print(colorful.blue("Deleting initial container..."))
     subprocess.getoutput("docker rm -f %s > /dev/null 2>&1" % (drucker.vars.DB_CONTAINER))
@@ -68,7 +66,6 @@ def start_db_container(drucker):
 
 def provision_db_container(drucker):
     """Provision database container"""
-    assert drucker  # TODO: Remove after porting this to use drucker object.
     if subprocess.getoutput("docker ps -a | grep -o %s" % (drucker.vars.DB_CONTAINER)):
         print(colorful.green("%s container already exists." % (drucker.vars.DB_CONTAINER)))
 

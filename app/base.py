@@ -15,8 +15,7 @@ def create_base_container(drucker):
                    % (drucker.vars.BASE_CONTAINER,
                       drucker.vars.APP,
                       drucker.vars.BASE_IP,
-                      drucker.vars.INIT_IMAGE),
-                      shell=True)
+                      drucker.vars.INIT_IMAGE), shell=True)
 
     ssh.configure_ssh_base(drucker)
     o.run_base_orchestration(drucker)
@@ -31,8 +30,7 @@ def create_base_image(drucker):
                    % (drucker.vars.BASE_CONTAINER,
                       str(date.today()),
                       drucker.vars.BASE_CONTAINER,
-                      drucker.vars.BASE_IMAGE),
-                      shell=True)
+                      drucker.vars.BASE_IMAGE), shell=True)
 
 
 def delete_base_container(drucker):
@@ -49,7 +47,6 @@ def delete_init_image(drucker):
 
 def provision_base_container(drucker):
     """Set up base container from init image"""
-    assert drucker  # TODO: Remove after porting this to use drucker object.
     if subprocess.getoutput(drucker.vars.CHECK_BASE_IMAGE):
         print(colorful.green("%s image already exists." % (drucker.vars.BASE_IMAGE)))
 

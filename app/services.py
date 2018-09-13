@@ -14,9 +14,8 @@ def check(container, service, name):
         print("- %s is up" % (name))
 
 
-def phpfpm(drucker, container):
+def phpfpm(drucker):
     """Starts PHP-FPM if it's down"""
-    assert container  # TODO: Remove 'container' argument for this function.
     if not subprocess.getoutput("docker exec -it %s pgrep php-fpm%s | head -1"
                                 % (drucker.vars.WEB_CONTAINER,
                                    drucker.vars.DEFAULT_PHP)):

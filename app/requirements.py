@@ -16,7 +16,6 @@ def check_python_version():
 
 def check_required_executables(drucker):
     """Both Docker and Ansible need to be installed"""
-    assert drucker  # TODO: Remove after porting this to use drucker object.
     for executable in drucker.vars.EXECUTABLES:
         if not shutil.which(executable):
             raise RuntimeError(

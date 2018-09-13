@@ -37,8 +37,7 @@ def create_edge_container(drucker):
                                    drucker.vars.EDGE_HOSTNAME,
                                    drucker.vars.APP,
                                    drucker.vars.EDGE_IP,
-                                   drucker.vars.EDGE_IMAGE),
-                                   shell=True)
+                                   drucker.vars.EDGE_IMAGE), shell=True)
 
     ssh.configure_ssh_edge(drucker)
     o.run_edge_orchestration(drucker)
@@ -68,7 +67,6 @@ def start_edge_container(drucker):
 
 def provision_edge_container(drucker):
     """Provision edge container"""
-    assert drucker  # TODO: Remove after porting this to use drucker object.
     if subprocess.getoutput("docker ps -a | grep -o %s" % (drucker.vars.EDGE_CONTAINER)):
         print(colorful.green("%s container already exists." % (drucker.vars.EDGE_CONTAINER)))
 

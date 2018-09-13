@@ -62,8 +62,7 @@ def run_tests_orchestration(drucker, shortname):
                           drucker.vars.APP,
                           drucker.vars.APP_DIR,
                           shortname,
-                          drucker.vars.APP),
-                          shell=True)
+                          drucker.vars.APP), shell=True)
 
 
 def run_tests(drucker):
@@ -108,8 +107,6 @@ def app_delete(drucker):
     """Deletes an arbitrary docroot"""
     param_check(drucker)
 
-    # TODO: actually enforce arbitrary docroots through positional arguments
-
     if os.path.isdir("%s/%s" % (drucker.vars.CONTAINER_HTML_PATH, drucker.app)):
         if click.confirm("Should we overwrite the codebase, files and database?", default=True):
             print(colorful.blue("Deleting %s docroot..." % (drucker.app)))
@@ -120,10 +117,9 @@ def app_delete(drucker):
                                   drucker.vars.APP,
                                   drucker.vars.APP_DIR,
                                   drucker.vars.APP,
-                                  drucker.app),
-                                  shell=True)
-            print(colorful.green("Remember to remove the %s.local entry from your"
-                          " local /etc/hosts file!" % (drucker.app)))
+                                  drucker.app), shell=True)
+            print(colorful.green("Remember to remove the %s.local entry from your local /etc/hosts file!"
+                                 % (drucker.app)))
         else:
             print(colorful.green("Back to the comfort zone. Aborting..."))
     else:
@@ -143,8 +139,7 @@ def app_drupal(drucker):
                           drucker.vars.APP,
                           drucker.vars.APP_DIR,
                           drucker.vars.APP,
-                          drucker.app),
-                          shell=True)
+                          drucker.app), shell=True)
     hosts_file(drucker.app)
     # elif [[ -n "${GIT_TAG}" ]]; then
     #     echo -e "${BLUE}Installing Drupal ${GIT_TAG} into new
@@ -167,8 +162,7 @@ def app_lightning(drucker):
                           drucker.vars.APP,
                           drucker.vars.APP_DIR,
                           drucker.vars.APP,
-                          drucker.app),
-                          shell=True)
+                          drucker.app), shell=True)
     hosts_file(drucker.app)
     return drucker.vars.EXITCODE_OK
 
@@ -185,8 +179,7 @@ def app_blt(drucker):
                           drucker.vars.APP,
                           drucker.vars.APP_DIR,
                           drucker.vars.APP,
-                          drucker.app),
-                          shell=True)
+                          drucker.app), shell=True)
     hosts_file(drucker.app)
     return drucker.vars.EXITCODE_OK
 
@@ -214,8 +207,7 @@ def app_dev(drucker):
                           drucker.vars.APP,
                           drucker.vars.APP_DIR,
                           drucker.vars.APP,
-                          drucker.app),
-                          shell=True)
+                          drucker.app), shell=True)
     return drucker.vars.EXITCODE_OK
 
 
@@ -240,8 +232,7 @@ def app_prod(drucker):
                           drucker.vars.APP,
                           drucker.vars.APP_DIR,
                           drucker.vars.APP,
-                          drucker.app),
-                          shell=True)
+                          drucker.app), shell=True)
     return drucker.vars.EXITCODE_OK
 
 
@@ -267,7 +258,6 @@ def app_import(drucker):
                           drucker.vars.APP_DIR,
                           drucker.vars.APP,
                           app_detected,
-                          drucker.app),
-                          shell=True)
+                          drucker.app), shell=True)
     hosts_file(drucker.app)
     return drucker.vars.EXITCODE_OK

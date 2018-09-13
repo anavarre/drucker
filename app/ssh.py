@@ -10,7 +10,6 @@ TMP_KEY = "/tmp/authorized_keys"
 
 def allow_ssh_access(drucker, host):
     """Allows to set up SSH access from the Web container to any other"""
-    assert drucker  # TODO: Remove after porting this to use drucker object.
     rsa_drucker_web = "/tmp/id_rsa_drucker_web"
     rsa_key_deployed = "/tmp/rsa_key_deployed"
     key = subprocess.getoutput("cat %s" % (rsa_drucker_web))
@@ -27,16 +26,14 @@ def allow_ssh_access(drucker, host):
                           host,
                           key,
                           drucker.vars.APP,
-                          rsa_key_deployed),
-                          shell=True)
+                          rsa_key_deployed), shell=True)
 
     if not subprocess.getoutput(rsa_key_deployed):
         subprocess.run('''docker exec -u %s -it %s bash -c "echo '%s' >> /home/%s/.ssh/authorized_keys
                        ''' % (drucker.vars.APP,
-                          host,
-                          key,
-                          drucker.vars.APP),
-                          shell=True)
+                              host,
+                              key,
+                              drucker.vars.APP), shell=True)
     else:
         subprocess.run("docker cp %s:/home/%s/.ssh/id_rsa.pub %s_check"
                        % (drucker.vars.WEB_CONTAINER,

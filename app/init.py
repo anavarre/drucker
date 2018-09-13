@@ -7,7 +7,6 @@ import colorful
 
 def create_bridge_network(drucker):
     """Creates a custom bridge network"""
-    assert drucker  # TODO: Remove after porting this to use drucker object.
     if subprocess.getoutput(drucker.vars.CHECK_BRIDGE):
         print(colorful.green("Custom %s bridge network already exists." % (drucker.vars.APP)))
     else:
@@ -17,7 +16,6 @@ def create_bridge_network(drucker):
 
 def pull_base_image(drucker):
     """Pulls and updates the preferred distribution image from the Docker Hub"""
-    assert drucker  # TODO: Remove after porting this to use drucker object.
     distro_image_exists = subprocess.getoutput(drucker.vars.CHECK_DISTRO_IMAGE)
     base_image_exists = subprocess.getoutput(drucker.vars.CHECK_BASE_IMAGE)
 
@@ -32,15 +30,13 @@ def pull_base_image(drucker):
 
 def build_init_image(drucker):
     """Builds the init image from Dockerfile"""
-    assert drucker  # TODO: Remove after porting this to use drucker object.
     if subprocess.getoutput(drucker.vars.CHECK_INIT_IMAGE):
         print(colorful.green("%s image already exists." % (drucker.vars.INIT_IMAGE)))
     elif not subprocess.getoutput(drucker.vars.CHECK_BASE_IMAGE):
         print(colorful.blue("Building %s image from Dockerfile..." % (drucker.vars.INIT_IMAGE)))
         subprocess.run("docker build -t \"%s\" %s"
                        % (drucker.vars.INIT_IMAGE,
-                          drucker.vars.APP_DIR),
-                          shell=True)
+                          drucker.vars.APP_DIR), shell=True)
 
 
 def main(drucker):

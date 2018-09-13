@@ -34,7 +34,7 @@ def health(drucker):
 
     print(colorful.blue("Checking services for %s container..." % (drucker.vars.WEB_CONTAINER)))
     services.check(drucker.vars.WEB_CONTAINER, "apache2", "Apache")
-    services.phpfpm(drucker, drucker.vars.DB_CONTAINER)
+    services.phpfpm(drucker)
     return drucker.vars.EXITCODE_OK
 
 
@@ -83,8 +83,7 @@ def set_previous_php_version(drucker):
                    ''' % (drucker.vars.APP_DIR,
                           drucker.vars.APP,
                           drucker.vars.APP_DIR,
-                          drucker.vars.APP),
-                          shell=True)
+                          drucker.vars.APP), shell=True)
     return drucker.vars.EXITCODE_OK
 
 
@@ -98,6 +97,5 @@ def set_default_php_version(drucker):
                    ''' % (drucker.vars.APP_DIR,
                           drucker.vars.APP,
                           drucker.vars.APP_DIR,
-                          drucker.vars.APP),
-                          shell=True)
+                          drucker.vars.APP), shell=True)
     return drucker.vars.EXITCODE_OK

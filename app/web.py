@@ -43,8 +43,7 @@ def create_web_container(drucker):
                       drucker.vars.HOST_HTML_PATH,
                       drucker.vars.CONTAINER_HTML_PATH,
                       drucker.vars.DB_CONTAINER,
-                      drucker.vars.WEB_IMAGE),
-                      shell=True)
+                      drucker.vars.WEB_IMAGE), shell=True)
 
     ssh.configure_ssh_web(drucker)
     o.run_web_orchestration(drucker)
