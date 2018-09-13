@@ -51,10 +51,10 @@ def allow_ssh_access(drucker, host):
                 os.path.getsize(subprocess.getoutput(rsa_key_deployed)) != 0):
 
             subprocess.run('''docker exec -u %s -it %s bash -c "echo '%s' >> /home/%s/.ssh/authorized_keys"
-                           '''  % (drucker.vars.APP,
-                                   host,
-                                   key_check,
-                                   drucker.vars.APP), shell=True)
+                           ''' % (drucker.vars.APP,
+                                  host,
+                                  key_check,
+                                  drucker.vars.APP), shell=True)
 
 
 def create_tmp_key(drucker):

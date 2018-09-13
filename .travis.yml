@@ -9,4 +9,4 @@ matrix:
   fast_finish: true
   include:
     - env: t=python_pep8_compliancy
-      install: pip install pycodestyle pylint
+      install: pip install pycodestyle pylint click
