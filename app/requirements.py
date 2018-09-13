@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """All requirements must be met before running orchestration"""
 
+import os
 import sys
 import subprocess
 import shutil
@@ -58,7 +59,26 @@ def check_hosts_file(drucker):
 
 def check_ssh_config_file(drucker):
     """The SSH config file must be correctly configured"""
-    assert drucker  # TODO: Remove after porting this to use drucker object.
+    ssh_config_suggestion = """
+You need to add the below configuration in %s:
+
+Host %s %s %s %s %s %s
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+  LogLevel=error
+""" % (drucker.vars.SSH_CONFIG,
+       drucker.vars.BASE_IP,
+       drucker.vars.EDGE_IP,
+       drucker.vars.WEB_IP,
+       drucker.vars.DB_IP,
+       drucker.vars.SEARCH_IP,
+       drucker.vars.MIRROR_IP)
+
+    if not os.path.isfile(drucker.vars.SSH_CONFIG):
+        print(ssh_config_suggestion)
+        raise RuntimeError(
+            "Without the %s file we can't proceed!" % (drucker.vars.SSH_CONFIG))
+
     ssh_config_ips = [drucker.vars.BASE_IP,
                       drucker.vars.EDGE_IP,
                       drucker.vars.WEB_IP,
@@ -68,20 +88,9 @@ def check_ssh_config_file(drucker):
 
     for ssh_config_ip in ssh_config_ips:
         if ssh_config_ip not in open(drucker.vars.SSH_CONFIG).read():
-            print("A correctly configured %s file is required\
- to run this application." % (drucker.vars.SSH_CONFIG))
-
-            ssh_config_suggestion = """
-You should add the below configuration:
-
-Host %s %s %s %s %s %s
-  StrictHostKeyChecking no
-  UserKnownHostsFile=/dev/null
-  LogLevel=error
-""" % (drucker.vars.BASE_IP, drucker.vars.EDGE_IP, drucker.vars.WEB_IP, drucker.vars.DB_IP, drucker.vars.SEARCH_IP, drucker.vars.MIRROR_IP)
-
             print(ssh_config_suggestion)
-            sys.exit()  # TODO: Port to RuntimeError, see check_hosts_file.
+            raise RuntimeError(
+                "Without the correct configuration in %s we can't proceed!" % (drucker.vars.SSH_CONFIG))
 
 
 def main(drucker):
