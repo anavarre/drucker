@@ -5,42 +5,41 @@ import subprocess as s
 import os
 import colorful as c
 import click
-from . import variables as v
 from . import containers
 
 
-def run_orchestration(container, shortname):
+def run_orchestration(drucker, container, shortname):
     """Parent function to manage container orchestration."""
     print(c.blue("Running %s orchestration on the container..." % (container)))
     s.getoutput("export ANSIBLE_HOST_KEY_CHECKING=False")
     s.run('''
           ansible-playbook -i %s/orchestration/hosts --user=%s %s/orchestration/provisioning/%s.yml --extra-vars ansible_sudo_pass=%s
-          ''' % (v.APP_DIR, v.APP, v.APP_DIR, shortname, v.APP), shell=True)
+          ''' % (drucker.vars.APP_DIR, drucker.vars.APP, drucker.vars.APP_DIR, shortname, drucker.vars.APP), shell=True)
 
 
-def run_base_orchestration():
+def run_base_orchestration(drucker):
     """Runs orchestration on base container"""
-    run_orchestration(v.BASE_CONTAINER, "base")
+    run_orchestration(drucker, drucker.vars.BASE_CONTAINER, "base")
 
 
-def run_mirror_orchestration():
+def run_mirror_orchestration(drucker):
     """Runs orchestration on mirror container"""
-    run_orchestration(v.MIRROR_CONTAINER, "mirror")
+    run_orchestration(drucker, drucker.vars.MIRROR_CONTAINER, "mirror")
 
 
-def run_edge_orchestration():
+def run_edge_orchestration(drucker):
     """Runs orchestration on edge container"""
-    run_orchestration(v.EDGE_CONTAINER, "edge")
+    run_orchestration(drucker, drucker.vars.EDGE_CONTAINER, "edge")
 
 
-def run_db_orchestration():
+def run_db_orchestration(drucker):
     """Runs orchestration on database container"""
-    run_orchestration(v.DB_CONTAINER, "db")
+    run_orchestration(drucker, drucker.vars.DB_CONTAINER, "db")
 
 
-def run_search_orchestration():
+def run_search_orchestration(drucker):
     """Runs orchestration on search container"""
-    run_orchestration(v.SEARCH_CONTAINER, "search")
+    run_orchestration(drucker, drucker.vars.SEARCH_CONTAINER, "search")
 
 
 def run_ssh_orchestration():
@@ -48,18 +47,18 @@ def run_ssh_orchestration():
     run_orchestration("SSH", "ssh")
 
 
-def run_web_orchestration():
+def run_web_orchestration(drucker):
     """Runs orchestration on web container"""
-    run_orchestration(v.WEB_CONTAINER, "web")
+    run_orchestration(drucker, drucker.vars.WEB_CONTAINER, "web")
 
 
-def run_tests_orchestration(shortname):
+def run_tests_orchestration(drucker, shortname):
     """Parent function to manage running the test suite"""
     print(c.blue("Running the %s test suite..." % (shortname)))
     s.getoutput("export ANSIBLE_HOST_KEY_CHECKING=False")
     s.run('''
           ansible-playbook -i %s/orchestration/hosts --user=%s %s/orchestration/_tests/%s-tests.yml --extra-vars ansible_sudo_pass=%s
-          ''' % (v.APP_DIR, v.APP, v.APP_DIR, shortname, v.APP), shell=True)
+          ''' % (drucker.vars.APP_DIR, drucker.vars.APP, drucker.vars.APP_DIR, shortname, drucker.vars.APP), shell=True)
 
 
 def run_tests(drucker):
@@ -68,20 +67,20 @@ def run_tests(drucker):
 
     php_version_check = s.getoutput('''docker exec -u %s -it %s /bin/cat\
                                        /etc/php/default_php_version
-                                    ''' % (v.APP, v.WEB_CONTAINER))
-    if v.DEFAULT_PHP not in php_version_check:
+                                    ''' % (drucker.vars.APP, drucker.vars.WEB_CONTAINER))
+    if drucker.vars.DEFAULT_PHP not in php_version_check:
         print("Tests need to be executed against the current stable PHP version")
-        print("Please switch to PHP %s with 'drucker --php%s'" % (v.DEFAULT_PHP, v.DEFAULT_PHP))
+        print("Please switch to PHP %s with 'drucker --php%s'" % (drucker.vars.DEFAULT_PHP, drucker.vars.DEFAULT_PHP))
         return drucker.vars.EXITCODE_FAIL
-    for group in v.TEST_GROUPS:
-        run_tests_orchestration(group)
+    for group in drucker.vars.TEST_GROUPS:
+        run_tests_orchestration(drucker, group)
     return drucker.vars.EXITCODE_OK
 
 
 def app_list(drucker):
     """Returns a list of installed apps."""
     s.run('''docker exec -it %s cat %s/.app-registry
-          ''' % (v.WEB_CONTAINER, v.CONTAINER_HTML_PATH), shell=True)
+          ''' % (drucker.vars.WEB_CONTAINER, drucker.vars.CONTAINER_HTML_PATH), shell=True)
     return drucker.vars.EXITCODE_OK
 
 
@@ -102,13 +101,13 @@ def app_delete(drucker):
 
     # TODO: actually enforce arbitrary docroots through positional arguments
 
-    if os.path.isdir("%s/%s" % (v.CONTAINER_HTML_PATH, drucker.app)):
+    if os.path.isdir("%s/%s" % (drucker.vars.CONTAINER_HTML_PATH, drucker.app)):
         if click.confirm("Should we overwrite the codebase, files and database?", default=True):
             print(c.blue("Deleting %s docroot..." % (drucker.app)))
             s.run('''ansible-playbook -i %s/orchestration/hosts\
                      --user=%s %s/orchestration/commands/app-delete.yml\
                      --extra-vars "ansible_sudo_pass=%s app=delete sitename=%s"
-                  ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP, drucker.app), shell=True)
+                  ''' % (drucker.vars.APP_DIR, drucker.vars.APP, drucker.vars.APP_DIR, drucker.vars.APP, drucker.app), shell=True)
             print(c.green("Remember to remove the %s.local entry from your"
                           " local /etc/hosts file!" % (drucker.app)))
         else:
@@ -126,7 +125,7 @@ def app_drupal(drucker):
     s.run('''ansible-playbook -i %s/orchestration/hosts\
              --user=%s %s/orchestration/commands/app-drupal.yml\
              --extra-vars "ansible_sudo_pass=%s app=Drupal sitename=%s"
-          ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP, drucker.app), shell=True)
+          ''' % (drucker.vars.APP_DIR, drucker.vars.APP, drucker.vars.APP_DIR, drucker.vars.APP, drucker.app), shell=True)
     hosts_file(drucker.app)
     # elif [[ -n "${GIT_TAG}" ]]; then
     #     echo -e "${BLUE}Installing Drupal ${GIT_TAG} into new
@@ -145,7 +144,7 @@ def app_lightning(drucker):
     s.run('''ansible-playbook -i %s/orchestration/hosts\
              --user=%s %s/orchestration/commands/app-lightning.yml\
              --extra-vars "ansible_sudo_pass=%s app=Lightning sitename=%s"
-          ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP, drucker.app), shell=True)
+          ''' % (drucker.vars.APP_DIR, drucker.vars.APP, drucker.vars.APP_DIR, drucker.vars.APP, drucker.app), shell=True)
     hosts_file(drucker.app)
     return drucker.vars.EXITCODE_OK
 
@@ -158,7 +157,7 @@ def app_blt(drucker):
     s.run('''ansible-playbook -i %s/orchestration/hosts\
              --user=%s %s/orchestration/commands/app-blt.yml\
              --extra-vars "ansible_sudo_pass=%s app=BLT sitename=%s"
-          ''' % (v.APP_DIR, v.APP, v.APP_DIR, v.APP, drucker.app), shell=True)
+          ''' % (drucker.vars.APP_DIR, drucker.vars.APP, drucker.vars.APP_DIR, drucker.vars.APP, drucker.app), shell=True)
     hosts_file(drucker.app)
     return drucker.vars.EXITCODE_OK
 
@@ -170,7 +169,7 @@ def app_dev(drucker):
     identify_drupal_type = s.getoutput('''grep "%s" "%s/.app-registry" |\
                                           awk '{print $NF}' | tr --d '()'
                                        ''' % (drucker.app,
-                                              v.CONTAINER_HTML_PATH))
+                                              drucker.vars.CONTAINER_HTML_PATH))
 
     if "BLT" in identify_drupal_type:
         print(c.red("This command is not currently"
@@ -184,8 +183,8 @@ def app_dev(drucker):
     s.run('''ansible-playbook -i %s/orchestration/hosts\
              --user=%s %s/orchestration/commands/app-dev.yml\
              --extra-vars "ansible_sudo_pass=%s app=dev sitename=%s"
-            ''' % (v.APP_DIR, v.APP,
-                   v.APP_DIR, v.APP, drucker.app), shell=True)
+            ''' % (drucker.vars.APP_DIR, drucker.vars.APP,
+                   drucker.vars.APP_DIR, drucker.vars.APP, drucker.app), shell=True)
     return drucker.vars.EXITCODE_OK
 
 
@@ -194,7 +193,7 @@ def app_prod(drucker):
     identify_drupal_type = s.getoutput('''grep "%s" "%s/.app-registry" |\
                                           awk '{print $NF}' | tr --d '()'
                                        ''' % (drucker.app,
-                                              v.CONTAINER_HTML_PATH))
+                                              drucker.vars.CONTAINER_HTML_PATH))
 
     if "BLT" in identify_drupal_type:
         print(c.red("This command is not currently"
@@ -208,14 +207,14 @@ def app_prod(drucker):
     s.run('''ansible-playbook -i %s/orchestration/hosts\
              --user=%s %s/orchestration/commands/app-prod.yml\
              --extra-vars "ansible_sudo_pass=%s app=prod sitename=%s"
-          ''' % (v.APP_DIR, v.APP,
-                 v.APP_DIR, v.APP, drucker.app), shell=True)
+          ''' % (drucker.vars.APP_DIR, drucker.vars.APP,
+                 drucker.vars.APP_DIR, drucker.vars.APP, drucker.app), shell=True)
     return drucker.vars.EXITCODE_OK
 
 
 def app_import(drucker):
     """Imports an app from the web container's import directory"""
-    import_path = v.CONTAINER_IMPORT_PATH
+    import_path = drucker.vars.CONTAINER_IMPORT_PATH
     if not os.path.isdir("%s/%s" % (import_path, drucker.app)):
         print(c.red("The %s app doesn't exist. Aborting..." % (drucker.app)))
         return drucker.vars.EXITCODE_FAIL
@@ -230,7 +229,7 @@ def app_import(drucker):
     s.run('''ansible-playbook -i %s/orchestration/hosts\
              --user=%s %s/orchestration/commands/app-import.yml\
              --extra-vars "ansible_sudo_pass=%s app=%s sitename=%s"
-          ''' % (v.APP_DIR, v.APP,
-                 v.APP_DIR, v.APP, app_detected, drucker.app), shell=True)
+          ''' % (drucker.vars.APP_DIR, drucker.vars.APP,
+                 drucker.vars.APP_DIR, drucker.vars.APP, app_detected, drucker.app), shell=True)
     hosts_file(drucker.app)
     return drucker.vars.EXITCODE_OK

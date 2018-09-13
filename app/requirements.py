@@ -4,7 +4,6 @@
 import sys
 import shutil
 import subprocess as s
-from . import variables as v
 
 
 def check_python_version():
@@ -17,7 +16,7 @@ def check_python_version():
 def check_required_executables(drucker):
     """Both Docker and Ansible need to be installed"""
     assert drucker  # TODO: Remove after porting this to use drucker object.
-    for executable in v.EXECUTABLES:
+    for executable in drucker.vars.EXECUTABLES:
         if not shutil.which(executable):
             raise RuntimeError(
                 "%s is required to run this application."
@@ -60,17 +59,17 @@ def check_hosts_file(drucker):
 def check_ssh_config_file(drucker):
     """The SSH config file must be correctly configured"""
     assert drucker  # TODO: Remove after porting this to use drucker object.
-    ssh_config_ips = [v.BASE_IP,
-                      v.EDGE_IP,
-                      v.WEB_IP,
-                      v.DB_IP,
-                      v.SEARCH_IP,
-                      v.MIRROR_IP]
+    ssh_config_ips = [drucker.vars.BASE_IP,
+                      drucker.vars.EDGE_IP,
+                      drucker.vars.WEB_IP,
+                      drucker.vars.DB_IP,
+                      drucker.vars.SEARCH_IP,
+                      drucker.vars.MIRROR_IP]
 
     for ssh_config_ip in ssh_config_ips:
-        if ssh_config_ip not in open(v.SSH_CONFIG).read():
+        if ssh_config_ip not in open(drucker.vars.SSH_CONFIG).read():
             print("A correctly configured %s file is required\
- to run this application." % (v.SSH_CONFIG))
+ to run this application." % (drucker.vars.SSH_CONFIG))
 
             ssh_config_suggestion = """
 You should add the below configuration:
@@ -79,7 +78,7 @@ Host %s %s %s %s %s %s
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
   LogLevel=error
-""" % (v.BASE_IP, v.EDGE_IP, v.WEB_IP, v.DB_IP, v.SEARCH_IP, v.MIRROR_IP)
+""" % (drucker.vars.BASE_IP, drucker.vars.EDGE_IP, drucker.vars.WEB_IP, drucker.vars.DB_IP, drucker.vars.SEARCH_IP, drucker.vars.MIRROR_IP)
 
             print(ssh_config_suggestion)
             sys.exit()  # TODO: Port to RuntimeError, see check_hosts_file.

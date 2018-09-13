@@ -3,7 +3,6 @@
 
 import subprocess as s
 import colorful as c
-from . import variables as v
 
 
 def check(container, service, name):
@@ -15,16 +14,16 @@ def check(container, service, name):
         print("- %s is up" % (name))
 
 
-def phpfpm(container):
+def phpfpm(drucker, container):
     """Starts PHP-FPM if it's down"""
     assert container  # TODO: Remove 'container' argument for this function.
     if not s.getoutput('''docker exec -it %s pgrep php-fpm%s | head -1
-                       ''' % (v.WEB_CONTAINER,
-                              v.DEFAULT_PHP)):
+                       ''' % (drucker.vars.WEB_CONTAINER,
+                              drucker.vars.DEFAULT_PHP)):
         print(c.red("!!! PHP-FPM is down.") + " Starting...")
         s.getoutput('''docker exec -it %s service php%s-fpm start
-                    ''' % (v.WEB_CONTAINER,
-                           v.DEFAULT_PHP))
+                    ''' % (drucker.vars.WEB_CONTAINER,
+                           drucker.vars.DEFAULT_PHP))
     else:
         print("- PHP-FPM is up")
 
