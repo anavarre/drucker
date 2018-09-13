@@ -50,10 +50,10 @@ ansible 2.4.1.0
 
 **Important**: Ansible 2.4 or later is required.
 
-_drucker_ is currently being rewritten in Python. One of the dependencies is [colorful](https://github.com/timofurrer/colorful) to improve readability. You can install it with:
+_drucker_ is written in Python and requires several dependencies to run correctly. Install with:
 
 ```
-$ pip3 install colorful
+$ pip install pycodestyle pylint colorful click
 ```
 
 ### <a name="disk_space"></a>Disk space
