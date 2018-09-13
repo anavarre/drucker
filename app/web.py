@@ -5,7 +5,6 @@ from datetime import date
 import subprocess
 import colorful
 from . import ssh
-from . import variables
 from . import orchestration as o
 
 
@@ -23,14 +22,14 @@ def create_base2web_container(drucker):
 
     subprocess.run(create_base2web, shell=True)
 
-    ssh.configure_ssh_web()
-    o.run_ssh_orchestration()
+    ssh.configure_ssh_web(drucker)
+    o.run_ssh_orchestration(drucker)
     # We need to set up web-to-mirror SSH access to SCP the Drupal Git repo.
     ssh.allow_ssh_access(drucker, drucker.vars.MIRROR_CONTAINER)
     o.run_web_orchestration(drucker)
 
 
-def create_web_container():
+def create_web_container(drucker):
     """Creates web container from web image"""
     print(colorful.blue("Spinning up %s container with ID:" % (drucker.vars.WEB_CONTAINER)))
 
@@ -47,15 +46,15 @@ def create_web_container():
                       drucker.vars.WEB_IMAGE),
                       shell=True)
 
-    ssh.configure_ssh_web()
+    ssh.configure_ssh_web(drucker)
     o.run_web_orchestration(drucker)
 
 
-def create_web_image():
+def create_web_image(drucker):
     """Creates web image from web container"""
     print(colorful.blue("Committing %s image from %s container..."
-                 % (drucker.vars.WEB_IMAGE,
-                    drucker.vars.WEB_CONTAINER)))
+                        % (drucker.vars.WEB_IMAGE,
+                           drucker.vars.WEB_CONTAINER)))
 
     subprocess.run("docker commit -m \"%s on %s\" %s %s"
                    % (drucker.vars.WEB_CONTAINER,
@@ -65,10 +64,10 @@ def create_web_image():
 
     print(colorful.blue("Deleting initial container..."))
     subprocess.getoutput("docker rm -f %s > /dev/null 2>&1" % (drucker.vars.WEB_CONTAINER))
-    create_web_container()
+    create_web_container(drucker)
 
 
-def start_web_container():
+def start_web_container(drucker):
     """Starts web container"""
     subprocess.getoutput("docker start %s" % (drucker.vars.WEB_CONTAINER))
 
@@ -82,15 +81,15 @@ def provision_web_container(drucker):
             o.run_web_orchestration(drucker)
         else:
             print(colorful.blue("Starting %s container..." % (drucker.vars.WEB_CONTAINER)))
-            start_web_container()
+            start_web_container(drucker)
             o.run_web_orchestration(drucker)
     else:
         if subprocess.getoutput("docker images | awk '{print $1\":\"$2}' | grep %s" % (drucker.vars.WEB_IMAGE)):
             print(colorful.green("%s custom image already exists." % (drucker.vars.WEB_IMAGE)))
-            create_web_container()
+            create_web_container(drucker)
         else:
             create_base2web_container(drucker)
-            create_web_image()
+            create_web_image(drucker)
 
 
 def main(drucker):

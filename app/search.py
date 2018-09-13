@@ -8,7 +8,7 @@ from . import ssh
 from . import orchestration as o
 
 
-def create_base2search_container():
+def create_base2search_container(drucker):
     """Create search container from base image"""
     print(colorful.blue("Spinning up %s container with ID:" % (drucker.vars.SEARCH_CONTAINER)))
 
@@ -22,11 +22,11 @@ def create_base2search_container():
 
     subprocess.run(create_base2search, shell=True)
 
-    ssh.configure_ssh_search()
+    ssh.configure_ssh_search(drucker)
     o.run_search_orchestration(drucker)
 
 
-def create_search_container():
+def create_search_container(drucker):
     """Create search container from search image"""
     print(colorful.blue("Spinning up %s container with ID:" % (drucker.vars.SEARCH_CONTAINER)))
 
@@ -39,15 +39,15 @@ def create_search_container():
                                    drucker.vars.SEARCH_IMAGE),
                                    shell=True)
 
-    ssh.configure_ssh_search()
+    ssh.configure_ssh_search(drucker)
     o.run_search_orchestration(drucker)
 
 
-def create_search_image():
+def create_search_image(drucker):
     """Create search image from search container"""
     print(colorful.blue("Committing %s image from %s container..."
-                 % (drucker.vars.SEARCH_IMAGE,
-                    drucker.vars.SEARCH_CONTAINER)))
+                        % (drucker.vars.SEARCH_IMAGE,
+                           drucker.vars.SEARCH_CONTAINER)))
 
     subprocess.run("docker commit -m \"%s on %s\" %s %s"
                    % (drucker.vars.SEARCH_CONTAINER,
@@ -57,10 +57,10 @@ def create_search_image():
 
     print(colorful.blue("Deleting initial container..."))
     subprocess.getoutput("docker rm -f %s > /dev/null 2>&1" % (drucker.vars.SEARCH_CONTAINER))
-    create_search_container()
+    create_search_container(drucker)
 
 
-def start_search_container():
+def start_search_container(drucker):
     """Start search container"""
     subprocess.getoutput("docker start %s > /dev/null 2>&1" % (drucker.vars.SEARCH_CONTAINER))
 
@@ -75,15 +75,15 @@ def provision_search_container(drucker):
             o.run_search_orchestration(drucker)
         else:
             print(colorful.blue("Starting %s container..." % (drucker.vars.SEARCH_CONTAINER)))
-            start_search_container()
+            start_search_container(drucker)
             o.run_search_orchestration(drucker)
     else:
         if subprocess.getoutput("docker images | awk '{print $1\":\"$2}' | grep %s" % (drucker.vars.SEARCH_IMAGE)):
             print(colorful.green("%s custom image already exists." % (drucker.vars.SEARCH_IMAGE)))
-            create_search_container()
+            create_search_container(drucker)
         else:
-            create_base2search_container()
-            create_search_image()
+            create_base2search_container(drucker)
+            create_search_image(drucker)
 
 
 def main(drucker):

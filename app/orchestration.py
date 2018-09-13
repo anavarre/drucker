@@ -42,9 +42,9 @@ def run_search_orchestration(drucker):
     run_orchestration(drucker, drucker.vars.SEARCH_CONTAINER, "search")
 
 
-def run_ssh_orchestration():
+def run_ssh_orchestration(drucker):
     """Runs SSH orchestration"""
-    run_orchestration("SSH", "ssh")
+    run_orchestration(drucker, "SSH", "ssh")
 
 
 def run_web_orchestration(drucker):
@@ -58,7 +58,12 @@ def run_tests_orchestration(drucker, shortname):
     subprocess.getoutput("export ANSIBLE_HOST_KEY_CHECKING=False")
     subprocess.run('''
                    ansible-playbook -i %s/orchestration/hosts --user=%s %s/orchestration/_tests/%s-tests.yml --extra-vars ansible_sudo_pass=%s
-                   ''' % (drucker.vars.APP_DIR, drucker.vars.APP, drucker.vars.APP_DIR, shortname, drucker.vars.APP), shell=True)
+                   ''' % (drucker.vars.APP_DIR,
+                          drucker.vars.APP,
+                          drucker.vars.APP_DIR,
+                          shortname,
+                          drucker.vars.APP),
+                          shell=True)
 
 
 def run_tests(drucker):

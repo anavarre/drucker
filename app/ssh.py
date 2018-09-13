@@ -60,20 +60,20 @@ def allow_ssh_access(drucker, host):
                                    drucker.vars.APP), shell=True)
 
 
-def create_tmp_key():
+def create_tmp_key(drucker):
     """Create temporary SSH key under /tmp"""
     store_key = "cat %s > %s" % (drucker.vars.DEFAULT_PUBKEY, TMP_KEY)
     subprocess.getoutput(store_key)
 
 
-def copy_tmp_key(container):
+def copy_tmp_key(drucker, container):
     """Copy temporary SSH key to container"""
     auth_key = "/home/%s/.ssh/authorized_keys" % (drucker.vars.APP)
     copy_key = "docker cp %s %s:%s" % (TMP_KEY, container, auth_key)
     subprocess.getoutput(copy_key)
 
 
-def set_ssh_dir_perms(container):
+def set_ssh_dir_perms(drucker, container):
     """Set correct permissions for .ssh directory"""
     chown_ssh = "chown -R %s:%s /home/%s/.ssh" % (drucker.vars.APP, drucker.vars.APP, drucker.vars.APP)
     ssh_dir_perms = "docker exec -it %s %s" % (container, chown_ssh)
@@ -85,49 +85,49 @@ def remove_tmp_key():
     subprocess.getoutput("rm %s" % (TMP_KEY))
 
 
-def configure_ssh_base():
+def configure_ssh_base(drucker):
     """Configure SSH access on base container"""
-    create_tmp_key()
-    copy_tmp_key(drucker.vars.BASE_CONTAINER)
-    set_ssh_dir_perms(drucker.vars.BASE_CONTAINER)
+    create_tmp_key(drucker)
+    copy_tmp_key(drucker, drucker.vars.BASE_CONTAINER)
+    set_ssh_dir_perms(drucker, drucker.vars.BASE_CONTAINER)
     remove_tmp_key()
 
 
-def configure_ssh_mirror():
+def configure_ssh_mirror(drucker):
     """Configure SSH access on mirror container"""
-    create_tmp_key()
-    copy_tmp_key(drucker.vars.MIRROR_CONTAINER)
-    set_ssh_dir_perms(drucker.vars.MIRROR_CONTAINER)
+    create_tmp_key(drucker)
+    copy_tmp_key(drucker, drucker.vars.MIRROR_CONTAINER)
+    set_ssh_dir_perms(drucker, drucker.vars.MIRROR_CONTAINER)
     remove_tmp_key()
 
 
-def configure_ssh_edge():
+def configure_ssh_edge(drucker):
     """Configure SSH access on edge container"""
-    create_tmp_key()
-    copy_tmp_key(drucker.vars.EDGE_CONTAINER)
-    set_ssh_dir_perms(drucker.vars.EDGE_CONTAINER)
+    create_tmp_key(drucker)
+    copy_tmp_key(drucker, drucker.vars.EDGE_CONTAINER)
+    set_ssh_dir_perms(drucker, drucker.vars.EDGE_CONTAINER)
     remove_tmp_key()
 
 
-def configure_ssh_web():
+def configure_ssh_web(drucker):
     """Configure SSH access on web container"""
-    create_tmp_key()
-    copy_tmp_key(drucker.vars.WEB_CONTAINER)
-    set_ssh_dir_perms(drucker.vars.WEB_CONTAINER)
+    create_tmp_key(drucker)
+    copy_tmp_key(drucker, drucker.vars.WEB_CONTAINER)
+    set_ssh_dir_perms(drucker, drucker.vars.WEB_CONTAINER)
     remove_tmp_key()
 
 
-def configure_ssh_db():
+def configure_ssh_db(drucker):
     """Configure SSH access on database container"""
-    create_tmp_key()
-    copy_tmp_key(drucker.vars.DB_CONTAINER)
-    set_ssh_dir_perms(drucker.vars.DB_CONTAINER)
+    create_tmp_key(drucker)
+    copy_tmp_key(drucker, drucker.vars.DB_CONTAINER)
+    set_ssh_dir_perms(drucker, drucker.vars.DB_CONTAINER)
     remove_tmp_key()
 
 
-def configure_ssh_search():
+def configure_ssh_search(drucker):
     """Configure SSH access on search container"""
-    create_tmp_key()
-    copy_tmp_key(drucker.vars.SEARCH_CONTAINER)
-    set_ssh_dir_perms(drucker.vars.SEARCH_CONTAINER)
+    create_tmp_key(drucker)
+    copy_tmp_key(drucker, drucker.vars.SEARCH_CONTAINER)
+    set_ssh_dir_perms(drucker, drucker.vars.SEARCH_CONTAINER)
     remove_tmp_key()
