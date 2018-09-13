@@ -3,14 +3,14 @@
 
 from datetime import date
 import subprocess
-import colorful as c
+import colorful
 from . import ssh
 from . import orchestration as o
 
 
 def create_base2mirror_container():
     """Create mirror container from base image"""
-    print(c.blue("Spinning up %s container with ID:" % (drucker.vars.MIRROR_CONTAINER)))
+    print(colorful.blue("Spinning up %s container with ID:" % (drucker.vars.MIRROR_CONTAINER)))
 
     create_base2mirror = '''
                          docker run --privileged=true --name %s -it -h %s --net %s --ip %s -d %s bash
@@ -28,7 +28,7 @@ def create_base2mirror_container():
 
 def create_mirror_container():
     """Create mirror container from mirror image"""
-    print(c.blue("Spinning up %s container with ID:" % (drucker.vars.MIRROR_CONTAINER)))
+    print(colorful.blue("Spinning up %s container with ID:" % (drucker.vars.MIRROR_CONTAINER)))
 
     subprocess.run("docker run --privileged=true\
                     --name %s -it -h %s --net %s --ip %s\
@@ -45,7 +45,7 @@ def create_mirror_container():
 
 def create_mirror_image():
     """Create mirror image from mirror container"""
-    print(c.blue("Committing %s image from %s container..."
+    print(colorful.blue("Committing %s image from %s container..."
                  % (drucker.vars.MIRROR_IMAGE,
                     drucker.vars.MIRROR_CONTAINER)))
 
@@ -55,7 +55,7 @@ def create_mirror_image():
                       drucker.vars.MIRROR_CONTAINER,
                       drucker.vars.MIRROR_IMAGE), shell=True)
 
-    print(c.blue("Deleting initial container..."))
+    print(colorful.blue("Deleting initial container..."))
     subprocess.getoutput("docker rm -f %s > /dev/null 2>&1" % (drucker.vars.MIRROR_CONTAINER))
     create_mirror_container()
 
@@ -69,16 +69,16 @@ def provision_mirror_container(drucker):
     """Provision mirror container"""
     assert drucker  # TODO: Remove after porting this to use drucker object.
     if subprocess.getoutput("docker ps -a | grep -o %s" % (drucker.vars.MIRROR_CONTAINER)):
-        print(c.green("%s container already exists." % (drucker.vars.MIRROR_CONTAINER)))
+        print(colorful.green("%s container already exists." % (drucker.vars.MIRROR_CONTAINER)))
         if subprocess.getoutput("docker ps | grep -o %s" % (drucker.vars.MIRROR_CONTAINER)):
             o.run_mirror_orchestration(drucker)
         else:
-            print(c.blue("Starting %s container..." % (drucker.vars.MIRROR_CONTAINER)))
+            print(colorful.blue("Starting %s container..." % (drucker.vars.MIRROR_CONTAINER)))
             start_mirror_container()
             o.run_mirror_orchestration(drucker)
     else:
         if subprocess.getoutput("docker images | awk '{print $1\":\"$2}' | grep %s" % (drucker.vars.MIRROR_IMAGE)):
-            print(c.green("%s custom image already exists." % (drucker.vars.MIRROR_IMAGE)))
+            print(colorful.green("%s custom image already exists." % (drucker.vars.MIRROR_IMAGE)))
             create_mirror_container()
         else:
             create_base2mirror_container()

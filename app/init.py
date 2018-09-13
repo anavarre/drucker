@@ -2,16 +2,16 @@
 """Initialize app with Docker networking and init image"""
 
 import subprocess
-import colorful as c
+import colorful
 
 
 def create_bridge_network(drucker):
     """Creates a custom bridge network"""
     assert drucker  # TODO: Remove after porting this to use drucker object.
     if subprocess.getoutput(drucker.vars.CHECK_BRIDGE):
-        print(c.green("Custom %s bridge network already exists." % (drucker.vars.APP)))
+        print(colorful.green("Custom %s bridge network already exists." % (drucker.vars.APP)))
     else:
-        print(c.blue("Creating custom %s bridge network..." % (drucker.vars.APP)))
+        print(colorful.blue("Creating custom %s bridge network..." % (drucker.vars.APP)))
         subprocess.getoutput(drucker.vars.CREATE_BRIDGE)
 
 
@@ -22,11 +22,11 @@ def pull_base_image(drucker):
     base_image_exists = subprocess.getoutput(drucker.vars.CHECK_BASE_IMAGE)
 
     if distro_image_exists and not base_image_exists:
-        print(c.green("%s image already exists" % (drucker.vars.DISTRO_IMAGE)))
-        print(c.blue("Check if %s can be updated..." % (drucker.vars.DISTRO_IMAGE)))
+        print(colorful.green("%s image already exists" % (drucker.vars.DISTRO_IMAGE)))
+        print(colorful.blue("Check if %s can be updated..." % (drucker.vars.DISTRO_IMAGE)))
         subprocess.run(drucker.vars.UPDATE_DISTRO_IMAGE, shell=True)
     elif not distro_image_exists:
-        print(c.blue("Pulling %s image from Docker Hub..." % (drucker.vars.DISTRO_IMAGE)))
+        print(colorful.blue("Pulling %s image from Docker Hub..." % (drucker.vars.DISTRO_IMAGE)))
         subprocess.run(drucker.vars.PULL_DISTRO_IMAGE, shell=True)
 
 
@@ -34,9 +34,9 @@ def build_init_image(drucker):
     """Builds the init image from Dockerfile"""
     assert drucker  # TODO: Remove after porting this to use drucker object.
     if subprocess.getoutput(drucker.vars.CHECK_INIT_IMAGE):
-        print(c.green("%s image already exists." % (drucker.vars.INIT_IMAGE)))
+        print(colorful.green("%s image already exists." % (drucker.vars.INIT_IMAGE)))
     elif not subprocess.getoutput(drucker.vars.CHECK_BASE_IMAGE):
-        print(c.blue("Building %s image from Dockerfile..." % (drucker.vars.INIT_IMAGE)))
+        print(colorful.blue("Building %s image from Dockerfile..." % (drucker.vars.INIT_IMAGE)))
         subprocess.run("docker build -t \"%s\" %s"
                        % (drucker.vars.INIT_IMAGE,
                           drucker.vars.APP_DIR),

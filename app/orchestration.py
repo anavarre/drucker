@@ -3,14 +3,14 @@
 
 import os
 import subprocess
-import colorful as c
+import colorful
 import click
 from . import containers
 
 
 def run_orchestration(drucker, container, shortname):
     """Parent function to manage container orchestration."""
-    print(c.blue("Running %s orchestration on the container..." % (container)))
+    print(colorful.blue("Running %s orchestration on the container..." % (container)))
     subprocess.getoutput("export ANSIBLE_HOST_KEY_CHECKING=False")
     subprocess.run('''
                    ansible-playbook -i %s/orchestration/hosts --user=%s %s/orchestration/provisioning/%s.yml --extra-vars ansible_sudo_pass=%s
@@ -54,7 +54,7 @@ def run_web_orchestration(drucker):
 
 def run_tests_orchestration(drucker, shortname):
     """Parent function to manage running the test suite"""
-    print(c.blue("Running the %s test suite..." % (shortname)))
+    print(colorful.blue("Running the %s test suite..." % (shortname)))
     subprocess.getoutput("export ANSIBLE_HOST_KEY_CHECKING=False")
     subprocess.run('''
                    ansible-playbook -i %s/orchestration/hosts --user=%s %s/orchestration/_tests/%s-tests.yml --extra-vars ansible_sudo_pass=%s
@@ -90,13 +90,13 @@ def app_list(drucker):
 
 def hosts_file(app):
     """Prompts the user with modifying their /etc/hosts file"""
-    print(c.green("Remember to add the %s.local entry to your local /etc/hosts file!" % (app)))
+    print(colorful.green("Remember to add the %s.local entry to your local /etc/hosts file!" % (app)))
 
 
 def param_check(drucker):
     """Determines whether a second parameter (sitename) was passed"""
     if not drucker.app:
-        print(c.red("This command needs a sitename to run. Aborting..."))
+        print(colorful.red("This command needs a sitename to run. Aborting..."))
 
 
 def app_delete(drucker):
@@ -107,7 +107,7 @@ def app_delete(drucker):
 
     if os.path.isdir("%s/%s" % (drucker.vars.CONTAINER_HTML_PATH, drucker.app)):
         if click.confirm("Should we overwrite the codebase, files and database?", default=True):
-            print(c.blue("Deleting %s docroot..." % (drucker.app)))
+            print(colorful.blue("Deleting %s docroot..." % (drucker.app)))
             subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                               --user=%s %s/orchestration/commands/app-delete.yml\
                               --extra-vars "ansible_sudo_pass=%s app=delete sitename=%s"
@@ -117,10 +117,10 @@ def app_delete(drucker):
                                   drucker.vars.APP,
                                   drucker.app),
                                   shell=True)
-            print(c.green("Remember to remove the %s.local entry from your"
+            print(colorful.green("Remember to remove the %s.local entry from your"
                           " local /etc/hosts file!" % (drucker.app)))
         else:
-            print(c.green("Back to the comfort zone. Aborting..."))
+            print(colorful.green("Back to the comfort zone. Aborting..."))
     else:
         print("This app doesn't exist.")
 
@@ -130,7 +130,7 @@ def app_drupal(drucker):
     app_delete(drucker)
 
     # if [[ -z "${GIT_TAG}" ]]; then
-    print(c.blue("Installing Drupal into new %s docroot..." % (drucker.app)))
+    print(colorful.blue("Installing Drupal into new %s docroot..." % (drucker.app)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-drupal.yml\
                       --extra-vars "ansible_sudo_pass=%s app=Drupal sitename=%s"
@@ -154,7 +154,7 @@ def app_lightning(drucker):
     """Spins up a ready-to-use Lightning install"""
     app_delete(drucker)
 
-    print(c.blue("Installing Lightning into new %s docroot..." % (drucker.app)))
+    print(colorful.blue("Installing Lightning into new %s docroot..." % (drucker.app)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-lightning.yml\
                       --extra-vars "ansible_sudo_pass=%s app=Lightning sitename=%s"
@@ -172,7 +172,7 @@ def app_blt(drucker):
     """Spins up a ready-to-use BLT build"""
     app_delete(drucker)
 
-    print(c.blue("Installing BLT into new %s docroot..." % (drucker.app)))
+    print(colorful.blue("Installing BLT into new %s docroot..." % (drucker.app)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-blt.yml\
                       --extra-vars "ansible_sudo_pass=%s app=BLT sitename=%s"
@@ -196,12 +196,12 @@ def app_dev(drucker):
                                                        drucker.vars.CONTAINER_HTML_PATH))
 
     if "BLT" in identify_drupal_type:
-        print(c.red("This command is not currently compatible with BLT. Exiting..."))
+        print(colorful.red("This command is not currently compatible with BLT. Exiting..."))
         return drucker.vars.EXITCODE_FAIL
     if not identify_drupal_type:
-        print(c.red("Could not identify the application type. Exiting..."))
+        print(colorful.red("Could not identify the application type. Exiting..."))
         return drucker.vars.EXITCODE_FAIL
-    print(c.blue("Configuring %s docroot for development..." % (drucker.app)))
+    print(colorful.blue("Configuring %s docroot for development..." % (drucker.app)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-dev.yml\
                       --extra-vars "ansible_sudo_pass=%s app=dev sitename=%s"
@@ -222,12 +222,12 @@ def app_prod(drucker):
                                                        drucker.vars.CONTAINER_HTML_PATH))
 
     if "BLT" in identify_drupal_type:
-        print(c.red("This command is not currently compatible with BLT. Exiting..."))
+        print(colorful.red("This command is not currently compatible with BLT. Exiting..."))
         return drucker.vars.EXITCODE_FAIL
     if not identify_drupal_type:
-        print(c.red("Could not identify the application type. Exiting..."))
+        print(colorful.red("Could not identify the application type. Exiting..."))
         return drucker.vars.EXITCODE_FAIL
-    print(c.blue("Configuring %s docroot for production..." % (drucker.app)))
+    print(colorful.blue("Configuring %s docroot for production..." % (drucker.app)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-prod.yml\
                       --extra-vars "ansible_sudo_pass=%s app=prod sitename=%s"
@@ -244,7 +244,7 @@ def app_import(drucker):
     """Imports an app from the web container's import directory"""
     import_path = drucker.vars.CONTAINER_IMPORT_PATH
     if not os.path.isdir("%s/%s" % (import_path, drucker.app)):
-        print(c.red("The %s app doesn't exist. Aborting..." % (drucker.app)))
+        print(colorful.red("The %s app doesn't exist. Aborting..." % (drucker.app)))
         return drucker.vars.EXITCODE_FAIL
     if os.path.isdir("%s/%s/blt" % (import_path, drucker.app)):
         app_detected = "BLT"

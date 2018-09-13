@@ -2,7 +2,7 @@
 """Edit the config file to accommodate for local user preferences"""
 
 import os
-import colorful as c
+import colorful
 
 
 def replace_string(file, old_string, new_string):
@@ -23,7 +23,7 @@ def set_local_ssh_path(drucker):
         elif os.path.isfile(pubkey):
             replace_string(drucker.vars.DEFAULT_CONFIG, drucker.vars.KEY_PLACEHOLDER, pubkey)
         else:
-            print(c.red("This filepath doesn't exist. Please try again."))
+            print(colorful.red("This filepath doesn't exist. Please try again."))
             set_local_ssh_path(drucker)
 
 
@@ -38,7 +38,7 @@ def set_local_html_path(drucker):
         elif os.path.isfile(host_html_path):
             replace_string(drucker.vars.DEFAULT_CONFIG, drucker.vars.HTML_PLACEHOLDER, host_html_path)
         else:
-            print(c.red("This filepath doesn't exist. Please try again."))
+            print(colorful.red("This filepath doesn't exist. Please try again."))
             set_local_html_path(drucker)
 
 
@@ -53,7 +53,7 @@ def set_local_db_path(drucker):
         elif os.path.isfile(host_db_path):
             replace_string(drucker.vars.DEFAULT_CONFIG, drucker.vars.DB_PLACEHOLDER, host_db_path)
         else:
-            print(c.red("This filepath doesn't exist. Please try again."))
+            print(colorful.red("This filepath doesn't exist. Please try again."))
             set_local_db_path(drucker)
 
 

@@ -2,13 +2,13 @@
 """Checks if services are correctly running in containers"""
 
 import subprocess
-import colorful as c
+import colorful
 
 
 def check(container, service, name):
     """Starts common services if they're down"""
     if not subprocess.getoutput("docker exec -it %s pgrep %s | head -1" % (container, service)):
-        print(c.red("!!! %s is down." % (name)) + " Starting...")
+        print(colorful.red("!!! %s is down." % (name)) + " Starting...")
         subprocess.getoutput("docker exec -it %s service %s start" % (container, service))
     else:
         print("- %s is up" % (name))
@@ -20,7 +20,7 @@ def phpfpm(drucker, container):
     if not subprocess.getoutput("docker exec -it %s pgrep php-fpm%s | head -1"
                                 % (drucker.vars.WEB_CONTAINER,
                                    drucker.vars.DEFAULT_PHP)):
-        print(c.red("!!! PHP-FPM is down.") + " Starting...")
+        print(colorful.red("!!! PHP-FPM is down.") + " Starting...")
         subprocess.getoutput("docker exec -it %s service php%s-fpm start"
                              % (drucker.vars.WEB_CONTAINER,
                                 drucker.vars.DEFAULT_PHP))
@@ -31,7 +31,7 @@ def phpfpm(drucker, container):
 def memcached(container):
     """Starts memcached if it's down"""
     if not subprocess.getoutput("docker exec -it %s pgrep memcached" % (container)):
-        print(c.red("!!! memcached is down.") + " Starting...")
+        print(colorful.red("!!! memcached is down.") + " Starting...")
         subprocess.getoutput("docker exec -it %s memcached -d -u nobody -m 64 -p 11211 127.0.0.1"
                              % (container))
     else:
@@ -41,7 +41,7 @@ def memcached(container):
 def solr(container):
     """Starts Apache Solr if it's down"""
     if not subprocess.getoutput("docker exec -it %s pgrep java" % (container)):
-        print(c.red("!!! Apache Solr is down.") + " Starting...")
+        print(colorful.red("!!! Apache Solr is down.") + " Starting...")
         subprocess.getoutput("docker exec -it -u solr %s /opt/solr/bin/solr start"
                              % (container))
     else:
