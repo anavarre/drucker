@@ -3,8 +3,8 @@
 
 import os
 import subprocess
-import colorful
 import click
+import colorful
 from . import containers
 
 
