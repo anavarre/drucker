@@ -142,6 +142,7 @@
        * DO NOT uncomment this block as it's managed by Ansible.
        * $settings['cache']['default'] = 'cache.backend.memcache';
        * $settings['memcache']['servers'] = ['{{ db_ip }}:11211' => 'default'];
+       * $settings['memcache']['bins'] = ['default' => 'default'];
        */
     insertafter: EOF
     marker: "# {mark} MANAGED MEMCACHED BLOCK"
