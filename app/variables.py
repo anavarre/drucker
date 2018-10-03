@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 APP = "drucker"
-APP_VERSION = "0.7.0"
+APP_VERSION = "dev"
 APP_ROOT = os.path.dirname(os.path.dirname(__file__))
 APP_DIR = "%s/app" % (APP_ROOT)
 HOME = str(Path.home())
