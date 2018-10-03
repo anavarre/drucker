@@ -30,7 +30,7 @@
 - name: "DRUPAL: Pin Drupal version to specific Git tag"
   replace:
     dest: "{{ drupal_composer_json }}"
-    regexp: '^(.*)"drupal/core": "\^8.6"(.*)$'
+    regexp: '^(.*)"drupal/core": "\^8.7"(.*)$'
     replace: '\1"drupal/core": "{{ git_tag }}"\2'
   when: new_site.stat.exists == false and git_tag is defined
 

@@ -19,7 +19,7 @@
         "composer/installers": "^1.5",
         "drupal-composer/drupal-scaffold": "^2.4",
         "cweagans/composer-patches": "^1.6",
-        "drupal/core": "^8.6",
+        "drupal/core": "^8.7",
         "drush/drush": "^9.0",
         "drupal/console": "^1.0"
     },
