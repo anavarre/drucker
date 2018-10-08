@@ -54,12 +54,12 @@ if __name__ == '__main__':
             EXITCODE = dispatch_the_provisioner(DRUCKER)
         sys.exit(EXITCODE)
 
-    # RuntimeWarning's are fatal and stop the program (printed in yellow).
-    except RuntimeWarning as err:
-        print(colorful.yellow(err))
-        sys.exit(DRUCKER.vars.EXITCODE_FAIL)
+    # RuntimeWarning's are non-fatal and won't stop the program.
+    except RuntimeWarning as warning:
+        print(colorful.orange(warning))
+        pass
 
-    # RuntimeError's are fatal and stop the program (printed in red).
+    # RuntimeError's are fatal and stop the program.
     except RuntimeError as err:
         print(colorful.red(err))
         sys.exit(DRUCKER.vars.EXITCODE_FAIL)
