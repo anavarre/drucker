@@ -35,6 +35,9 @@ def get_parser():
     parser.add_argument('--blt', dest='dispatched_function', action='store_const',
                         help='Spins up a ready-to-use BLT build',
                         const=orch.app_blt)
+    parser.add_argument('--reinstall', dest='dispatched_function', action='store_const',
+                        help='Reinstalls Drupal or the currently installed distribution',
+                        const=orch.app_reinstall)
     parser.add_argument('--dev', dest='dispatched_function', action='store_const',
                         help='Prepare app for development work with no'
                              ' caching and helper modules enabled.',

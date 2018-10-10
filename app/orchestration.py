@@ -100,7 +100,8 @@ def hosts_file(app):
 def param_check(drucker):
     """Determines whether a second parameter (sitename) was passed"""
     if not drucker.app:
-        print(colorful.red("This command needs a sitename to run. Aborting..."))
+        raise RuntimeError(
+            "This command needs a sitename to run. Aborting...")
 
 
 def app_delete(drucker):
@@ -108,7 +109,7 @@ def app_delete(drucker):
     param_check(drucker)
 
     if os.path.isdir("%s/%s" % (drucker.vars.CONTAINER_HTML_PATH, drucker.app)):
-        if click.confirm("Should we overwrite the codebase, files and database?", default=True):
+        if click.confirm("Should we delete the codebase, files and database?", default=True):
             print(colorful.blue("Deleting %s docroot..." % (drucker.app)))
             subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                               --user=%s %s/orchestration/commands/app-delete.yml\
@@ -122,8 +123,6 @@ def app_delete(drucker):
                                  % (drucker.app)))
         else:
             print(colorful.green("Back to the comfort zone. Aborting..."))
-    else:
-        print("This app doesn't exist.")
 
 
 def app_drupal(drucker):
@@ -134,7 +133,7 @@ def app_drupal(drucker):
     print(colorful.blue("Installing Drupal into new %s docroot..." % (drucker.app)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-drupal.yml\
-                      --extra-vars "ansible_sudo_pass=%s app=Drupal sitename=%s"
+                      --extra-vars "ansible_sudo_pass=%s app=drupal sitename=%s"
                    ''' % (drucker.vars.APP_DIR,
                           drucker.vars.APP,
                           drucker.vars.APP_DIR,
@@ -157,7 +156,7 @@ def app_lightning(drucker):
     print(colorful.blue("Installing Lightning into new %s docroot..." % (drucker.app)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-lightning.yml\
-                      --extra-vars "ansible_sudo_pass=%s app=Lightning sitename=%s"
+                      --extra-vars "ansible_sudo_pass=%s app=lightning sitename=%s"
                    ''' % (drucker.vars.APP_DIR,
                           drucker.vars.APP,
                           drucker.vars.APP_DIR,
@@ -174,11 +173,36 @@ def app_blt(drucker):
     print(colorful.blue("Installing BLT into new %s docroot..." % (drucker.app)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-blt.yml\
-                      --extra-vars "ansible_sudo_pass=%s app=BLT sitename=%s"
+                      --extra-vars "ansible_sudo_pass=%s app=blt sitename=%s"
                    ''' % (drucker.vars.APP_DIR,
                           drucker.vars.APP,
                           drucker.vars.APP_DIR,
                           drucker.vars.APP,
+                          drucker.app), shell=True)
+    hosts_file(drucker.app)
+    return drucker.vars.EXITCODE_OK
+
+
+def app_reinstall(drucker):
+    """Reinstall currently deployed app."""
+    app_detected = subprocess.getoutput(
+        "docker exec -it %s grep '%s' %s/.app-registry |\
+         awk '{print $NF}' | tr -d '()'" % (drucker.vars.WEB_CONTAINER,
+                                            drucker.app,
+                                            drucker.vars.CONTAINER_HTML_PATH))
+
+    app_delete(drucker)
+
+    print(colorful.blue("Reinstalling %s docroot..." % (drucker.app)))
+    subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
+                      --user=%s %s/orchestration/commands/app-%s.yml\
+                      --extra-vars "ansible_sudo_pass=%s app=%s sitename=%s"
+                   ''' % (drucker.vars.APP_DIR,
+                          drucker.vars.APP,
+                          drucker.vars.APP_DIR,
+                          app_detected,
+                          drucker.vars.APP,
+                          app_detected,
                           drucker.app), shell=True)
     hosts_file(drucker.app)
     return drucker.vars.EXITCODE_OK
