@@ -65,12 +65,15 @@ def get_parser():
     parser.add_argument("--health", dest='dispatched_function', action='store_const',
                         help="Runs a service healthcheck",
                         const=cont.health)
+    parser.add_argument('--php7.3', dest='dispatched_function', action='store_const',
+                        help='Sets the PHP version to 7.3',
+                        const=cont.set_default_php_version)
     parser.add_argument('--php7.2', dest='dispatched_function', action='store_const',
                         help='Sets the PHP version to 7.2',
-                        const=cont.set_default_php_version)
+                        const=cont.set_previous_php_version)
     parser.add_argument('--php7.1', dest='dispatched_function', action='store_const',
                         help='Sets the PHP version to 7.1',
-                        const=cont.set_previous_php_version)
+                        const=cont.set_legacy_php_version)
     parser.add_argument('--list', dest='dispatched_function', action='store_const',
                         help='Lists all deployed apps',
                         const=orch.app_list)

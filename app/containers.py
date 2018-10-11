@@ -74,8 +74,22 @@ def restart(drucker):
     return drucker.vars.EXITCODE_OK
 
 
+def set_default_php_version(drucker):
+    """Set the PHP version to the current stable version"""
+    # pylint: disable=E1101
+    print(colorful.blue("Switch to %s..." % (drucker.vars.DEFAULT_PHP)))
+    subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
+                      --user=%s %s/orchestration/commands/default-php.yml\
+                      --extra-vars "ansible_sudo_pass=%s"
+                   ''' % (drucker.vars.APP_DIR,
+                          drucker.vars.APP,
+                          drucker.vars.APP_DIR,
+                          drucker.vars.APP), shell=True)
+    return drucker.vars.EXITCODE_OK
+
+
 def set_previous_php_version(drucker):
-    """Sets the PHP version to the previous version"""
+    """Sets the PHP version to the previous stable version"""
     print(colorful.blue("Switch to %s..." % (drucker.vars.PREVIOUS_PHP)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/previous-php.yml\
@@ -87,12 +101,12 @@ def set_previous_php_version(drucker):
     return drucker.vars.EXITCODE_OK
 
 
-def set_default_php_version(drucker):
-    """Set the PHP version to the current stable version"""
+def set_legacy_php_version(drucker):
+    """Set the PHP version to the legacy stable version"""
     # pylint: disable=E1101
-    print(colorful.blue("Switch to %s..." % (drucker.vars.DEFAULT_PHP)))
+    print(colorful.blue("Switch to %s..." % (drucker.vars.LEGACY_PHP)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
-                      --user=%s %s/orchestration/commands/default-php.yml\
+                      --user=%s %s/orchestration/commands/legacy-php.yml\
                       --extra-vars "ansible_sudo_pass=%s"
                    ''' % (drucker.vars.APP_DIR,
                           drucker.vars.APP,

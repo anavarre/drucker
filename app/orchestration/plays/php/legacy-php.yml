@@ -1,0 +1,73 @@
+---
+- name: "PHP: Check if PHP {{ legacy_php_version}} is installed"
+  stat:
+    path: "{{ legacy_php_ini }}"
+  register: legacy_phpfpm
+
+- name: "PHP: Install PHP {{ legacy_php_version}} core packages"
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - php{{ legacy_php_version }}-fpm
+    - php{{ legacy_php_version }}-cli
+    - php{{ legacy_php_version }}-common
+    - php{{ legacy_php_version }}-dev
+  when: legacy_phpfpm.stat.exists == false
+
+- name: "PHP: Install PHP {{ legacy_php_version}} extensions"
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - php-imagick
+    - php-memcached
+    - php{{ legacy_php_version }}-apcu
+    - php{{ legacy_php_version }}-curl
+    - php{{ legacy_php_version }}-gd
+    - php{{ legacy_php_version }}-mbstring
+    - php{{ legacy_php_version }}-mysql
+    - php{{ legacy_php_version }}-xmlrpc
+    - php{{ legacy_php_version }}-xsl
+    - php{{ legacy_php_version }}-bz2
+    - php{{ legacy_php_version }}-sqlite3
+  when: legacy_phpfpm.stat.exists == false
+
+- name: "PHP: Ensure PHP {{ legacy_php_version }} extensions directory exists"
+  file:
+    path: "{{ legacy_php_extensions }}"
+    state: directory
+  when: legacy_phpfpm.stat.exists == false
+
+- import_tasks: php_version_and_vhost_check.yml
+
+- name: "PHP: Update PHP FPM version in vHosts"
+  replace:
+    dest: "{{ item }}"
+    regexp: '^(.*)php{{ php_read_version.stdout }}-fpm.sock(.*)$'
+    replace: '\1php{{ legacy_php_version }}-fpm.sock\2'
+  with_items:
+    - "{{ apache_vhosts_list.stdout_lines }}"
+  when: apache_vhosts_list.stdout != 'no vHost'
+
+- name: "PHP: Switch PHP CLI version"
+  command: update-alternatives --set php /usr/bin/php{{ legacy_php_version }}
+
+- import_tasks: phpfpm_process_check.yml
+
+- name: "PHP: Start PHP {{ legacy_php_version}} FPM"
+  command: /etc/init.d/php{{ legacy_php_version }}-fpm start
+  when: legacy_php_version != php_read_version.stdout or phpfpm_is_started.stdout == 'stopped'
+
+- name: "PHP: Ensure PHP {{ legacy_php_version}} FPM is started"
+  shell: pgrep -ln php-fpm | awk '{print $NF}'
+  register: legacy_phpfpm_is_started
+  notify: Restart Apache
+
+- name: "PHP: Write new PHP version to file"
+  copy:
+    content: "{{ legacy_php_version }}"
+    dest: "{{ default_php_version_file }}"
+  when: legacy_phpfpm_is_started.changed
+
+- import_tasks: legacy_php_ini.yml

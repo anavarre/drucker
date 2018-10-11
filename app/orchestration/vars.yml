@@ -121,21 +121,29 @@ post_max_size: 100M
 opcache_max_accelerated_files: 4000
 timezone: UTC
 
-# Default PHP version: 7.2
-# Remember to also change the DEFAULT_PHP bash variable.
-default_php_version: 7.2
+# Default PHP version
+# Remember to also change the DEFAULT_PHP variable.
+default_php_version: 7.3
 default_php_ini: /etc/php/{{ default_php_version }}/fpm/php.ini
 default_php_ini_cli: /etc/php/{{ default_php_version }}/cli/php.ini
 default_php_process: "{{ phpfpm_process }}{{ default_php_version }}"
 default_php_extensions: /usr/lib/php/{{ default_php_version }}/20131226
 
-# Previous PHP version: 7.1
-# Remember to also change the PREVIOUS_PHP bash variable.
-previous_php_version: 7.1
+# Previous PHP version
+# Remember to also change the PREVIOUS_PHP variable.
+previous_php_version: 7.2
 previous_php_process: "{{ phpfpm_process }}{{ previous_php_version }}"
 previous_php_ini: /etc/php/{{ previous_php_version }}/fpm/php.ini
 previous_php_ini_cli: /etc/php/{{ previous_php_version }}/cli/php.ini
 previous_php_extensions: /usr/lib/php/{{ previous_php_version }}/20131226
+
+# Legacy PHP version
+# Remember to also change the LEGACY_PHP variable.
+legacy_php_version: 7.1
+legacy_php_process: "{{ phpfpm_process }}{{ legacy_php_version }}"
+legacy_php_ini: /etc/php/{{ legacy_php_version }}/fpm/php.ini
+legacy_php_ini_cli: /etc/php/{{ legacy_php_version }}/cli/php.ini
+legacy_php_extensions: /usr/lib/php/{{ legacy_php_version }}/20131226
 
 # PECL Upload Progress
 uploadprogress_release: master
