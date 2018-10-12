@@ -39,12 +39,10 @@ def get_parser():
                         help='Reinstalls Drupal or the currently installed distribution',
                         const=orch.app_reinstall)
     parser.add_argument('--dev', dest='dispatched_function', action='store_const',
-                        help='Prepare app for development work with no'
-                             ' caching and helper modules enabled.',
+                        help='Configures the app for development use',
                         const=orch.app_dev)
     parser.add_argument('--prod', dest='dispatched_function', action='store_const',
-                        help='Opinionated setup with all known performance'
-                             ' best practices enabled.',
+                        help='Configures the app for production use',
                         const=orch.app_prod)
     parser.add_argument('--import', dest='dispatched_function', action='store_const',
                         help="Imports an app from the web container's"
