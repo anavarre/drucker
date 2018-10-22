@@ -53,7 +53,7 @@ ansible 2.4.1.0
 _drucker_ is written in Python and requires several dependencies to run correctly. Install with:
 
 ```
-$ pip install pycodestyle pylint colorful click
+$ pip3 install pycodestyle pylint colorful click --user
 ```
 
 ### <a name="disk_space"></a>Disk space
@@ -107,7 +107,7 @@ _drucker_ ships with the following software stack:
 Add the below entries in your `/etc/hosts` file:
 
 ```
-203.0.113.2    drucker.local phpmyadmin.local adminer.local lightning.local reservoir.local blt.local
+203.0.113.2    drucker.local phpmyadmin.local adminer.local lightning.local blt.local
 203.0.113.13   search.local
 203.0.113.50   mirror.local
 ```
