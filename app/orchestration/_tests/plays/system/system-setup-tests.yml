@@ -15,10 +15,10 @@
   failed_when: system.stat.exists == false
 
 - name: "TEST: sources.list file needs to be correctly configured"
-  shell: grep -o "{{ codename }} main contrib non-free" || echo "absent"
+  shell: grep -o -m1 "{{ codename }} main contrib non-free" {{ sources_list }} || echo "absent"
   register: sources_list_repos
-  changed_when: sources_list_repos.stdout != 'absent'
-  failed_when: sources_list_repos.stdout != 'absent'
+  changed_when: sources_list_repos.stdout == 'absent'
+  failed_when: sources_list_repos.stdout == 'absent'
 
 - name: "TEST: System packages need to be correctly installed"
   shell: dpkg -l | grep {{ item }}
