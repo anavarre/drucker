@@ -108,7 +108,7 @@ def app_delete(drucker):
     param_check(drucker)
 
     if os.path.isdir("%s/%s" % (drucker.vars.CONTAINER_HTML_PATH, drucker.app)):
-        if click.confirm("Should we delete the codebase, files and database?", default=True):
+        if click.confirm("Should we delete the existing codebase, files and database?", default=True):
             print(colorful.blue("Deleting %s docroot..." % (drucker.app)))
             subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                               --user=%s %s/orchestration/commands/app-delete.yml\

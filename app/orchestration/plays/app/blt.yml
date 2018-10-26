@@ -100,7 +100,7 @@
   when: new_site.stat.exists == false
 
 - name: "BLT: Install Drupal (Lightning) and finish setup"
-  command: "{{ blt_command }} setup"
+  command: "{{ blt_command }} setup --no-interaction"
   args:
     chdir: "{{ drupal_root }}"
   become: yes
