@@ -176,7 +176,7 @@ libyaml_archive_path: "{{ libyaml_temp_path }}.tar.gz"
 libyaml_mirror_archive_path: "{{ mirror_archives_dir }}/yaml-{{ libyaml_stable_release }}.tar.gz"
 
 # PECL YAML
-pecl_yaml_stable_release: 2.0.0
+pecl_yaml_stable_release: 2.0.4
 pecl_yaml_download_link: https://github.com/php/pecl-file_formats-yaml/archive/{{ pecl_yaml_stable_release }}.tar.gz
 pecl_yaml_mirror_download_link: http://{{ mirror_host }}/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}.tar.gz
 pecl_yaml_extension_name: yaml.so
