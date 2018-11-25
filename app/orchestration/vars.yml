@@ -276,7 +276,7 @@ phpmyadmin_hostname: phpmyadmin
 phpmyadmin_mirror_archive_file_path: "{{ mirror_archives_dir }}/{{ phpmyadmin_archive_filename }}"
 
 # Adminer
-adminer_stable_release: 4.6.3
+adminer_stable_release: 4.7.0
 adminer_download_link: https://github.com/vrana/adminer/releases/download/v{{ adminer_stable_release }}/adminer-{{ adminer_stable_release }}-en.php
 adminer_mirror_download_link: http://{{ mirror_host }}/adminer-{{ adminer_stable_release }}-en.php
 adminer_root: "{{ webroot }}/adminer"
