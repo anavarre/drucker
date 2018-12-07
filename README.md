@@ -53,7 +53,7 @@ ansible 2.4.1.0
 _drucker_ is written in Python and requires several dependencies to run correctly. Install with:
 
 ```
-$ pip install pycodestyle pylint colorful click
+$ pip3 install pycodestyle pylint colorful click --user
 ```
 
 ### <a name="disk_space"></a>Disk space
@@ -78,7 +78,7 @@ _drucker_ ships with the following software stack:
 | memcached           | 3.0.4                 | APT, via [ppa:ondrej/php](https://deb.sury.org/)       |
 | mcstat              | 1.1.0                 | [webbj74/mcstat](https://github.com/webbj74/mcstat) (Github)      |
 | phpMyAdmin          | 4.8.3                 | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
-| adminer             | 4.6.3                 | [vrana/adminer](https://github.com/vrana/adminer) (Github)      |
+| adminer             | 4.7.0                 | [vrana/adminer](https://github.com/vrana/adminer) (Github)      |
 | PHP-FPM             | 7.1 or 7.2            | APT, via [ppa:ondrej/php](https://deb.sury.org/)      |
 | APCu                | 5.1.12 or higher      | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
 | Coder               | 8.2.11                | [drupal/coder](https://packagist.org/packages/drupal/coder) (Packagist)      |
@@ -86,7 +86,7 @@ _drucker_ ships with the following software stack:
 | PHP-CS-Fixer        | 2.2.20                | [FriendsOfPHP/PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (Github)              |
 | phpmd               | 2.6.0                 | [PHPMD](https://phpmd.org/) (official site)      |
 | PECL uploadprogress | master                | [ php/pecl-php-uploadprogress](https://github.com/php/pecl-php-uploadprogress)  (Github)              |
-| PECL YAML           | 2.0.0                 | [php/pecl-file_formats-yaml](https://github.com/php/pecl-file_formats-yaml) (Github)              |
+| PECL YAML           | 2.0.4                 | [php/pecl-file_formats-yaml](https://github.com/php/pecl-file_formats-yaml) (Github)              |
 | LibYAML             | 0.1.7                 | [PyYAML](http://pyyaml.org/) (official site)     |
 | Xdebug              | 2.6.1                 | [Xdebug](https://xdebug.org/) (official site)     |
 | Tideways Profiler   | 4.1.6                 | [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension)  (Github)  |
@@ -107,7 +107,7 @@ _drucker_ ships with the following software stack:
 Add the below entries in your `/etc/hosts` file:
 
 ```
-203.0.113.2    drucker.local phpmyadmin.local adminer.local lightning.local reservoir.local blt.local
+203.0.113.2    drucker.local phpmyadmin.local adminer.local lightning.local blt.local
 203.0.113.13   search.local
 203.0.113.50   mirror.local
 ```

@@ -184,7 +184,7 @@ libyaml_archive_path: "{{ libyaml_temp_path }}.tar.gz"
 libyaml_mirror_archive_path: "{{ mirror_archives_dir }}/yaml-{{ libyaml_stable_release }}.tar.gz"
 
 # PECL YAML
-pecl_yaml_stable_release: 2.0.0
+pecl_yaml_stable_release: 2.0.4
 pecl_yaml_download_link: https://github.com/php/pecl-file_formats-yaml/archive/{{ pecl_yaml_stable_release }}.tar.gz
 pecl_yaml_mirror_download_link: http://{{ mirror_host }}/pecl-file_formats-yaml-{{ pecl_yaml_stable_release }}.tar.gz
 pecl_yaml_extension_name: yaml.so
@@ -284,7 +284,7 @@ phpmyadmin_hostname: phpmyadmin
 phpmyadmin_mirror_archive_file_path: "{{ mirror_archives_dir }}/{{ phpmyadmin_archive_filename }}"
 
 # Adminer
-adminer_stable_release: 4.6.3
+adminer_stable_release: 4.7.0
 adminer_download_link: https://github.com/vrana/adminer/releases/download/v{{ adminer_stable_release }}/adminer-{{ adminer_stable_release }}-en.php
 adminer_mirror_download_link: http://{{ mirror_host }}/adminer-{{ adminer_stable_release }}-en.php
 adminer_root: "{{ webroot }}/adminer"
@@ -360,7 +360,7 @@ drush_launcher: "{{ user_programs_path }}/drush"
 
 # Drush
 global_drush: "{{ user_programs_path }}/global-drush"
-global_drush_stable_release: 9.4.0
+global_drush_stable_release: 9.5.2
 drush_yml_source_file: "{{ source_file_dir }}/drush.yml"
 drush_alias_template_file: drush.{{ drush_alias_extension }}
 drush_alias_source_file: "{{ source_file_dir }}/{{ drush_alias_template_file }}"

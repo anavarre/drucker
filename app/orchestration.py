@@ -74,11 +74,10 @@ def run_tests(drucker):
                                              ''' % (drucker.vars.APP,
                                                     drucker.vars.WEB_CONTAINER))
     if drucker.vars.DEFAULT_PHP not in php_version_check:
-        print("Tests need to be executed against the current stable PHP version")
-        print("Please switch to PHP %s with 'drucker --php%s'"
-              % (drucker.vars.DEFAULT_PHP,
-                 drucker.vars.DEFAULT_PHP))
-        return drucker.vars.EXITCODE_FAIL
+        raise RuntimeError(
+            """Tests need to be executed against the current stable PHP version.\r
+Please switch to PHP %s with 'drucker --php%s'"""
+            % (drucker.vars.DEFAULT_PHP, drucker.vars.DEFAULT_PHP))
     for group in drucker.vars.TEST_GROUPS:
         run_tests_orchestration(drucker, group)
     return drucker.vars.EXITCODE_OK
@@ -109,7 +108,7 @@ def app_delete(drucker):
     param_check(drucker)
 
     if os.path.isdir("%s/%s" % (drucker.vars.CONTAINER_HTML_PATH, drucker.app)):
-        if click.confirm("Should we delete the codebase, files and database?", default=True):
+        if click.confirm("Should we delete the existing codebase, files and database?", default=True):
             print(colorful.blue("Deleting %s docroot..." % (drucker.app)))
             subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                               --user=%s %s/orchestration/commands/app-delete.yml\
@@ -208,21 +207,26 @@ def app_reinstall(drucker):
     return drucker.vars.EXITCODE_OK
 
 
-def app_dev(drucker):
-    """Prepares app for development work with no caching and helper modules enabled."""
-    param_check(drucker)
-
+def identify_app(drucker):
+    """Checks the app registry to identify the application type."""
     identify_drupal_type = subprocess.getoutput('''grep "%s" "%s/.app-registry" |\
-                                                   awk '{print $NF}' | tr --d '()'
+                                                   awk '{print $NF}' | tr -d '()'
                                                 ''' % (drucker.app,
                                                        drucker.vars.CONTAINER_HTML_PATH))
 
-    if "BLT" in identify_drupal_type:
-        print(colorful.red("This command is not currently compatible with BLT. Exiting..."))
-        return drucker.vars.EXITCODE_FAIL
+    if "blt" in identify_drupal_type:
+        raise RuntimeError(
+            "This command is not currently compatible with BLT. Exiting...")
     if not identify_drupal_type:
-        print(colorful.red("Could not identify the application type. Exiting..."))
-        return drucker.vars.EXITCODE_FAIL
+        raise RuntimeError(
+            "Could not identify the application type. Exiting...")
+
+
+def app_dev(drucker):
+    """Prepares app for development work with no caching and helper modules enabled."""
+    param_check(drucker)
+    identify_app(drucker)
+
     print(colorful.blue("Configuring %s docroot for development..." % (drucker.app)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-dev.yml\
@@ -237,17 +241,9 @@ def app_dev(drucker):
 
 def app_prod(drucker):
     """Opinionated setup with all known performance best practices enabled."""
-    identify_drupal_type = subprocess.getoutput('''grep "%s" "%s/.app-registry" |\
-                                                   awk '{print $NF}' | tr --d '()'
-                                                ''' % (drucker.app,
-                                                       drucker.vars.CONTAINER_HTML_PATH))
+    param_check(drucker)
+    identify_app(drucker)
 
-    if "BLT" in identify_drupal_type:
-        print(colorful.red("This command is not currently compatible with BLT. Exiting..."))
-        return drucker.vars.EXITCODE_FAIL
-    if not identify_drupal_type:
-        print(colorful.red("Could not identify the application type. Exiting..."))
-        return drucker.vars.EXITCODE_FAIL
     print(colorful.blue("Configuring %s docroot for production..." % (drucker.app)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-prod.yml\
@@ -264,15 +260,15 @@ def app_import(drucker):
     """Imports an app from the web container's import directory"""
     import_path = drucker.vars.CONTAINER_IMPORT_PATH
     if not os.path.isdir("%s/%s" % (import_path, drucker.app)):
-        print(colorful.red("The %s app doesn't exist. Aborting..." % (drucker.app)))
-        return drucker.vars.EXITCODE_FAIL
+        raise RuntimeError(
+            "The %s app doesn't exist. Aborting..." % (drucker.app))
     if os.path.isdir("%s/%s/blt" % (import_path, drucker.app)):
-        app_detected = "BLT"
+        app_detected = "blt"
     elif os.path.isdir("%s/%s/vendor/bin/lightning" % (import_path,
                                                        drucker.app)):
-        app_detected = "Lightning"
+        app_detected = "lightning"
     else:
-        app_detected = "Drupal"
+        app_detected = "drupal"
 
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-import.yml\
