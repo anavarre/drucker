@@ -77,7 +77,7 @@ _drucker_ ships with the following software stack:
 | MariaDB             | 10.1.26 or higher     | APT               |
 | memcached           | 3.0.4                 | APT, via [ppa:ondrej/php](https://deb.sury.org/)       |
 | mcstat              | 1.1.0                 | [webbj74/mcstat](https://github.com/webbj74/mcstat) (Github)      |
-| phpMyAdmin          | 4.8.3                 | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
+| phpMyAdmin          | 4.8.4                 | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
 | adminer             | 4.7.0                 | [vrana/adminer](https://github.com/vrana/adminer) (Github)      |
 | PHP-FPM             | 7.1 or 7.2            | APT, via [ppa:ondrej/php](https://deb.sury.org/)      |
 | APCu                | 5.1.12 or higher      | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
@@ -181,9 +181,9 @@ For more advanced `drucker` usage, you can pass several CLI parameters:
 
 ```
 $ drucker -h
-usage: arguments.py [-h] [--drupal] [--lightning] [--blt] [--dev] [--prod]
-[--import] [--delete] [--start] [--stop] [--restart]
-[--health] [--php7.2] [--php7.1] [--list] [--tests]
+usage: drucker [-h] [--drupal] [--lightning] [--blt] [--reinstall] [--dev]
+[--prod] [--import] [--delete] [--start] [--stop] [--restart]
+[--health] [--php7.3] [--php7.2] [--php7.1] [--list] [--tests]
 [--version]
 [app]
 positional arguments:
@@ -193,16 +193,16 @@ optional arguments:
 --drupal     Spins up a ready-to-use Drupal install
 --lightning  Spins up a ready-to-use Lightning install
 --blt        Spins up a ready-to-use BLT build
---dev        Prepare app for development work with no caching and helper
-modules enabled.
---prod       Opinionated setup with all known performance best practices
-enabled.
+--reinstall  Reinstalls Drupal or the currently installed distribution
+--dev        Configures the app for development use
+--prod       Configures the app for production use
 --import     Imports an app from the web container's import directory
 --delete     Deletes an arbitrary docroot
 --start      Starts all containers
 --stop       Stops all containers
 --restart    Restarts all containers
 --health     Runs a service healthcheck
+--php7.3     Sets the PHP version to 7.3
 --php7.2     Sets the PHP version to 7.2
 --php7.1     Sets the PHP version to 7.1
 --list       Lists all deployed apps
