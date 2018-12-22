@@ -115,38 +115,3 @@ LEGACY_PHP = "7.1"
 
 # Database
 MYSQL_DIR_OWNERSHIP = "mysql"
-
-# # Search
-# export SEARCH_USER="solr"
-# export SEARCH_CORE="${USER}"
-
-# # Images
-# export SOLR_IMAGE="solr:latest"
-# export CUSTOM_SOLR_IMAGE="${USER}:solr"
-# export SEARCH_IMAGE="${USER}:search"
-# export MIRROR_IMAGE="${USER}:mirror"
-# export EDGE_IMAGE="${USER}:EDGE"
-# export WEB_IMAGE="${USER}:web"
-# export DB_IMAGE="${USER}:db"
-
-# # Containers
-# WEB_CONTAINER_EXISTS=$(docker ps -a | grep -o "${WEB_CONTAINER}")
-# export WEB_CONTAINER_EXISTS
-# DB_CONTAINER_EXISTS=$(docker ps -a | grep -o "${DB_CONTAINER}")
-# export DB_CONTAINER_EXISTS
-# export EDGE_CONTAINER_EXISTS
-# EDGE_CONTAINER_EXISTS=$(docker ps -a | grep -o "${EDGE_CONTAINER}")
-# SEARCH_CONTAINER_EXISTS=$(docker ps -a | grep -o "${SEARCH_CONTAINER}")
-# export SEARCH_CONTAINER_EXISTS
-
-# # Services
-# export WEB_SERVICES="apache2 mysql"
-# export EDGE_SERVICES="nginx varnish"
-
-# # Git
-# export GIT_EXECUTABLE="/usr/bin/git"
-# export DRUPAL_REPO="/var/www/repo/drupal"
-# export DRUPAL_VERSION="8.5.x"
-
-# # Misc
-# export MYSQL_DIR_OWNERSHIP="mysql"
