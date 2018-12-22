@@ -407,7 +407,7 @@ client_max_body_size: 100m
 
 # Apache Solr
 solr_conf: "{{ source_file_dir }}/solr-conf-7.x"
-solr_version: 7.3.0
+solr_version: 7.6.0
 solr_unarchived_directory: solr-{{ solr_version }}
 solr_temp_unarchived_path: /opt/{{ solr_unarchived_directory }}
 solr_installation_path: /opt/solr
