@@ -85,7 +85,6 @@ _drucker_ ships with the following software stack:
 | Code Sniffer        | 2.6.1                 | [squizlabs/PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) (Github)              |
 | PHP-CS-Fixer        | 2.2.20                | [FriendsOfPHP/PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (Github)              |
 | phpmd               | 2.6.0                 | [PHPMD](https://phpmd.org/) (official site)      |
-| PECL uploadprogress | master                | [ php/pecl-php-uploadprogress](https://github.com/php/pecl-php-uploadprogress)  (Github)              |
 | PECL YAML           | 2.0.4                 | [php/pecl-file_formats-yaml](https://github.com/php/pecl-file_formats-yaml) (Github)              |
 | LibYAML             | 0.1.7                 | [PyYAML](http://pyyaml.org/) (official site)     |
 | Xdebug              | 2.7.0beta1            | [Xdebug](https://xdebug.org/) (official site)     |

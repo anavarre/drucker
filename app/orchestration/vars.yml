@@ -145,16 +145,6 @@ legacy_php_ini: /etc/php/{{ legacy_php_version }}/fpm/php.ini
 legacy_php_ini_cli: /etc/php/{{ legacy_php_version }}/cli/php.ini
 legacy_php_extensions: /usr/lib/php/{{ legacy_php_version }}/20131226
 
-# PECL Upload Progress
-uploadprogress_release: master
-uploadprogress_download_link: https://github.com/php/pecl-php-uploadprogress/archive/{{ uploadprogress_release }}.zip
-uploadprogress_mirror_download_link: http://{{ mirror_host }}/pecl-php-uploadprogress-{{ uploadprogress_release }}.zip
-uploadprogress_temp_path: "{{ download_dir }}/pecl-php-uploadprogress-{{ uploadprogress_release}}"
-uploadprogress_archive: "{{ uploadprogress_temp_path }}.zip"
-uploadprogress_extension_name: uploadprogress.so
-uploadprogress_extension_path: "{{ default_php_extensions }}/{{ uploadprogress_extension_name }}"
-uploadprogress_mirror_archive_path: "{{ mirror_archives_dir }}/pecl-php-uploadprogress-{{ uploadprogress_release }}.zip"
-
 # Composer
 composer_stable_release: 1.6.2
 composer_download_link: https://getcomposer.org/download/{{ composer_stable_release }}/composer.phar

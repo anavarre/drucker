@@ -29,24 +29,6 @@
   delay: 10
   when: solr_mirror_archive_path_check.stat.exists == false
 
-# PECL Upload Progress
-- name: "MIRROR: Check if PECL uploadprogress archive exists"
-  stat:
-    path: "{{ uploadprogress_mirror_archive_path }}"
-  register: uploadprogress_mirror_archive_path_check
-  changed_when: uploadprogress_mirror_archive_path_check.stat.exists == false
-
-- name: "MIRROR: Download latest PECL uploadprogress release"
-  get_url:
-    url: "{{ uploadprogress_download_link }}"
-    dest: "{{ mirror_archives_dir }}"
-    validate_certs: no
-  register: uploadprogress_get_url_result
-  until: "'OK' in uploadprogress_get_url_result.msg"
-  retries: 3
-  delay: 10
-  when: uploadprogress_mirror_archive_path_check.stat.exists == false
-
 # LibYAML
 - name: "MIRROR: Check if the LibYAML C parser archive exists"
   stat:

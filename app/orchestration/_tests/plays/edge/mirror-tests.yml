@@ -19,7 +19,6 @@
   with_items:
     - "{{ mirror_archives_dir }}"
     - "{{ solr_mirror_archive_path }}"
-    - "{{ uploadprogress_mirror_archive_path }}"
     - "{{ libyaml_mirror_archive_path }}"
     - "{{ pecl_yaml_mirror_archive_path }}"
     - "{{ xdebug_mirror_archive_path }}"

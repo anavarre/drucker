@@ -5,7 +5,6 @@
 - import_tasks: plays/db/adminer-tests.yml
 - import_tasks: plays/tools/drush-tests.yml
 - import_tasks: plays/tools/drupal-console-tests.yml
-- import_tasks: plays/php/pecl-uploadprogress-tests.yml
 - import_tasks: plays/php/pecl-yaml-tests.yml
 - import_tasks: plays/tools/xdebug-tests.yml
 - import_tasks: plays/tools/tideways-tests.yml
