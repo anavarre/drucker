@@ -18,7 +18,7 @@ def _test_pep8(args):
         print("Binary %s not found!" % args[0])
         return False
     if args[0] == 'pylint':
-        if proc.returncode is not 0:
+        if proc.returncode != 0:
             print("cmd: %s (exit status: %d)\n" % (cmd, proc.returncode))
             print(proc_output)
 
@@ -34,7 +34,7 @@ def _test_pep8(args):
                 print(ignores)
             return False
     else:
-        if proc.returncode is 1:
+        if proc.returncode == 1:
             print("cmd: %s (exit status: %d)\n" % (cmd, proc.returncode))
             print(proc_output)
             return False
