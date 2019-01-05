@@ -110,7 +110,7 @@ sury_gpg: https://packages.sury.org/php/apt.gpg
 sury_deb: deb https://packages.sury.org/php/ {{ codename }} main
 sury_repo: "{{ sources_list_d }}/packages_sury_org_php.list"
 apcu_stable_release: 5.1.12
-php_memcached_stable_release: 3.0.4
+php_memcached_stable_release: 3.1.3
 # php.ini
 max_input_time: 300
 max_execution_time: 300
