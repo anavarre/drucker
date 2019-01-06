@@ -22,7 +22,7 @@
         "drupal/core": "^8.7",
         "drush/drush": "^9.0",
         "drupal/console": "^1.0",
-        "zaporylie/composer-drupal-optimizations:^1.0"
+        "zaporylie/composer-drupal-optimizations" : "^1.0"
     },
     "conflict": {
         "drupal/core": "7.*"
