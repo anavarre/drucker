@@ -1,4 +1,72 @@
+# Ignore Ansible files.
 *.retry
+
+# Ignore drucker's custom config file.
 config
+
+# Ignore Python cache files.
 __pycache__
 *.pyc
+
+# Ignore Mac OS files
+.DS_Store
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+
+# Ignore Windows files
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+####################### IDEs #######################
+.vscode/settings.json
+
+# Eclipse
+*.pydevproject
+.project
+.metadata
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+*.launch
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpathk
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+#Netbeans IDE
+nbproject
+nbproject/*
+
+# PHPStorm
+.idea/
+atlassian-ide-plugin.xml
+####################### END IDEs #######################
+
+# Exports
+*.gz
+*.sql
+*.zip
