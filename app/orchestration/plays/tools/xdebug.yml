@@ -58,14 +58,14 @@
   register: xdebug_config
   changed_when: xdebug_config.stdout == "absent"
 
-- name: "XDEBUG: Configure extension in php.ini"
-  blockinfile:
-    dest: "{{ default_php_ini }}"
-    block: |
-      zend_extension = {{ xdebug_extension_path }}
-      xdebug.remote_host={{ xdebug_remote_host }}
-      xdebug.remote_port=9000
-      xdebug.remote_enable=1
-      xdebug.max_nesting_level=256
-    marker: ; {mark} MANAGED XDEBUG BLOCK
-  when: xdebug_config.stdout == "absent"
+# - name: "XDEBUG: Configure extension in php.ini"
+#   blockinfile:
+#     dest: "{{ default_php_ini }}"
+#     block: |
+#       zend_extension = {{ xdebug_extension_path }}
+#       xdebug.remote_host={{ xdebug_remote_host }}
+#       xdebug.remote_port=9000
+#       xdebug.remote_enable=1
+#       xdebug.max_nesting_level=256
+#     marker: ; {mark} MANAGED XDEBUG BLOCK
+#   when: xdebug_config.stdout == "absent"
