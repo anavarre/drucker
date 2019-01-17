@@ -88,7 +88,7 @@ _drucker_ ships with the following software stack:
 | PECL YAML           | 2.0.4                 | [php/pecl-file_formats-yaml](https://github.com/php/pecl-file_formats-yaml) (Github)              |
 | LibYAML             | 0.1.7                 | [PyYAML](http://pyyaml.org/) (official site)     |
 | Xdebug              | 2.7.0beta1            | [Xdebug](https://xdebug.org/) (official site)     |
-| Tideways Profiler   | 4.1.6                 | [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension)  (Github)  |
+| Tideways Profiler   | 4.1.7                 | [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension)  (Github)  |
 | phantomjs           | 2.1.1                 | [ariya/phantomjs](https://bitbucket.org/ariya/phantomjs/) (Bitbucket)     |
 | Drupal              | 8.7.x                 | [Drupal](https://www.drupal.org/project/drupal) (official site)     |
 | Drush               | ^9.0                  | [Drush](https://packagist.org/packages/drush/drush) (Packagist)      |
