@@ -15,6 +15,6 @@
   register: search_hostname
   changed_when: search_hostname.stdout == "absent"
 
-- name: "POST-INSTALL: Make sure Drupal can talk to the Solr backend"
+- name: "POST-INSTALL: Make sure the web container can talk to the Solr backend"
   shell: echo "{{ search_ip }}    search.{{ tld }}" >> {{ hosts_file }}
   when: search_hostname.stdout == "absent"
