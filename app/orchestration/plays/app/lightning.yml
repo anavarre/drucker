@@ -13,7 +13,7 @@
 # We're using the shell command here, because using the composer command leaves us
 # with missing vendor dependencies, for some reason.
 - name: "LIGHTNING: Create project with vendor dependencies (this can take a while)"
-  shell: cd {{ webroot }} && composer create-project acquia/lightning-project {{ sitename }} ^8.2 --no-interaction
+  shell: cd {{ webroot }} && composer create-project acquia/lightning-project {{ sitename }} ^8.6 --no-interaction
   become: yes
   become_user: "{{ user }}"
 
