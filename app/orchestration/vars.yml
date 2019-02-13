@@ -109,7 +109,7 @@ php_process: php-fpm{{ default_php_version }}
 sury_gpg: https://packages.sury.org/php/apt.gpg
 sury_deb: deb https://packages.sury.org/php/ {{ codename }} main
 sury_repo: "{{ sources_list_d }}/packages_sury_org_php.list"
-apcu_stable_release: 5.1.12
+apcu_stable_release: 5.1.17
 php_memcached_stable_release: 3.1.3
 # php.ini
 max_input_time: 300
@@ -153,10 +153,10 @@ composer_dir_path: "{{ home }}/.composer"
 composer_json_path: "{{ home }}/.composer/composer.json"
 
 # XDebug
-xdebug_stable_release: 2.7.0beta1
+xdebug_stable_release: 2.7.0RC1
 xdebug_version_file: "{{ mirror_archives_dir }}/xdebug-version"
-xdebug_archive_file: xdebug-{{ xdebug_stable_release }}.tgz
-xdebug_download_link: http://xdebug.org/files/{{ xdebug_archive_file }}
+xdebug_archive_file: "xdebug-{{ xdebug_stable_release }}.tar.gz"
+xdebug_download_link: https://github.com/xdebug/xdebug/archive/{{ xdebug_stable_release }}.tar.gz
 xdebug_extension_name: xdebug.so
 xdebug_extension_path: "{{ default_php_extensions }}/{{ xdebug_extension_name }}"
 xdebug_archive_path: "{{ download_dir }}/{{ xdebug_archive_file }}"
@@ -274,7 +274,7 @@ phpmyadmin_hostname: phpmyadmin
 phpmyadmin_mirror_archive_file_path: "{{ mirror_archives_dir }}/{{ phpmyadmin_archive_filename }}"
 
 # Adminer
-adminer_stable_release: 4.7.0
+adminer_stable_release: 4.7.1
 adminer_download_link: https://github.com/vrana/adminer/releases/download/v{{ adminer_stable_release }}/adminer-{{ adminer_stable_release }}-en.php
 adminer_mirror_download_link: http://{{ mirror_host }}/adminer-{{ adminer_stable_release }}-en.php
 adminer_root: "{{ webroot }}/adminer"

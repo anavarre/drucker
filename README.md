@@ -78,16 +78,16 @@ _drucker_ ships with the following software stack:
 | memcached           | 3.1.3                 | APT, via [ppa:ondrej/php](https://deb.sury.org/)       |
 | mcstat              | 1.1.0                 | [webbj74/mcstat](https://github.com/webbj74/mcstat) (Github)      |
 | phpMyAdmin          | 4.8.5                 | [phpMyAdmin](https://www.phpmyadmin.net/) (official site)      |
-| adminer             | 4.7.0                 | [vrana/adminer](https://github.com/vrana/adminer) (Github)      |
+| adminer             | 4.7.1                 | [vrana/adminer](https://github.com/vrana/adminer) (Github)      |
 | PHP-FPM             | 7.1 or 7.2            | APT, via [ppa:ondrej/php](https://deb.sury.org/)      |
-| APCu                | 5.1.12 or higher      | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
+| APCu                | 5.1.17 or higher      | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
 | Coder               | 8.2.11                | [drupal/coder](https://packagist.org/packages/drupal/coder) (Packagist)      |
 | Code Sniffer        | 2.6.1                 | [squizlabs/PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) (Github)              |
 | PHP-CS-Fixer        | 2.2.20                | [FriendsOfPHP/PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (Github)              |
 | phpmd               | 2.6.0                 | [PHPMD](https://phpmd.org/) (official site)      |
 | PECL YAML           | 2.0.4                 | [php/pecl-file_formats-yaml](https://github.com/php/pecl-file_formats-yaml) (Github)              |
 | LibYAML             | 0.1.7                 | [PyYAML](http://pyyaml.org/) (official site)     |
-| Xdebug              | 2.7.0beta1            | [Xdebug](https://xdebug.org/) (official site)     |
+| Xdebug              | 2.7.0rc1              | [Xdebug](https://xdebug.org/) (official site)     |
 | Tideways Profiler   | 4.1.7                 | [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension)  (Github)  |
 | phantomjs           | 2.1.1                 | [ariya/phantomjs](https://bitbucket.org/ariya/phantomjs/) (Bitbucket)     |
 | Drupal              | 8.7.x                 | [Drupal](https://www.drupal.org/project/drupal) (official site)     |
