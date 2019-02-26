@@ -249,6 +249,10 @@ phpmd_mirror_download_link: http://{{ mirror_host }}/phpmd.phar
 phpmd_mirror_archive_file: "{{ mirror_archives_dir }}/phpmd.phar"
 phpmd_binary: "{{ user_programs_path }}/phpmd"
 
+# phpstan
+phpstan_source_file: "{{ source_file_dir }}/phpstan.neon"
+phpstan_neon: "{{ drupal_root }}/phpstan.neon"
+
 # MySQL
 db_config: /etc/mysql/mariadb.conf.d/50-server.cnf
 db_data: /var/lib/mysql

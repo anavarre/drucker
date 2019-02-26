@@ -97,6 +97,21 @@
   become: yes
   become_user: "{{ user }}"
 
+- name: "DEV: Check if phpstan.neon exists"
+  stat:
+    path: "{{ phpstan_neon }}"
+  register: phpstan
+  ignore_errors: True
+
+- name: "DEV: Deploy phpstan.neon"
+  copy:
+    src: "{{ phpstan_source_file }}"
+    dest: "{{ drupal_root }}"
+    mode: 0644
+    owner: "{{ user }}"
+    group: "{{ apache_user }}"
+  when: phpstan.stat.exists == false
+
 - name: "DEV: Rebuild Drupal cache"
   command: drush --root={{ drupal_root }} cache-rebuild
   when: turn_on_twig_debugging.changed
