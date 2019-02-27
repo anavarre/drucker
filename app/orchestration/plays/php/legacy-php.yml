@@ -1,4 +1,17 @@
 ---
+- name: "PHP: Check if the version file exists"
+  stat:
+    path: "{{ default_php_version_file }}"
+  register: php_version_file_check
+
+- name: "PHP: Check which PHP version is currently running"
+  shell: grep -o "{{ legacy_php_version }}" {{ default_php_version_file }} || echo "Different version"
+  when: php_version_file_check.stat.exists == true
+  register: current_php
+
+- meta: end_play
+  when: current_php.stdout != 'Different version'
+
 - name: "PHP: Check if PHP {{ legacy_php_version}} is installed"
   stat:
     path: "{{ legacy_php_ini }}"

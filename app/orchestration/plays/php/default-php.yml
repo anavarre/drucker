@@ -1,4 +1,17 @@
 ---
+- name: "PHP: Check if the version file exists"
+  stat:
+    path: "{{ default_php_version_file }}"
+  register: php_version_file_check
+
+- name: "PHP: Check which PHP version is currently running"
+  shell: grep -o "{{ default_php_version }}" {{ default_php_version_file }} || echo "Different version"
+  register: current_php
+  when: php_version_file_check.stat.exists == true
+
+- meta: end_play
+  when: current_php.stdout != 'Different version'
+
 - name: "PHP: Check if PHP {{ default_php_version }} is installed"
   stat:
     path: "{{ default_php_ini }}"
@@ -14,11 +27,6 @@
     - php{{ default_php_version }}-common
     - php{{ default_php_version }}-dev
   when: default_phpfpm.stat.exists == false
-
-- name: "PHP: Check if the version file exists"
-  stat:
-    path: "{{ default_php_version_file }}"
-  register: php_version_file_check
 
 - name: "PHP: Write default PHP version to file"
   copy:
