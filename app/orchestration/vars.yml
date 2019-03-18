@@ -197,7 +197,7 @@ tideways_output_dir: "{{ download_dir }}/tideways/"
 tideways_temp_dir: "{{ download_dir }}/{{ tideways_github_project_name }}-{{ tideways_stable_release }}"
 
 # Coder
-coder_stable_release: 8.2.12
+coder_stable_release: 8.3.1
 coder_composer_package: drupal/coder
 coder_binary: "{{ composer_dir_path }}/vendor/drupal/coder"
 
@@ -224,7 +224,7 @@ codesniffer_extensions: php,module,inc,install,test,profile,theme
 codesniffer_binary: "{{ composer_dir_path }}/vendor/drupal/coder/coder_sniffer"
 
 # PHP-CS-Fixer
-php_cs_fixer_stable_release: 2.2.20
+php_cs_fixer_stable_release: 2.14.2
 php_cs_fixer_download_link: https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v{{ php_cs_fixer_stable_release }}/php-cs-fixer.phar
 php_cs_fixer_mirror_download_link: http://{{ mirror_host }}/php-cs-fixer.phar
 php_cs_fixer_version_file: "{{ mirror_archives_dir }}/php-cs-fixer-version"
