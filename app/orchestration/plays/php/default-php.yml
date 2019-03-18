@@ -10,7 +10,7 @@
   when: php_version_file_check.stat.exists == true
 
 - meta: end_play
-  when: current_php.stdout != 'Different version'
+  when: current_php is not skipped and current_php.stdout != 'Different version'
 
 - name: "PHP: Check if PHP {{ default_php_version }} is installed"
   stat:
