@@ -45,8 +45,8 @@ def create_edge_container(drucker):
 def create_edge_image(drucker):
     """Create edge image from edge container"""
     print(colorful.white_on_blue("Committing %s image from %s container..."
-                        % (drucker.vars.EDGE_IMAGE,
-                           drucker.vars.EDGE_CONTAINER)))
+                                 % (drucker.vars.EDGE_IMAGE,
+                                    drucker.vars.EDGE_CONTAINER)))
 
     subprocess.run("docker commit -m \"%s on %s\" %s %s"
                    % (drucker.vars.EDGE_CONTAINER,

@@ -52,8 +52,8 @@ def create_web_container(drucker):
 def create_web_image(drucker):
     """Creates web image from web container"""
     print(colorful.white_on_blue("Committing %s image from %s container..."
-                        % (drucker.vars.WEB_IMAGE,
-                           drucker.vars.WEB_CONTAINER)))
+                                 % (drucker.vars.WEB_IMAGE,
+                                    drucker.vars.WEB_CONTAINER)))
 
     subprocess.run("docker commit -m \"%s on %s\" %s %s"
                    % (drucker.vars.WEB_CONTAINER,

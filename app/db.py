@@ -45,8 +45,8 @@ def create_db_container(drucker):
 def create_db_image(drucker):
     """Create database image from database container"""
     print(colorful.white_on_blue("Committing %s image from %s container..."
-                        % (drucker.vars.DB_IMAGE,
-                           drucker.vars.DB_CONTAINER)))
+                                 % (drucker.vars.DB_IMAGE,
+                                    drucker.vars.DB_CONTAINER)))
 
     subprocess.run("docker commit -m \"%s on %s\" %s %s"
                    % (drucker.vars.DB_CONTAINER,

@@ -45,8 +45,8 @@ def create_mirror_container(drucker):
 def create_mirror_image(drucker):
     """Create mirror image from mirror container"""
     print(colorful.white_on_blue("Committing %s image from %s container..."
-                        % (drucker.vars.MIRROR_IMAGE,
-                           drucker.vars.MIRROR_CONTAINER)))
+                                 % (drucker.vars.MIRROR_IMAGE,
+                                    drucker.vars.MIRROR_CONTAINER)))
 
     subprocess.run("docker commit -m \"%s on %s\" %s %s"
                    % (drucker.vars.MIRROR_CONTAINER,

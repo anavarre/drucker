@@ -24,8 +24,8 @@ def create_base_container(drucker):
 def create_base_image(drucker):
     """Create base image from base container"""
     print(colorful.white_on_blue("Committing %s image from %s container..."
-                        % (drucker.vars.BASE_IMAGE,
-                           drucker.vars.BASE_CONTAINER)))
+                                 % (drucker.vars.BASE_IMAGE,
+                                    drucker.vars.BASE_CONTAINER)))
     subprocess.run("docker commit -m \"%s on %s\" %s %s"
                    % (drucker.vars.BASE_CONTAINER,
                       str(date.today()),

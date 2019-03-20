@@ -45,8 +45,8 @@ def create_search_container(drucker):
 def create_search_image(drucker):
     """Create search image from search container"""
     print(colorful.white_on_blue("Committing %s image from %s container..."
-                        % (drucker.vars.SEARCH_IMAGE,
-                           drucker.vars.SEARCH_CONTAINER)))
+                                 % (drucker.vars.SEARCH_IMAGE,
+                                    drucker.vars.SEARCH_CONTAINER)))
 
     subprocess.run("docker commit -m \"%s on %s\" %s %s"
                    % (drucker.vars.SEARCH_CONTAINER,
