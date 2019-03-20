@@ -1,4 +1,14 @@
 ---
+- name: "LIBYAML: Install required build tools"
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - build-essential
+  - autogen
+  - autoconf
+  - libtool
+
 - name: "LIBYAML: Check if archive exists"
   stat:
     path: "{{ libyaml_archive_path }}"
@@ -26,6 +36,7 @@
 - name: "LIBYAML: Compile parser"
   command: "{{ item }} chdir={{ libyaml_temp_path }}"
   with_items:
+    - ./bootstrap
     - ./configure
     - /usr/bin/make
     - /usr/bin/make install
