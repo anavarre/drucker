@@ -10,7 +10,7 @@ from . import containers
 
 def run_orchestration(drucker, container, shortname):
     """Parent function to manage container orchestration."""
-    print(colorful.blue("Running %s orchestration on the container..." % (container)))
+    print(colorful.white_on_blue("Running %s orchestration on the container..." % (container)))
     subprocess.getoutput("export ANSIBLE_HOST_KEY_CHECKING=False")
     subprocess.run('''
                    ansible-playbook -i %s/orchestration/hosts --user=%s %s/orchestration/provisioning/%s.yml --extra-vars ansible_sudo_pass=%s
