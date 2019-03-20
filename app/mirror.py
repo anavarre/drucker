@@ -10,7 +10,7 @@ from . import orchestration as o
 
 def create_base2mirror_container(drucker):
     """Create mirror container from base image"""
-    print(colorful.blue("Spinning up %s container with ID:" % (drucker.vars.MIRROR_CONTAINER)))
+    print(colorful.white_on_blue("Spinning up %s container with ID:" % (drucker.vars.MIRROR_CONTAINER)))
 
     create_base2mirror = '''
                          docker run --privileged=true --name %s -it -h %s --net %s --ip %s -d %s bash
@@ -28,7 +28,7 @@ def create_base2mirror_container(drucker):
 
 def create_mirror_container(drucker):
     """Create mirror container from mirror image"""
-    print(colorful.blue("Spinning up %s container with ID:" % (drucker.vars.MIRROR_CONTAINER)))
+    print(colorful.white_on_blue("Spinning up %s container with ID:" % (drucker.vars.MIRROR_CONTAINER)))
 
     subprocess.run("docker run --privileged=true\
                     --name %s -it -h %s --net %s --ip %s\
@@ -44,7 +44,7 @@ def create_mirror_container(drucker):
 
 def create_mirror_image(drucker):
     """Create mirror image from mirror container"""
-    print(colorful.blue("Committing %s image from %s container..."
+    print(colorful.white_on_blue("Committing %s image from %s container..."
                         % (drucker.vars.MIRROR_IMAGE,
                            drucker.vars.MIRROR_CONTAINER)))
 
@@ -54,7 +54,7 @@ def create_mirror_image(drucker):
                       drucker.vars.MIRROR_CONTAINER,
                       drucker.vars.MIRROR_IMAGE), shell=True)
 
-    print(colorful.blue("Deleting initial container..."))
+    print(colorful.white_on_blue("Deleting initial container..."))
     subprocess.getoutput("docker rm -f %s > /dev/null 2>&1" % (drucker.vars.MIRROR_CONTAINER))
     create_mirror_container(drucker)
 
@@ -71,7 +71,7 @@ def provision_mirror_container(drucker):
         if subprocess.getoutput("docker ps | grep -o %s" % (drucker.vars.MIRROR_CONTAINER)):
             o.run_mirror_orchestration(drucker)
         else:
-            print(colorful.blue("Starting %s container..." % (drucker.vars.MIRROR_CONTAINER)))
+            print(colorful.white_on_blue("Starting %s container..." % (drucker.vars.MIRROR_CONTAINER)))
             start_mirror_container(drucker)
             o.run_mirror_orchestration(drucker)
     else:

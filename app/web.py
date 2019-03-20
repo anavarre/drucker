@@ -10,7 +10,7 @@ from . import orchestration as o
 
 def create_base2web_container(drucker):
     """Create web container from base image"""
-    print(colorful.blue("Spinning up %s container with ID:" % (drucker.vars.WEB_CONTAINER)))
+    print(colorful.white_on_blue("Spinning up %s container with ID:" % (drucker.vars.WEB_CONTAINER)))
 
     create_base2web = '''
                       docker run --privileged=true --name %s -it -h %s --net %s --ip %s -d %s bash
@@ -31,7 +31,7 @@ def create_base2web_container(drucker):
 
 def create_web_container(drucker):
     """Creates web container from web image"""
-    print(colorful.blue("Spinning up %s container with ID:" % (drucker.vars.WEB_CONTAINER)))
+    print(colorful.white_on_blue("Spinning up %s container with ID:" % (drucker.vars.WEB_CONTAINER)))
 
     subprocess.run("docker run --privileged=true\
                     --name %s -it -h %s --net %s --ip %s\
@@ -51,7 +51,7 @@ def create_web_container(drucker):
 
 def create_web_image(drucker):
     """Creates web image from web container"""
-    print(colorful.blue("Committing %s image from %s container..."
+    print(colorful.white_on_blue("Committing %s image from %s container..."
                         % (drucker.vars.WEB_IMAGE,
                            drucker.vars.WEB_CONTAINER)))
 
@@ -61,7 +61,7 @@ def create_web_image(drucker):
                       drucker.vars.WEB_CONTAINER,
                       drucker.vars.WEB_IMAGE), shell=True)
 
-    print(colorful.blue("Deleting initial container..."))
+    print(colorful.white_on_blue("Deleting initial container..."))
     subprocess.getoutput("docker rm -f %s > /dev/null 2>&1" % (drucker.vars.WEB_CONTAINER))
     create_web_container(drucker)
 
@@ -79,7 +79,7 @@ def provision_web_container(drucker):
         if subprocess.getoutput("docker ps | grep -o %s" % (drucker.vars.WEB_CONTAINER)):
             o.run_web_orchestration(drucker)
         else:
-            print(colorful.blue("Starting %s container..." % (drucker.vars.WEB_CONTAINER)))
+            print(colorful.white_on_blue("Starting %s container..." % (drucker.vars.WEB_CONTAINER)))
             start_web_container(drucker)
             o.run_web_orchestration(drucker)
     else:

@@ -54,7 +54,7 @@ def run_web_orchestration(drucker):
 
 def run_tests_orchestration(drucker, shortname):
     """Parent function to manage running the test suite"""
-    print(colorful.blue("Running the %s test suite..." % (shortname)))
+    print(colorful.white_on_blue("Running the %s test suite..." % (shortname)))
     subprocess.getoutput("export ANSIBLE_HOST_KEY_CHECKING=False")
     subprocess.run('''
                    ansible-playbook -i %s/orchestration/hosts --user=%s %s/orchestration/_tests/%s-tests.yml --extra-vars ansible_sudo_pass=%s
@@ -109,7 +109,7 @@ def app_delete(drucker):
 
     if os.path.isdir("%s/%s" % (drucker.vars.CONTAINER_HTML_PATH, drucker.app)):
         if click.confirm("Should we delete the existing codebase, files and database?", default=True):
-            print(colorful.blue("Deleting %s docroot..." % (drucker.app)))
+            print(colorful.white_on_blue("Deleting %s docroot..." % (drucker.app)))
             subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                               --user=%s %s/orchestration/commands/app-delete.yml\
                               --extra-vars "ansible_sudo_pass=%s app=delete sitename=%s"
@@ -129,7 +129,7 @@ def app_drupal(drucker):
     app_delete(drucker)
 
     # if [[ -z "${GIT_TAG}" ]]; then
-    print(colorful.blue("Installing Drupal into new %s docroot..." % (drucker.app)))
+    print(colorful.white_on_blue("Installing Drupal into new %s docroot..." % (drucker.app)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-drupal.yml\
                       --extra-vars "ansible_sudo_pass=%s app=drupal sitename=%s"
@@ -152,7 +152,7 @@ def app_lightning(drucker):
     """Spins up a ready-to-use Lightning install"""
     app_delete(drucker)
 
-    print(colorful.blue("Installing Lightning into new %s docroot..." % (drucker.app)))
+    print(colorful.white_on_blue("Installing Lightning into new %s docroot..." % (drucker.app)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-lightning.yml\
                       --extra-vars "ansible_sudo_pass=%s app=lightning sitename=%s"
@@ -169,7 +169,7 @@ def app_blt(drucker):
     """Spins up a ready-to-use BLT build"""
     app_delete(drucker)
 
-    print(colorful.blue("Installing BLT into new %s docroot..." % (drucker.app)))
+    print(colorful.white_on_blue("Installing BLT into new %s docroot..." % (drucker.app)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-blt.yml\
                       --extra-vars "ansible_sudo_pass=%s app=blt sitename=%s"
@@ -192,7 +192,7 @@ def app_reinstall(drucker):
 
     app_delete(drucker)
 
-    print(colorful.blue("Reinstalling %s docroot..." % (drucker.app)))
+    print(colorful.white_on_blue("Reinstalling %s docroot..." % (drucker.app)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-%s.yml\
                       --extra-vars "ansible_sudo_pass=%s app=%s sitename=%s"
@@ -227,7 +227,7 @@ def app_dev(drucker):
     param_check(drucker)
     identify_app(drucker)
 
-    print(colorful.blue("Configuring %s docroot for development..." % (drucker.app)))
+    print(colorful.white_on_blue("Configuring %s docroot for development..." % (drucker.app)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-dev.yml\
                       --extra-vars "ansible_sudo_pass=%s app=dev sitename=%s"
@@ -244,7 +244,7 @@ def app_prod(drucker):
     param_check(drucker)
     identify_app(drucker)
 
-    print(colorful.blue("Configuring %s docroot for production..." % (drucker.app)))
+    print(colorful.white_on_blue("Configuring %s docroot for production..." % (drucker.app)))
     subprocess.run('''ansible-playbook -i %s/orchestration/hosts\
                       --user=%s %s/orchestration/commands/app-prod.yml\
                       --extra-vars "ansible_sudo_pass=%s app=prod sitename=%s"

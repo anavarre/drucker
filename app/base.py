@@ -10,7 +10,7 @@ from . import orchestration as o
 
 def create_base_container(drucker):
     """Create base container from init image"""
-    print(colorful.blue("Spinning up %s container with ID:" % (drucker.vars.BASE_CONTAINER)))
+    print(colorful.white_on_blue("Spinning up %s container with ID:" % (drucker.vars.BASE_CONTAINER)))
     subprocess.run("docker run -d --name %s -it --net %s --ip %s %s bash"
                    % (drucker.vars.BASE_CONTAINER,
                       drucker.vars.APP,
@@ -23,7 +23,7 @@ def create_base_container(drucker):
 
 def create_base_image(drucker):
     """Create base image from base container"""
-    print(colorful.blue("Committing %s image from %s container..."
+    print(colorful.white_on_blue("Committing %s image from %s container..."
                         % (drucker.vars.BASE_IMAGE,
                            drucker.vars.BASE_CONTAINER)))
     subprocess.run("docker commit -m \"%s on %s\" %s %s"
@@ -35,13 +35,13 @@ def create_base_image(drucker):
 
 def delete_base_container(drucker):
     """Delete base container"""
-    print(colorful.blue("Deleting %s container..." % (drucker.vars.BASE_CONTAINER)))
+    print(colorful.white_on_blue("Deleting %s container..." % (drucker.vars.BASE_CONTAINER)))
     subprocess.getoutput("docker rm -f %s > /dev/null 2>&1" % (drucker.vars.BASE_CONTAINER))
 
 
 def delete_init_image(drucker):
     """Delete init image"""
-    print(colorful.blue("Deleting %s image..." % (drucker.vars.INIT_IMAGE)))
+    print(colorful.white_on_blue("Deleting %s image..." % (drucker.vars.INIT_IMAGE)))
     subprocess.getoutput("docker rmi %s > /dev/null 2>&1" % (drucker.vars.INIT_IMAGE))
 
 

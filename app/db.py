@@ -10,7 +10,7 @@ from . import orchestration as o
 
 def create_base2db_container(drucker):
     """Create database container from base image"""
-    print(colorful.blue("Spinning up %s container with ID:" % (drucker.vars.DB_CONTAINER)))
+    print(colorful.white_on_blue("Spinning up %s container with ID:" % (drucker.vars.DB_CONTAINER)))
 
     create_base2db = '''
                      docker run --privileged=true --name %s -it -h %s --net %s --ip %s -d %s bash
@@ -28,7 +28,7 @@ def create_base2db_container(drucker):
 
 def create_db_container(drucker):
     """Create database container from database image"""
-    print(colorful.blue("Spinning up %s container with ID:" % (drucker.vars.DB_CONTAINER)))
+    print(colorful.white_on_blue("Spinning up %s container with ID:" % (drucker.vars.DB_CONTAINER)))
 
     subprocess.run("docker run --privileged=true\
                     --name %s -it -h %s --net %s --ip %s\
@@ -44,7 +44,7 @@ def create_db_container(drucker):
 
 def create_db_image(drucker):
     """Create database image from database container"""
-    print(colorful.blue("Committing %s image from %s container..."
+    print(colorful.white_on_blue("Committing %s image from %s container..."
                         % (drucker.vars.DB_IMAGE,
                            drucker.vars.DB_CONTAINER)))
 
@@ -54,7 +54,7 @@ def create_db_image(drucker):
                       drucker.vars.DB_CONTAINER,
                       drucker.vars.DB_IMAGE), shell=True)
 
-    print(colorful.blue("Deleting initial container..."))
+    print(colorful.white_on_blue("Deleting initial container..."))
     subprocess.getoutput("docker rm -f %s > /dev/null 2>&1" % (drucker.vars.DB_CONTAINER))
     create_db_container(drucker)
 
@@ -72,7 +72,7 @@ def provision_db_container(drucker):
         if subprocess.getoutput("docker ps | grep -o %s" % (drucker.vars.DB_CONTAINER)):
             o.run_db_orchestration(drucker)
         else:
-            print(colorful.blue("Starting %s container..." % (drucker.vars.DB_CONTAINER)))
+            print(colorful.white_on_blue("Starting %s container..." % (drucker.vars.DB_CONTAINER)))
             start_db_container(drucker)
             o.run_db_orchestration(drucker)
     else:

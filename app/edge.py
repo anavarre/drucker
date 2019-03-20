@@ -10,7 +10,7 @@ from . import orchestration as o
 
 def create_base2edge_container(drucker):
     """Create edge container from base image"""
-    print(colorful.blue("Spinning up %s container with ID:" % (drucker.vars.EDGE_CONTAINER)))
+    print(colorful.white_on_blue("Spinning up %s container with ID:" % (drucker.vars.EDGE_CONTAINER)))
 
     create_base2edge = '''
                        docker run --privileged=true --name %s -it -h %s --net %s --ip %s -d %s bash
@@ -28,7 +28,7 @@ def create_base2edge_container(drucker):
 
 def create_edge_container(drucker):
     """Create edge container from edge image"""
-    print(colorful.blue("Spinning up %s container with ID:" % (drucker.vars.EDGE_CONTAINER)))
+    print(colorful.white_on_blue("Spinning up %s container with ID:" % (drucker.vars.EDGE_CONTAINER)))
 
     subprocess.run("docker run --privileged=true\
                     --name %s -it -h %s --net %s --ip %s\
@@ -44,7 +44,7 @@ def create_edge_container(drucker):
 
 def create_edge_image(drucker):
     """Create edge image from edge container"""
-    print(colorful.blue("Committing %s image from %s container..."
+    print(colorful.white_on_blue("Committing %s image from %s container..."
                         % (drucker.vars.EDGE_IMAGE,
                            drucker.vars.EDGE_CONTAINER)))
 
@@ -54,7 +54,7 @@ def create_edge_image(drucker):
                       drucker.vars.EDGE_CONTAINER,
                       drucker.vars.EDGE_IMAGE), shell=True)
 
-    print(colorful.blue("Deleting initial container..."))
+    print(colorful.white_on_blue("Deleting initial container..."))
     subprocess.getoutput("docker rm -f %s > /dev/null 2>&1" % (drucker.vars.EDGE_CONTAINER))
     create_edge_container(drucker)
 
@@ -72,7 +72,7 @@ def provision_edge_container(drucker):
         if subprocess.getoutput("docker ps | grep -o %s" % (drucker.vars.EDGE_CONTAINER)):
             o.run_edge_orchestration(drucker)
         else:
-            print(colorful.blue("Starting %s container..." % (drucker.vars.EDGE_CONTAINER)))
+            print(colorful.white_on_blue("Starting %s container..." % (drucker.vars.EDGE_CONTAINER)))
             start_edge_container(drucker)
             o.run_edge_orchestration(drucker)
     else:
