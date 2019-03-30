@@ -18,7 +18,7 @@ def dispatch_the_provisioner(drucker):
     return drucker.vars.EXITCODE_OK
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     PARSER = app.arguments.get_parser()
 
     # Name the argparse Namespace object 'DRUCKER'. The 'DRUCKER' object

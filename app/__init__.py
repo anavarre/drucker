@@ -12,14 +12,16 @@ from . import search
 from . import web
 
 # Declare all submodules so that pydoc and others know how to find them.
-__all__ = ['variables',
-           'arguments',
-           'requirements',
-           'local_setup',
-           'init',
-           'base',
-           'mirror',
-           'edge',
-           'db',
-           'search',
-           'web']
+__all__ = [
+    "variables",
+    "arguments",
+    "requirements",
+    "local_setup",
+    "init",
+    "base",
+    "mirror",
+    "edge",
+    "db",
+    "search",
+    "web",
+]

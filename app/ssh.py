@@ -16,45 +16,49 @@ def allow_ssh_access(drucker, host):
     key_check = subprocess.getoutput("cat %s_check" % (rsa_drucker_web))
 
     if not os.path.isfile(rsa_drucker_web):
-        subprocess.run("docker cp %s:/home/%s/.ssh/id_rsa.pub %s"
-                       % (drucker.vars.WEB_CONTAINER,
-                          drucker.vars.APP,
-                          rsa_drucker_web), shell=True)
+        subprocess.run(
+            "docker cp %s:/home/%s/.ssh/id_rsa.pub %s"
+            % (drucker.vars.WEB_CONTAINER, drucker.vars.APP, rsa_drucker_web),
+            shell=True,
+        )
 
-        subprocess.run("docker exec -u %s -it %s /bin/grep -q %s /home/%s/.ssh/authorized_keys > %s"
-                       % (drucker.vars.APP,
-                          host,
-                          key,
-                          drucker.vars.APP,
-                          rsa_key_deployed), shell=True)
+        subprocess.run(
+            "docker exec -u %s -it %s /bin/grep -q %s /home/%s/.ssh/authorized_keys > %s"
+            % (drucker.vars.APP, host, key, drucker.vars.APP, rsa_key_deployed),
+            shell=True,
+        )
 
     if not subprocess.getoutput(rsa_key_deployed):
-        subprocess.run('''docker exec -u %s -it %s bash -c "echo '%s' >> /home/%s/.ssh/authorized_keys
-                       ''' % (drucker.vars.APP,
-                              host,
-                              key,
-                              drucker.vars.APP), shell=True)
+        subprocess.run(
+            """docker exec -u %s -it %s bash -c "echo '%s' >> /home/%s/.ssh/authorized_keys
+                       """
+            % (drucker.vars.APP, host, key, drucker.vars.APP),
+            shell=True,
+        )
     else:
-        subprocess.run("docker cp %s:/home/%s/.ssh/id_rsa.pub %s_check"
-                       % (drucker.vars.WEB_CONTAINER,
-                          drucker.vars.APP,
-                          rsa_drucker_web), shell=True)
+        subprocess.run(
+            "docker cp %s:/home/%s/.ssh/id_rsa.pub %s_check"
+            % (drucker.vars.WEB_CONTAINER, drucker.vars.APP, rsa_drucker_web),
+            shell=True,
+        )
 
-        subprocess.run("docker exec -u %s -it %s /bin/grep -q %s /home/%s/.ssh/authorized_keys > %s"
-                       % (drucker.vars.APP,
-                          host,
-                          key_check,
-                          drucker.vars.APP,
-                          rsa_key_deployed), shell=True)
+        subprocess.run(
+            "docker exec -u %s -it %s /bin/grep -q %s /home/%s/.ssh/authorized_keys > %s"
+            % (drucker.vars.APP, host, key_check, drucker.vars.APP, rsa_key_deployed),
+            shell=True,
+        )
 
-        if (not subprocess.getoutput(rsa_key_deployed) and
-                os.path.getsize(subprocess.getoutput(rsa_key_deployed)) != 0):
+        if (
+            not subprocess.getoutput(rsa_key_deployed)
+            and os.path.getsize(subprocess.getoutput(rsa_key_deployed)) != 0
+        ):
 
-            subprocess.run('''docker exec -u %s -it %s bash -c "echo '%s' >> /home/%s/.ssh/authorized_keys"
-                           ''' % (drucker.vars.APP,
-                                  host,
-                                  key_check,
-                                  drucker.vars.APP), shell=True)
+            subprocess.run(
+                """docker exec -u %s -it %s bash -c "echo '%s' >> /home/%s/.ssh/authorized_keys"
+                           """
+                % (drucker.vars.APP, host, key_check, drucker.vars.APP),
+                shell=True,
+            )
 
 
 def create_tmp_key(drucker):
@@ -72,7 +76,11 @@ def copy_tmp_key(drucker, container):
 
 def set_ssh_dir_perms(drucker, container):
     """Set correct permissions for .ssh directory"""
-    chown_ssh = "chown -R %s:%s /home/%s/.ssh" % (drucker.vars.APP, drucker.vars.APP, drucker.vars.APP)
+    chown_ssh = "chown -R %s:%s /home/%s/.ssh" % (
+        drucker.vars.APP,
+        drucker.vars.APP,
+        drucker.vars.APP,
+    )
     ssh_dir_perms = "docker exec -it %s %s" % (container, chown_ssh)
     subprocess.getoutput(ssh_dir_perms)
 

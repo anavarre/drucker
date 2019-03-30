@@ -43,9 +43,13 @@ DB_PLACEHOLDER = "db_path"
 SUBNET = "203.0.113.0/24"
 GATEWAY = "203.0.113.254"
 CHECK_BRIDGE = "docker network ls | awk '{print $2}' | grep '%s'" % (APP)
-CREATE_BRIDGE = '''
+CREATE_BRIDGE = """
 docker network create --subnet \"%s\" --gateway \"%s\" \"%s\"
-''' % (SUBNET, GATEWAY, APP)
+""" % (
+    SUBNET,
+    GATEWAY,
+    APP,
+)
 
 # Docker images
 DISTRO_IMAGE = "debian:stretch"
@@ -56,13 +60,19 @@ EDGE_IMAGE = "%s:edge" % (APP)
 DB_IMAGE = "%s:db" % (APP)
 WEB_IMAGE = "%s:web" % (APP)
 SEARCH_IMAGE = "%s:search" % (APP)
-CHECK_DISTRO_IMAGE = "docker images | awk '{print $1\":\"$2}' | grep \"%s\"" % (DISTRO_IMAGE)
+CHECK_DISTRO_IMAGE = 'docker images | awk \'{print $1":"$2}\' | grep "%s"' % (
+    DISTRO_IMAGE
+)
 CHECK_INIT_IMAGE = "docker images | awk '{print $1\":\"$2}' | grep %s" % (INIT_IMAGE)
 CHECK_BASE_IMAGE = "docker images | awk '{print $1\":\"$2}' | grep %s" % (BASE_IMAGE)
-CHECK_SEARCH_IMAGE = "docker images | awk '{print $1\":\"$2}' | grep \"%s\"" % (SEARCH_IMAGE)
-UPDATE_DISTRO_IMAGE = '''
+CHECK_SEARCH_IMAGE = 'docker images | awk \'{print $1":"$2}\' | grep "%s"' % (
+    SEARCH_IMAGE
+)
+UPDATE_DISTRO_IMAGE = """
 docker images | awk '{print $1\":\"$2}' | grep \"%s\" | xargs -L1 docker pull
-''' % (DISTRO_IMAGE)
+""" % (
+    DISTRO_IMAGE
+)
 PULL_DISTRO_IMAGE = "docker pull %s" % (DISTRO_IMAGE)
 
 # Docker containers
@@ -73,11 +83,13 @@ DB_CONTAINER = "%s_db" % (APP)
 WEB_CONTAINER = "%s_web" % (APP)
 SEARCH_CONTAINER = "%s_search" % (APP)
 
-CONTAINERS = [MIRROR_CONTAINER,
-              EDGE_CONTAINER,
-              DB_CONTAINER,
-              WEB_CONTAINER,
-              SEARCH_CONTAINER]
+CONTAINERS = [
+    MIRROR_CONTAINER,
+    EDGE_CONTAINER,
+    DB_CONTAINER,
+    WEB_CONTAINER,
+    SEARCH_CONTAINER,
+]
 
 # Hostnames
 TLD = "local"
