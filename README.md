@@ -95,7 +95,7 @@ _drucker_ ships with the following software stack:
 | Drush               | ^9.0                  | [Drush](https://packagist.org/packages/drush/drush) (Packagist)      |
 | Drush Launcher      | 0.6.0                 | [Drush Launcher](https://github.com/drush-ops/drush-launcher) (Github)
 | Drupal Console      | ~1.0                  | [hechoendrupal/drupal-console-launcher](https://github.com/hechoendrupal/drupal-console-launcher) (Github)|
-| Composer            | 1.6.2                 | [Composer](https://getcomposer.org) (official site)     |
+| Composer            | 1.8.5                 | [Composer](https://getcomposer.org) (official site)     |
 | Apache Solr         | 7.6.0                 | [Solr](https://lucene.apache.org/solr/) (official site) |
 | OpenJDK             | 1.8.0_121 or higher   | APT, via debian-backports |
 | bash-git-prompt     | 2.7.1                 | [magicmonty/bash-git-prompt](https://github.com/magicmonty/bash-git-prompt) (Github)              |

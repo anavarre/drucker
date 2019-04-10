@@ -146,7 +146,7 @@ legacy_php_ini_cli: /etc/php/{{ legacy_php_version }}/cli/php.ini
 legacy_php_extensions: /usr/lib/php/{{ legacy_php_version }}/20131226
 
 # Composer
-composer_stable_release: 1.6.2
+composer_stable_release: 1.8.5
 composer_download_link: https://getcomposer.org/download/{{ composer_stable_release }}/composer.phar
 composer_binary: "{{ user_programs_path }}/composer"
 composer_dir_path: "{{ home }}/.composer"
