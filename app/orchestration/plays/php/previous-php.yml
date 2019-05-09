@@ -9,9 +9,6 @@
   when: php_version_file_check.stat.exists == true
   register: current_php
 
-- meta: end_play
-  when: current_php.stdout != 'Different version'
-
 - name: "PHP: Check if PHP {{ previous_php_version}} is installed"
   stat:
     path: "{{ previous_php_ini }}"
