@@ -153,7 +153,7 @@ composer_dir_path: "{{ home }}/.composer"
 composer_json_path: "{{ home }}/.composer/composer.json"
 
 # XDebug
-xdebug_stable_release: 2.7.1
+xdebug_stable_release: 2.7.2
 xdebug_version_file: "{{ mirror_archives_dir }}/xdebug-version"
 xdebug_archive_file: "xdebug-{{ xdebug_stable_release }}.tar.gz"
 xdebug_download_link: https://github.com/xdebug/xdebug/archive/{{ xdebug_stable_release }}.tar.gz
@@ -224,7 +224,7 @@ codesniffer_extensions: php,module,inc,install,test,profile,theme
 codesniffer_binary: "{{ composer_dir_path }}/vendor/drupal/coder/coder_sniffer"
 
 # PHP-CS-Fixer
-php_cs_fixer_stable_release: 2.14.2
+php_cs_fixer_stable_release: 2.14.3
 php_cs_fixer_download_link: https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v{{ php_cs_fixer_stable_release }}/php-cs-fixer.phar
 php_cs_fixer_mirror_download_link: http://{{ mirror_host }}/php-cs-fixer.phar
 php_cs_fixer_version_file: "{{ mirror_archives_dir }}/php-cs-fixer-version"

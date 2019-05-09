@@ -83,12 +83,12 @@ _drucker_ ships with the following software stack:
 | APCu                | 5.1.17 or higher      | APT, via `php-apcu` ([ppa:ondrej/php](https://deb.sury.org/)) |
 | Coder               | 8.2.11                | [drupal/coder](https://packagist.org/packages/drupal/coder) (Packagist)      |
 | Code Sniffer        | 2.6.1                 | [squizlabs/PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) (Github)              |
-| PHP-CS-Fixer        | 2.2.20                | [FriendsOfPHP/PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (Github)              |
+| PHP-CS-Fixer        | 2.14.3                | [FriendsOfPHP/PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (Github)              |
 | phpmd               | 2.6.0                 | [PHPMD](https://phpmd.org/) (official site)      |
 | phpstan             | 0.11.2 or higher      | [mglaman/phpstan-drupal](https://github.com/mglaman/phpstan-drupal) (Github)      |
 | PECL YAML           | 2.0.4                 | [php/pecl-file_formats-yaml](https://github.com/php/pecl-file_formats-yaml) (Github)              |
 | LibYAML             | 0.2.2                 | [PyYAML](http://pyyaml.org/) (official site)     |
-| Xdebug              | 2.7.1                 | [Xdebug](https://xdebug.org/) (official site)     |
+| Xdebug              | 2.7.2                 | [Xdebug](https://xdebug.org/) (official site)     |
 | Tideways Profiler   | 4.1.7                 | [tideways/php-profiler-extension](https://github.com/tideways/php-profiler-extension)  (Github)  |
 | phantomjs           | 2.1.1                 | [ariya/phantomjs](https://bitbucket.org/ariya/phantomjs/) (Bitbucket)     |
 | Drupal              | 8.7.x                 | [Drupal](https://www.drupal.org/project/drupal) (official site)     |
