@@ -27,7 +27,7 @@
     - "{{ phpcs_mirror_archive_path }}"
     - "{{ phpcbf_mirror_archive_path }}"
     - "{{ php_cs_fixer_mirror_archive_file }}"
-    - "{{ phpmd_mirror_archive_file }}"
+    # - "{{ phpmd_mirror_archive_file }}"
     - "{{ mcstat_mirror_archive_file }}"
     - "{{ phpmyadmin_mirror_archive_file_path }}"
     - "{{ adminer_mirror_filepath }}"

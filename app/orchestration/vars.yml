@@ -243,11 +243,11 @@ phantomjs_archive_path: "{{ phantomjs_temp_path }}.tar.bz2"
 phantomjs_mirror_archive_path: "{{ mirror_archives_dir }}/phantomjs-{{ phantomjs_stable_version }}-linux-x86_64.tar.bz2"
 
 # PHPmd
-phpmd_stable_version: 2.6.0
-phpmd_download_link: http://static.phpmd.org/php/{{ phpmd_stable_version }}/phpmd.phar
-phpmd_mirror_download_link: http://{{ mirror_host }}/phpmd.phar
-phpmd_mirror_archive_file: "{{ mirror_archives_dir }}/phpmd.phar"
-phpmd_binary: "{{ user_programs_path }}/phpmd"
+# phpmd_stable_version: 2.6.0
+# phpmd_download_link: http://static.phpmd.org/php/{{ phpmd_stable_version }}/phpmd.phar
+# phpmd_mirror_download_link: http://{{ mirror_host }}/phpmd.phar
+# phpmd_mirror_archive_file: "{{ mirror_archives_dir }}/phpmd.phar"
+# phpmd_binary: "{{ user_programs_path }}/phpmd"
 
 # phpstan
 phpstan_source_file: "{{ source_file_dir }}/phpstan.neon"

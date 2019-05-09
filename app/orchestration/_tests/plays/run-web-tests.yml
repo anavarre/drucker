@@ -12,6 +12,6 @@
 - import_tasks: plays/tools/codesniffer-tests.yml
 - import_tasks: plays/tools/php-cs-fixer-tests.yml
 - import_tasks: plays/tools/coder-tests.yml
-- import_tasks: plays/tools/phpmd-tests.yml
+# - import_tasks: plays/tools/phpmd-tests.yml
 - import_tasks: plays/tools/mcstat-tests.yml
 - import_tasks: plays/drupal/drupal-tests.yml

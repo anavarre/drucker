@@ -247,24 +247,24 @@
   when: php_cs_fixer_get_url_result.changed
 
 # PHPmd
-- name: "MIRROR: Check if the phpmd PHAR file exists"
-  stat:
-    path: "{{ phpmd_mirror_archive_file }}"
-  register: phpmd_mirror_archive_file_check
-  changed_when: phpmd_mirror_archive_file_check.stat.exists == false
+# - name: "MIRROR: Check if the phpmd PHAR file exists"
+#   stat:
+#     path: "{{ phpmd_mirror_archive_file }}"
+#   register: phpmd_mirror_archive_file_check
+#   changed_when: phpmd_mirror_archive_file_check.stat.exists == false
 
-- name: "MIRROR: Download phpmd PHAR file"
-  get_url:
-    url: "{{ phpmd_download_link }}"
-    dest: "{{ mirror_archives_dir }}"
-    mode: 0755
-    validate_certs: no
-    force: yes
-  register: phpmd_get_url_result
-  until: "'OK' in phpmd_get_url_result.msg"
-  retries: 3
-  delay: 10
-  when: phpmd_mirror_archive_file_check.stat.exists == false
+# - name: "MIRROR: Download phpmd PHAR file"
+#   get_url:
+#     url: "{{ phpmd_download_link }}"
+#     dest: "{{ mirror_archives_dir }}"
+#     mode: 0755
+#     validate_certs: no
+#     force: yes
+#   register: phpmd_get_url_result
+#   until: "'OK' in phpmd_get_url_result.msg"
+#   retries: 3
+#   delay: 10
+#   when: phpmd_mirror_archive_file_check.stat.exists == false
 
 # mcstat
 - name: "MIRROR: Check if mcstat archive exists"

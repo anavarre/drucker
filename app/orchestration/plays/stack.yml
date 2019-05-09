@@ -11,7 +11,7 @@
 - import_tasks: tools/codesniffer.yml
 - import_tasks: tools/php-cs-fixer.yml
 - import_tasks: tools/coder.yml
-- import_tasks: tools/phpmd.yml
+# - import_tasks: tools/phpmd.yml
 - import_tasks: tools/mcstat.yml
 - import_tasks: tools/sass.yml
 - import_tasks: db/db-tools.yml
