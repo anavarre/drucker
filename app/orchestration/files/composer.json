@@ -3,9 +3,9 @@
     "description": "Base dependencies",
     "license": "GPL-2.0-or-later",
     "require": {
-        "hirak/prestissimo": "^0.3",
-        "symfony/yaml": "^3.0",
-        "drush/drush": "^9.0"
+        "hirak/prestissimo": "^0.3.9",
+        "symfony/yaml": "^3.4",
+        "drush/drush": "^9.6"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
