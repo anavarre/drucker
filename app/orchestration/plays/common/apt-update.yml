@@ -9,7 +9,7 @@
 
 - name: "SYSTEM: Update APT cache and upgrade the container"
   apt:
-    upgrade: yes
+    upgrade: safe
     update_cache: yes
   when: apt_cache_check.cache_updated == true
   ignore_errors: true
